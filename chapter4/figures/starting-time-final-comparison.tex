@@ -1,0 +1,49 @@
+
+\pgfplotstableread{
+Components    {Processes} {CRIU}   {Plain Kevoree} 
+%3        	  547.9745857	2529.407146	155.59293
+%4     		  685.5744837	4341.203728	161.0288691
+%5       	  743.4672428	5893.812401	171.0221846 
+%7       	  1064.555133	9324.145486	162.0639121
+%9       	  1268.435203	12563.95009	170.3004435
+%12       	  1553.555575	17342.69007	172.6008458
+%15 			  2045.492792	22165.56394	192.4309822
+3	2.32911218644444	0.790383362555555	0.0907548736666666
+4	3.68871036625	1.26219532775	0.12180777075
+5	5.15906548553333	1.75811954106667	0.123942168
+7	8.10203280628571	2.64415631295238	0.155080078
+9	11.3615227505555	3.43788487492592	0.1576709236
+12	16.3622474985	5.04937113155556	0.159263136583333
+15	21.1857631248444	6.87974225997778	0.1994543878
+}\Rapperswil
+
+\begin{tikzpicture}[scale=0.8,transform shape]
+  
+\begin{axis}[
+	every axis legend/.append style={nodes={right}},
+	height=4.2cm, width=0.95\columnwidth,
+    ybar=0pt,   % Stacked horizontal bars
+    ymin=0,         % Start x axis at 0
+    xtick=data,     % Use as many tick labels as y coordinates
+    xticklabels from table={\Rapperswil}{Components},  % Get the labels from the Label column of the \datatable
+    xlabel={Number of components},
+    scaled y ticks = false,
+%	y tick label style={
+%		/pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+%	},
+    scaled x ticks = false,
+           x tick label style={
+           /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+           },
+    bar width = 7,
+    ylabel={Time (seconds)},
+    y label style={at={(0.04, 0.5)}},
+    legend pos=north west,
+    legend style={font=\tiny},
+]
+\addplot [fill=white] table [y={Plain Kevoree}, x expr=\coordindex] {\Rapperswil};
+\addplot [draw=black,fill=black] table [y=CRIU, x expr=\coordindex] {\Rapperswil};    % Plot the "First" column against the data index
+\addplot [draw=black,pattern=crosshatch] table [y=Processes, x expr=\coordindex] {\Rapperswil};
+\legend{Plain Kevoree, CRIU, Processes}
+\end{axis}
+\end{tikzpicture}

@@ -1,0 +1,82 @@
+\section{Introduction}\label{sec:introduction}
+%Garbage collection-based memory management is a wide\-spread approach nowadays since
+%it improves software quality and eases the development process.
+%Nonetheless, memory-related issues are still relevant in languages/runtimes with
+%garbage collectors because developers tend to fail during memory manipulation.
+%In particular, it is known that memory leaks and unnecessary allocations are the sources
+%of both functional and non-functional software misbehavior~\cite{cbse/14/attouchi/monitoring, Vera:2004:FAF:973097.973099}.
+
+%Dealing with these issues have been a concern for both the industry and the academy
+%for a while; therefore, there are several approaches to reduce the risk of memory-related
+%errors.
+%In the industry, practitioners use memory profilers (e.g. YourKit, Eclipse Memory
+%Analyzer Tool and Plumbr) to deal with the problem.
+%These tools support many sort of built-in analysis which are fairly efficient because
+%they are based on industrial standards such as JVMTI.
+%Some of them also provide mechanisms to specify user-defined analysis through a query 
+%language such as OQL~\cite{OQL-visualvm}.
+%Although useful, the usage of user-defined analysis requires in most cases the 
+%generation of a costly heap dump which makes the associated queries unsuitable for
+%at runtime execution in a production environment.
+%Hence, it is not possible to use these tools to feed neither self-adaptive nor self-healing
+%systems.
+
+%In the academy, different approaches tackle memory issues~\cite{Xu:2015:MPP:2729552.2729565, Nguyen:2007:DEM:1296907.1296912, Bond:2008:TML:1449764.1449774, Jung:2014:AML:2568225.2568311}.
+%Many of these solutions are either efficiently implemented as hard-coded modifications to the
+%garbage collector or built on top of industrial standards as JVMTI.
+%The advantage of these mechanisms is a reduction on the overhead of such analysis.
+%However, they have two limitations: i) they target a single memory issue and ii) it is hard to
+%introduce them in the industry.
+%In general, implementing a highly efficient analysis requires knowledge of low-level APIs or
+%garbage collection mechanisms which are not commonly in the curriculum of most managed runtime
+%environment (MRE) users.
+
+%It seems clear to us that there is a gap in existent solutions to analyze the heap.
+%Either they are fairly {\em generic/easy to use} but offer poor performance or they offer good performance but are hard to customize/create. 
+%We claim that a {\em simple to use} and efficient mechanism to perform memory analysis is
+%a feature required in many areas of software development for MREs (e.g. to build self-adaptive systems, to
+%reduce development complexity, to decrease the number of errors).  
+
+%In this paper, we propose a framework to analyze the status of the memory heap and collect information about it.
+%The main component of the framework is a domain-specific language (DSL) that allows us to specify
+%how to explore and collect the desired information.
+%The concepts of this language are highly coupled to the way the heap is traversed.
+%A program in this language is compiled into a backing technology that support, in an efficient way, the iteration over all objects and 
+
+There is currently a global trend in Software Engineering towards the systematic creation of new languages and tools to support specific  software developments~\cite{van2000domain,hutchinson2011empirical}. 
+The design of such new languages and platforms are done for good reasons, such as  having specific point of views on a particular system, simplifying software development, reducing errors, removing redundant tasks and improving software developers productivity. 
+
+This trend has led to the development of new research topics such as Software Language Engineering~\cite{sle}. Most of the research currently done in this community aims at improving the engineering of new software languages and their corresponding development tools, thus improving the efficiency of people in charge of designing new languages. 
+However, the research done in Software Language Engineering only tackles simulation and development tools such as Integrated Development Environment, and does not takes into account debugging and profiling tools which are essentials for software maintenance and optimization.
+Specific tools are especially needed to monitor running system in order to detect defects or abnormal behaviors~\cite{duesterwald2000software,Jovic:2011:CMY:2076021.2048081}.
+These tools have to be specific to the languages and platforms and have to exhibits small overhead to make their usage suitable with online system.
+
+Many of the newly designed languages and runtime platform are built on top of existing object oriented languages runtime such as the Java Virtual Machine. 
+Therefore people in charge of optimizing, debugging and maintaining software application can use the existing debugger and profiler of these platforms. 
+However, there is a paradigm mismatch between the  classical profiler used in Object oriented System and the newly designed  platforms and languages. 
+Indeed, the concepts introduced in these new languages may not exhibit a straightforward mapping to the underlying object oriented system. For example, in the case of the Spring framework~\cite{laddad2009aspectj}, some annotations like $@Aspect$ generate on the fly dynamic proxies. Existing profilers will show these proxies, which is not the right level of abstractions for developers. 
+
+
+
+In this paper, we focus on the problem of easily creating memory profiler for newly designed software languages and platforms. 
+We propose a tooled DSL which generates specific memory profilers to match the language concepts and provide useful information to the end user. 
+The generated memory profilers are specific to the new language and therefore exhibit information in terms of the concepts present in this language. 
+For example, in a component oriented system, our memory profiler will exhibit memory consumption in terms of components instead of objects.
+
+Another important point for our approach lies in its very limited overhead which makes it suitable to use for systems in production.
+Indeed, generating a specific profiler from an abstract definition of the role of this profiler enable us to produce very specific profiler which only monitor the relevant information.
+
+The contributions of this paper are as follows:
+\begin{itemize}
+\item A Domain Specific Language to describe the specific memory information to monitor and the mapping between these information and the language concepts. 
+\item A reference implementation which generates specific memory profiler suitable for on-line usage with very limited overhead.
+\item An evaluation of the Domain Specific Language expressiveness and the performance overhead of the generated memory profiler on three real world use cases.
+\end{itemize}
+
+The rest of this paper is organized as follows: in the next section we show with motivating scenarios why we need a new mechanism to specify user-defined memory analysis.
+A description of the DSL and the reference implementation are presented in sections
+\ref{sec:approach} and \ref{sec:implementation}.
+In section~\ref{sec:expressiveness} we discuss the expressiveness of the language.
+Section~\ref{sec:evaluation} presents an evaluation of the approach.
+Related works are discussed in section~\ref{sec:relatedwork}.
+Finally, section~\ref{sec:conclusions} gives the conclusions and presents future works.

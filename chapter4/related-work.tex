@@ -1,0 +1,50 @@
+
+
+\section{Related Work} \label{sec:related-works}
+%\todo{Walter + inti + olivier}
+
+%Lots of approaches~\cite{Oreizy:2008:RSA:1370175.1370181} demonstrate the benefits of component-based systems to support runtime adaptation in order to handle Quality of Service (QoS) reservation or QoS improvement.
+The Squirrel approach is mainly related to i) component isolation for fine-grained resource management, ii) efficient communication between containers, and iii) efficient container initialisation. We discuss the related works for these topics. 
+
+%\fancynote{Inti}{I am not writing the story. I am just listing related papers. That's what you asked me last time}
+% a paragrapth to talk about resource monitoring, I-JVM, Charles University (Binder), Other, the paper by Kouter
+	
+
+\textbf{Component isolation for fine-grained resource management.}
+%A first solution to support resource aware component management is to use monitoring. 
+In the Java world, several approaches describe the use of monitoring to achieve resource-aware programming~\cite{Guidec:2003:JMP,Maurel:2012:AME:2304736.2304763,Moreau:2005:RAP}.
+In \cite{binder_portable_2006,Hulaas:2008:PTL} the authors propose mechanisms based on bytecode instrumentation to monitor CPU and memory consumption.
+%The instrumentation consists in adding calls to a resource monitoring agent during class loading.
+Yet, instrumentation introduces high overhead and the monitoring framework contaminates the measurements
+%contaminates the 
+%Furthermore, the measurements are contaminated by the monitoring framework
+because it is performed in the context of the monitored JVM.
+%To avoid such a negative effect, the authors of \cite{Marek:2013:SRC} introduce ShadowVM. This framework delegates monitoring tasks to separate processes.
+%However, the required communication also produces additional CPU overhead.
+Geoffray et al.~\cite{Geoffray:2009:I-JVM} introduce a modification to the garbage collector to achieve lightweight memory accounting for OSGi containers.
+%This modification has lower overhead than using instrumentation. 
+Our work shows how we can automatically isolate components with resource contracts with low overhead through the execution of components on isolated system containers.
+
+% about communication
+\textbf{Efficient Inter-Container/Process communication}.
+In~\cite{Unrau:708530}, the authors devise mechanisms for IPC based on building a queue in shared memory. As in our case, these solutions perform two data copies.
+Nonetheless, the authors do not consider the problem of sending messages to multiple targets, which is a concern for us.
+In Android, Binder is used to support IPC. 
+Although it is a single-copy mechanism, its common usage in applications still requires two copies due to marshaling.
+The limitations of the built-in serialization in Java are described by Bouchenak et al.~\cite{bouchenak2003techniques}.
+Protocol buffers \cite{protobuf} provides an Interface Definition Language to generate RPC artifacts in different languages. 
+Although the performance is good, it makes mandatory the use of an IDL, which is often a burden for engineers.
+We propose to use a combination of shared-memory-based channels and a high-performance serialization library to marshal POJOs.
+
+
+% about initialization time, talk also about VM
+\textbf{Fast container initialization.} 
+%Several approaches show the need to improve the initialisation time of containers or VMs. 
+A goal of the MVM~\cite{czajkowski2012multitasking} is to provide fast initialization of new Java Applications.
+By sharing the standard library among JVM instances, the authors reduce initialization time for new applications the bootstrap classes are already loaded.
+However, the MVM is a non-trivial modification to a JVM and its current implementation does not support the latest version of the JDK~\cite{czajkowski2012multitasking}. 
+Android \cite{Kalkov:2012:REA:2388936.2388955,Nagata:2013:MIA:2569436.2570296} uses a process, named Zygote, that loads the standard classes and is a sort of pre-initialized Dalvik VM.
+Zygote receives demands to create copies of itself that mutate into Dalvik VMs. %executing applications.
+%The approach leverages the \textit{fork} system-call to clone a process and it also uses copy-on-write to reduce memory consumption and initialization time. 
+%On the contrary, 
+We use an external tool, CRIU, to speed-up the creation of new JVMs because current JVM implementations do not provide built-in facilities for doing so.

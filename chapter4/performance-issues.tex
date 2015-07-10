@@ -1,0 +1,58 @@
+\subsection{Identifying performance issues} \label{sec:bottlenecks}
+Our first hypothesis was that each isolated copy of the middleware performs common initialization steps that consume more time than the specialized initialization steps.
+To test such a claim, we identified the main initialization steps and measured their respective time when many components are deployed in parallel.
+ 
+Figure \ref{fig:starting-kevorees-motivation} depicts how much time is devoted to every major step during deployment when a separate process is used for each component.
+As the results show, most of the initialization time is consumed for loading the core Kevoree runtime. It is followed by the operation of deploying models, and finally by the step of creating and initializing new JVMs.
+We observe other trends, for instance, it is not surprising that both the total time and step-specific times grow with the number of components since more Kevoree instances are sharing CPU cycles to deploy applications.
+More relevant is how the time to deploy a single component and the time to start a Kevoree instance are also affected by the latency in network access.
+Indeed, because Kevoree downloads components from external repositories the time used to deploy the model depends on the location of the dependencies.
+As the figure shows, the framework retrieves local dependencies faster than remote dependencies. 
+
+In general, the deployment of each component goes through exactly the same two initial steps, 1) launching a new JVM and 2) executing the Kevoree Runtime.
+We can reduce the time to deploy components if we only execute these two steps once for all processes.
+Likewise, the last step, which is deploying the isolated component in its process, may also be executed many times under specific circumstances.
+Indeed, dependencies are downloaded many times from a remote repository if they are shared between two or more components.
+Simplifying the mechanism to download dependencies would reduce the total deployment time.
+
+\begin{figure}[t!]
+\centering
+\input{chapter6/figures/starting-kevorees.tex}
+\caption{Starting time of parallel Kevoree Runtime Environments}
+\label{fig:starting-kevorees-motivation}
+\end{figure}
+
+Standard mechanisms to support communication among JVMs are either using RMI or user-defined protocols built on sockets (i.e, NIO Sockets).
+RMI-based communication imposes high overhead due to the burden of marshaling \cite{Carpenter:1999:OSM:304065.304099, Maassen:1999:EIJ:329366.301120}.
+Likewise, it is well-known that sockets-based communication imposes overhead, unneeded on a single node, because of the network stack \cite{Goglin2013176}.
+When sockets are used, additional overhead exists in Java due to serialization, unavoidable copies and the multicast semantic we want to build on top of the bidirectional semantic of sockets.
+
+Any IPC mechanism for Java faces the challenge of flattening.
+In short, it means that multiple copies of the data are needed during communication because objects are stored in memory under garbage collector control; hence the middleware must copy data back and forth from its managed representation to a buffer suitable for low-level IPC \cite{Carpenter:1999:OSM:304065.304099}.
+We argue that channels should be in charge of marshaling arbitrary \textit{Plain Old Java Object} (POJO) structures because it is the easiest way to use them as black-boxes that handle communications with minimum effort for components' developer.
+Although it is possible to move this concern to components, it requires that they agree on a common binary representation.
+This limits both, the components we can link together and the usability of channels.
+In contrast, built-in serialization guarantees a common interface, but it comes at the cost of high overhead. 
+
+Table \ref{tab:time-consumed-in-communication} presents the time required to send in a round-trip a POJO structure to multiple consumers using NIO-based sockets and built-in serialization.\footnote{Definition at: http://goo.gl/y5vtI7}
+In the experiment, the same data structure is sent a million times to consumers.
+The table shows the total time used by the producer as well as the average time consumed during serialization in the producer.
+%Total time is defined as: $\max_{c \in Consumers}({receptionTime}_c)$.
+If we assume that each consumer is using a similar time deserializing, it is remarkable that on average the serialization/deserialization steps take 98.858\% of the time.
+
+Fortunately, there are solutions to overcome the overhead due to serialization without discarding the advantages of channels as black-boxes.
+Likewise, there are alternatives to socked-based communication within a single node that we could employ.
+
+\begin{table}
+\centering
+\caption{Time consumed during message passing using built-in serialization and NIO-based sockets with many consumers}
+\begin{tabular}{|c|c|l|} \hline 
+Consumers & Average (de)serialization Time  & Total Time \\ \hline
+1 &	51.84 sec &	 104.43 sec	\\ \hline
+2 &	43.14 sec & 130.85 sec	\\ \hline
+4 &	45.82 sec &	230.35 sec	\\ \hline
+6 &	51.57 sec &	 366.56 sec	\\ \hline
+8 &	52.83 sec &	 484.37 sec	\\ \hline
+\end{tabular}
+\label{tab:time-consumed-in-communication}
+\end{table}

@@ -1,0 +1,50 @@
+%------------------------------%
+%------------------------------%
+\selectlanguage{english}
+
+\chapter{State of the art}
+\label{chap:indus_contexte}
+\markboth{State of the art}{Chapter1}
+%------------------------------%
+%------------------------------%
+
+\coolphrase {Hey, look at this}{Inti}
+
+\begin{itemize}
+\item Resource-aware programming, a broad view. \\
+The \textbf{goal} of this section is to introduce and discuss the main concepts regarding resource-aware programming.
+In short, I am going to present how important is, in some contexts, developing applications which are able to monitor and manage the resources consumed.
+This is specially important in middleware, system with continuous evolution and open environments.
+I shall mention the goals we pursuit when we put attention to the resource consumption's concern: QoS, reliability, availability, performance, security, resource-constrained devices.
+This section also mentions how this important not only for applications but for applications framework too.
+
+\textbf{Discuss} the following topics that are related to resource management:
+\begin{itemize}
+\item Resource monitoring
+\item Resource reservation
+\item Resource isolation
+\item Reflection
+\end{itemize}
+
+\item Resource monitoring and reservation technologies.\\
+Aqui \textbf{discutire} los metodos para hacer monitroing and reservation. Primero algo muy general, pasando a discutir el tema y su importancia in nowadays managed runtime enviroments. La mayoria de este contenido puedo tomarlo desde el reporte.
+
+Los \textbf{objetivos} son: destacar las tecnologias que hay, mencionar sus limitacion. Las limitacion a destacar son: el problema de la portabilidad (muchas implementaciones de la JVM), el problema del performance, el problema de lidear con variadas abstracciones de dominio especifico. 
+
+\item Domain-specific abstractions. \\
+En esta seccion se discutira escencialmente que son los domain-specific languages y caules son sus limitaciones en relacion a tooling support cuando se trata de profilers y debuggers. Argumentar esta carencia es facil cuando hablamos de lenguages como Xtend y Kermeta3. Para lenguajes mas especificos como el ubiquo State Machine ya no es tan facil de argumentar porque esas abstracciones no tienen un modelo de ejecucion tan claro o si lo tienen entonces el consumo de memoria no es relevante.
+
+\item Component-based software engineering.\\
+Esta seccion \textbf{discute} primero, y solo brevemente, los elementos fundamentales de CBSE, sus ventajas y nivel de adopcion en la practica. Por ultimo menciona que existen varios modelos de componentes y hace una breve recapitulacion de los mismo haciendo enfazis en aquellos que tienen implementacion en managed runtime environments.
+Es vital en esta parte hacer una descripcion de los aspectos de estos modelos que los hacen unicos o similares en terminos de control de recursos.
+Lo siguiente es relacionar componentes con resource-aware programming. In short, como los modelos de componentes pueden beneficiarse de resource-aware programming para ofrecer un ambiente mas util a los componentes. 
+
+Disutir como el concepto de componente es un tipo especial de abstraccion que presenta para un monitor de consumo de memoria los mismos retos que otras abstracciones. Por lo tanto, debe de intentar generalizarse la definiciones de monitores de consumo de memoria
+
+Me pregunto si debo usar aqui el termino middleware?
+
+Los \textbf{objetivos} de la seccion son: enmarcar la tesis en un contexto de componentes, resaltar la utilidad y desafios de hacer resource-aware programming for component models. Ademas, DEBE decirse what have been done en resource-aware programming y resource mangement para modelos de componentes en el pasado.
+Entonces viene la parte dificil: indicar las limitaciones de lo existentes. En mi opinion, no son tanto limitaciones como enfoques diferentes, o quizas la limitacion esta en que el proceso de seleccion del component binding nunca ha estado dirigido por la necesidad de disminuir el overhead de hacer resource management at runtime.
+
+\end{itemize}
+

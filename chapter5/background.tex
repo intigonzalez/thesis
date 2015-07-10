@@ -1,0 +1,97 @@
+\section{Background and motivating example}\label{sec:background}
+
+\subsection{Motivating example\label{sec:motivatingexample}}
+
+In this section we present a motivating example for the use of an optimistic adaptive monitoring process in the context of a real-time crisis management system in a fire department. 
+During a dangerous event, many firefighters are present and need to collaborate to achieve common goals.
+Firefighters have to coordinate among themselves and commanding officers need to have an accurate real-time view of the system.
+
+The Daum project\footnote{\url{https://github.com/daumproject}} provides a software application that supports firefighters in these situations.
+The application runs on devices with limited computational resources because it must be mobile and taken on-site.
+It provides numerous services for firefighters depending on their role in the crisis. In this paper we focus on the two following roles:
+\begin{itemize}
+\leftskip -.2in
+ \item A collaborative functionality that allows commanding officers to follow and edit tactical operations. The firefighters' equipment include communicating sensors that report on their current conditions.
+ \item A drone control system which automatically launches a drone equipped with sensors and a camera to provide a different point-of-view on the current situation.
+\end{itemize}
+
+As is common in many software applications, the firefighter application may have a potentially infinite number of configurations. These configurations depend on the number of firefighters involved, the type of crisis, the available devices and equipment, among other parameters. 
+Thus, it is generally not possible to test all configurations to guarantee that the software will always function properly. 
+Consequently, instead of testing all configurations, there is a need to monitor the software's execution to detect faulty behaviours and prevent system crashes. 
+However, fine-grained monitoring of the application can have excessive overhead that makes it unsuitable with the application and the devices used in our example.
+Thus, there is a need for an accurate monitoring system that can find faulty components while reducing overhead.
+
+The Daum project has implemented the firefighter application using a Component Based Software Architecture.  The application makes extensive use of the Kevoree\footnote{\url{http://www.kevoree.org}\label{note:kevoree}} component model and runtime presented below.
+
+
+\subsection{Kevoree}
+Kevoree is an open-source dynamic component platform, which relies on Models@run.time~\cite{BlairBF09} to properly support the dynamic adaptation of distributed systems.
+Our use case application and the implementation of the Scapegoat framework make extensive use of the Kevoree framework.
+The following subsections detail the background on component-based software architecture, introduce the Models@run.time paradigm and give an overview of the Kevoree platform.
+
+\subsubsection{Component-based software architecture}
+
+Software architecture aims at reducing complexity through abstraction and separation of concerns by providing a common understanding of component, connector and configuration~\cite{xadl,Medvidovic:2000,VanOmmering-et-al-00}.
+One of the benefits is that it facilitates the management of dynamic architectures, which becomes a primary concern in the Future Internet and Cyber-Physical Systems~\cite{DBLP:journals/ase/NittoGMPP08}.
+Such systems demand techniques that let software react to changes by self-organizing its structure and self-adapting its behaviour. Many works~\cite{cbse-conference} have shown the benefits of using component-based approaches in such open-world environments~\cite{baresi2006toward}.
+
+To satisfy the needs for adaptation, several component models provide solutions to dynamically reconfigure a software architecture through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components. 
+In practice, component-based (and/or service-based) platforms like Fractal~\cite{bruneton06}, OpenCOM~\cite{Coulson04acomponent}, OSGi~\cite{OSGI:r5} or SCA~\cite{SEINTURIER:2011:INRIA-00567442:1} provide platform mechanisms to support dynamic architectures.
+
+\subsubsection{Models@run.time}
+Built on top of dynamic component frameworks, Models@run.time denote model-driven approaches that aim at taming the complexity of dynamic adaptation.
+It basically pushes the idea of reflection~\cite{morin09a} one step further by considering the reflection-layer as a real model: ``something simpler, safer or cheaper than reality to avoid the complexity, danger and irreversibility of reality''.
+In practice, component-based and service-based platforms offer reflection APIs that allow instrospecting the application (e.g., which components and bindings are currently in place in the system) and dynamic adaptation (e.g., changing the current components and bindings).
+While some of these platforms offer rollback mechanisms to recover after an erroneous adaptation~\cite{leger2010reliable}, the purpose of Models@run.time is to prevent the system from actually enacting an erroneous adaptation. 
+In other words, the ``model at runtime'' is a reflection model that can be decoupled from the application (for reasoning, validation, and simulation purposes) and then automatically resynchronized.
+This model can not only manage the application's structural information (i.e., the architecture), but can also be populated with behavioural information from the specification or the runtime monitoring data.
+
+
+\subsubsection*{The Kevoree framework\label{sec:kevoree}}	
+
+Kevoree provides multiple concepts that are used to create a distributed application that allows dynamic adaptation. The \emph{Node} concept is used to model the infrastructure topology and the \emph{Group} concept is used to model the semantics of inter-node communication, particularly when synchronizing the reflection model among nodes. 
+Kevoree includes a \emph{Channel} concept to allow for different communication semantics between remote \emph{Components} deployed on heterogeneous nodes. 
+All Kevoree concepts (\textit{Component}, \textit{Channel}, \textit{Node}, \textit{Group}) obey the object type design pattern~\cite{johnson_type_1997} in order to separate deployment artifacts from running artifacts.  
+
+%Platforms
+Kevoree supports multiple execution platforms (e.g.,~Java, Android, MiniCloud, FreeBSD, Arduino). For each target platform it provides a specific runtime container. 
+%Tools
+Moreover, Kevoree comes with a set of tools for building dynamic applications (a graphical editor to visualize and edit configurations, a textual language to express reconfigurations, several checkers to valid configurations). 
+
+As a result, Kevoree provides a promising environment by facilitating the implementation of dynamically reconfigurable applications in the context of an open-world environment.
+Because our goal is to design and implement an adaptive monitoring system, the introspection and the dynamic reconfiguration facilities offered by Kevoree suit the needs of the ScapeGoat framework.
+
+
+%\subsection{Dynamic Adaptation with Kevoree}
+%Kevoree aims at providing advanced adaptation capabilities to different types of nodes:
+%\begin{itemize}
+%\setlength{\itemsep}{0pt}
+%\setlength{\parskip}{0pt}
+%\setlength{\parsep}{0pt}
+%\item 
+%\noindent{\bf Level 1: Parametric adaptation.} Dynamic update of parameter values, e.g. change of sampling rate in a component that wraps a physical sensor (adaptation of instance properties).
+
+%\item 
+%\noindent{\bf Level 2: Architectural adaptation.} Dynamic addition or removal of bindings or components, e.g. replication of software components and channels on different nodes to perform load balancing (adaptation of instances graph).
+
+%\item 
+%\noindent{\bf Level 3: Dynamic provisioning of types.} Hot deployment of component types that were not foreseen before the initial deployment of the system. 
+%This allows for system evolution by enabling parametric and architectural reconfigurations, including management of instances for types that are added and managed dynamically (adaptation of types).
+
+%%\item 
+%%\noindent{\bf Level 4: Adaptation for remote management.} Nodes supporting level~4 adaptation participate in a remote management layer, which supervises less powerful nodes. 
+%%This layer monitors remote nodes by requesting their current Kevoree model;
+%%the layer triggers dynamic adaptation of nodes by sending precomputed reconfiguration scripts to them. 
+%%This remote adaptation process supports seamless management of less powerful nodes by a more powerful one, which has enough resources to build and evaluate new and appropriate  configurations.
+%\end{itemize}
+
+%The adaptation engine relies on a model comparison between two Kevoree models to compute a  script for a safe system reconfiguration; execution of this script brings the system from its current configuration to the new selected configuration~\cite{morin09a}. 
+%Model comparison yields  a delta-model defining changes (using CRUD operations) that should be applied on the source model to obtain the target model. 
+%Planification algorithms~\cite{daubert} use this delta-model as input in order to defined an efficient schedule of the adaptation steps. 
+%The delta-model is finally compiled into a Kevoree script. 
+%The Kevoree Script language (KevScript for short) is a core language for describing reconfiguration.
+%KevScript  is comparable to FScript for Fractal Component Model~\cite{DBLP:journals/adt/DavidLLC09}. 
+%Execution of a KevScript directly adapts a Kevoree system, without the need for  a full Kevoree model definition. 
+%Such adaptation scripts are written by designers, or they can be generated  by automated processes ({\em e.g.} within a  control loop managing the Kevoree system).
+
+%\hl{(Johann) What is the point of having so much detail about the Kevoree adaptation framework for this paper? It's not clear to me or we should have a last paragraph explaining a bit in what this is usefull for the rest of the paper.}

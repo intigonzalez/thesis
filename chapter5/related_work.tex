@@ -1,0 +1,37 @@
+\section{Related work}\label{sec:related}
+
+The Scapegoat framework is related to component monitoring, Models@run.time, component isolation and component performance prediction approaches.
+
+Performance and resource-consumption prediction approaches are complementary to the Scapegoat framework because they can assist in better specifying the component contracts.
+Some approaches require developers to provide extensive per-component metadata at design-time in order to calculate the application's overall performance or resource consumption \cite{Becker:2007:MPP:1216993.1217006,Jonge03scenario-basedprediction}.
+Prediction approaches have been achieved by using combinations of design-time and runtime analyses \cite{autili2012hybrid}.
+However, although many approaches to performance prediction have been proposed, none of them have obtained widespread use \cite{Koziolek:2006:QDD:2171366.2171393}.
+
+%In \cite{Ghezzi2009}, the authors propose using performance models based on Queuing Networks to cope with the problem of architectural reasoning.
+%The authors keep Models@run.time to enable re-estimation of model parameters based on the behavior of the running system and they present a mechanism to update the parameters when usage profiles change.
+%The authors target the same problem we are dealing with, although we are not facing the prediction of behavior.
+
+KAMI \cite{Ghezzi2009} builds performance models at design-time but uses and continually refines them at runtime.
+By collecting runtime data, they are able to build performance and resource consumption models that reflect real usage.
+They are able to adapt the application according to changes in components' behavior, but they do not use nor propose an adaptive monitoring system to minimize overhead.
+
+%\todo{For Walter: Review this paragraph}
+State of the art monitoring systems \cite{FrenotS04,KregerHaroldWilliamson03,Binder200645} extract steady data-flows of system parameters, such as, the time spent executing a component, the amount of I/O and memory used, and the number of calls to a component.
+The overhead that these monitoring systems introduce into applications is high, which makes it unlikely for them to be used in production systems.
+Maurel et al. \cite{Maurel:2012:AME:2304736.2304763} propose an adaptive monitoring framework for the OSGi platform.
+Similar to our approach, they propose a global monitoring system that changes to a localized monitoring system when a problem is detected.
+However, their work is focused on CPU usage and does not consider other resources, such as memory or I/O.
+Exploring the Java heap to obtain useful information about resource consumption has been proposed in~\cite{Price:2003:GCM:829515.830545, Geoffray5270296}.
+As in our work, they account objects to the resource principal being explored (in their case to OSGi bundles) the first time an object is reached.
+Their solutions modify the garbage collector in order to reduce overhead, but this causes resource accounting to be tied to, and performed on, each collection cycle.
+%but it means that the accounting step is performed on each collection cycle.
+In contrast, our approach can be executed on demand, albeit at the cost of further passes over the heap.
+%although our accounting step requires further passes over the heap, we can precisely specify when to execute it.
+
+Gama and Donsez \cite{Gama:2010:SCS:2176905.2176915} propose using virtual machines in separate processes or using MVM isolates \cite{czajkowski2012multitasking} to manage trusted and untrusted components.
+After an evaluation period, untrusted components can be moved to the trusted JVM if no problems are detected.
+This allows the main application to depend on potentially faulty components without risking severe crashes.
+We can also cite Microsoft technologies such as COM (Component Object Model) components which can be either loaded in the client application process or provided in an isolated process \cite{lowy2001and}.
+In addition to process virtualization, some operating systems also propose user-space virtualization, which isolates not only the processes but also the memory, the network interface and the file system. Examples of these approaches are Jails\footnote{\url{http://www.freebsd.org/doc/handbook/jails.html}} for BSD, LXC\footnote{\url{http://lxc.sourceforge.net/}} and CGroups for Linux, and lmctfy\footnote{\url{https://github.com/google/lmctfy}}.
+All of these approaches have the drawback of limiting code and instance sharing and introduce additional overhead in cross-boundary component interactions.
+Furthermore, depending on the complexity of the approach, there is also overhead in having to manage multiple processes.

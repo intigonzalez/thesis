@@ -1,0 +1,41 @@
+\section{Background on resource management }
+
+%\textbf{Synthesis.}
+%Providing resource management features at the application level is possible, but it introduces high overhead in the application \cite{gonzalezherrera:hal-00983045}, thus greatly limiting its interest.
+Current middleware either provide limited resource-awareness or totally hide resource concerns from the application.  Following the same ideas as in \cite{guerraoui1999oo} where authors explain that the distribution concern should not be hidden from developers in object-oriented distributed programming, we believe that the resource management concern should not be hidden from application developers. We envision combining monitoring techniques and system-layer resource management techniques to achieve this goal. 
+This section presents a summary of two underlying techniques used to monitor and reserve resources. 
+
+
+
+%These approaches are used in section~\ref{sec:kevoree}.
+
+%Providing adequate support for pervasive applications is a challenge because their resource requirements vary (e.g., processors, memory bandwidth, I/O).
+%For critical applications, such as surveillance systems, a known bounded amount of resources must be guaranteed for the application to run properly. For multimedia applications, the amount of required resources may change over time and dynamic adaptations and redeployment can be required. 
+
+%Lots of modern middleware are typically implemented using Java (for example with OSGi) because of its safety, flexibility, and mature development environment.
+%However, the Java virtual machine was designed to execute a single application at a time and does not provide \textit{per-component} resource reservation.
+%Current Java-based middleware are thus unable to reserve resources for critical applications, which may cause these applications to crash or hang when insufficient resources are available.
+
+%As an example, we can consider a smart home system that simultaneously provides services that are critical for user safety, and services that increase user comfort. 
+%For example, a smart home system can provide a health monitoring service for elderly people allowing them to stay at home while regularly reporting on their health and quickly raising alarms in case of emergency. 
+%The same system can simultaneously provide services for closing all shutters at night or to access multimedia content.
+%All these services constantly evolve after their initial deployment and thus their behavior and requirements regarding resource consumption may change accordingly.
+%For these environments, where services featuring various degrees of criticality share the same execution environments and thus the same resources, a mechanism to guarantee resource access and priority is required.
+
+\textbf{Cgroups} (control groups) is a Linux kernel feature to limit, account, and isolate the resource usage of processes. 
+It provides a low-level API to access properties on resource usage that allow to i) limit memory consumption per task, 
+ii) assign a minimum percentage of CPU time to the task,
+iii) establish a minimum and maximum throughput for I/O block devices and network throughput per task, and
+iv) measure the resources a task uses.
+Cgroups are used in particular in the context of lightweight process virtualization (e.g., OpenVZ, LXC).
+
+
+\textbf{Scapegoat} provides an application-level adaptive resource monitoring framework~\cite{gonzalezherrera:hal-00983045}.
+Each component is augmented with a contract that specifies its resource usage, such as peak CPU and memory consumption.
+The framework adjusts the monitoring level to minimize overhead while still allowing precise accounting when needed.
+The adjustment is done by selecting, through a heuristic, components that should be deeply monitored using intrusive instrumentation to check their contracts, while using a lightweight monitoring mode the rest of the time.
+%Furthermore, Scapegoat proposed a heuristic that leverages information produced by the Models@runtime approach to quickly predict the faulty components.
+
+
+%They are considered one of the building blocks to support Linux containers.
+

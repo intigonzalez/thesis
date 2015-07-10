@@ -1,0 +1,73 @@
+
+\pgfplotstableread{
+{Data Size}    {NIO}   {Shared Memory}
+0	6.298	1.58	
+1	6.678	0.92	
+1.5849625007	6.27	0.921	
+2	6.914	1.012
+2.5849625007	6.263	0.909
+3	6.92	0.911
+3.5849625007	7.14	0.918
+3.7004397181	6.678	0.918
+4	6.555	0.914
+4.2479275134	6.536	0.917
+4.3923174228	8.42	0.926
+4.5849625007	6.243	0.924
+4.7548875022	6.325	0.921
+4.8579809951	6.324	0.921
+5	6.243	0.915
+5.1292830169	8.477	0.917
+5.4918530963	7.925	0.925
+5.5849625007	7.552	0.915
+5.672425342	6.842	0.958
+5.9307373376	8.49	0.997
+6	8.484	1.199
+6.0660891905	8.448	1.083
+6.5391588111	8.467	0.946
+6.5849625007	6.901	0.922
+6.6293566201	8.48	1.104
+6.9657842847	8.481	0.932
+7	7.184	0.949
+}\datatable
+
+%\newcommand\test[1]{
+%\pgfmathsetmacro{\var}{#1}
+%\pgfmathparse{\varDelta*2} \pgfmathresult}
+
+\definecolor{light-gray}{gray}{0.35}
+
+\begin{tikzpicture}
+    \begin{axis}[
+    every axis legend/.append style={nodes={right}},
+    width= 1\columnwidth,
+    height=3.8cm,
+    xlabel={Message Size (bytes)},
+    ylabel={usec},
+    %y label style={pos=east},
+    y label style={at={(0.14, 0.5)}},
+    x label style={at={(0.5, 0.08)}},
+    legend pos=north west,
+    legend style={anchor=north west,font=\tiny},
+    xtick={0,2,4,6,7},
+    %xmode=log,
+    %log basis x={2},
+    scaled y ticks = false,
+    y tick label style={
+    	/pgf/number format/1000 sep = \thinspace
+    },
+    x tick label style={font=\tiny},
+    scaled x ticks=manual:{}{%
+      	\pgfmathparse{pow(2,#1)}%
+    },
+    %xticklabel={\pgfmathprintnumber\tick },
+    %scaled y ticks=manual:{}{%
+    %      	\pgfmathparse{#1/1000}%
+    %},
+    yticklabel={\pgfmathprintnumber\tick},
+    ]
+    	\addplot [mark=+,color=black,mark size =1] table[y={Shared Memory}, x = {Data Size}] {\datatable};
+    	%\addlegendentry{Shared Memory}[minimum height=1.9in];
+    	\addplot [mark=none,color=gray] table[y={NIO}, x ={Data Size}] {\datatable};
+    	%\addlegendentry{NIO}[minimum height=1.9in];
+    \end{axis}
+\end{tikzpicture}

@@ -1,0 +1,32 @@
+
+\pgfplotstableread{
+{Components}   {NIO}   {Shared Memory} 
+1        17.12		16.328
+2		  31.74		26.693
+4        62.16		33.056 
+8        105.235		60.2813
+16		253.075		105.067
+32		487.856		206.504
+64		942.836		435.61
+}\Rapperswil
+
+\begin{tikzpicture}
+    \begin{axis}[
+    width=0.75\columnwidth,
+    height=4cm,
+    x tick label style={/pgf/number format/1000 sep=},
+    xlabel={Consumers},
+    ylabel={Seconds},
+%    ytick scale label code/.code={$\times$bn\EUR{}},
+    legend pos=outer north east,
+    legend style={anchor=north west,font=\tiny},
+    legend columns=1,
+    %legend style={text width=1.8cm}
+    mark size=1.5
+    ]
+    	\addplot[mark=x, color = red] table[y={Shared Memory}, x={Components}] {\Rapperswil};
+    	\addlegendentry{Shared Memory}[minimum height=1.9in];
+    	\addplot [mark=*, color = brown] table[y={NIO}, x={Components}] {\Rapperswil};
+    	\addlegendentry{NIO};
+    \end{axis}
+\end{tikzpicture}

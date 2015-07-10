@@ -1,0 +1,43 @@
+
+\pgfplotstableread{
+{Components}   {NIO+Builtin} {NIO+FST} {Shared Memory+Builtin} {Shared Memory+FST}
+1	9.5757382966045	21.5430618770379	9.7620268732395	25.9297426880135
+2	7.6422174248457	17.5126876795335	7.5310355481145	21.0667494056227
+3	5.250704274339	12.9178921978644	6.0802882854381	16.15260490071
+4	4.3413147942753	10.0750437619601	4.5948850025035	11.7925202756171
+5	3.4491399072965	8.539957899374	3.6971062586641	10.2725891101392
+6	2.7280490283444	7.0238142280927	3.0884059889541	7.92238942117
+7	2.3306217714334	5.6761283469114	2.7639583086961	7.0266894534711
+8	2.0645411102461	5.2233197450063	2.3809104485843	5.9730099510704
+}\Rapperswil
+
+\begin{tikzpicture}
+    \begin{axis}[
+    every axis legend/.append style={nodes={right}},
+    width=0.9\columnwidth,
+    height=4.0cm,
+    x tick label style={/pgf/number format/1000 sep=},
+    xlabel={Consumers},
+    ylabel={k msg/sec},
+    y label style={at={(0.05, 0.5)}},
+	scaled y ticks = false,
+%	y tick label style={
+%	    	/pgf/number format/1000 sep = \thinspace
+%	},
+	%legend pos=north west,
+    legend style={anchor=north west,font=\tiny},
+    legend style={at={(0.55,0.95)}},
+    legend columns=1,
+    %legend style={text width=1.8cm}
+    mark size=1.5
+    ]
+    \addplot [mark=+, color = black] table[y={Shared Memory+FST}, x={Components}] {\Rapperswil};
+    \addlegendentry{Shared Memory+FST};
+    \addplot [mark=*, color= gray] table[y={NIO+FST}, x={Components}] {\Rapperswil};
+    \addlegendentry{NIO+FST};
+    \addplot[mark=*, color = black] table[y={Shared Memory+Builtin}, x={Components}] {\Rapperswil};
+    \addlegendentry{Shared Memory+Builtin}[minimum height=1.9in];    	    
+    \addplot [mark=none, color = gray] table[y={NIO+Builtin}, x={Components}] {\Rapperswil};
+    \addlegendentry{NIO+Builtin};	
+    \end{axis}
+\end{tikzpicture}

@@ -1,0 +1,237 @@
+\section{Evaluation} \label{sec:evaluation}
+
+%The Squirrel guidelines can be applied to component-based models for different platforms, but in this section we focus on evaluating our implementation for Kevoree.
+
+This section presents experiments that determine the performance of our reference implementation.
+We evaluate performance and overhead using systematic, full isolation of components using resource containers.
+We also compare different design decisions presented in the previous section.
+%We also compare the performance of the various design choices presented in the previous subsection against each other.
+%We therefore perform the three following experiments:
+The experiments include:
+\begin{itemize}
+ \item Measuring the CPU and memory overhead introduced by \textit{Scapegoat} and \textit{component isolation}.
+ \item Determining how isolation affects deployment time and to what extent process cloning and our high-performance IPC alleviate it.
+ \item Evaluating the extent to which known high-performance IPC techniques reduce communication overhead due to component isolation.
+\end{itemize}
+
+
+%To obtain comparable and reproducible results, 
+We used the same hardware across all experiments: a laptop with a 2.90GHz Intel(R) i7-3520M processor, running Linux with a 64 bit kernel 3.13.5 and 8GiB of RAM.
+We used the HotSpot JVM v1.7.0-55, and Kevoree framework v5.0.1.
+
+\subsection{Evaluating performance overhead}
+In section \ref{overview-memory-reservation}, we describe two approaches for memory reservation: 1) Scapegoat \cite{gonzalezherrera:hal-00983045}, an instrumentation-based resource management container, and 2) using isolated processes with cgroups. %with memory constraints as containers.  
+%Throughout this paper, we have highlighted the advantages and drawbacks of both approaches regarding deployment time and inter-component communication degradation, but so far, we barely considered CPU and memory consumption.
+%In this section we compare the overhead produced by these two approaches in terms of CPU and memory consumption.
+%Since we tackle resource management in component-based systems, it is necessary to conduct the experiments with more than one component.
+To compare the overhead produced by these approaches, we devised use cases that contain two components that execute a test from the Dacapo Benchmark Suite~\cite{Blackburn:2006:DBJ:1167473.1167488}.
+These components run in parallel to simulate realistic conditions where components demand resources simultaneously.
+The use cases are executed with different settings, as follows:
+\begin{enumerate}
+\item Using cgroups to assign 50\% of the CPU time to each component (no memory monitoring).
+Both components run on a single Kevoree instance with 2GiB maximum heap size.
+This is the baseline because there is no CPU nor memory overhead.
+Nevertheless, execution time is affected due to the CPU allotment.
+We call this setting \textit{Memory unaware}.
+
+\item Using \textit{Scapegoat} to monitor per-component memory consumption and bounding CPU consumption to 50\%.
+Again, both components run on the same Kevoree instance with 2GiB maximum heap size.
+
+\item Isolating each component in a new process, allotting 256MiB of memory to each process, and bounding its CPU consumption to 50\%.
+\end{enumerate}
+
+%\input{code/setting.tex}
+
+%\begin{lstlisting}[escapeinside={(*}{*)},
+%caption=Dacapo-Component-Type executes a benchmark,
+%label=lst:component-with-benchmark,
+%float=!h]
+%run (String benchmarkTestName)
+%	sleep(5) // wait for the other components
+%	// if channel's latency is low, this is a sort of barrier
+%	if master
+%		channel.send(time)
+%		time <- channel.receive
+%	else
+%		time <- channel.receive
+%		channel.send(time)
+%	// after the barrier, both components are synchronized
+%	elapsedTime = dacapo.execute(benchmarkTestName)
+%\end{lstlisting}
+
+To measure CPU overhead, we use the result reported by each \textit{Dacapo test} and we keep the maximum value.
+Measuring memory overhead is more complex because the garbage collector hides the real consumption.
+We address this by approximating the consumption with the usage after each major garbage collection.
+As there are many collection cycles during the use case's execution, and because we may have more than one runtime involved, we define a scheme to aggregate the values: the consumption $MC_i$ of every Kevoree instance is the maximum among all the usages reported after each collection, while the final consumption is defined as $\sum_{i \in \mathit{Isolates}} {\textit{MC}}_i$.
+
+Figure \ref{fig:cpu-overhead} depicts the CPU overhead for \textit{Scapegoat} and \textit{Isolating components}.
+%As an instrumentation based solution,
+The overhead of \textit{Scapegoat} was expected because of the instrumentation.
+On average, it performs 2.27 times worse than \textit{Memory Unaware}, which is consistent with \cite{gonzalezherrera:hal-00983045}.
+In contrast, isolating components produces no appreciable CPU overhead for these use cases (small differences are likely due to environment fluctuations) because the components do not interact.
+
+%Memory consumption is affected by both \textit{ScapeGoat} and \textit{Squirrel}.
+Both \textit{ScapeGoat} and \textit{Isolating components} cause memory overhead.
+As shown in figure \ref{fig:memory-overhead}, \textit{ScapeGoat's} is higher than when using component isolation.
+\textit{Isolating components}'s overhead is the result of JVM duplication and is, on average, 99\% over baseline.
+Meanwhile, \textit{ScapeGoat's} overhead is due to tagging objects with the identifier of the component that owns it.
+Tagging adds either a field and a finalization method to an object, or wraps the object with a \textit{weak reference} held by the framework, resulting in overhead in the \textit{Permanent Space}.
+%The overhead of these additional structures plus the burden of finalization methods in the \textit{Permanent Space}.
+As seen in the experiments, memory overhead due to tagging is more important than CPU. 
+
+\begin{figure*}
+
+\subfloat[][]{
+	\centering
+	\begin{minipage}{0.48\textwidth}
+	\input{chapter4/figures/cpu-overhead.tex}
+	\end{minipage}
+	\label{fig:cpu-overhead}
+}%
+\subfloat[][]{
+	\centering
+	\begin{minipage}{0.48\textwidth}
+	\input{chapter4/figures/memory-overhead.tex}
+	\end{minipage}
+	\label{fig:memory-overhead}
+}%
+%\hspace{4cm}
+\caption{In \ref{fig:cpu-overhead}) and \ref{fig:memory-overhead}), we show CPU and memory overhead, respectively, caused by resource management during the execution of Dacapo benchmarks.}
+\vspace{-0.5cm}
+\end{figure*}
+
+
+In synthesis, \textit{Isolating components} produces no CPU overhead, and low memory overhead in comparison to the performance of the same component model without resource management features.
+
+
+\subsection{Evaluating starting time}
+%In this subsection w
+We compare the performance of three methods to deploy components: 1) in a single JVM (the baseline), 2) in isolated JVMs, starting processes from scratch, and 3) in isolated JVMs using CRIU to clone processes.
+%a preexistent Kevoree runtime.
+%In this experiment, 
+We study the scalability of each method
+% when many components are deployed.
+ by deploying many components.
+To do so, we created a template architectural model with two component types: \textit{Component A} runs in the \textit{management runtime} and deploys a new architectural model with resource-aware contracts; and \textit{Components B} records the timestamp after initialization is completed.
+The experiment is as follows:
+\begin{enumerate}
+\item Component \textit{A} is deployed in the \textit{management runtime}. Afterwards, it forces the deployment of a new model with components of type \textit{B}.
+\item After deployment, each component $c \in List_B$ sends \textit{A} the timestamp $T_c$.
+\item Component \textit{A} collects $T_c - T_0, \forall {c \in List_B}$, where $T_0$ is the timestamp before deployment.
+\end{enumerate}
+ 
+\begin{figure}
+\centering
+\input{chapter4/figures/starting-time-final-comparison.tex}
+\caption{Average deployment time per component using different strategies}
+\label{fig:starting-kevorees-final}
+\vspace{-0.5cm}
+\end{figure}
+
+Figure \ref{fig:starting-kevorees-final} shows the results for a varying number of components.
+As expected, using plain Kevoree is faster than deploying with other methods.
+Leveraging isolation with CRIU's process cloning is, on average, 19.75 times worse than plain Kevoree, and this overhead grows with the number of components.
+This is because CRIU-based deployment still spawns new threads in order to clone and create new instances. 
+Nevertheless, using process cloning instead of starting processes from scratch reduces the isolation overhead by a factor of 41.79.
+
+\subsection{Evaluating communication}
+We present two experiments that highlight how we mitigate the impact of isolation on communication performance. % by using well-established technologies.
+First, we use a micro-benchmark to compare the performance of a shared-memory based IPC queue and a socket-based IPC queue. % while sending blocks of data.
+Then we benchmark the performance gain of using a specialized serialization framework that uses POJO structures, which is a common way to encode the business logic in real-life applications.
+   
+We evaluate our channel by comparing its performance against built-in TCP communication, which is a widely used IPC mechanism in Java.
+To measure latency and bandwidth, the metrics we use for comparison, we developed a Netpipe clone~\cite{Snell96netpipe:a} for Java\footnote{Source code at: http://goo.gl/h7OVm5}.
+The clone is delivered with three protocols: 1) socket-based, 2) our channel, and 3) a protocol for \textit{named pipes}.
+The first uses simple TCP sockets with synchronous operation in its implementation. 
+The second requires two channels, configured to use a queue with 128 chunks of 512Kb, because our channel is unidirectional.
+Figure \ref{fig:latency-raw-communication} shows the latency for messages shorter than 128 bytes.
+Memory-based communication outperforms NIO-sockets for all the values in the range.
+Likewise, figure \ref{fig:badnwidth-raw-communication} shows the throughput of both mechanisms.
+In general, memory-based communication behaves better than TCP sockets.
+Our approach outperforms sockets by an average of 652.36\% for messages shorter than 512 bytes.
+Meanwhile, it behaves on average 46.26\% better for messages between 1 Mb and 64 Mb, which is the range where the benefits of large copies surpass the disadvantages of having a synchronized queue.
+
+\begin{figure*}
+\centering
+\subfloat[][]{
+	\begin{minipage}{0.49\textwidth}
+	\input{chapter4/figures/latency-raw-communication.tex}
+	\end{minipage}
+	\label{fig:latency-raw-communication}
+}
+\subfloat[][]{
+	\begin{minipage}{0.49\textwidth}
+	\input{chapter4/figures/raw-communication.tex}
+	\end{minipage}
+	\label{fig:badnwidth-raw-communication}
+}
+%\hspace{4cm}
+%\subfloat[][]{
+%	\begin{minipage}{0.47\textwidth}
+%	\input{figures/latency-raw-communication-8-consumers.tex}
+%	\end{minipage}
+	
+%	\label{fig:latency-raw-communication-8-consumers}
+%}
+%\subfloat[][]{
+%	\begin{minipage}{0.47\textwidth}
+%	\input{figures/raw-communication-8-consumers.tex}
+%	\end{minipage}
+%	\label{fig:badnwidth-raw-communication-8-consumers}
+%}
+\caption{Comparing our queue against another IPC mechanism. Latency and bandwidth for a single receiver are shown in \ref{fig:latency-raw-communication}) and \ref{fig:badnwidth-raw-communication}).
+%Figures \ref{fig:latency-raw-communication-8-consumers}) and \ref{fig:badnwidth-raw-communication-8-consumers}) show latency and bandwidth respectively for eight receivers.
+\vspace{-0.5cm}
+}
+\end{figure*}
+
+%We also evaluate latency and bandwidth when the number of receivers grows because the design of the shared-memory channel was driven by the need to provide multicast semantics.
+%We design and implement a \textit{Netpipe extension} with a slight modification in the way bandwidth is calculated as well as new protocols in order to support collective communication.
+%The protocol for our queue based on shared-memory uses two queues; the first one to send data from the transmitter to many receivers and the second one to echo data back from receivers to the transmitter.
+%In this way, we are evaluating the overhead due to synchronization on both sides of the queue.
+%To perform the comparison, we chose a single transmitter with eight receivers as a simple way to see if the channel scales. 
+%As shown in figure \ref{fig:latency-raw-communication-8-consumers}, our approach's latency is comparable to sockets for short messages.
+%This is probably an effect of synchronization; hence, using a lock-less queue should reduce such values.
+%On the other hand, figure \ref{fig:latency-raw-communication-8-consumers} depicts the bandwidth.
+%For both IPC mechanisms the values between 1 and 512 bytes are alike, but our approach slightly outperforms NIO sockets by 0.66\% on average.
+%The point where our approach surpasses NIO sockets is close to 8Kb and for long messages from 2Mb to 64Mb it behaves on average 21.64\% better.
+ 
+Latency between Java isolates is also affected by the time spent marshaling and unmarshaling messages.
+To evaluate the benefits of \textit{fast Serialization}, we designed a micro-benchmark that sends a POJO structure, 16 bytes long, back and forth a million times. \footnote{Source code at: http://goo.gl/FXuUxc}
+We then measure the effect of marshaling for different numbers of consumers.
+Figure \ref{fig:multicast-communication} shows the results of using built-in serialization against \textit{fast Serialization} for up to 8 components.
+We chose this value because in component-based systems it is unlikely to find more interconnections within a single node.
+The figure depicts the results in \textit{messages per second} because different serialization methods flatten the same POJO structure into buffers with varying sizes.
+%Thus, we cannot use plain bandwidth as a measure because the IPC mechanism transmits different amounts of data.
+The comparison includes two serialization and two IPC mechanisms.
+However, the effect of the IPC mechanism is low due to the fact that serialization dominates the execution times.
+As a result, curves with the same serialization mechanism are close no matter what IPC mechanism we use.
+%We can leverage this knowledge to automatically select an IPC mechanism depending on the kind of data it transmits.
+%For instance, in several cases it is possible to statically know if a channel sends raw data, such as arrays, or complex POJO structures that require serialization.
+%In the former case, it is advised to select a memory-based channel due to the performance gains, while in the latter case, both memory and socket based channels are suitable for the job, although a socket-based channel consumes less memory.
+
+\begin{figure}
+\centering
+\input{chapter4/figures/multicast-serialization-communication.tex}
+\caption{Communication throughput for different channels.}
+\label{fig:multicast-communication}
+\vspace{-0.5cm}
+\end{figure}
+
+%\paragraph{Communication performance in Kevoree}
+
+\subsection{Synthesis and Threats to validity} \label{sec:synthesis-evaluation}
+We evaluated our implementation of Squirrel regarding three aspects: overall performance overhead, starting time and communication performance.
+We believe that the performance of our reference implementation is good enough to enable resource management, while not excessively affecting the application's behavior.  
+Although some metrics exhibit high overhead, we think that the trade-off
+% between no-overhead and 
+given the new features offered in Squirrel is 
+worth considering. % if we analyze the practical implications of each result.
+Memory overhead is the biggest concern. % because it affects one of the resources managed by the framework.
+Nevertheless, isolating components within separate processes greatly reduces the memory overhead and eliminates CPU overhead in comparison to the instrumentation-based solution from Scapegoat.
+
+A threat to validity of our experimental protocol is that we evaluate different features as orthogonal concerns. % assuming that any improvement to a particular feature will also improve the overall performance.
+Our experiments do not study the impact of all of Squirrel's features together in a real scenario, although the assumption of orthogonality of each concern is reasonable, particularly because Squirrel mainly relies on the well tested cgroups to enable CPU and I/O reservation. 
+%In this paper, we do not evaluate to a large experiment the ability of cgroups to actually perform these reservations.
+%We believe that this is a reasonable assumption since cgroups is widely used in different application domains.
+

@@ -1,0 +1,161 @@
+\usetikzlibrary{shadows,arrows}
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+% Define block styles  
+\tikzstyle{component_sty}=[draw, fill=white!20, text width=5em, text centered,
+  minimum height=1.4em, rounded corners]
+
+\tikzstyle{deployment_node_sty}=[draw, thin, text width=2.5em, text centered,
+  minimum height=1.4em]
+
+\tikzstyle{physical_node_sty}=[deployment_node_sty, fill=yellow!20, text width=2.5em, dashed]
+
+\tikzstyle{virtual_node_sty}=[deployment_node_sty, fill=gray!30, dotted]
+
+\tikzstyle{line} = [draw, thick, color=black!80, -latex']
+
+\tikzstyle{channel_sty}=[draw, fill=green!20, text width=5em, text centered,
+  minimum height=1.4em, dashed]
+
+
+% commands
+\newcommand{\component}[2]{node (p#1) [component_sty]
+  {{\scriptsize{#2}}}}
+
+\newcommand{\virtualNode}[2]{node (p#1) [virtual_node_sty]
+  {{\scriptsize{#2}}}}
+
+
+
+\begin{tikzpicture}[scale=0.9,transform shape]
+
+\begin{pgfonlayer}{foreground}
+	\path \component{1} {Video Recorder};
+	\path (p1.south) + (0,1) \component{2} {Video coder};
+	\path (p1.east) + (2.2,0.0) \component{3} {Video storage};
+\end{pgfonlayer}
+
+%\path \virtualNode{1} {node0};
+
+% virtual node 0
+\path (p2.west)+(-0.16,0.6) node (g) {};
+\path (p1.east)+(0.16,-0.8) node (h) {};
+\path[virtual_node_sty] (g) rectangle (h) ;
+%\path (h) +(-1.3,0.2) node (asrs) {java node 0};
+\begin{pgfonlayer}{background}
+% physical node 0
+        \path (g.west)+(-0.12,0.24) node (g) {};
+        \path (h.east)+(0.12,-0.24) node (h) {};
+        \path[physical_node_sty] (g) rectangle (h);
+     	\path (h) +(-1.6,-0.2) node (asrs) {device 0};         
+\end{pgfonlayer}
+
+% virtual node 1
+\path (p3.west)+(-0.16,0.6) node (g) {};
+\path (p3.east)+(0.16,-0.8) node (h) {};
+\path[virtual_node_sty] (g) rectangle (h) ;
+\path (h) +(-1.3,0.2) node (asrs) {java node 1};
+\begin{pgfonlayer}{background}
+% physical node 1
+        \path (g.west)+(-0.12,0.24) node (g) {};
+        \path (h.east)+(0.12,-0.24) node (h) {};
+        \path[physical_node_sty] (g) rectangle (h);
+     	\path (h) +(-1.6,-0.2) node (asrs) {device 1};         
+\end{pgfonlayer}
+
+%channels
+\path (p2) + (-2.5,-0.2) node (channel1) {};
+\path [line] (p1.west) -- (channel1) ;
+\path [line] (channel1) --  (p2.west);
+\path[channel_sty] (channel1) circle (0.4);
+
+\path (p1) + (2.3,2.1) node (channel2) {};
+\path [line] (p2.north) -- (channel2) -- (p3.north);
+\path[channel_sty] (channel2) circle (0.4);
+
+\path (h) node (temp1) {};
+
+%AFTER MODEL TRANSFORMATION
+
+\path (temp1.east) + (0.1,4) node(l0) {}; 
+\path (temp1.east) + (0.1,-1) node(l1) {};
+\path[draw, thick, color=black!80, dashed] (l0) -- (l1);
+
+\begin{pgfonlayer}{foreground}
+	\path (temp1.east) + (2,1) \component{1} {Video Recorder};
+	\path (p1.east) + (1.6,0) \component{2} {Video coder};
+	\path (p2.east) + (2.2,0) \component{3} {Video storage};
+\end{pgfonlayer}
+
+% virtual node 0
+\path (p1.west)+(-0.16,0.6) node (g) {};
+\path (p1.east)+(0.16,-0.8) node (h) {};
+\path[virtual_node_sty] (g) rectangle (h) ;
+\path (h) +(-1.3,0.2) node (asrs) {java node 0};
+% virtual node 1
+\path (g) node (gTemp) {};
+\path (p2.west)+(-0.16,0.6) node (g) {};
+\path (p2.east)+(0.16,-0.8) node (h) {};
+\path[virtual_node_sty] (g) rectangle (h) ;
+\path (h) +(-1.3,0.2) node (asrs) {java node 1};
+\begin{pgfonlayer}{background}
+% physical node 0
+        \path (gTemp.west)+(-0.12,0.24) node (g) {};
+        \path (h.east)+(0.12,-0.24) node (h) {};
+        \path[physical_node_sty] (g) rectangle (h);
+     	\path (h) +(-3,-0.2) node (asrs) {device 0};         
+\end{pgfonlayer}
+
+% virtual node 1
+\path (p3.west)+(-0.16,0.6) node (g) {};
+\path (p3.east)+(0.16,-0.8) node (h) {};
+\path[virtual_node_sty] (g) rectangle (h) ;
+\path (h) +(-1.3,0.2) node (asrs) {java node 2};
+\begin{pgfonlayer}{background}
+% physical node 1
+        \path (g.west)+(-0.12,0.24) node (g) {};
+        \path (h.east)+(0.12,-0.24) node (h) {};
+        \path[physical_node_sty] (g) rectangle (h);
+     	\path (h) +(-1.6,-0.2) node (asrs) {device 1};         
+\end{pgfonlayer}
+
+%channels
+\path (p2) + (-1.6,2.1) node (channel1) {};
+\path (p2.north)+(-0.7,-0.2) node (tt0) {};
+\path [line] (p1.north) -- (channel1) -- (tt0);
+\path[channel_sty] (channel1) circle (0.4);
+
+\path (p3) + (-1.6,2.1) node (channel2) {};
+\path [line] (p2.north) + (0.7,0) -- (channel2) -- (p3.north);
+\path[channel_sty] (channel2) circle (0.4);
+
+
+\path (h) node (temp1) {};
+
+% legend
+% physical nodes
+\path (temp1)+(1.0,2.8) node (h) {};
+\path (h)+(0.8,0.8) node (g) {};
+\path[physical_node_sty] (g) rectangle (h);
+\path[right,text width=4em] (g) +(0,-0.4) node (asrs) {physical devices};
+
+% virtual nodes
+\path (h)+(0,-0.9) node (h) {};
+\path (g)+(0,-0.9) node (g) {};
+\path[virtual_node_sty] (g) rectangle (h);
+\path[right] (g) + (0.0,-0.4) node (asrs) {virtual nodes};
+
+% components
+\path (h)+(0,-0.9) node (h) {};
+\path (g)+(0,-0.9) node (g) {};
+\path[component_sty] (g) rectangle (h);
+\path[right] (g) +(0,-0.4) node (asrs) {components};
+
+% channels
+\path (g)+(-0.4,-1.35) node (g) {};
+\path[channel_sty] (g) circle (0.4);
+\path[right] (g) +(0.38,-0.0) node (asrs) {channels};
+
+\end{tikzpicture}

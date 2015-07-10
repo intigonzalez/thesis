@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   font-size="13"
+   width="683.06805"
+   height="361.81934"
+   id="svg2"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="image.svg"
+   style="font-size:13px;font-family:Arial">
+  <metadata
+     id="metadata77">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs75">
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient"
+       id="linearGradient3054"
+       spreadMethod="pad"
+       x1="9.4740324"
+       y1="32.905739"
+       x2="9.4740324"
+       y2="123.68018"
+       gradientTransform="scale(2.2693611,0.44065265)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient"
+       id="linearGradient3056"
+       spreadMethod="pad"
+       x1="157.48126"
+       y1="36.967892"
+       x2="157.48126"
+       y2="138.94827"
+       gradientTransform="scale(2.5495098,0.39223227)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       id="greyGradient-6"
+       x1="0"
+       y1="0"
+       x2="0"
+       y2="1"
+       spreadMethod="pad">
+      <stop
+         offset="0%"
+         stop-color="#FFFFFF"
+         stop-opacity="1"
+         id="stop10-8" />
+      <stop
+         offset="100%"
+         stop-color="#E5E5E5"
+         stop-opacity="1"
+         id="stop12-1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3085"
+       x1="0"
+       y1="0"
+       x2="0"
+       y2="1"
+       spreadMethod="pad">
+      <stop
+         offset="0%"
+         stop-color="#FFFFFF"
+         stop-opacity="1"
+         id="stop3087" />
+      <stop
+         offset="100%"
+         stop-color="#E5E5E5"
+         stop-opacity="1"
+         id="stop3089" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3091"
+       x1="0"
+       y1="0"
+       x2="0"
+       y2="1"
+       spreadMethod="pad">
+      <stop
+         offset="0%"
+         stop-color="#FFFFFF"
+         stop-opacity="1"
+         id="stop3093" />
+      <stop
+         offset="100%"
+         stop-color="#E5E5E5"
+         stop-opacity="1"
+         id="stop3095" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3097"
+       x1="0"
+       y1="0"
+       x2="0"
+       y2="1"
+       spreadMethod="pad">
+      <stop
+         offset="0%"
+         stop-color="#FFFFFF"
+         stop-opacity="1"
+         id="stop3099" />
+      <stop
+         offset="100%"
+         stop-color="#E5E5E5"
+         stop-opacity="1"
+         id="stop3101" />
+    </linearGradient>
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(2.4882075,0.40189575)"
+       y2="172.93042"
+       x2="105.09574"
+       y1="3.7323112"
+       x1="105.09574"
+       spreadMethod="pad"
+       id="linearGradient3154"
+       xlink:href="#greyGradient-6"
+       inkscape:collect="always" />
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(1.337955,0.74740932)"
+       y2="110.38128"
+       x2="1.121114"
+       y1="2.0069325"
+       x1="1.121114"
+       spreadMethod="pad"
+       id="linearGradient3156"
+       xlink:href="#greyGradient-6"
+       inkscape:collect="always" />
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(1.4229165,0.70278193)"
+       y2="273.91144"
+       x2="43.221088"
+       y1="158.6552"
+       x1="43.221088"
+       spreadMethod="pad"
+       id="linearGradient3158"
+       xlink:href="#greyGradient-6"
+       inkscape:collect="always" />
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(1.7320508,0.57735027)"
+       y2="333.41977"
+       x2="249.12663"
+       y1="193.12367"
+       x1="249.12663"
+       spreadMethod="pad"
+       id="linearGradient3160"
+       xlink:href="#greyGradient-6"
+       inkscape:collect="always" />
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1680"
+     inkscape:window-height="1001"
+     id="namedview73"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.7485577"
+     inkscape:cx="343.95471"
+     inkscape:cy="153.82961"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <desc
+     id="desc4">UML diagram model</desc>
+  <g
+     id="_jnJbMlXdEeSu48YT12vqpQ"
+     transform="translate(0.2195573,192.31935)">
+    <defs
+       id="defs7">
+      <linearGradient
+         id="greyGradient"
+         x1="0"
+         y1="0"
+         x2="0"
+         y2="1"
+         spreadMethod="pad">
+        <stop
+           offset="0%"
+           stop-color="#FFFFFF"
+           stop-opacity="1"
+           id="stop10" />
+        <stop
+           offset="100%"
+           stop-color="#E5E5E5"
+           stop-opacity="1"
+           id="stop12" />
+      </linearGradient>
+      <linearGradient
+         id="packageGradient"
+         x1="967.13019"
+         y1="46.911213"
+         x2="967.13019"
+         y2="74.569847"
+         spreadMethod="pad"
+         gradientTransform="scale(0.54232614,1.8439089)"
+         gradientUnits="userSpaceOnUse">
+        <stop
+           offset="0%"
+           stop-color="#FFFFFF"
+           stop-opacity="1"
+           id="stop15" />
+        <stop
+           offset="100%"
+           stop-color="#EFE9DE"
+           stop-opacity="1"
+           id="stop17" />
+      </linearGradient>
+    </defs>
+    <g
+       id="_nVeQUDgLEDKYbu-ZhAM8Ig">
+      <polyline
+         points="125,36  125,165 "
+         id="polyline20"
+         style="fill:none;stroke:#a29e9e;stroke-width:1;stroke-dasharray:10, 5" />
+      <rect
+         x="22"
+         y="15"
+         width="205"
+         height="39"
+         rx="0"
+         ry="0"
+         id="rect22"
+         style="fill:url(#linearGradient3054);stroke:#cccccc;stroke-width:1" />
+      <text
+         x="125"
+         y="36"
+         font-style="normal"
+         font-weight="bold"
+         id="text24"
+         style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656">manager: ScapeGoatManager</text>
+    </g>
+    <g
+       id="_7JxhQDgLEDKYbu-ZhAM8Ig">
+      <polyline
+         points="532,36  532,169 "
+         id="polyline27"
+         style="fill:none;stroke:#a29e9e;stroke-width:1;stroke-dasharray:10, 5" />
+      <rect
+         x="402"
+         y="15"
+         width="259"
+         height="39"
+         rx="0"
+         ry="0"
+         id="rect29"
+         style="fill:url(#linearGradient3056);stroke:#cccccc;stroke-width:1" />
+      <text
+         x="532"
+         y="36"
+         font-style="normal"
+         font-weight="bold"
+         id="text31"
+         style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656">st: ScapeGoatConcreteHeuristicSample</text>
+    </g>
+    <g
+       id="_yVWBwDgMEDKYbu-ZhAM8Ig">
+      <polygon
+         points="105,87 2,87 2,137 120,137 120,102 "
+         id="polygon34"
+         style="fill:#ffffff;stroke:#cccccc;stroke-width:1" />
+      <text
+         x="6"
+         y="92"
+         id="text36"
+         style="fill:#2d2d2d">
+        <tspan
+           x="6"
+           y="104"
+           font-size="12"
+           id="tspan38"
+           style="font-size:12px">Strategy pattern to</tspan>
+        <tspan
+           x="6"
+           y="116"
+           font-size="12"
+           id="tspan40"
+           style="font-size:12px">integrate a new</tspan>
+        <tspan
+           x="6"
+           y="128"
+           font-size="12"
+           id="tspan42"
+           style="font-size:12px">heuristic</tspan>
+      </text>
+      <polygon
+         points="105,87 105,102 120,102 "
+         id="polygon44"
+         style="fill:#cccccc;stroke:#cccccc;stroke-width:1" />
+    </g>
+    <g
+       id="_Q3o74jgMEDKYbu-ZhAM8Ig">
+      <rect
+         x="525"
+         y="87"
+         width="14"
+         height="50"
+         rx="0"
+         ry="0"
+         id="rect47"
+         style="fill:url(#packageGradient);stroke:#c2b79f;stroke-width:1" />
+    </g>
+    <g
+       id="_Q3o74zgMEDKYbu-ZhAM8Ig">
+      <polyline
+         points="525,137 125,137"
+         id="polyline50"
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:10, 5" />
+      <g
+         transform="translate(125,137)"
+         id="g52">
+        <g
+           transform="matrix(0,-1,1,0,0,0)"
+           id="g54">
+          <polyline
+             points="-4,8 0,0 4,8"
+             id="polyline56"
+             style="fill:none;stroke:#000000;stroke-width:1" />
+        </g>
+      </g>
+    </g>
+    <g
+       id="_Q3pi8DgMEDKYbu-ZhAM8Ig">
+      <polyline
+         points="125,87 525,87"
+         id="polyline59"
+         style="fill:none;stroke:#000000;stroke-width:1" />
+      <g
+         id="g61">
+        <text
+           x="162"
+           y="80"
+           font-style="normal"
+           id="text63"
+           style="font-style:normal;fill:#000000">getScapeGoat(currentmodel, modelHistory,failureHistory)</text>
+      </g>
+      <g
+         transform="translate(525,87)"
+         id="g65">
+        <g
+           transform="matrix(0,1,-1,0,0,0)"
+           id="g67">
+          <polyline
+             points="-4,12 0,0 4,12 -4,12"
+             id="polyline69"
+             style="fill:#000000;stroke:#000000;stroke-width:1" />
+        </g>
+      </g>
+    </g>
+    <text
+       x="270"
+       y="121"
+       id="text71"
+       style="fill:#000000">{suspectedComponents}</text>
+  </g>
+  <g
+     transform="translate(-1.5,-1.5)"
+     id="_77W5wTgMEDKYbu-ZhAM8Ig">
+    <defs
+       id="defs7-6">
+      <linearGradient
+         id="linearGradient3105"
+         x1="0"
+         y1="0"
+         x2="0"
+         y2="1"
+         spreadMethod="pad">
+        <stop
+           offset="0%"
+           stop-color="#FFFFFF"
+           stop-opacity="1"
+           id="stop3107" />
+        <stop
+           offset="100%"
+           stop-color="#E5E5E5"
+           stop-opacity="1"
+           id="stop3109" />
+      </linearGradient>
+      <linearGradient
+         id="packageGradient-0"
+         x1="0"
+         y1="0"
+         x2="0"
+         y2="1"
+         spreadMethod="pad">
+        <stop
+           offset="0%"
+           stop-color="#FFFFFF"
+           stop-opacity="1"
+           id="stop15-4" />
+        <stop
+           offset="100%"
+           stop-color="#EFE9DE"
+           stop-opacity="1"
+           id="stop17-9" />
+      </linearGradient>
+    </defs>
+    <g
+       id="_8eXgMDgMEDKYbu-ZhAM8Ig">
+      <rect
+         style="fill:url(#linearGradient3154);stroke:#cccccc;stroke-width:1"
+         x="262"
+         y="2"
+         width="420"
+         height="67"
+         rx="5"
+         ry="0"
+         id="rect20" />
+      <text
+         style="font-size:12px;font-style:normal;font-weight:bold;text-anchor:middle;fill:#696969"
+         x="472"
+         y="20"
+         font-size="12"
+         font-style="normal"
+         font-weight="bold"
+         id="text22">« Interface »</text>
+      <text
+         style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+         x="472"
+         y="38"
+         font-style="normal"
+         font-weight="bold"
+         id="text24-5">HeuristicStrategy</text>
+      <line
+         style="stroke:#cccccc;stroke-width:1"
+         x1="262"
+         y1="44"
+         x2="682"
+         y2="44"
+         id="line26" />
+      <g
+         id="_SHxRkTgNEDKYbu-ZhAM8Ig">
+        <image
+           x="265"
+           y="51"
+           width="16"
+           height="16"
+           xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP///8HBw6Ky1rfD3Ymh0au73Ku62Yag0aq72bPB27fD2b7J3YWh0Ieiz4ahzomk0Z2z2Ki72bPD3L7J23eXyIajz7TE27PD2rTD2maPxbvK38PP32OMwGSMvYamz7PE2LXE10V/vkh/v0d/vEiAvUh+vFGEu1OEvGaEpqC40kaBvUWAukd/ukmBvGGQvmSGqWOEpZ+61QA9cwA8cgA7cQI7cAM8czZ0rT16sEF9s0J9tUSBuE6GuVGFt2OGpmSHp2OEo2WGpWSFpAA8cAA9cAA7bwA8bgA9bgA7bQI8bgI8bD18slCGtWKFo2OGpGSHpQA9bAA7aDR3rAWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADH1d5AAAABYdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wB4m8IIAAAA2UlEQVR42lSPzUoCURhAz/0cUrhjTYzuIu0PicZFy57ABxjQdxR8iQQJYmrTDYJZNEZQC2fGHPIndVyUkGdz4OyO6rCL/Mqkj//Ce8iR8Uge/sJzNUqG+etocH4PqA6TQEpfUzWvlBoOFDyKrsnOLnQi1weAEKRG37iTWWs8iJ9AqN9Ns/0sqL3oVf8YCl7UGO05lbKTDRer0FxZXNL8CE/tNMaHHgLx9+zkU9++gUDXgqK45Z8YH8DHAh3Z9tIGAWFtATUID2GNykFtb7vgq7y3vYV2G3JgMwDzTEnCPC8r9AAAAABJRU5ErkJggg=="
+           id="image29" />
+        <text
+           style="font-style:normal;fill:#000000"
+           x="283"
+           y="63"
+           font-style="normal"
+           id="text31-5">getScapeGoat(Model, Model[1..*], FailureModel): Component[1..*]</text>
+      </g>
+    </g>
+    <g
+       id="_A6cC4DgNEDKYbu-ZhAM8Ig">
+      <rect
+         style="fill:url(#linearGradient3156);stroke:#cccccc;stroke-width:1"
+         x="2"
+         y="2"
+         width="144"
+         height="80"
+         rx="5"
+         ry="0"
+         id="rect34" />
+      <text
+         style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+         x="74"
+         y="20"
+         font-style="normal"
+         font-weight="bold"
+         id="text36-8">ScapeGoatManager</text>
+      <line
+         style="stroke:#cccccc;stroke-width:1"
+         x1="2"
+         y1="26"
+         x2="146"
+         y2="26"
+         id="line38" />
+      <line
+         style="stroke:#cccccc;stroke-width:1"
+         x1="2"
+         y1="32"
+         x2="146"
+         y2="32"
+         id="line40" />
+    </g>
+    <g
+       id="_D5XSIDgNEDKYbu-ZhAM8Ig">
+      <rect
+         style="fill:url(#linearGradient3158);stroke:#cccccc;stroke-width:1"
+         x="62"
+         y="112"
+         width="163"
+         height="80"
+         rx="5"
+         ry="0"
+         id="rect43" />
+      <text
+         style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+         x="144"
+         y="130"
+         font-style="normal"
+         font-weight="bold"
+         id="text45">HeuristicDefaultStrategy</text>
+      <line
+         style="stroke:#cccccc;stroke-width:1"
+         x1="62"
+         y1="136"
+         x2="225"
+         y2="136"
+         id="line47" />
+      <line
+         style="stroke:#cccccc;stroke-width:1"
+         x1="62"
+         y1="142"
+         x2="225"
+         y2="142"
+         id="line49" />
+    </g>
+    <g
+       id="_MtA5EDgNEDKYbu-ZhAM8Ig">
+      <rect
+         style="fill:url(#linearGradient3160);stroke:#cccccc;stroke-width:1"
+         x="432"
+         y="112"
+         width="242"
+         height="80"
+         rx="5"
+         ry="0"
+         id="rect52" />
+      <text
+         style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+         x="553"
+         y="130"
+         font-style="normal"
+         font-weight="bold"
+         id="text54">ScapeGoatConcreteHeuristicSample</text>
+      <line
+         style="stroke:#cccccc;stroke-width:1"
+         x1="432"
+         y1="136"
+         x2="674"
+         y2="136"
+         id="line56" />
+      <line
+         style="stroke:#cccccc;stroke-width:1"
+         x1="432"
+         y1="142"
+         x2="674"
+         y2="142"
+         id="line58" />
+    </g>
+    <g
+       id="_HAR_wDgNEDKYbu-ZhAM8Ig">
+      <polyline
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:10, 5"
+         points="225,123 378,69"
+         id="polyline61" />
+      <g
+         transform="translate(378,69)"
+         id="g63">
+        <g
+           transform="matrix(0.32556815,0.94551858,-0.94551858,0.32556815,0,0)"
+           id="g65-4">
+          <polyline
+             style="fill:#ffffff;stroke:#000000;stroke-width:1"
+             points="-4,12 0,0 4,12 -4,12"
+             id="polyline67" />
+        </g>
+      </g>
+    </g>
+    <g
+       id="_H8Gu0TgNEDKYbu-ZhAM8Ig">
+      <polyline
+         style="fill:none;stroke:#000000;stroke-width:1"
+         points="146,40 262,39"
+         id="polyline70" />
+      <g
+         transform="translate(262,39)"
+         id="g72">
+        <g
+           transform="matrix(0,1,-1,0,0,0)"
+           id="g74">
+          <polyline
+             style="fill:none;stroke:#000000;stroke-width:1"
+             points="-4,8 0,0 4,8"
+             id="polyline76" />
+        </g>
+      </g>
+    </g>
+    <g
+       id="_RYUxoDgNEDKYbu-ZhAM8Ig">
+      <polyline
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:10, 5"
+         points="525,112 495,69"
+         id="polyline79" />
+      <g
+         transform="translate(495,69)"
+         id="g81">
+        <g
+           transform="matrix(0.81915204,-0.57357644,0.57357644,0.81915204,0,0)"
+           id="g83">
+          <polyline
+             style="fill:#ffffff;stroke:#000000;stroke-width:1"
+             points="-4,12 0,0 4,12 -4,12"
+             id="polyline85" />
+        </g>
+      </g>
+    </g>
+    <text
+       style="fill:#000000"
+       x="155"
+       y="27"
+       id="text87">heuristicStrategy</text>
+    <text
+       style="fill:#000000"
+       x="243"
+       y="57"
+       id="text89">1</text>
+  </g>
+  <rect
+     style="fill:#5bc0d9;fill-opacity:1"
+     id="rect3191"
+     width="681.70471"
+     height="1.1437998"
+     x="1.3633571"
+     y="197.87007"
+     ry="0.57189989" />
+</svg>

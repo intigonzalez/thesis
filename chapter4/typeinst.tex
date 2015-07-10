@@ -1,0 +1,168 @@
+
+%%%%%%%%%%%%%%%%%%%%%%% file typeinst.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is the LaTeX source for the instructions to authors using
+% the LaTeX document class 'llncs.cls' for contributions to
+% the Lecture Notes in Computer Sciences series.
+% http://www.springer.com/lncs       Springer Heidelberg 2006/05/04
+%
+% It may be used as a template for your own input - copy it
+% to a new file with a new name and use it as the basis
+% for your article.
+%
+% NB: the document class 'llncs' has its own and detailed documentation, see
+% ftp://ftp.springer.de/data/pubftp/pub/tex/latex/llncs/latex2e/llncsdoc.pdf
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[runningheads,a4paper]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+
+\usepackage{balance}
+\usepackage{lmodern}
+\usepackage{tikz}
+\usetikzlibrary{arrows,shadows,patterns}
+\usepackage{pgf-umlsd}
+%\usepgflibrary{arrows} % for pgf-umlsd
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+%\usepackage{amsmath}
+%\usepackage{subcaption}
+\usepackage[caption=false]{subfig}
+
+\usepackage{dblfloatfix}
+
+\usepackage{listings}
+
+\usepackage{color}
+
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{green}{rgb}{0,1,0}
+\definecolor{blue}{rgb}{0,0,1}
+\definecolor{cyan}{rgb}{0.4,1,1}
+\definecolor{orange}{rgb}{1,0.7,0}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{purple}{rgb}{0.58,0,0.82}
+
+\usepackage{url} 
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+\newcommand{\hl}[1]{\textcolor{dkgreen}{#1}}
+\newcommand{\fixme}[1]{\textcolor{red}{{\em TODO}: \bf #1}}
+
+\begin{document}
+
+\mainmatter  % start of an individual contribution
+
+% first the title is needed
+\title{Squirrel: Architecture Driven Resource Management}
+
+% a short form should be given in case it is too long for the running head
+\titlerunning{Squirrel: Architecture Driven Resource Management}
+
+% the name(s) of the author(s) follow(s) next
+\author{Inti Gonzalez-Herrera\inst{1}
+\and Johann Bourcier\inst{1}
+\and Walter Rudametkin\inst{2}
+\and\\ Olivier Barais\inst{1}
+\and Francois Fouquet\inst{3}}
+%
+\authorrunning{Squirrel: Architecture Driven Resource Management}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next; don't give your e-mail address
+% unless you accept that it will be published
+\institute{University of Rennes 1 - IRISA, 35042 Rennes, France,\\
+\email{\{inti.glez,johann.bourcier,barais\}@irisa.fr},
+\and
+University of Lille - INRIA,
+Cit\'{e} Scientifique Villeneuve d{'}Ascq, France\\
+\email{walter.rudametkin@univ-lille1.fr},
+\and
+University of Luxembourg,
+Luxembourg, Luxembourg,\\
+\email{francois.fouquet@uni.lu}
+}
+
+%\toctitle{Lecture Notes in Computer Science}
+%\tocauthor{Authors' Instructions}
+\maketitle
+
+
+\begin{abstract}
+Resource management is critical to guarantee Quality of Service when various stakeholders share the execution environment, such as cloud or mobile environments.
+In this context, providing management techniques compatible with standard practices, such as component models, is essential.
+Resource management is often realized through monitoring techniques, while resource isolation uses virtual machines or containers (e.g., docker).
+These techniques (i) impose varying levels of overhead depending on the managed resource, and (ii) are applied at different abstraction levels, such as processes, threads or objects.
+Thus, mapping components to system-level abstractions in the presence of resource management requirements can lead to sub-optimal systems.
+
+%We propose Squirrel, an approach to automatically tune component deployment and resource management in order to maintain a good balance between management overhead and the level of sharing.
+We propose Squirrel, an approach to tune component deployment and resource management in order to reduce management overhead.
+%In Squirrel, an architectural model annotated with resource requirements is used at runtime to guide the mapping of components to system abstractions with different resource management capabilities and overhead.
+At runtime, Squirrel uses an architectural model annotated with resource requirements to guide the mapping of components to system abstractions, providing different resource management capabilities and overhead.
+%To evaluate the approach, 
+We present an implementation of Squirrel, using a Java component framework,
+%for a Java-based component platform
+and a set of experiments to validate its feasibility and overhead.
+%\hl{The results show how the right mapping selection can reduce the performance impact and memory footprint.[NEEDS IMPROVEMENT]}
+We show that choosing the right \textit{component-to-system} mappings at deployment-time reduces performance overhead and/or memory use.
+%The results show (i) better performance than system deployed with full isolation among components and, (ii) only memory overhead in certain situations when comparing an application against its version running without resource management.
+\keywords{resource management, components, architecture adaptation}
+\end{abstract}
+
+\input{introduction.tex}
+
+%\subsection{Copyright Forms}
+
+%The copyright form may be downloaded from the ``For Authors"
+%(Information for LNCS Authors) section of the LNCS Website:
+%\texttt{www.springer.com/lncs}. Please send your signed copyright form
+%to the Contact Volume Editor, either as a scanned pdf or by fax or by
+%courier. One author may sign on behalf of all of the other authors of a
+%particular paper. Digital signatures are acceptable.
+
+\input{background.tex}
+
+\input{approach-overview.tex}
+
+\input{implementation.tex}
+
+\input{evaluation.tex}
+
+\input{related-work.tex}
+
+\input{conclusion.tex}
+
+%\begin{equation}
+%  \psi (u) = \int_{o}^{T} \left[\frac{1}{2}
+%  \left(\Lambda_{o}^{-1} u,u\right) + N^{\ast} (-u)\right] dt \;  .
+%\end{equation}
+
+%\subsubsection*{Acknowledgments.} The heading should be treated as a
+%subsubsection heading and should not be assigned a number.
+
+\bibliographystyle{abbrv}
+\bibliography{biblio}  % sigproc.bib is the name of the Bibliography in this case
+
+%\section{Checklist of Items to be Sent to Volume Editors}
+%Here is a checklist of everything the volume editor requires from you:
+
+%\begin{itemize}
+%\settowidth{\leftmargin}{{\Large$\square$}}\advance\leftmargin\labelsep
+%\itemsep8pt\relax
+%\renewcommand\labelitemi{{\lower1.5pt\hbox{\Large$\square$}}}
+
+%\item The final \LaTeX{} source files
+%\item A final PDF file
+%\item A copyright form, signed by one author on behalf of all of the
+%authors of the paper.
+%\item A readme giving the name and email address of the
+%corresponding author.
+%\end{itemize}
+\end{document}

@@ -1,0 +1,46 @@
+\section{Introduction}
+
+Resource management is critical for domains where software components share an execution environment but belong to different stakeholders.
+For instance, in multi-tenant systems resource management is used to guarantee safety, reliability and per-stakeholder Quality of Service (QoS).
+These applications essentially require the isolation of tenants in terms of resource consumption~\cite{KrWeKo2013-icwe-MTBenchmark}.
+This enables, for example, \textit{Software-as-a-Service} layers for cloud systems, allowing innovative pricing policies based on user requirements. %(e.g. user A has a \textit{premium} contract that guarantees a response time inferior to 500 ms for each request, while user B has a \textit{standard} contract that does not guarantee any response time).
+Since these services are often implemented on paradigms such as component models,
+the design of resource management techniques dedicated to component models is an important issue.
+
+Component model implementations represent high level concepts, such as component instances, by means of mapping them to system-level abstractions like objects, threads, processes or virtual machines.
+Each mapping has unique features in terms of performance, memory footprint, etc.
+However, these mappings are often done in a once-size-fits-all manner, allowing some choices to optimize for memory use while others might, for example, improve inter-component communication.
+%\hl{The mapping of components to system abstractions, which has the goal of improving some parameters of the runtime, has often been made in a homogeneous way for all components.[I DON'T UNDERSTAND?, Quiero decir que todos los componentes usan el mismo mapping, todos son representados como hilos, o todos como procesos. La parte de ``som parameters'' significa que cuanod se toma esa decision durante la implementacion del framework se hace con un objetivo como reducir el uso de memoria o facilitar la comunicacion entre componentes o garantizar un ``sandbox'' para los componentes]}
+Interestingly, system abstractions offer varying resource management capabilities that differ in how they impact the application.
+Although we can hard-code the resource management concern during the design of the component model, we argue that this leads to sub-optimal systems with high  overhead~\cite{binder_portable_2006,czajkowski_jres:_1998,Maurel:2012:AME:2304736.2304763} because components have different resource requirements.
+
+% without taking into account resource management concerns, and (ii) .
+
+To address this issue, we propose Squirrel, an approach to resource management for component models that aims at reducing overhead.
+In Squirrel, the application is deployed with a model containing resource usage contracts for each component and a detailed view of the system.
+These metadata are used to choose at deployment-time the best way of representing each component in terms of system abstractions.
+This contrasts with the \textit{traditional} approach of binding the representation during the design of the component model and results in the final runtime representation of the system only being known after deployment.
+%uses meta-data regarding the application's structure and its requirements to deploy components on system-level abstractions.
+
+
+
+%During deployment, the information is used to automatically create a new deployment model where components are automatically mapped into abstractions that we call \textit{containers}.
+%Each \textit{container} is then configured based on the components' resource contracts, ensuring resource consumption while minimizing the overhead.
+
+In this paper we discuss an approach to resource management applicable to any component model. To validate the feasibility of our proposal, we present a reference implementation for a Java-based component model.
+A set of experiments validate its feasibility and show various aspects of its overhead.
+The results demonstrate that choosing the right \textit{component-to-system} mappings at deployment-time can reduce performance overhead and/or memory footprint.
+%\hl{INTI: Se que esta oracion es muy general, el problema es que no estoy seguro de si poner los numeros es lo correcto pues los ejemplos son tan solo para mostrar con un caso de uso los potenciales beneficios de postergar la decision acerca de como hacer el manejo de recursos.}
+The contributions of this paper are as follow:
+\begin{itemize}
+\item An approach for architecture driven resource management that leverages structural information to guide the mapping of component model concepts onto system-level abstractions.
+\item A reference implementation of the Squirrel framework for a Java-Based component platform.
+\item A performance comparison showing how different mappings can impact the overhead of the system and how the approach behaves in comparison to state-of-practice approaches for resource management.
+\end{itemize}
+
+The remainder of this paper is organized as follows.
+The next section presents some foundational work we use along this paper.
+Section \ref{sec:apprach} describes the Squirrel approach and presents how we leverage metadata to drive resource management.
+In section~\ref{sec:kevoree} we propose a reference implementation of Squirrel for a Java-based component platform.
+A validation of the implementation through a set of experiments is presented in section~\ref{sec:evaluation}.
+Finally, section \ref{sec:related-works} discusses related work and section \ref{sec:conclusions} presents our conclusions and future work.

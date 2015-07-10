@@ -1,0 +1,2307 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   font-size="13"
+   width="1381.8132"
+   height="376.95505"
+   id="svg2"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="toto.svg"
+   style="font-size:13px;font-family:Arial">
+  <metadata
+     id="metadata323">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs321">
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient"
+       id="linearGradient3300"
+       spreadMethod="pad"
+       x1="50.769436"
+       y1="59.962257"
+       x2="50.769436"
+       y2="138.93694"
+       gradientTransform="scale(0.97499604,1.0256452)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#FFC8CF"
+       id="linearGradient3302"
+       spreadMethod="pad"
+       x1="200.99498"
+       y1="1.5634719"
+       x2="200.99498"
+       y2="85.990959"
+       gradientTransform="scale(1.0423146,0.95940322)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#FFC8CF"
+       id="linearGradient3304"
+       spreadMethod="pad"
+       x1="195.51724"
+       y1="151.61961"
+       x2="195.51724"
+       y2="238.41248"
+       gradientTransform="scale(1.0715168,0.93325653)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient"
+       id="linearGradient3314"
+       spreadMethod="pad"
+       x1="404.46902"
+       y1="26.44022"
+       x2="404.46902"
+       y2="137.23734"
+       gradientTransform="scale(0.83937206,1.1913668)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient"
+       id="linearGradient3316"
+       spreadMethod="pad"
+       x1="491.79688"
+       y1="59.962257"
+       x2="491.79688"
+       y2="138.93694"
+       gradientTransform="scale(0.97499604,1.0256452)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient"
+       id="linearGradient3318"
+       spreadMethod="pad"
+       x1="455.63531"
+       y1="27.816654"
+       x2="455.63531"
+       y2="146.84605"
+       gradientTransform="scale(1.2937979,0.77291823)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient"
+       id="linearGradient3320"
+       spreadMethod="pad"
+       x1="461.86734"
+       y1="196.64575"
+       x2="461.86734"
+       y2="316.061"
+       gradientTransform="scale(1.2979918,0.77042092)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient"
+       id="linearGradient3322"
+       spreadMethod="pad"
+       x1="635.53522"
+       y1="26.70859"
+       x2="635.53522"
+       y2="127.33165"
+       gradientTransform="scale(1.24226,0.80498447)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient"
+       id="linearGradient3324"
+       spreadMethod="pad"
+       x1="616.125"
+       y1="194.13147"
+       x2="616.125"
+       y2="297.92453"
+       gradientTransform="scale(1.2813958,0.78039897)"
+       gradientUnits="userSpaceOnUse" />
+    <defs
+       id="defs7">
+      <linearGradient
+         spreadMethod="pad"
+         y2="1"
+         x2="0"
+         y1="0"
+         x1="0"
+         id="greyGradient">
+        <stop
+           id="stop10"
+           stop-opacity="1"
+           stop-color="#FFFFFF"
+           offset="0%" />
+        <stop
+           id="stop12"
+           stop-opacity="1"
+           stop-color="#E5E5E5"
+           offset="100%" />
+      </linearGradient>
+      <linearGradient
+         spreadMethod="pad"
+         y2="1"
+         x2="0"
+         y1="0"
+         x1="0"
+         id="packageGradient">
+        <stop
+           id="stop15"
+           stop-opacity="1"
+           stop-color="#FFFFFF"
+           offset="0%" />
+        <stop
+           id="stop17"
+           stop-opacity="1"
+           stop-color="#EFE9DE"
+           offset="100%" />
+      </linearGradient>
+      <linearGradient
+         spreadMethod="pad"
+         y2="1"
+         x2="0"
+         y1="0"
+         x1="0"
+         id="FFC8CF">
+        <stop
+           id="stop20"
+           stop-opacity="1"
+           stop-color="rgb(255, 255, 255)"
+           offset="0%" />
+        <stop
+           id="stop22"
+           stop-opacity="1"
+           stop-color="rgb(255, 200, 207)"
+           offset="100%" />
+      </linearGradient>
+    </defs>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#packageGradient-3"
+       id="linearGradient3244"
+       spreadMethod="pad"
+       x1="233.68515"
+       y1="115.36356"
+       x2="233.68515"
+       y2="133.1118"
+       gradientTransform="scale(0.84515425,1.183216)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="packageGradient-3">
+      <stop
+         id="stop15-3"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop17-9"
+         stop-opacity="1"
+         stop-color="#EFE9DE"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#packageGradient-3"
+       id="linearGradient3240"
+       spreadMethod="pad"
+       x1="283.92413"
+       y1="53.214039"
+       x2="283.92413"
+       y2="74.777901"
+       gradientTransform="scale(0.69560834,1.4375906)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="linearGradient3405">
+      <stop
+         id="stop3407"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop3409"
+         stop-opacity="1"
+         stop-color="#EFE9DE"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient-7"
+       id="linearGradient3234"
+       spreadMethod="pad"
+       x1="32.81818"
+       y1="21.870501"
+       x2="32.81818"
+       y2="82.202911"
+       gradientTransform="scale(1.5083103,0.66299354)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="greyGradient-7">
+      <stop
+         id="stop10-3"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop12-6"
+         stop-opacity="1"
+         stop-color="#E5E5E5"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient-7"
+       id="linearGradient3228"
+       spreadMethod="pad"
+       x1="105.74747"
+       y1="21.870501"
+       x2="105.74747"
+       y2="82.202911"
+       gradientTransform="scale(1.5083103,0.66299354)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="linearGradient3416">
+      <stop
+         id="stop3418"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop3420"
+         stop-opacity="1"
+         stop-color="#E5E5E5"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#packageGradient-7"
+       id="linearGradient3254"
+       spreadMethod="pad"
+       x1="884.1543"
+       y1="56.130756"
+       x2="884.1543"
+       y2="83.789391"
+       gradientTransform="scale(0.54232614,1.8439089)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="packageGradient-7">
+      <stop
+         id="stop15-9"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop17-8"
+         stop-opacity="1"
+         stop-color="#EFE9DE"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#packageGradient-7"
+       id="linearGradient3252"
+       spreadMethod="pad"
+       x1="696.07562"
+       y1="117.41361"
+       x2="696.07562"
+       y2="145.07224"
+       gradientTransform="scale(0.54232614,1.8439089)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="linearGradient3473">
+      <stop
+         id="stop3475"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop3477"
+         stop-opacity="1"
+         stop-color="#EFE9DE"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#packageGradient-7"
+       id="linearGradient3250"
+       spreadMethod="pad"
+       x1="984.39954"
+       y1="29.336411"
+       x2="984.39954"
+       y2="68.451622"
+       gradientTransform="scale(0.38348249,2.607681)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="linearGradient3480">
+      <stop
+         id="stop3482"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop3484"
+         stop-opacity="1"
+         stop-color="#EFE9DE"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#packageGradient-7"
+       id="linearGradient3248"
+       spreadMethod="pad"
+       x1="546.77875"
+       y1="260.99176"
+       x2="546.77875"
+       y2="273.83701"
+       gradientTransform="scale(1.1677484,0.85634884)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="linearGradient3487">
+      <stop
+         id="stop3489"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop3491"
+         stop-opacity="1"
+         stop-color="#EFE9DE"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#packageGradient-7"
+       id="linearGradient3246"
+       spreadMethod="pad"
+       x1="742.09082"
+       y1="137.84869"
+       x2="742.09082"
+       y2="161.40714"
+       gradientTransform="scale(0.63671454,1.5705625)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="linearGradient3494">
+      <stop
+         id="stop3496"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop3498"
+         stop-opacity="1"
+         stop-color="#EFE9DE"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#packageGradient-7"
+       id="linearGradient3242"
+       spreadMethod="pad"
+       x1="1256.0563"
+       y1="28.777571"
+       x2="1256.0563"
+       y2="68.652374"
+       gradientTransform="scale(0.3761774,2.6583203)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="linearGradient3501">
+      <stop
+         id="stop3503"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop3505"
+         stop-opacity="1"
+         stop-color="#EFE9DE"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient-3"
+       id="linearGradient3238"
+       spreadMethod="pad"
+       x1="577.57642"
+       y1="19.318224"
+       x2="577.57642"
+       y2="72.609871"
+       gradientTransform="scale(1.3322913,0.75058663)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="greyGradient-3">
+      <stop
+         id="stop10-4"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop12-7"
+         stop-opacity="1"
+         stop-color="#E5E5E5"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient-3"
+       id="linearGradient3236"
+       spreadMethod="pad"
+       x1="225.0863"
+       y1="21.870501"
+       x2="225.0863"
+       y2="82.202911"
+       gradientTransform="scale(1.5083103,0.66299354)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="linearGradient3512">
+      <stop
+         id="stop3514"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop3516"
+         stop-opacity="1"
+         stop-color="#E5E5E5"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient-3"
+       id="linearGradient3232"
+       spreadMethod="pad"
+       x1="250.81129"
+       y1="31.767908"
+       x2="250.81129"
+       y2="119.40352"
+       gradientTransform="scale(2.1908902,0.45643546)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="linearGradient3519">
+      <stop
+         id="stop3521"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop3523"
+         stop-opacity="1"
+         stop-color="#E5E5E5"
+         offset="100%" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#greyGradient-3"
+       id="linearGradient3230"
+       spreadMethod="pad"
+       x1="308.84912"
+       y1="20.633862"
+       x2="308.84912"
+       y2="77.554863"
+       gradientTransform="scale(1.4230249,0.70272837)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       spreadMethod="pad"
+       y2="1"
+       x2="0"
+       y1="0"
+       x1="0"
+       id="linearGradient3526">
+      <stop
+         id="stop3528"
+         stop-opacity="1"
+         stop-color="#FFFFFF"
+         offset="0%" />
+      <stop
+         id="stop3530"
+         stop-opacity="1"
+         stop-color="#E5E5E5"
+         offset="100%" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="715"
+     id="namedview319"
+     showgrid="false"
+     inkscape:zoom="0.88930607"
+     inkscape:cx="1056.5718"
+     inkscape:cy="273.05672"
+     inkscape:window-x="0"
+     inkscape:window-y="31"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <desc
+     id="desc4">UML diagram model</desc>
+  <g
+     id="_jmLZwLqREDK07IxEU2-Zdg"
+     transform="translate(-12.965168,-0.40625)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3300);stroke:#cccccc;stroke-width:1"
+       id="rect25"
+       ry="0"
+       rx="5"
+       height="80"
+       width="76"
+       y="62"
+       x="50" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text27"
+       font-weight="bold"
+       font-style="normal"
+       y="80"
+       x="88">A</text>
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line29"
+       y2="89"
+       x2="126"
+       y1="89"
+       x1="50" />
+    <g
+       id="_ouxrQLqREDK07IxEU2-Zdg">
+      <image
+         id="image32"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP////3+/ypvqCtuqCtvqDF0qzp5rzp4rjp5rkN/skOAskR/sk2Ftk2GtlWMulaMulaNulaMuV6Svl6RvV6SvV+SvWWWwGWXwGqawvr9/+35//b8//L7/+T3/+H3/+T4/+z6/+36/+P4/+f5//L8//b9/wWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACj1MwgAAAArdFJOU////////////////////////////////////////////////////////wAjyafQAAAAjklEQVR42lyPMQrCUBBE364bbbSwEcE+EO9/l0AqIZ0K2in8v7sWIkmc7s1MMSNnltI/xnjMcY8Rt4kPYNRjIYUUaCoYvr3vvvlzU0DxVyFiHetIcTDcgiZr4+EWYPjKrwC8udB3RtZTUSDGFgaMHDVBKqBBL7/pfQsaYIsXSsyMQHLeGGhhmN52HSTwGQCflTcMX9qOTgAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="95"
+         x="53" />
+      <text
+         style="fill:#000000"
+         id="text34"
+         y="107"
+         x="71">a: String</text>
+    </g>
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line36"
+       y2="116"
+       x2="126"
+       y1="116"
+       x1="50" />
+  </g>
+  <g
+     id="_kk0MQLqREDK07IxEU2-Zdg"
+     transform="translate(-12.965168,-0.40625)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3302);stroke:#99787d;stroke-width:1"
+       id="rect39"
+       ry="0"
+       rx="5"
+       height="80"
+       width="87"
+       y="2"
+       x="210" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#4d3c3f"
+       id="text41"
+       font-weight="bold"
+       font-style="normal"
+       y="20"
+       x="254">AAspect</text>
+    <line
+       style="stroke:#99787d;stroke-width:1"
+       id="line43"
+       y2="29"
+       x2="297"
+       y1="29"
+       x1="210" />
+    <g
+       id="_rmXjcLqREDK07IxEU2-Zdg">
+      <image
+         id="image46"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP////3+/ypvqCtuqCtvqDF0qzp5rzp4rjp5rkN/skOAskR/sk2Ftk2GtlWMulaMulaNulaMuV6Svl6RvV6SvV+SvWWWwGWXwGqawvr9/+35//b8//L7/+T3/+H3/+T4/+z6/+36/+P4/+f5//L8//b9/wWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACj1MwgAAAArdFJOU////////////////////////////////////////////////////////wAjyafQAAAAjklEQVR42lyPMQrCUBBE364bbbSwEcE+EO9/l0AqIZ0K2in8v7sWIkmc7s1MMSNnltI/xnjMcY8Rt4kPYNRjIYUUaCoYvr3vvvlzU0DxVyFiHetIcTDcgiZr4+EWYPjKrwC8udB3RtZTUSDGFgaMHDVBKqBBL7/pfQsaYIsXSsyMQHLeGGhhmN52HSTwGQCflTcMX9qOTgAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="35"
+         x="213" />
+      <text
+         style="fill:#4d3c3f"
+         id="text48"
+         y="47"
+         x="231">b: String</text>
+    </g>
+    <line
+       style="stroke:#99787d;stroke-width:1"
+       id="line50"
+       y2="56"
+       x2="297"
+       y1="56"
+       x1="210" />
+    <g
+       id="_vburcbqREDK07IxEU2-Zdg">
+      <image
+         id="image53"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP///8HBw6Ky1rfD3Ymh0au73Ku62Yag0aq72bPB27fD2b7J3YWh0Ieiz4ahzomk0Z2z2Ki72bPD3L7J23eXyIajz7TE27PD2rTD2maPxbvK38PP32OMwGSMvYamz7PE2LXE10V/vkh/v0d/vEiAvUh+vFGEu1OEvGaEpqC40kaBvUWAukd/ukmBvGGQvmSGqWOEpZ+61QA9cwA8cgA7cQI7cAM8czZ0rT16sEF9s0J9tUSBuE6GuVGFt2OGpmSHp2OEo2WGpWSFpAA8cAA9cAA7bwA8bgA9bgA7bQI8bgI8bD18slCGtWKFo2OGpGSHpQA9bAA7aDR3rAWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADH1d5AAAABYdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wB4m8IIAAAA2UlEQVR42lSPzUoCURhAz/0cUrhjTYzuIu0PicZFy57ABxjQdxR8iQQJYmrTDYJZNEZQC2fGHPIndVyUkGdz4OyO6rCL/Mqkj//Ce8iR8Uge/sJzNUqG+etocH4PqA6TQEpfUzWvlBoOFDyKrsnOLnQi1weAEKRG37iTWWs8iJ9AqN9Ns/0sqL3oVf8YCl7UGO05lbKTDRer0FxZXNL8CE/tNMaHHgLx9+zkU9++gUDXgqK45Z8YH8DHAh3Z9tIGAWFtATUID2GNykFtb7vgq7y3vYV2G3JgMwDzTEnCPC8r9AAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="60"
+         x="213" />
+      <text
+         style="font-style:normal;fill:#4d3c3f"
+         id="text55"
+         font-style="normal"
+         y="72"
+         x="231">foo(): void</text>
+    </g>
+  </g>
+  <g
+     id="_l1H9kLqREDK07IxEU2-Zdg"
+     transform="translate(-12.965168,-0.40625)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3304);stroke:#99787d;stroke-width:1"
+       id="rect58"
+       ry="0"
+       rx="5"
+       height="80"
+       width="92"
+       y="142"
+       x="210" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#4d3c3f"
+       id="text60"
+       font-weight="bold"
+       font-style="normal"
+       y="160"
+       x="256">AAspect1</text>
+    <line
+       style="stroke:#99787d;stroke-width:1"
+       id="line62"
+       y2="169"
+       x2="302"
+       y1="169"
+       x1="210" />
+    <g
+       id="_ts81cLqREDK07IxEU2-Zdg">
+      <image
+         id="image65"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP////3+/ypvqCtuqCtvqDF0qzp5rzp4rjp5rkN/skOAskR/sk2Ftk2GtlWMulaMulaNulaMuV6Svl6RvV6SvV+SvWWWwGWXwGqawvr9/+35//b8//L7/+T3/+H3/+T4/+z6/+36/+P4/+f5//L8//b9/wWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACj1MwgAAAArdFJOU////////////////////////////////////////////////////////wAjyafQAAAAjklEQVR42lyPMQrCUBBE364bbbSwEcE+EO9/l0AqIZ0K2in8v7sWIkmc7s1MMSNnltI/xnjMcY8Rt4kPYNRjIYUUaCoYvr3vvvlzU0DxVyFiHetIcTDcgiZr4+EWYPjKrwC8udB3RtZTUSDGFgaMHDVBKqBBL7/pfQsaYIsXSsyMQHLeGGhhmN52HSTwGQCflTcMX9qOTgAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="175"
+         x="213" />
+      <text
+         style="fill:#4d3c3f"
+         id="text67"
+         y="187"
+         x="231">c: Boolean</text>
+    </g>
+    <line
+       style="stroke:#99787d;stroke-width:1"
+       id="line69"
+       y2="196"
+       x2="302"
+       y1="196"
+       x1="210" />
+    <g
+       id="_wdVSYbqREDK07IxEU2-Zdg">
+      <image
+         id="image72"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP///8HBw6Ky1rfD3Ymh0au73Ku62Yag0aq72bPB27fD2b7J3YWh0Ieiz4ahzomk0Z2z2Ki72bPD3L7J23eXyIajz7TE27PD2rTD2maPxbvK38PP32OMwGSMvYamz7PE2LXE10V/vkh/v0d/vEiAvUh+vFGEu1OEvGaEpqC40kaBvUWAukd/ukmBvGGQvmSGqWOEpZ+61QA9cwA8cgA7cQI7cAM8czZ0rT16sEF9s0J9tUSBuE6GuVGFt2OGpmSHp2OEo2WGpWSFpAA8cAA9cAA7bwA8bgA9bgA7bQI8bgI8bD18slCGtWKFo2OGpGSHpQA9bAA7aDR3rAWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADH1d5AAAABYdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wB4m8IIAAAA2UlEQVR42lSPzUoCURhAz/0cUrhjTYzuIu0PicZFy57ABxjQdxR8iQQJYmrTDYJZNEZQC2fGHPIndVyUkGdz4OyO6rCL/Mqkj//Ce8iR8Uge/sJzNUqG+etocH4PqA6TQEpfUzWvlBoOFDyKrsnOLnQi1weAEKRG37iTWWs8iJ9AqN9Ns/0sqL3oVf8YCl7UGO05lbKTDRer0FxZXNL8CE/tNMaHHgLx9+zkU9++gUDXgqK45Z8YH8DHAh3Z9tIGAWFtATUID2GNykFtb7vgq7y3vYV2G3JgMwDzTEnCPC8r9AAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="200"
+         x="213" />
+      <text
+         style="font-style:normal;fill:#4d3c3f"
+         id="text74"
+         font-style="normal"
+         y="212"
+         x="231">bar(): void</text>
+    </g>
+  </g>
+  <g
+     id="_j7ftALqSEDK07IxEU2-Zdg"
+     transform="translate(-12.965168,-0.40625)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3314);stroke:#cccccc;stroke-width:1"
+       id="rect117"
+       ry="0"
+       rx="5"
+       height="131"
+       width="92"
+       y="32"
+       x="340" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text119"
+       font-weight="bold"
+       font-style="normal"
+       y="50"
+       x="386">A</text>
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line121"
+       y2="59"
+       x2="432"
+       y1="59"
+       x1="340" />
+    <g
+       id="_lLxpILqSEDK07IxEU2-Zdg">
+      <image
+         id="image124"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP////3+/ypvqCtuqCtvqDF0qzp5rzp4rjp5rkN/skOAskR/sk2Ftk2GtlWMulaMulaNulaMuV6Svl6RvV6SvV+SvWWWwGWXwGqawvr9/+35//b8//L7/+T3/+H3/+T4/+z6/+36/+P4/+f5//L8//b9/wWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACj1MwgAAAArdFJOU////////////////////////////////////////////////////////wAjyafQAAAAjklEQVR42lyPMQrCUBBE364bbbSwEcE+EO9/l0AqIZ0K2in8v7sWIkmc7s1MMSNnltI/xnjMcY8Rt4kPYNRjIYUUaCoYvr3vvvlzU0DxVyFiHetIcTDcgiZr4+EWYPjKrwC8udB3RtZTUSDGFgaMHDVBKqBBL7/pfQsaYIsXSsyMQHLeGGhhmN52HSTwGQCflTcMX9qOTgAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="65"
+         x="343" />
+      <text
+         style="fill:#000000"
+         id="text126"
+         y="77"
+         x="361">a: String</text>
+    </g>
+    <g
+       id="_oVB5ELqSEDK07IxEU2-Zdg">
+      <image
+         id="image129"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP////3+/ypvqCtuqCtvqDF0qzp5rzp4rjp5rkN/skOAskR/sk2Ftk2GtlWMulaMulaNulaMuV6Svl6RvV6SvV+SvWWWwGWXwGqawvr9/+35//b8//L7/+T3/+H3/+T4/+z6/+36/+P4/+f5//L8//b9/wWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACj1MwgAAAArdFJOU////////////////////////////////////////////////////////wAjyafQAAAAjklEQVR42lyPMQrCUBBE364bbbSwEcE+EO9/l0AqIZ0K2in8v7sWIkmc7s1MMSNnltI/xnjMcY8Rt4kPYNRjIYUUaCoYvr3vvvlzU0DxVyFiHetIcTDcgiZr4+EWYPjKrwC8udB3RtZTUSDGFgaMHDVBKqBBL7/pfQsaYIsXSsyMQHLeGGhhmN52HSTwGQCflTcMX9qOTgAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="85"
+         x="343" />
+      <text
+         style="fill:#000000"
+         id="text131"
+         y="97"
+         x="361">b: String</text>
+    </g>
+    <g
+       id="_qK3ZULqSEDK07IxEU2-Zdg">
+      <image
+         id="image134"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP////3+/ypvqCtuqCtvqDF0qzp5rzp4rjp5rkN/skOAskR/sk2Ftk2GtlWMulaMulaNulaMuV6Svl6RvV6SvV+SvWWWwGWXwGqawvr9/+35//b8//L7/+T3/+H3/+T4/+z6/+36/+P4/+f5//L8//b9/wWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACj1MwgAAAArdFJOU////////////////////////////////////////////////////////wAjyafQAAAAjklEQVR42lyPMQrCUBBE364bbbSwEcE+EO9/l0AqIZ0K2in8v7sWIkmc7s1MMSNnltI/xnjMcY8Rt4kPYNRjIYUUaCoYvr3vvvlzU0DxVyFiHetIcTDcgiZr4+EWYPjKrwC8udB3RtZTUSDGFgaMHDVBKqBBL7/pfQsaYIsXSsyMQHLeGGhhmN52HSTwGQCflTcMX9qOTgAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="105"
+         x="343" />
+      <text
+         style="fill:#000000"
+         id="text136"
+         y="117"
+         x="361">c: Boolean</text>
+    </g>
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line138"
+       y2="126"
+       x2="432"
+       y1="126"
+       x1="340" />
+    <g
+       id="_txycsbqSEDK07IxEU2-Zdg">
+      <image
+         id="image141"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP///8HBw6Ky1rfD3Ymh0au73Ku62Yag0aq72bPB27fD2b7J3YWh0Ieiz4ahzomk0Z2z2Ki72bPD3L7J23eXyIajz7TE27PD2rTD2maPxbvK38PP32OMwGSMvYamz7PE2LXE10V/vkh/v0d/vEiAvUh+vFGEu1OEvGaEpqC40kaBvUWAukd/ukmBvGGQvmSGqWOEpZ+61QA9cwA8cgA7cQI7cAM8czZ0rT16sEF9s0J9tUSBuE6GuVGFt2OGpmSHp2OEo2WGpWSFpAA8cAA9cAA7bwA8bgA9bgA7bQI8bgI8bD18slCGtWKFo2OGpGSHpQA9bAA7aDR3rAWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADH1d5AAAABYdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wB4m8IIAAAA2UlEQVR42lSPzUoCURhAz/0cUrhjTYzuIu0PicZFy57ABxjQdxR8iQQJYmrTDYJZNEZQC2fGHPIndVyUkGdz4OyO6rCL/Mqkj//Ce8iR8Uge/sJzNUqG+etocH4PqA6TQEpfUzWvlBoOFDyKrsnOLnQi1weAEKRG37iTWWs8iJ9AqN9Ns/0sqL3oVf8YCl7UGO05lbKTDRer0FxZXNL8CE/tNMaHHgLx9+zkU9++gUDXgqK45Z8YH8DHAh3Z9tIGAWFtATUID2GNykFtb7vgq7y3vYV2G3JgMwDzTEnCPC8r9AAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="130"
+         x="343" />
+      <text
+         style="font-style:normal;fill:#000000"
+         id="text143"
+         font-style="normal"
+         y="142"
+         x="361">foo(): void</text>
+    </g>
+    <g
+       id="_ubrHMbqSEDK07IxEU2-Zdg">
+      <image
+         id="image146"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP///8HBw6Ky1rfD3Ymh0au73Ku62Yag0aq72bPB27fD2b7J3YWh0Ieiz4ahzomk0Z2z2Ki72bPD3L7J23eXyIajz7TE27PD2rTD2maPxbvK38PP32OMwGSMvYamz7PE2LXE10V/vkh/v0d/vEiAvUh+vFGEu1OEvGaEpqC40kaBvUWAukd/ukmBvGGQvmSGqWOEpZ+61QA9cwA8cgA7cQI7cAM8czZ0rT16sEF9s0J9tUSBuE6GuVGFt2OGpmSHp2OEo2WGpWSFpAA8cAA9cAA7bwA8bgA9bgA7bQI8bgI8bD18slCGtWKFo2OGpGSHpQA9bAA7aDR3rAWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADH1d5AAAABYdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wB4m8IIAAAA2UlEQVR42lSPzUoCURhAz/0cUrhjTYzuIu0PicZFy57ABxjQdxR8iQQJYmrTDYJZNEZQC2fGHPIndVyUkGdz4OyO6rCL/Mqkj//Ce8iR8Uge/sJzNUqG+etocH4PqA6TQEpfUzWvlBoOFDyKrsnOLnQi1weAEKRG37iTWWs8iJ9AqN9Ns/0sqL3oVf8YCl7UGO05lbKTDRer0FxZXNL8CE/tNMaHHgLx9+zkU9++gUDXgqK45Z8YH8DHAh3Z9tIGAWFtATUID2GNykFtb7vgq7y3vYV2G3JgMwDzTEnCPC8r9AAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="149"
+         x="343" />
+      <text
+         style="font-style:normal;fill:#000000"
+         id="text148"
+         font-style="normal"
+         y="161"
+         x="361">bar(): void</text>
+    </g>
+  </g>
+  <g
+     id="_4kjbsLqSEDK07IxEU2-Zdg"
+     transform="translate(155.70568,-47.634085)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3316);stroke:#cccccc;stroke-width:1"
+       id="rect151"
+       ry="0"
+       rx="5"
+       height="80"
+       width="76"
+       y="62"
+       x="480" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text153"
+       font-weight="bold"
+       font-style="normal"
+       y="80"
+       x="518">A</text>
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line155"
+       y2="89"
+       x2="556"
+       y1="89"
+       x1="480" />
+    <g
+       id="_5ZMksLqSEDK07IxEU2-Zdg">
+      <image
+         id="image158"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP////3+/ypvqCtuqCtvqDF0qzp5rzp4rjp5rkN/skOAskR/sk2Ftk2GtlWMulaMulaNulaMuV6Svl6RvV6SvV+SvWWWwGWXwGqawvr9/+35//b8//L7/+T3/+H3/+T4/+z6/+36/+P4/+f5//L8//b9/wWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACj1MwgAAAArdFJOU////////////////////////////////////////////////////////wAjyafQAAAAjklEQVR42lyPMQrCUBBE364bbbSwEcE+EO9/l0AqIZ0K2in8v7sWIkmc7s1MMSNnltI/xnjMcY8Rt4kPYNRjIYUUaCoYvr3vvvlzU0DxVyFiHetIcTDcgiZr4+EWYPjKrwC8udB3RtZTUSDGFgaMHDVBKqBBL7/pfQsaYIsXSsyMQHLeGGhhmN52HSTwGQCflTcMX9qOTgAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="95"
+         x="483" />
+      <text
+         style="fill:#000000"
+         id="text160"
+         y="107"
+         x="501">a: String</text>
+    </g>
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line162"
+       y2="116"
+       x2="556"
+       y1="116"
+       x1="480" />
+  </g>
+  <g
+     id="_9yk_wLqSEDK07IxEU2-Zdg"
+     transform="translate(128.71834,-9.4020283)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3318);stroke:#cccccc;stroke-width:1"
+       id="rect165"
+       ry="0"
+       rx="5"
+       height="91"
+       width="153"
+       y="22"
+       x="590" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text167"
+       font-weight="bold"
+       font-style="normal"
+       y="40"
+       x="667">AAspect</text>
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line169"
+       y2="49"
+       x2="743"
+       y1="49"
+       x1="590" />
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line171"
+       y2="56"
+       x2="743"
+       y1="56"
+       x1="590" />
+    <g
+       id="_FNWvQbqTEDK07IxEU2-Zdg">
+      <image
+         id="image174"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP///8HBw6Ky1rfD3Ymh0au73Ku62Yag0aq72bPB27fD2b7J3YWh0Ieiz4ahzomk0Z2z2Ki72bPD3L7J23eXyIajz7TE27PD2rTD2maPxbvK38PP32OMwGSMvYamz7PE2LXE10V/vkh/v0d/vEiAvUh+vFGEu1OEvGaEpqC40kaBvUWAukd/ukmBvGGQvmSGqWOEpZ+61QA9cwA8cgA7cQI7cAM8czZ0rT16sEF9s0J9tUSBuE6GuVGFt2OGpmSHp2OEo2WGpWSFpAA8cAA9cAA7bwA8bgA9bgA7bQI8bgI8bD18slCGtWKFo2OGpGSHpQA9bAA7aDR3rAWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADH1d5AAAABYdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wB4m8IIAAAA2UlEQVR42lSPzUoCURhAz/0cUrhjTYzuIu0PicZFy57ABxjQdxR8iQQJYmrTDYJZNEZQC2fGHPIndVyUkGdz4OyO6rCL/Mqkj//Ce8iR8Uge/sJzNUqG+etocH4PqA6TQEpfUzWvlBoOFDyKrsnOLnQi1weAEKRG37iTWWs8iJ9AqN9Ns/0sqL3oVf8YCl7UGO05lbKTDRer0FxZXNL8CE/tNMaHHgLx9+zkU9++gUDXgqK45Z8YH8DHAh3Z9tIGAWFtATUID2GNykFtb7vgq7y3vYV2G3JgMwDzTEnCPC8r9AAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="60"
+         x="593" />
+      <text
+         style="font-style:normal;text-decoration: underline;fill:#000000"
+         id="text176"
+         text-decoration="underline"
+         font-style="normal"
+         y="72"
+         x="611">getB(A): String</text>
+    </g>
+    <g
+       id="_S2fecbqTEDK07IxEU2-Zdg">
+      <image
+         id="image179"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP///8HBw6Ky1rfD3Ymh0au73Ku62Yag0aq72bPB27fD2b7J3YWh0Ieiz4ahzomk0Z2z2Ki72bPD3L7J23eXyIajz7TE27PD2rTD2maPxbvK38PP32OMwGSMvYamz7PE2LXE10V/vkh/v0d/vEiAvUh+vFGEu1OEvGaEpqC40kaBvUWAukd/ukmBvGGQvmSGqWOEpZ+61QA9cwA8cgA7cQI7cAM8czZ0rT16sEF9s0J9tUSBuE6GuVGFt2OGpmSHp2OEo2WGpWSFpAA8cAA9cAA7bwA8bgA9bgA7bQI8bgI8bD18slCGtWKFo2OGpGSHpQA9bAA7aDR3rAWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADH1d5AAAABYdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wB4m8IIAAAA2UlEQVR42lSPzUoCURhAz/0cUrhjTYzuIu0PicZFy57ABxjQdxR8iQQJYmrTDYJZNEZQC2fGHPIndVyUkGdz4OyO6rCL/Mqkj//Ce8iR8Uge/sJzNUqG+etocH4PqA6TQEpfUzWvlBoOFDyKrsnOLnQi1weAEKRG37iTWWs8iJ9AqN9Ns/0sqL3oVf8YCl7UGO05lbKTDRer0FxZXNL8CE/tNMaHHgLx9+zkU9++gUDXgqK45Z8YH8DHAh3Z9tIGAWFtATUID2GNykFtb7vgq7y3vYV2G3JgMwDzTEnCPC8r9AAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="79"
+         x="593" />
+      <text
+         style="font-style:normal;text-decoration: underline;fill:#000000"
+         id="text181"
+         text-decoration="underline"
+         font-style="normal"
+         y="91"
+         x="611">foo(A): void</text>
+    </g>
+    <g
+       id="_W09fIbqTEDK07IxEU2-Zdg">
+      <image
+         id="image184"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP///8gdLMHBw6Ky1rfD3Ymh0au73Ku62Yag0aq72bPB27fD2b7J3XmXyYWh0Ieiz4ahzomk0Z2z2Ki72bPD3L7J23eXyIajz7TE27PD2rTD2maPxbvK38PP32WQxWOMwGSMvYamz7PE2LXE10V/vkh/v0d/vEiAvUh+vFGEu1OEvGGPw2aEpqC40kaBvUWAukd/ukmBvGGQvmSGqWOEpZ+61QA9cwA8cgA7cQI7cAM8czZ0rT16sEF9s0J9tUWCu0SBuE6GuVGFt2OGpmSHp2OEo2WGpWSFpAA8cAA9cAA7bwA8bgA9bgA7bQI8bgI8bD18slCGtWKFo2OGpGSHpQA9bAA7aDR3rMlHPvV8fP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF0EaqEAAABcdFJOU/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8Ag20X4AAAANtJREFUeNpUj0tLAlEARs+9XppGpzHDu1AQJcHHZlZFuBDa9wci/6Cu/AmBEcJQLSxFRJCgBy3MGSd8QenCB3Y2B87q+0SF/8i12v7TXvjok2o5eI+b0NED73U5+G7kXEBU+HGl6U/EXJvFKIQcDnQryBWsoTyzAcmD/2yV4+PZlXc3egHJ6f0ksAM307V+b9Mg+SqpWJC8MIy/48sxhBxtxuRb+HD6rnXSBgWj2TT7ma8DTUCBIeNHiyHXu6VhLxKJJqgJIYSoKSANvROo7p87z7Jco7a3bzZeDQBYqUT6Rob/IQAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="98"
+         x="593" />
+      <text
+         style="font-style:normal;text-decoration: underline;fill:#000000"
+         id="text186"
+         text-decoration="underline"
+         font-style="normal"
+         y="110"
+         x="611">_internal_foo(A): void</text>
+    </g>
+  </g>
+  <g
+     id="___ProLqSEDK07IxEU2-Zdg"
+     transform="translate(459.31318,-142.08974)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3320);stroke:#cccccc;stroke-width:1"
+       id="rect189"
+       ry="0"
+       rx="5"
+       height="91"
+       width="154"
+       y="152"
+       x="600" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text191"
+       font-weight="bold"
+       font-style="normal"
+       y="170"
+       x="677">AAspect1</text>
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line193"
+       y2="179"
+       x2="754"
+       y1="179"
+       x1="600" />
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line195"
+       y2="186"
+       x2="754"
+       y1="186"
+       x1="600" />
+    <g
+       id="_jLnSwbqTEDK07IxEU2-Zdg">
+      <image
+         id="image198"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP///8HBw6Ky1rfD3Ymh0au73Ku62Yag0aq72bPB27fD2b7J3YWh0Ieiz4ahzomk0Z2z2Ki72bPD3L7J23eXyIajz7TE27PD2rTD2maPxbvK38PP32OMwGSMvYamz7PE2LXE10V/vkh/v0d/vEiAvUh+vFGEu1OEvGaEpqC40kaBvUWAukd/ukmBvGGQvmSGqWOEpZ+61QA9cwA8cgA7cQI7cAM8czZ0rT16sEF9s0J9tUSBuE6GuVGFt2OGpmSHp2OEo2WGpWSFpAA8cAA9cAA7bwA8bgA9bgA7bQI8bgI8bD18slCGtWKFo2OGpGSHpQA9bAA7aDR3rAWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADH1d5AAAABYdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wB4m8IIAAAA2UlEQVR42lSPzUoCURhAz/0cUrhjTYzuIu0PicZFy57ABxjQdxR8iQQJYmrTDYJZNEZQC2fGHPIndVyUkGdz4OyO6rCL/Mqkj//Ce8iR8Uge/sJzNUqG+etocH4PqA6TQEpfUzWvlBoOFDyKrsnOLnQi1weAEKRG37iTWWs8iJ9AqN9Ns/0sqL3oVf8YCl7UGO05lbKTDRer0FxZXNL8CE/tNMaHHgLx9+zkU9++gUDXgqK45Z8YH8DHAh3Z9tIGAWFtATUID2GNykFtb7vgq7y3vYV2G3JgMwDzTEnCPC8r9AAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="190"
+         x="603" />
+      <text
+         style="font-style:normal;text-decoration: underline;fill:#000000"
+         id="text200"
+         text-decoration="underline"
+         font-style="normal"
+         y="202"
+         x="621">getC(A): void</text>
+    </g>
+    <g
+       id="_kRHiQbqTEDK07IxEU2-Zdg">
+      <image
+         id="image203"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP///8HBw6Ky1rfD3Ymh0au73Ku62Yag0aq72bPB27fD2b7J3YWh0Ieiz4ahzomk0Z2z2Ki72bPD3L7J23eXyIajz7TE27PD2rTD2maPxbvK38PP32OMwGSMvYamz7PE2LXE10V/vkh/v0d/vEiAvUh+vFGEu1OEvGaEpqC40kaBvUWAukd/ukmBvGGQvmSGqWOEpZ+61QA9cwA8cgA7cQI7cAM8czZ0rT16sEF9s0J9tUSBuE6GuVGFt2OGpmSHp2OEo2WGpWSFpAA8cAA9cAA7bwA8bgA9bgA7bQI8bgI8bD18slCGtWKFo2OGpGSHpQA9bAA7aDR3rAWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADH1d5AAAABYdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wB4m8IIAAAA2UlEQVR42lSPzUoCURhAz/0cUrhjTYzuIu0PicZFy57ABxjQdxR8iQQJYmrTDYJZNEZQC2fGHPIndVyUkGdz4OyO6rCL/Mqkj//Ce8iR8Uge/sJzNUqG+etocH4PqA6TQEpfUzWvlBoOFDyKrsnOLnQi1weAEKRG37iTWWs8iJ9AqN9Ns/0sqL3oVf8YCl7UGO05lbKTDRer0FxZXNL8CE/tNMaHHgLx9+zkU9++gUDXgqK45Z8YH8DHAh3Z9tIGAWFtATUID2GNykFtb7vgq7y3vYV2G3JgMwDzTEnCPC8r9AAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="209"
+         x="603" />
+      <text
+         style="font-style:normal;text-decoration: underline;fill:#000000"
+         id="text205"
+         text-decoration="underline"
+         font-style="normal"
+         y="221"
+         x="621">bar(A): void</text>
+    </g>
+    <g
+       id="_lGlxsbqTEDK07IxEU2-Zdg">
+      <image
+         id="image208"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP///8gdLMHBw6Ky1rfD3Ymh0au73Ku62Yag0aq72bPB27fD2b7J3XmXyYWh0Ieiz4ahzomk0Z2z2Ki72bPD3L7J23eXyIajz7TE27PD2rTD2maPxbvK38PP32WQxWOMwGSMvYamz7PE2LXE10V/vkh/v0d/vEiAvUh+vFGEu1OEvGGPw2aEpqC40kaBvUWAukd/ukmBvGGQvmSGqWOEpZ+61QA9cwA8cgA7cQI7cAM8czZ0rT16sEF9s0J9tUWCu0SBuE6GuVGFt2OGpmSHp2OEo2WGpWSFpAA8cAA9cAA7bwA8bgA9bgA7bQI8bgI8bD18slCGtWKFo2OGpGSHpQA9bAA7aDR3rMlHPvV8fP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF0EaqEAAABcdFJOU/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8Ag20X4AAAANtJREFUeNpUj0tLAlEARs+9XppGpzHDu1AQJcHHZlZFuBDa9wci/6Cu/AmBEcJQLSxFRJCgBy3MGSd8QenCB3Y2B87q+0SF/8i12v7TXvjok2o5eI+b0NED73U5+G7kXEBU+HGl6U/EXJvFKIQcDnQryBWsoTyzAcmD/2yV4+PZlXc3egHJ6f0ksAM307V+b9Mg+SqpWJC8MIy/48sxhBxtxuRb+HD6rnXSBgWj2TT7ma8DTUCBIeNHiyHXu6VhLxKJJqgJIYSoKSANvROo7p87z7Jco7a3bzZeDQBYqUT6Rob/IQAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="228"
+         x="603" />
+      <text
+         style="font-style:normal;text-decoration: underline;fill:#000000"
+         id="text210"
+         text-decoration="underline"
+         font-style="normal"
+         y="240"
+         x="621">_internal_bar(A): void</text>
+    </g>
+  </g>
+  <g
+     id="_twGlMLqTEDK07IxEU2-Zdg"
+     transform="translate(128.71834,-9.4020283)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3322);stroke:#cccccc;stroke-width:1"
+       id="rect213"
+       ry="0"
+       rx="5"
+       height="80"
+       width="124"
+       y="22"
+       x="790" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text215"
+       font-weight="bold"
+       font-style="normal"
+       y="40"
+       x="852">AAspectProperty</text>
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line217"
+       y2="49"
+       x2="914"
+       y1="49"
+       x1="790" />
+    <g
+       id="_vb_fQLqTEDK07IxEU2-Zdg">
+      <image
+         id="image220"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP////3+/ypvqCtuqCtvqDF0qzp5rzp4rjp5rkN/skOAskR/sk2Ftk2GtlWMulaMulaNulaMuV6Svl6RvV6SvV+SvWWWwGWXwGqawvr9/+35//b8//L7/+T3/+H3/+T4/+z6/+36/+P4/+f5//L8//b9/wWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACj1MwgAAAArdFJOU////////////////////////////////////////////////////////wAjyafQAAAAjklEQVR42lyPMQrCUBBE364bbbSwEcE+EO9/l0AqIZ0K2in8v7sWIkmc7s1MMSNnltI/xnjMcY8Rt4kPYNRjIYUUaCoYvr3vvvlzU0DxVyFiHetIcTDcgiZr4+EWYPjKrwC8udB3RtZTUSDGFgaMHDVBKqBBL7/pfQsaYIsXSsyMQHLeGGhhmN52HSTwGQCflTcMX9qOTgAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="55"
+         x="793" />
+      <text
+         style="fill:#000000"
+         id="text222"
+         y="67"
+         x="811">b: String</text>
+    </g>
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line224"
+       y2="76"
+       x2="914"
+       y1="76"
+       x1="790" />
+  </g>
+  <g
+     id="_xbbAYLqTEDK07IxEU2-Zdg"
+     transform="translate(459.31318,-142.08974)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3324);stroke:#cccccc;stroke-width:1"
+       id="rect227"
+       ry="0"
+       rx="5"
+       height="80"
+       width="132"
+       y="152"
+       x="790" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text229"
+       font-weight="bold"
+       font-style="normal"
+       y="170"
+       x="856">AAspect1Property</text>
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line231"
+       y2="179"
+       x2="922"
+       y1="179"
+       x1="790" />
+    <g
+       id="_y8OEwLqTEDK07IxEU2-Zdg">
+      <image
+         id="image234"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG8dAAB6pAAA9NYAAIZwAAB37gAA9bAAADqjAAAVsi1zQqwAAAMAUExURQAAAP////3+/ypvqCtuqCtvqDF0qzp5rzp4rjp5rkN/skOAskR/sk2Ftk2GtlWMulaMulaNulaMuV6Svl6RvV6SvV+SvWWWwGWXwGqawvr9/+35//b8//L7/+T3/+H3/+T4/+z6/+36/+P4/+f5//L8//b9/wWBSUOcbHGxdf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACj1MwgAAAArdFJOU////////////////////////////////////////////////////////wAjyafQAAAAjklEQVR42lyPMQrCUBBE364bbbSwEcE+EO9/l0AqIZ0K2in8v7sWIkmc7s1MMSNnltI/xnjMcY8Rt4kPYNRjIYUUaCoYvr3vvvlzU0DxVyFiHetIcTDcgiZr4+EWYPjKrwC8udB3RtZTUSDGFgaMHDVBKqBBL7/pfQsaYIsXSsyMQHLeGGhhmN52HSTwGQCflTcMX9qOTgAAAABJRU5ErkJggg=="
+         height="16"
+         width="16"
+         y="185"
+         x="793" />
+      <text
+         style="fill:#000000"
+         id="text236"
+         y="197"
+         x="811">c: String</text>
+    </g>
+    <line
+       style="stroke:#cccccc;stroke-width:1"
+       id="line238"
+       y2="206"
+       x2="922"
+       y1="206"
+       x1="790" />
+  </g>
+  <polygon
+     points="380,172 380,272 565,272 565,187 550,172 "
+     id="polygon241"
+     style="fill:#ffffff;stroke:#cccccc;stroke-width:1"
+     transform="matrix(0.70393434,0,0,0.64343881,161.22227,-101.16522)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <polygon
+     points="565,187 550,172 550,187 "
+     id="polygon257"
+     style="fill:#cccccc;stroke:#cccccc;stroke-width:1"
+     transform="translate(-3.9693879,-162.33025)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <g
+     id="_nqwCcLqREDK07IxEU2-Zdg"
+     transform="translate(-12.965168,-0.40625)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:10, 5"
+       id="polyline260"
+       points="210,57 126,88" />
+    <g
+       id="g262"
+       transform="translate(126,88)">
+      <g
+         id="g264"
+         transform="matrix(-0.34202014,-0.93969262,0.93969262,-0.34202014,0,0)">
+        <polyline
+           style="fill:none;stroke:#000000;stroke-width:1"
+           id="polyline266"
+           points="-4,8 0,0 4,8" />
+      </g>
+    </g>
+  </g>
+  <g
+     id="_oG82QLqREDK07IxEU2-Zdg"
+     transform="translate(-12.965168,-0.40625)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:10, 5"
+       id="polyline269"
+       points="210,160 126,120" />
+    <g
+       id="g271"
+       transform="translate(126,120)">
+      <g
+         id="g273"
+         transform="matrix(0.42261826,-0.90630779,0.90630779,0.42261826,0,0)">
+        <polyline
+           style="fill:none;stroke:#000000;stroke-width:1"
+           id="polyline275"
+           points="-4,8 0,0 4,8" />
+      </g>
+    </g>
+  </g>
+  <g
+     id="_4HTCgbqTEDK07IxEU2-Zdg"
+     transform="translate(128.71834,-9.4020283)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline278"
+       points="743,63 766,63" />
+  </g>
+  <g
+     id="g280"
+     transform="translate(128.71834,-9.4020283)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline282"
+       points="766,63 766,63" />
+  </g>
+  <g
+     id="g284"
+     transform="translate(128.71834,-9.4020283)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline286"
+       points="766,63 790,63" />
+    <g
+       id="g288"
+       transform="translate(790,63)">
+      <g
+         id="g290"
+         transform="matrix(0,1,-1,0,0,0)">
+        <polyline
+           style="fill:none;stroke:#000000;stroke-width:1"
+           id="polyline292"
+           points="-4,8 0,0 4,8" />
+      </g>
+    </g>
+  </g>
+  <g
+     id="_FqStcLqUEDK07IxEU2-Zdg"
+     transform="translate(459.31318,-142.08974)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline295"
+       points="754,193 771,193" />
+  </g>
+  <g
+     id="g297"
+     transform="translate(459.31318,-142.08974)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline299"
+       points="771,193 771,193" />
+  </g>
+  <g
+     id="g301"
+     transform="translate(459.31318,-142.08974)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline303"
+       points="771,193 790,193" />
+    <g
+       id="g305"
+       transform="translate(790,193)">
+      <g
+         id="g307"
+         transform="matrix(0,1,-1,0,0,0)">
+        <polyline
+           style="fill:none;stroke:#000000;stroke-width:1"
+           id="polyline309"
+           points="-4,8 0,0 4,8" />
+      </g>
+    </g>
+  </g>
+  <text
+     style="fill:#000000"
+     id="text311"
+     y="71.597977"
+     x="900.71826"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">*</text>
+  <text
+     style="fill:#000000"
+     id="text313"
+     y="68.91024"
+     x="1231.3131"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">*</text>
+  <text
+     style="fill:#000000"
+     id="text315"
+     y="44.59375"
+     x="101.03484"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">« dependency »</text>
+  <text
+     style="fill:#000000"
+     id="text317"
+     y="127.59375"
+     x="129.03484"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">« dependency »</text>
+  <g
+     transform="translate(278.95243,156.76255)"
+     id="_CAta0LqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#a29e9e;stroke-width:1;stroke-dasharray:10, 5"
+       id="polyline20"
+       points="205,36  205,210 " />
+    <rect
+       style="fill:url(#linearGradient3228);stroke:#cccccc;stroke-width:1"
+       id="rect22"
+       ry="0"
+       rx="0"
+       height="39"
+       width="90"
+       y="15"
+       x="160" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text24"
+       font-weight="bold"
+       font-style="normal"
+       y="36"
+       x="205">a:A</text>
+  </g>
+  <g
+     transform="translate(278.95243,156.76255)"
+     id="_LJ6bALqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#a29e9e;stroke-width:1;stroke-dasharray:10, 5"
+       id="polyline41"
+       points="95,36  95,200 " />
+    <rect
+       style="fill:url(#linearGradient3234);stroke:#cccccc;stroke-width:1"
+       id="rect43"
+       ry="0"
+       rx="0"
+       height="39"
+       width="90"
+       y="15"
+       x="50" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text45"
+       font-weight="bold"
+       font-style="normal"
+       y="36"
+       x="95">external</text>
+  </g>
+  <g
+     transform="translate(278.95243,156.76255)"
+     id="_M2kKELqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3240);stroke:#c2b79f;stroke-width:1"
+       id="rect62"
+       ry="0"
+       rx="0"
+       height="30"
+       width="14"
+       y="77"
+       x="198" />
+  </g>
+  <g
+     transform="translate(278.95243,156.76255)"
+     id="_XFli0bqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3244);stroke:#c2b79f;stroke-width:1"
+       id="rect68"
+       ry="0"
+       rx="0"
+       height="20"
+       width="14"
+       y="137"
+       x="198" />
+  </g>
+  <g
+     transform="translate(278.95243,156.76255)"
+     id="_M2l_QLqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:1, 2"
+       id="polyline86"
+       points="198,107 95,107" />
+    <g
+       id="g88"
+       transform="translate(95,107)">
+      <g
+         id="g90"
+         transform="matrix(0,-1,1,0,0,0)">
+        <polyline
+           style="fill:none;stroke:#000000;stroke-width:1"
+           id="polyline92"
+           points="-5,16 0,0 5,16" />
+      </g>
+    </g>
+  </g>
+  <g
+     transform="translate(278.95243,156.76255)"
+     id="_M2mmULqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline95"
+       points="95,77 198,77" />
+    <g
+       id="g97">
+      <text
+         style="font-style:normal;fill:#000000"
+         id="text99"
+         font-style="normal"
+         y="70"
+         x="147">bar</text>
+    </g>
+    <g
+       id="g101"
+       transform="translate(198,77)">
+      <g
+         id="g103"
+         transform="matrix(0,1,-1,0,0,0)">
+        <polyline
+           style="fill:#000000;stroke:#000000;stroke-width:1"
+           id="polyline105"
+           points="-4,12 0,0 4,12 -4,12" />
+      </g>
+    </g>
+  </g>
+  <g
+     transform="translate(278.95243,156.76255)"
+     id="_XFli0rqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:1, 2"
+       id="polyline108"
+       points="198,157 95,157" />
+    <g
+       id="g110"
+       transform="translate(95,157)">
+      <g
+         id="g112"
+         transform="matrix(0,-1,1,0,0,0)">
+        <polyline
+           style="fill:none;stroke:#000000;stroke-width:1"
+           id="polyline114"
+           points="-5,16 0,0 5,16" />
+      </g>
+    </g>
+  </g>
+  <g
+     transform="translate(278.95243,156.76255)"
+     id="_XFmw8LqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline117"
+       points="95,137 198,137" />
+    <g
+       id="g119">
+      <text
+         style="font-style:normal;fill:#000000"
+         id="text121"
+         font-style="normal"
+         y="150"
+         x="150">c</text>
+    </g>
+    <g
+       id="g123"
+       transform="translate(198,137)">
+      <g
+         id="g125"
+         transform="matrix(0,1,-1,0,0,0)">
+        <polyline
+           style="fill:#000000;stroke:#000000;stroke-width:1"
+           id="polyline127"
+           points="-4,12 0,0 4,12 -4,12" />
+      </g>
+    </g>
+  </g>
+  <g
+     transform="matrix(1,0,0,0.91836835,430.42483,107.36467)"
+     id="_C5-lILqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#a29e9e;stroke-width:1;stroke-dasharray:10, 5"
+       id="polyline27"
+       points="480,36  480,290 " />
+    <rect
+       style="fill:url(#linearGradient3230);stroke:#cccccc;stroke-width:1"
+       id="rect29"
+       ry="0"
+       rx="0"
+       height="39"
+       width="80"
+       y="15"
+       x="440" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text31"
+       font-weight="bold"
+       font-style="normal"
+       y="36"
+       x="480">AAspect1</text>
+  </g>
+  <g
+     transform="matrix(1,0,0,0.88979727,430.42483,107.79324)"
+     id="_Ek7EALqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#a29e9e;stroke-width:1;stroke-dasharray:10, 5"
+       id="polyline34"
+       points="646,36  646,290 " />
+    <rect
+       style="fill:url(#linearGradient3232);stroke:#cccccc;stroke-width:1"
+       id="rect36"
+       ry="0"
+       rx="0"
+       height="39"
+       width="191"
+       y="15"
+       x="550" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text38"
+       font-weight="bold"
+       font-style="normal"
+       y="36"
+       x="646">aspect1:AAspect1Property</text>
+  </g>
+  <g
+     transform="matrix(1,0,0,0.89759591,430.42483,107.67626)"
+     id="_xpb08LqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#a29e9e;stroke-width:1;stroke-dasharray:10, 5"
+       id="polyline48"
+       points="385,36  385,300 " />
+    <rect
+       style="fill:url(#linearGradient3236);stroke:#cccccc;stroke-width:1"
+       id="rect50"
+       ry="0"
+       rx="0"
+       height="39"
+       width="90"
+       y="15"
+       x="340" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text52"
+       font-weight="bold"
+       font-style="normal"
+       y="36"
+       x="385">external</text>
+  </g>
+  <g
+     transform="matrix(1,0,0,0.88163411,430.42483,107.91569)"
+     id="_9KJfELqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#a29e9e;stroke-width:1;stroke-dasharray:10, 5"
+       id="polyline55"
+       points="805,36  805,290 " />
+    <rect
+       style="fill:url(#linearGradient3238);stroke:#cccccc;stroke-width:1"
+       id="rect57"
+       ry="0"
+       rx="0"
+       height="39"
+       width="70"
+       y="15"
+       x="770" />
+    <text
+       style="font-style:normal;font-weight:bold;text-anchor:middle;fill:#033656"
+       id="text59"
+       font-weight="bold"
+       font-style="normal"
+       y="36"
+       x="805">a:A</text>
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_OoT0gLqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3242);stroke:#c2b79f;stroke-width:1"
+       id="rect65"
+       ry="0"
+       rx="0"
+       height="105"
+       width="14"
+       y="77"
+       x="473" />
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_Ycu787qYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3246);stroke:#c2b79f;stroke-width:1"
+       id="rect71"
+       ry="0"
+       rx="0"
+       height="36"
+       width="14"
+       y="217"
+       x="473" />
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_bWcUALqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3248);stroke:#c2b79f;stroke-width:1"
+       id="rect74"
+       ry="0"
+       rx="0"
+       height="10"
+       width="14"
+       y="224"
+       x="639" />
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_4EbicbqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3250);stroke:#c2b79f;stroke-width:1"
+       id="rect77"
+       ry="0"
+       rx="0"
+       height="101"
+       width="14"
+       y="77"
+       x="378" />
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_A0pa4bqZEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3252);stroke:#c2b79f;stroke-width:1"
+       id="rect80"
+       ry="0"
+       rx="0"
+       height="50"
+       width="14"
+       y="217"
+       x="378" />
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_RpjX8rqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <rect
+       style="fill:url(#linearGradient3254);stroke:#c2b79f;stroke-width:1"
+       id="rect83"
+       ry="0"
+       rx="0"
+       height="50"
+       width="14"
+       y="104"
+       x="480" />
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_bWdiILqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:1, 2"
+       id="polyline130"
+       points="639,234 487,234" />
+    <g
+       id="g132"
+       transform="translate(487,234)">
+      <g
+         id="g134"
+         transform="matrix(0,-1,1,0,0,0)">
+        <polyline
+           style="fill:none;stroke:#000000;stroke-width:1"
+           id="polyline136"
+           points="-5,16 0,0 5,16" />
+      </g>
+    </g>
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_bWeJMLqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline139"
+       points="487,224 639,224" />
+    <g
+       id="g141">
+      <text
+         style="font-style:normal;fill:#000000"
+         id="text143-7"
+         font-style="normal"
+         y="217"
+         x="563">getC()</text>
+    </g>
+    <g
+       id="g145"
+       transform="translate(639,224)">
+      <g
+         id="g147"
+         transform="matrix(0,1,-1,0,0,0)">
+        <polyline
+           style="fill:#000000;stroke:#000000;stroke-width:1"
+           id="polyline149"
+           points="-4,12 0,0 4,12 -4,12" />
+      </g>
+    </g>
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_0f5EsbqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline152"
+       points="385,77 473,77" />
+    <g
+       id="g154">
+      <text
+         style="font-style:normal;fill:#000000"
+         id="text156"
+         font-style="normal"
+         y="70"
+         x="429">bar(a)</text>
+    </g>
+    <g
+       id="g158"
+       transform="translate(473,77)">
+      <g
+         id="g160"
+         transform="matrix(0,1,-1,0,0,0)">
+        <polyline
+           style="fill:#000000;stroke:#000000;stroke-width:1"
+           id="polyline162"
+           points="-4,12 0,0 4,12 -4,12" />
+      </g>
+    </g>
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_5Zpo8LqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:1, 2"
+       id="polyline165"
+       points="473,182 392,178" />
+    <g
+       id="g167">
+      <text
+         style="font-style:normal;fill:#000000"
+         id="text169"
+         font-style="normal"
+         y="173"
+         x="433">reply</text>
+    </g>
+    <g
+       id="g171"
+       transform="translate(392,178)">
+      <g
+         id="g173"
+         transform="matrix(0.05233596,-0.99862953,0.99862953,0.05233596,0,0)">
+        <polyline
+           style="fill:none;stroke:#000000;stroke-width:1"
+           id="polyline175"
+           points="-5,16 0,0 5,16" />
+      </g>
+    </g>
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_Bt8aYLqZEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline178"
+       points="392,217 473,217" />
+    <g
+       id="g180">
+      <text
+         style="font-style:normal;fill:#000000"
+         id="text182"
+         font-style="normal"
+         y="210"
+         x="418">getC(c)</text>
+    </g>
+    <g
+       id="g184"
+       transform="translate(473,217)">
+      <g
+         id="g186"
+         transform="matrix(0,1,-1,0,0,0)">
+        <polyline
+           style="fill:#000000;stroke:#000000;stroke-width:1"
+           id="polyline188"
+           points="-4,12 0,0 4,12 -4,12" />
+      </g>
+    </g>
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_CaO4oLqZEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:1, 2"
+       id="polyline191"
+       points="473,253 392,253" />
+    <g
+       id="g193">
+      <text
+         style="font-style:normal;fill:#000000"
+         id="text195"
+         font-style="normal"
+         y="379"
+         x="252" />
+    </g>
+    <g
+       id="g197"
+       transform="translate(392,253)">
+      <g
+         id="g199"
+         transform="matrix(0,-1,1,0,0,0)">
+        <polyline
+           style="fill:none;stroke:#000000;stroke-width:1"
+           id="polyline201"
+           points="-5,16 0,0 5,16" />
+      </g>
+    </g>
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_RpkmELqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline204"
+       points="487,90 523,89" />
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="g206"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline208"
+       points="523,89 523,104" />
+    <g
+       id="g210">
+      <text
+         style="font-style:normal;fill:#000000"
+         id="text212"
+         font-style="normal"
+         y="90"
+         x="523">_internalbar_</text>
+    </g>
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="g214"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1"
+       id="polyline216"
+       points="523,104 494,104" />
+    <g
+       id="g218"
+       transform="translate(494,104)">
+      <g
+         id="g220"
+         transform="matrix(0,-1,1,0,0,0)">
+        <polyline
+           style="fill:#000000;stroke:#000000;stroke-width:1"
+           id="polyline222"
+           points="-4,12 0,0 4,12 -4,12" />
+      </g>
+    </g>
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="_Rpj_ALqYEDK07IxEU2-Zdg"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:1, 2"
+       id="polyline225"
+       points="487,154 516,169" />
+    <g
+       id="g227">
+      <text
+         style="font-style:normal;fill:#000000"
+         id="text229-9"
+         font-style="normal"
+         y="152"
+         x="501" />
+    </g>
+  </g>
+  <g
+     transform="translate(430.42483,106.1402)"
+     id="g231"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <polyline
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:1, 2"
+       id="polyline233"
+       points="516,169 487,170" />
+    <g
+       id="g235"
+       transform="translate(487,170)">
+      <g
+         id="g237"
+         transform="matrix(-0.0348995,-0.99939083,0.99939083,-0.0348995,0,0)">
+        <polyline
+           style="fill:none;stroke:#000000;stroke-width:1"
+           id="polyline239"
+           points="-5,16 0,0 5,16" />
+      </g>
+    </g>
+  </g>
+  <rect
+     style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     id="rect3873"
+     width="5.6223502"
+     height="365.45346"
+     x="301.88708"
+     y="0.51368612"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     id="rect3875"
+     width="5.6223612"
+     height="368.8269"
+     x="623.48615"
+     y="0.51368612"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <polygon
+     points="565,272 565,187 550,172 380,172 380,272 "
+     id="polygon241-9"
+     style="fill:#ffffff;stroke:#cccccc;stroke-width:1"
+     transform="matrix(0.821832,0,0,2.2221609,-311.88524,-233.61518)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <polygon
+     points="565,187 550,172 550,187 "
+     id="polygon257-1"
+     style="fill:#cccccc;stroke:#cccccc;stroke-width:1"
+     transform="translate(-411.24999,-24.703673)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot3355"
+     style="font-size:13px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     transform="translate(-12.965168,-0.40625)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90"><flowRegion
+       id="flowRegion3357"><rect
+         id="rect3359"
+         width="168.67084"
+         height="76.464111"
+         x="31.485224"
+         y="255.05066"
+         style="font-size:13px" /></flowRegion><flowPara
+       id="flowPara3361"></flowPara></flowRoot>  <flowRoot
+     xml:space="preserve"
+     id="flowRoot3419"
+     style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     transform="translate(-2.844918,-16.148862)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90"><flowRegion
+       id="flowRegion3421"><rect
+         id="rect3423"
+         width="132.68773"
+         height="240.63707"
+         x="21.364973"
+         y="177.46208"
+         style="font-size:12px" /></flowRegion><flowPara
+       id="flowPara3425">class A{}</flowPara><flowPara
+       id="flowPara3427"></flowPara><flowPara
+       id="flowPara3429">@Aspect(class=A)</flowPara><flowPara
+       id="flowPara3431">class  AAspect{</flowPara><flowPara
+       id="flowPara3433">b:String</flowPara><flowPara
+       id="flowPara3435">foo():void;</flowPara><flowPara
+       id="flowPara3437">}</flowPara><flowPara
+       id="flowPara3439"></flowPara><flowPara
+       id="flowPara3441">@Aspect(class=A)</flowPara><flowPara
+       id="flowPara3443">class  AAspect1{</flowPara><flowPara
+       id="flowPara3445">c:Boolean</flowPara><flowPara
+       id="flowPara3447">bar():void;</flowPara><flowPara
+       id="flowPara3449">}</flowPara></flowRoot>  <flowRoot
+     xml:space="preserve"
+     id="flowRoot3485"
+     style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     transform="translate(-12.965168,-0.40625)"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90"><flowRegion
+       id="flowRegion3487"><rect
+         id="rect3489"
+         width="177.66661"
+         height="92.206726"
+         x="447.53995"
+         y="15.538074"
+         style="font-size:12px" /></flowRegion><flowPara
+       id="flowPara3491">var a = new A();</flowPara><flowPara
+       id="flowPara3493">a.bar()</flowPara><flowPara
+       id="flowPara3495">a.b()</flowPara><flowPara
+       id="flowPara3497" /></flowRoot>  <polygon
+     points="380,272 565,272 565,187 550,172 380,172 "
+     id="polygon241-6"
+     style="fill:#ffffff;stroke:#cccccc;stroke-width:1"
+     transform="matrix(0.70393434,0,0,0.64343881,371.83916,117.42336)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <polygon
+     points="565,187 550,172 550,187 "
+     id="polygon257-2"
+     style="fill:#cccccc;stroke:#cccccc;stroke-width:1"
+     transform="translate(206.64751,56.25833)"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <flowRoot
+     transform="translate(197.65173,218.18233)"
+     xml:space="preserve"
+     id="flowRoot3485-6"
+     style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90"><flowRegion
+       id="flowRegion3487-2"><rect
+         id="rect3489-1"
+         width="177.66661"
+         height="92.206726"
+         x="447.53995"
+         y="15.538074"
+         style="font-size:12px" /></flowRegion><flowPara
+       id="flowPara3495-2">AAspect.bar(a)</flowPara><flowPara
+       id="flowPara3549">AAspect.getB(a)</flowPara><flowPara
+       id="flowPara3497-0" /></flowRoot>  <rect
+     style="fill:#000000;fill-opacity:1"
+     id="rect3556"
+     width="70.841743"
+     height="2.2489431"
+     x="737.65381"
+     y="83.467789"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="font-size:13px;fill:#000000;fill-opacity:1;font-family:Arial"
+     id="rect3556-7"
+     width="87.708832"
+     height="2.2489431"
+     x="738.21606"
+     y="64.351761"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="font-size:13px;fill:#000000;fill-opacity:1;font-family:Arial"
+     id="rect3556-4"
+     width="118.06958"
+     height="2.2489431"
+     x="747.21179"
+     y="100.33487"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="font-size:13px;fill:#000000;fill-opacity:1;font-family:Arial"
+     id="rect3556-75"
+     width="74.215164"
+     height="2.2489431"
+     x="1081.1802"
+     y="62.102818"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="font-size:13px;fill:#000000;fill-opacity:1;font-family:Arial"
+     id="rect3556-3"
+     width="67.46833"
+     height="2.2489431"
+     x="1081.1801"
+     y="80.094376"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="font-size:13px;fill:#000000;fill-opacity:1;font-family:Arial"
+     id="rect3556-8"
+     width="116.94511"
+     height="2.2489431"
+     x="1089.0514"
+     y="98.08593"
+     inkscape:export-filename="/home/barais/Téléchargements/flowRoot3485-6.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+</svg>

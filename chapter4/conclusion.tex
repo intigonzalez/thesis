@@ -1,0 +1,35 @@
+%\paragraph{Practical considerations \todo{Move to perspectives}}
+%A component does not execute on top of a flat operating system process but on top of a managed runtime environment, the JVM.
+%As a consequence, we devote resources to the component but also to the middleware.
+%Due to the presence of the garbage collector, we do not know the exact amount of memory new \textit{JVM nodes} should be assigned with.
+%In fact, we can only state that the reserved memory must equal the component reservation plus the middleware requirement plus any amount that allows an efficient behavior %of the garbage collector.
+%Chances are that any prediction will overestimate the real consumption, leading to the problem of wasting resources due to internal fragmentation.
+
+\section{Conclusion} \label{sec:conclusions}
+
+%\enlargethispage{0.3cm}
+
+This paper presents Squirrel, a framework that provides resource management capabilities to dynamic component-based frameworks.
+Squirrel proposes choosing component-to-system mappings at deployment time for better resource management.
+This strategy is performed automatically by checking the resource availability and transforming the application's structure to run the application on resource-aware containers.
+Containers describe how to map components to system abstractions
+%in ways that reduce the cost of resource management.
+allowing for different trade-offs in resource management.
+
+We present an implementation of Squirrel that manages CPU, I/O and memory, and provide performance analyses and a comparison of different design decisions.
+The experiments
+%to assess our implementation's behavior 
+show that choosing the right component-to-system mappings at deployment-time reduces CPU overhead and/or memory use.
+They also highlight that optimizing mappings is essential to reducing isolation and communication overhead to acceptable levels.
+%and make it affordable.
+
+In the future, we envision augmenting the Squirrel framework with automatic and dynamic reasoning capabilities in order to automatically place and migrate components with resource contracts over a distributed architecture.
+%This paper also opens interesting perspectives by applying the presented concepts in different application domains with strong security and safety concerns.
+Applying the concepts in this paper to other application domains with strong safety and security concerns is of interest.
+For instance, security concerns often leverage resource isolation as a means to avoid sharing confidential information with untrusted components within the same container.
+%\hl{WHAT?: Indeed, security concerns are often correlated with resource isolation in managing that some confidential information cannot be shared to untrusted components within the same container. }
+The possibility of applying a pattern-based approach to increase an application's security without compromising its efficiency looks promising~\cite{DBLP:conf/kbse/MorinMFTBJ10}.
+
+
+
+%Energy efficient dynamic adaptation, to switch off parts of the electronics depending on the resources usage

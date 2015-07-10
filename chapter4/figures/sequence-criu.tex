@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{arrows,shadows}
+\usepackage{pgf-umlsd}
+
+\begin{document}
+\begin{figure}
+\centering
+\newlength\figureheight %define length \figureheight 
+\newlength\figurewidth % define length \figurewidth 
+\setlength\figureheight{2cm} % set \figureheight 
+\setlength\figurewidth{2cm}	% set \figurewidth - See more at: http://www.howtotex.com/tips-tricks/faster-latex-part-ii-external-tikz-library/#sthash.hgLlceL1.dpuf
+\begin{sequencediagram}
+\newthread[white]{u}{User}
+\newinst[0.3]{m}{Management Runtime}
+\newinst[0.3]{b}{Base Runtime}
+\newinst[0.3]{criu}{CRIU Server}
+
+\begin{call}{u}{init}{b}{pid}
+\end{call}
+
+\begin{call}{u}{snapshot(pid)}{criu}{}
+\end{call}
+
+\begin{call}{u}{init}{m}{}
+\end{call}
+
+\begin{call}{u}{deploy(model)}{m}{}
+	\begin{sdblock}{Loop}{$\forall C \in components$}
+		\begin{call}{m}{clone($C_{size}$)}{criu}{runtime id}
+		\end{call}
+		\begin{call}{m}{deploy($C$)}{b}{}
+		\end{call}
+	\end{sdblock}
+\end{call}
+\end{sequencediagram}
+\end{figure}
+
+\end{document}

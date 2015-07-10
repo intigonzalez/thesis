@@ -1,0 +1,89 @@
+
+\newcounter{groupcount}
+\pgfplotsset{
+    draw group line/.style n args={5}{
+        after end axis/.append code={
+            \setcounter{groupcount}{0}
+            \pgfplotstableforeachcolumnelement{#1}\of\datatable\as\cell{%
+                \def\temp{#2}
+                \ifx\temp\cell
+                    \ifnum\thegroupcount=0
+                        \stepcounter{groupcount}
+                        \pgfplotstablegetelem{\pgfplotstablerow}{X}\of\datatable
+                        \coordinate [yshift=#4] (startgroup) at (axis cs:\pgfplotsretval,0);
+                    \else
+                        \pgfplotstablegetelem{\pgfplotstablerow}{X}\of\datatable
+                        \coordinate [yshift=#4] (endgroup) at (axis cs:\pgfplotsretval,0);
+                    \fi
+                \else
+                    \ifnum\thegroupcount=1
+                        \setcounter{groupcount}{0}
+                        \draw [
+                            shorten >=-#5,
+                            shorten <=-#5
+                        ] (startgroup) -- node [anchor=base, yshift=0.5ex] {#3} (endgroup);
+                    \fi
+                \fi
+            }
+            \ifnum\thegroupcount=1
+                        \setcounter{groupcount}{0}
+                        \draw [
+                            shorten >=-#5,
+                            shorten <=-#5
+                        ] (startgroup) -- node [anchor=base, yshift=0.5ex] {#3} (endgroup);
+            \fi
+        }
+    }
+}
+
+\begin{tikzpicture}
+\pgfplotstableread{
+X   Gp  Components  {Starting Java}      {Starting Kevoree} {Deploy Component} 
+1   2   local     	152.504650    				2266			887					
+2   2   remote   	165.629631      			4052			1709
+4   4   local     	192.179540      			2846			953
+5   4   remote   	210.916032    				4415			1994
+7   8   local     	532.695974      			6201			1936
+8   8   remote   	579.056628      			8529			2544
+10  12  local     	729.494640      			8527 			2783
+11  12  remote	   	757.555079    				12518			4605
+13  16  local     	1180.690414   				12244			3901
+14  16  remote  	975.361004    				16822			5235
+%16  32  local     2200     				5700			1567
+%17  32  remote   2200      				5700  			2100
+}\datatable
+
+\begin{axis}[
+    %axis lines*=left, ymajorgrids,
+    width=0.9\columnwidth, height=4.7cm,
+    ymin=0,
+    ybar stacked,
+    bar width=5pt,
+    xtick=data,
+    xticklabels from table={\datatable}{Components},
+    xticklabel style={rotate=90,xshift=-5ex,anchor=mid east},
+    scaled y ticks = false,
+               y tick label style={
+               /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+               },
+    ylabel={Time (milliseconds)},
+    legend pos = north west,
+    draw group line={Gp}{2}{2}{-4ex}{7pt},
+    draw group line={Gp}{4}{4}{-4ex}{7pt},
+    draw group line={Gp}{8}{8}{-4ex}{7pt},
+    draw group line={Gp}{12}{12}{-4ex}{7pt},
+    draw group line={Gp}{16}{16}{-4ex}{7pt},
+    %draw group line={Gp}{32}{32}{-4ex}{7pt},
+    after end axis/.append code={
+        \path [anchor=base east, yshift=0.5ex]
+            (rel axis cs:0,0) node [yshift=-4ex] {Components};
+    }
+]
+
+\addplot [draw=black,fill=black] table [x=X, y={Starting Java}] {\datatable}; \addlegendentry{Start Java}
+\addplot [draw=black,pattern=crosshatch] table [x=X, y={Starting Kevoree}] {\datatable}; \addlegendentry{Start Kevoree}
+\addplot [fill=white] table [x=X, y={Deploy Component}] {\datatable}; \addlegendentry{Deploy Model}
+
+\end{axis}
+\end{tikzpicture}
+

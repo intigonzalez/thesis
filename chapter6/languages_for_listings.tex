@@ -1,0 +1,59 @@
+\lstset{frame=tb,
+  aboveskip=1mm,
+  belowskip=1mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle=\color{black}\scriptsize,
+  numbers=none,
+  numberstyle=\color{gray}\scriptsize,
+  keywordstyle=\color{black}\scriptsize\bfseries,
+  commentstyle=\color{dkgreen}\scriptsize,
+  stringstyle=\color{purple}\scriptsize,
+  identifierstyle=\color{dkgray}\scriptsize,
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4,
+  captionpos=b,
+}
+
+\lstdefinelanguage{AlgLang}
+{
+literate={aaa}{bbb}3,
+morekeywords={input, foreach, action, if, return, routine},
+morekeywords={instances_for, have_id},
+sensitive=true,
+morecomment=[l]{//},
+morecomment=[s]{/*}{*/},
+morestring=[b]",
+}
+
+\lstdefinelanguage{DSL}
+{
+literate={aaa}{bbb}3,
+morekeywords={data, set_type, void, int, bool, Objects, THIS, is, ENTITY},
+morekeywords={instances_for, have_names},
+sensitive=true,
+morecomment=[l]{//},
+morecomment=[s]{/*}{*/},
+morestring=[b]",
+}
+
+\lstdefinelanguage{OQL}
+{
+literate={aaa}{bbb}3,
+morekeywords={SELECT, FROM, WHERE, UNION, AS, DISTINCT, ALL, GROUP, BY},
+sensitive=true,
+morecomment=[l]{//},
+morecomment=[s]{/*}{*/},
+morestring=[b]",
+}
+
+\lstdefinelanguage{CYPHER}
+{
+literate={aaa}{bbb}3,
+morekeywords={MATCH, RETURN, WITH, sum},
+sensitive=true,
+morecomment=[l]{//},
+morecomment=[s]{/*}{*/},
+morestring=[b]",
+}

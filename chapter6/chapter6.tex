@@ -1,0 +1,47 @@
+\selectlanguage{english}
+\chapter{Efficient Memory Analysis In Production}
+\markboth{Efficient Memory Analysis In Production}{Chapter6}
+
+%#Context  
+Domain-specific abstractions are increasingly used in industry to ease the development of complex applications. These abstractions take various forms, (e.g., internal domain specific language (DSL), external DSL, macros or active annotations, \dots). Workbenches exist to easily define and provide tooling over such abstractions. For example, DSL workbenches now provide facilities for both language definition and language tooling (e.g., checkers, editor or code generators). 
+% #Problem 
+However, profiling applications that has been partially developed using those domain specific abstractions still requires significant development efforts for keeping the traceability links between abstractions and runtime data-structure. This effort must be balanced with the limited audience of these abstractions. Besides, even if automatic memory management through garbage collection is a common feature nowadays, applications in production still suffer from memory-related issues such as memory leaks and excessive consumption that require efficient profiling.  If some profilers are able to represent such abstractions through arbitrary queries, they cannot be efficiently embedded at runtime due to poor performances of the evaluation of these queries.  
+%#Contribution
+
+In this paper, we propose an approach to ease the efficient analysis of the memory during the production stage. Our approach provides a DSL for expressing the mapping between abstractions and runtime data structure.
+It leverages the traversal mechanism to efficiently collect the data specified through these mappings.   
+%#Evaluation
+To evaluate our approach, we compare an initial implementation against: i) an efficient but complex to develop solution, and ii) a solution based on existent tools which offer poor performance. The results show that our approach offers a better trade-off between usability and performance than previous solutions.
+
+\input{chapter6/languages_for_listings}
+
+\input{chapter6/introduction}
+
+%\input{background}
+
+\input{chapter6/motivation}
+
+\input{chapter6/approach}
+
+\input{chapter6/implementation}
+
+\input{chapter6/expressiveness}
+
+\input{chapter6/evaluation}
+
+\input{chapter6/RelatedWork}
+
+\section{Conclusions and Future Works}\label{sec:conclusions}
+
+In this paper, we propose a Domain Specific Language for expressing the mapping between abstractions and runtime data structure to collect information about the memory heap in production. This language provides an abstraction that is useful to reason about the heap and is, at the same time, easy to translate into a set of low-level routines to efficiently collect the desired information.
+In our opinion, this approach is a step forward in the creation of resource-aware software systems for two reasons. 
+First, it reduces the complexity of defining customized queries; hence, developers and operators are able to use this feature to solve new problems without the need of high expertise on runtime internals.
+Second, such customized queries can be used in a production environment since they have a limited impact on the system's performance.
+
+In the future, we plan to address the limitations of the execution model we propose.
+In particular, we are aware that it is not as powerful as other query languages since it is based on a single traversal of the graph.
+The advantages of the chosen approach are that it guarantees a low impact on the performance and it is easy to weave with existent technique to explore the heap.
+An alternative we consider is to leverage the results from graph databases.
+It would provide two benefits: i) algebraic transformation of the queries with all the potential optimizations and, ii) an already known language for developers.
+
+

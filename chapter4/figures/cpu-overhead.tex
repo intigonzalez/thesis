@@ -1,0 +1,43 @@
+
+\pgfplotstableread{
+{Test Case}    {Memory Unaware}   {Scapegoat}   {Squirrel} 
+xalan	7.910	9.9616	7.957
+avrora	10.3672	11.6296	10.3214
+batik	1.5054	2.0536	1.3078
+fop	0.4774	3.6102	0.4708
+luindex	0.7798	1.007	0.6836
+lusearch	0.863	6.068	0.935
+%pmd	125444	135085	125085
+}\data
+
+\begin{tikzpicture}[scale=0.9,transform shape]
+  
+\begin{axis}[
+	every axis legend/.append style={nodes={right}},
+	height=4.2cm, width=1\columnwidth,
+    ybar=0pt,   % Stacked horizontal bars
+    ymin=0,         % Start x axis at 0
+    xtick=data,     % Use as many tick labels as y coordinates
+    xticklabels from table={\data}{Test Case},  % Get the labels from the Label column of the \datatable
+    scaled y ticks = false,
+   	y tick label style={
+   		/pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+   	},
+    scaled x ticks = false,
+   	x tick label style={
+   		/pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+   	},
+   	x tick label style={rotate=45},
+    bar width = 4,
+    ylabel={Execution Time (sec)},
+    y label style={at={(0.1,0.5)}},
+    legend pos=north west,
+    legend style={at={(0.44,0.95)}},
+    legend style={font=\tiny},
+]
+\addplot [fill=white] table [y={Memory Unaware}, x expr=\coordindex] {\data};
+\addplot [draw=black,fill=black] table [y={Scapegoat}, x expr=\coordindex] {\data};    % Plot the "First" column against the data index
+\addplot [draw=black,pattern=crosshatch] table [y={Squirrel}, x expr=\coordindex] {\data};
+\legend{Memory Unaware, Scapegoat, Isolating components}
+\end{axis}
+\end{tikzpicture}

@@ -1,0 +1,37 @@
+
+\pgfplotstableread{
+{Test Case}    {Memory Unaware}   {Scapegoat}   {Squirrel} 
+xalan	30082990.4	393385183.2	53634089.6
+avrora	30980142.4	104351584	47699702.4
+batik	151662422.4	324599222.4	172317585.6
+fop	72838632	756471347.2	97060990.4
+luindex	36728345.6	98952945.6	57629534.4
+lusearch	23896294.6666667	1182045168	109559376
+%pmd	125444	135085	125085
+}\data
+
+\begin{tikzpicture}[scale=0.9,transform shape]
+  
+\begin{axis}[
+	every axis legend/.append style={nodes={right}},
+	height=4.2cm, width=1\columnwidth,
+    ybar=0pt,   % Stacked horizontal bars
+    ymin=0,         % Start x axis at 0
+    xtick=data,     % Use as many tick labels as y coordinates
+    xticklabels from table={\data}{Test Case},  % Get the labels from the Label column of the \datatable
+    ytick={268435456,536870912,805306368,1073741824},
+    scaled y ticks = false,
+   	scaled y ticks=manual:{}{\pgfmathparse{#1/(1024*1024)}},
+   	x tick label style={rotate=45},
+    bar width = 4,
+    ylabel={Memory Usage (MiB)},
+    y label style={at={(0.04,0.5)}},
+    legend pos=north west,
+    legend style={font=\tiny},
+]
+\addplot [fill=white] table [y={Memory Unaware}, x expr=\coordindex] {\data};
+\addplot [draw=black,fill=black] table [y={Scapegoat}, x expr=\coordindex] {\data};    % Plot the "First" column against the data index
+\addplot [draw=black,pattern=crosshatch] table [y={Squirrel}, x expr=\coordindex] {\data};
+%\legend{Memory Unaware, Scapegoat, Squirrel}
+\end{axis}
+\end{tikzpicture}

@@ -1,0 +1,61 @@
+%\usetikzlibrary{shadows,arrows}
+
+% Define block styles  
+\tikzstyle{cgroup_sty}=[draw, fill=white!20, text width=5em, text centered,
+  minimum height=1.4em, rounded corners]
+
+\tikzstyle{thread_sty}=[draw, thin, fill=yellow!20, text width=3em, text centered,
+  minimum height=1.4em,dashed]
+
+\tikzstyle{cgroup_container_sty}=[cgroup_sty,fill=gray!20]
+
+\tikzstyle{cgroup_container_hidden_sty}=[cgroup_container_sty,dotted]
+
+
+\tikzstyle{line} = [draw, thick, color=black!80, -latex']
+
+% commands
+\newcommand{\cgroup}[2]{node (p#1) [cgroup_sty]
+  {{\scriptsize{#2}}}}
+
+\newcommand{\cgroupContainer}[2]{node (p#1) [cgroup_container_sty]
+  {{\scriptsize{#2}}}}
+
+\newcommand{\hiddenCgroup}[2]{node (p#1) [cgroup_container_hidden_sty]
+  {{\scriptsize{#2}}}}
+
+\newcommand{\thread}[2]{node (t#1) [thread_sty]
+  {{\scriptsize{#2}}}}
+
+\begin{tikzpicture}[scale=0.7,transform shape]
+\path \cgroup {1} {Root CGroup};
+\path(p1.south) + (-2,-1.2) \cgroupContainer {2} {Cgroup for Kevoree};
+\path(p1.south) + (1.7,-1.2) \cgroup {3} {Cgroup for other apps};
+
+\path(p2.south) + (2.3,-1.2) \cgroupContainer {4} {Cgroup for Component2};
+\path(p2.south) + (-1.5,-1.6) \cgroupContainer {5} {Cgroup for Component1};
+
+%\path(p4.south) + (0,-1.0) \hiddenCgroup {6} {Hidden Cgroup};
+%\path(p5.south) + (0,-1.0) \hiddenCgroup {7} {Hidden Cgroup};
+
+\path [line] (p1) --  node [left] {50\%} (p2);
+\path [line] (p1) --  node [right] {50\%} (p3);
+
+\path [line] (p2) --  node [left] {45\%} (p4);
+\path [line] (p2) --  node [left] {10\%} (p5);
+%\path [line] (p5) --  node [left] {100\%} (p7);
+%\path [line] (p4) --  node [right] {100\%} (p6);
+
+\path(p5.south) + (-1.5,-1.2) \thread {1} {Thread1};
+\path(p5.south) + (1.8,-1.0) \thread {2} {Thread3};
+\path(p5.south) + (0,-1.7) \thread {3} {Thread2};
+
+\path(p4.south) + (0,-1.2) \thread {4} {Thread4};
+
+\path [line] (p5) --  node [above,left] {33\%} (t1);
+\path [line] (p5) --  node [above,right] {33\%} (t2);
+\path [line] (p5) --  node [left] {33\%} (t3);
+
+\path [line] (p4) --  node [right] {100\%} (t4);
+
+\end{tikzpicture}

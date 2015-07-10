@@ -1,0 +1,23 @@
+\section{ScapeGoat Performance Evaluation\label{sec:evaluation}}
+In this section we present a first series of experiments and discuss the usability of our approach.
+We focus on the following research questions to assess the quality and the efficiency of ScapeGoat:
+
+\begin{itemize}
+	\item \textbf{What is the impact of the various levels of instrumentation on the application?}
+	Our approach assumes high overhead for full monitoring and low overhead for a lightweight global monitoring system. The experiments presented in section \ref{sec:OverheadFullMonitoring} show the overhead for each instrumentation level.
+	\item \textbf{What is the performance cost of using instrumentation-based and heap-exploration-based memory monitoring?}
+	Since both mechanisms have by design different features, the experiments in section \ref{sec:OverheadFullMonitoring} show the overhead each mechanism produces. 
+	\item \textbf{Does our adaptive monitoring approach have better performance than state-of-the-art monitoring solutions?}
+	The experiment presented in section \ref{sec:adaptive-vs-full} highlights the performances benefits of our approach considering a real-world scenario.
+	\item \textbf{What is the impact of using a heuristic in our adaptive monitoring approach?}
+	The experiment presented in section \ref{sec:switch-heuristic} highlights the impact of the application and component sizes, and the need of a good heuristic to quickly identify faulty components.
+%Our last experiments aims at showing the potential benefits of the Heuristics in our approach. The experiment presented in section \ref{heuristic_eval} highlights the benefits of using a heuristics with a growing size of the application.
+\end{itemize}
+
+The efficiency of our monitoring solution is evaluated on two dimensions: the overhead on the system and the delay to detect failures.
+We show there is a trade-off between the two dimensions and that ScapeGoat provides a valuable solution that increases the delay to detect a faulty component but reduces accumulated overhead.
+This evaluation has been conducted on a Cyber Physical System case study.
+It corresponds to a concrete application that leverage the Kevoree framework for dyamic adaptation purpose.
+
+\input{chapter5/evalUseCase1.tex}
+\input{chapter5/evalUseCase2.tex}

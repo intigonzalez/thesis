@@ -1,0 +1,26 @@
+\section{Related Work}\label{sec:relatedwork}
+Our work is related to the topics of tools to aid at detecting memory issues, and to resource consumption monitoring.
+
+In DeAl~\cite{Reichenbach:2010:GCE:1869459.1869482}, the authors propose a language to compute heap assertions at garbage collection time.
+The language design is motivated by concerns of efficiency as our approach.
+There is however a large number of differences, first DeAl is only able to compute boolean outputs while our DSL is intended to produce arbitrary data type as output which also includes boolean values.
+DeAl is a purely declarative language while our DSL contains a much more complex execution model.
+In exchange for the declarative style and the focus on assertions, DeAl is able to guarantee formal properties about the computation that we cannot provide. 
+Javana~\cite{Maebe06javana:a} is a system for building Java program analysis tools. It provides a dynamic instrumentation mechanism and a language to express customized profiling tools.
+The main difference with our
+approach is that it is able to handle fine-grained events but it cannot handle the structure of the heap as a whole.
+On the contrary, to the best of our knowledge, our paper focuses on a higher level of abstraction for profiling.
+Ansaloni et. al.~\cite{Ansaloni:2010:RDE:1712605.1712616} promote the idea of building Java profilers using high-level aspect-oriented programming.
+The authors share our motivation of trying to ease the process of profiler construction but their target is not on memory profiling due to its costs.
+
+In~\cite{Xu:2013:PML:2491509.2491511} the authors propose a framework to detect memory leaks associated with Java containers.
+To do so, the framework explores the status of each container object with the goal of identifying leak patterns. The approach is based on finding objects which are keeping references to removed bundles. LeakBots~\cite{Mitchell03leakbot:an} is an automated tool to detect memory leaks. It makes heavy
+use of information recollected from the heap in order to identify the more likely structures leading to a leak.
+These tools collect data from the heap in order to automatically pinpoint a particular memory issue.
+The methods to collect the data are handwritten for efficiency reasons.
+Lots of data collected in these works is also available with our approach.
+
+The authors of~\cite{Attouchi:2014:MMM:2602458.2602467} discuss the requirements of memory consumption monitoring in OSGi environments and discuss solutions to identify the source of misbehavior in multi-tenant applications. Our approach aims at handling such scenarios but our focus is more on the efficiency and the usability instead of on the accuracy.
+ solutions to the problem of memory monitoring in Java are based on bytecode instrumentation~\cite{binder_extending_2005, binder_portable_2001}.
+However, these solutions perform poorly when there is a high allocation rate. Moreover, they are not easy to implement and extend.
+

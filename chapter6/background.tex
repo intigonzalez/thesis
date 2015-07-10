@@ -1,0 +1,33 @@
+\section{Background}
+In this section we introduce two concepts which are related to our work.
+First, we briefly introduce the component-base software development model.
+Afterwards, we give a brief overview of domain-specific languages.
+
+\todo{Is this useful? Some reviewers said it is not.}
+\paragraph{Component-based software architecture}
+Software architecture aims at reducing complexity through abstraction and separation of concerns by providing a common understanding of component, connector and configuration~\cite{xadl,Medvidovic:2000,VanOmmering-et-al-00}.
+One of the benefits is that it facilitates the management of dynamic architectures, which becomes a primary concern in the Future Internet and Cyber-Physical Systems~\cite{DBLP:journals/ase/NittoGMPP08}.
+Such systems demand techniques that let software react to changes by self-organizing its structure and self-adapting its behaviour. Many works~\cite{cbse-conference} have shown the benefits of using component-based approaches in such open-world environments~\cite{baresi2006toward}.
+
+To satisfy the needs for adaptation, several component models provide solutions to dynamically reconfigure a software architecture through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components. 
+In practice, component-based (and/or service-based) platforms like Fractal~\cite{bruneton06}, OpenCOM~\cite{Coulson04acomponent}, OSGi~\cite{OSGI:r5} or SCA~\cite{SEINTURIER:2011:INRIA-00567442:1} provide platform mechanisms to support dynamic architectures.
+Many of these component models either provide Java-based implementations or are defined from the scratch for the Java runtime.
+These implementations tend to execute many components on top of a single JVM.
+
+\todo{One of the reviewers suggested that this section is unnecessary. Probabily it is true.}
+\paragraph{Domain-Specific Languages}
+In software engineer, models are abstractions of a software system and its environment.
+Model-Driven Software Development (MDSD) puts analysis and design models on par with
+code because their implementation is automated~\cite{Stahl:2006:MSD:1196766, Fowler:2010:DSL:1809745}.
+It is known that domain is essential for models.
+A model may be useful for answering a class of questions, but it may
+fail in answering other questions.
+MDSD aims to find domain-specific abstractions and make them accessible
+through formal modeling.
+This set of abstractions and their relationships is called in the context of MDSD a Metamodel or  Domain-Specific Language (DSL)~\cite{Fowler:2010:DSL:1809745}.
+Typically, these models are translated into programming language source code to enable their subsequent compilation and execution.
+
+MDSD consists of two major aspects: processing models and creating models.
+The creation of models can be achieved with graphical~\cite{Kolovos:2009:RLA:1564600.1564699, Biermann:2006:GDI:2087202.2087244} or textual editors~\cite{Merkle:2010:TMT:1869542.1869564}.
+A well known framework for building DSLs is Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625}.
+It is an Eclipse-based framework which supports the definition of languages together with their syntaxes, semantic checkers, code generators and even code editors.

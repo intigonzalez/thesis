@@ -1,0 +1,303 @@
+We have built several use cases based on a template application from our motivating example in section \ref{sec:motivatingexample}.
+We reused an open-source crisis-management application for firefighters that has been built with Kevoree components.
+We use two functionalitiess of the crisis-management application.
+The first one is for managing firefighters.
+The equipment given to each firefighter contains a set of sensors that provides data for the firefighter's current location, his heartbeat, his body temperature, his acceleration movements, the environmental temperature, and the concentration of toxic gases. 
+These data are collected and displayed in the crisis-management application, which provides a global-view of the situation. 
+The second functionality uses drones to capture real-time video from an advantageous point-of-view.
+
+Figure \ref{fig:complete-usecase} shows the set of components that are involved in our use-case, including components for firefighters, drones and the crisis-management application\footnote{More information about these components is given in \url{http://goo.gl/x64wHG}}. The components in the crisis-management application are used in our experiments, but the physical devices (drones and sensors) are simulated through the use of mock components.
+
+\begin{figure*}[!bt]
+	\centering
+	\includegraphics[scale=0.4]{chapter5/figures/complete-usecase-new}
+	\caption{\label{fig:complete-usecase}The component configuration for our crisis-management use-case.}
+\end{figure*}
+
+Every use case we present extends the crisis-management base application by any one of the following possibilities: adding new or redundant components, adding external Java applications with wrapper components (e.g., Weka, DaCapo), or modifying existing components (e.g., to introduce a fault into them).
+%is extended in every use case by: modifying existent components (e.g, to introduce faulty behavior), adding new redundant components and adding external java applications with a wrapper component.
+%The particular features of each component are details in each experiment.
+
+\subsection{Measurement Methodology} \label{sec:measurement_metodology}
+To obtain comparable and reproducible results, we used the same hardware across all experiments: a laptop with a 2.90GHz Intel(R) i7-3520M processor, running Fedora 19 with a 64 bit kernel and 8GiB of system memory.
+We used the HotSpot Java Virtual Machine version 1.7.0\_67, and Kevoree framework version 5.0.1.
+Each measurement presented in the experiment is the average of ten different runs under the same conditions. 
+%In addition to the template application we presented, we introduce a new component to execute an external jar file. This new component is used to measure the impact of the faulty behavior on the execution of the system by measuring its execution time.
+
+The evaluation of our approach is tightly coupled with the quality of the resource consumption contracts attached to each component.
+We built the contracts following classic profiling techniques. 
+The contracts were built by performing several runs of our use cases, without inserting any faulty components into the execution.
+Firstly, we executed the use cases in an environment with global monitoring activated to get information for the global contract.
+Secondly, per-component contracts were created by running the use cases in an environment with full monitoring.
+
+\subsection{Overhead of the instrumentation solution\label{sec:OverheadFullMonitoring}}
+Our first experiment compares the various instrumentation levels to show the overhead of each one. 
+In this section, \emph{Memory instrumentation} refers to the technique for accounting memory which leverage bytecode instrumentation, while \textit{Heap Exploration} refers to the memory accouting technique which leverage on-demand heap exploration.
+%The results of the evaluation are fundamental because they justify the interest of our adaptative monitoring approach. 
+%Additionally, these results are the baseline to understand the rest of the evaluation. 
+In this experiment, we compare the following instrumentation levels: \emph{No monitoring}, \emph{Global monitoring}, \emph{Memory instrumentation}, \emph{Instructions instrumentation}, \emph{Memory and instructions instrumentation} (i.e., Full monitoring).
+We also evaluate the impact on performance of the two fine-grain memory monitoring approaches we proposed: instrumentation-based and heap-dump-based.
+
+In this set of experiments we used the DaCapo 2006 benchmark suite \cite{DaCapo:paper}. 
+We developed a Kevoree component to execute this benchmark~\footnote{\url{http://goo.gl/V5T6De}}.
+The container was configured to use full monitoring and the parameters in the contract are upper bounds of the real consumption\footnote{Scripts are generated from those available at \url{http://goo.gl/FR8LC7}.}.
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+every axis legend/.append style={nodes={right}},
+ybar=0pt,
+legend style={at={(0.25,1.1)},
+anchor=north,legend columns=1, font=\tiny},
+ylabel={Time (seconds)},
+y label style={at={(0.04, 0.5)}},
+scaled y ticks = false,
+      y tick label style={/pgf/number format/fixed,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+      },
+xtick=data,ymin=0,
+width = 13cm,
+height = 5cm,
+bar width = 7,
+x tick label style={rotate=45,anchor=east, font=\small},
+ axis lines*=left, % Don't display the top and right lines
+ symbolic x coords={antlr,fop,hsqldb,jython,chart,luindex,xalan,lusearch}
+]
+\addplot[fill=black] coordinates 
+	{(antlr,1.28) (fop,1.101) (hsqldb,2.337) (jython,2.351) (chart,2.534) (luindex,3.561) (xalan,1.224) (lusearch,1.305)};
+\addplot[fill=gray] coordinates 
+	{(antlr,1.023) (fop,1.039) (hsqldb,2.284) (jython,2.524) (chart,2.417) (luindex,3.165) (xalan,1.191) (lusearch,1.321)};
+\addplot[pattern=north east lines] coordinates 
+	{(antlr,2.164) (fop,1.188) (hsqldb,8.655) (jython,10.688) (chart,4.806) (luindex,8.001) (xalan,4.885) (lusearch,9.349)};
+\addplot[pattern=crosshatch] coordinates 
+	{(antlr,6.235) (fop,1.905) (hsqldb,9.091) (jython,10.905) (chart,8.985) (luindex,44.988) (xalan,8.026) (lusearch,9.261)};
+\addplot[pattern=dots] coordinates 
+	{(antlr,7.468) (fop,1.970) (hsqldb,15.888) (jython,18.625) (chart,11.502) (luindex,51.660) (xalan,11.188) (lusearch,18.975)};
+\legend{No monitoring, Global monitoring, Memory instrumentation,Instructions instrumentation, Memory \& Instructions instrumentation}
+\end{axis}
+\end{tikzpicture}
+\caption{Execution time for tests using the DaCapo Benchmark\label{overhead-of-monitoring}}
+\end{figure}
+
+Figure \ref{overhead-of-monitoring} shows the execution time of several DaCapo tests under different scenarios when only instrumentation is used to provide fine-grain monitoring.
+First, we wish to highlight that Global monitoring introduces no overhead compared with the \emph{No monitoring} mode.
+Second, the overhead due to memory accounting is lower than the overhead due to instruction accounting.
+This is very important because, as we described in section \ref{monitorContainer}, memory probes cannot be deactivated dynamically.
+
+In figure~\ref{overhead-of-monitoring-with_heapexplorer} we compare the execution time of the same tests but using different memory monitoring approaches.
+This comparison is important because, as explained in section~\ref{monitorContainer}, the two approaches have different CPU footprint.
+
+To perform the comparison, we evaluate the overhead produced for each monitoring mode. We calculated the overhead as: \[overhead=\frac{WithInstrumentation}{GlobalMonitoring}\]
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+every axis legend/.append style={nodes={right}},
+ybar=0pt, legend style={at={(0.25,1.1)},
+anchor=north,legend columns=1, font=\tiny},
+ylabel={Time (seconds)},
+y label style={at={(0.04, 0.5)}},
+scaled y ticks = false,
+      y tick label style={/pgf/number format/fixed,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+      },
+xtick=data,ymin=0,
+width = 13cm,
+height = 5cm,
+bar width = 7,
+x tick label style={rotate=45,anchor=east, font=\small},
+ axis lines*=left, % Don't display the top and right lines
+ symbolic x coords={antlr,fop,hsqldb,jython,chart,luindex,xalan,lusearch}
+]
+% memory
+\addplot[pattern=north east lines] coordinates 
+	{(antlr,2.164) (fop,1.188) (hsqldb,8.655) (jython,10.688) (chart,4.806) (luindex,8.001) (xalan,4.885) (lusearch,9.349)};
+% heap dump
+\addplot[pattern=crosshatch] coordinates 
+	{(antlr,1.143) (fop,1.125) (hsqldb,8.639) (jython,2.762) (chart,2.836) (luindex,3.589) (xalan,1.822) (lusearch,5.078)};
+% memory and instructions
+\addplot[pattern=dots] coordinates 
+	{(antlr,7.468) (fop,1.970) (hsqldb,15.888) (jython,18.625) (chart,11.502) (luindex,51.660) (xalan,11.188) (lusearch,18.975)};
+% heap dump and instructions
+\addplot[fill=black] coordinates 
+	{(antlr,6.159) (fop,1.188) (hsqldb,14.647) (jython,10.950) (chart,9.059) (luindex,44.758) (xalan,7.812) (lusearch,15.990)};
+% legend
+\legend{Memory instrumentation, Heap Exploration, Memory \& Instructions instrumentation, Heap Exploration \& Instructions Instrumentation}
+\end{axis}
+\end{tikzpicture}
+\caption{Comparison of execution time for tests using two different memory monitoring techniques\label{overhead-of-monitoring-with_heapexplorer}}
+\end{figure}
+
+The average overhead due to instruction accounting is 5.62, while the value for memory accounting depends on the monitoring mechanism.
+If bytecode instrumentation is used, the average overhead is 3.29 which is close to the values reported in \cite{Binder:2009:PPV:1464245.1464249}.
+However, the overhead decreases to 1.79, which is better than the value reported in \cite{Binder:2009:PPV:1464245.1464249}, if a \textit{Heap Exploration} monitoring mechanism is used.
+In the case of instruction accounting, these values are not as good as the values reported in \cite{Binder:2009:PPV:1464245.1464249}; because they obtain a better value between 3.2 and 4.3 for instructions accounting.
+The performance difference comes from a specific optimization that we chose not to apply.
+The optimization provides fast access to the execution context by adding a new parameter to each method.
+Nevertheless, this solution needs to keep a version of the method without the new parameter because native calls cannot be instrumented like that. 
+We decided to avoid such an optimization because duplication of methods increases the size of the applications, and with it, the memory used by the heap.
+In short, our solution can reach similar values if we include the mentioned optimization, but at the cost of using more memory.
+On the other hand, the values we report are far lower than the values reported in \cite{Binder:2009:PPV:1464245.1464249} for hprof.
+Hence, we consider that our solution is comparable to state of the art approaches in the literature.
+
+In addition, we plan to study alternatives to improve instruction accounting. %These alternatives are about using peak monitoring and learning monitoring.
+For example, we plan to study the use of machine learning for monitoring \cite{tesauro2006hybrid}. Based on a machine learning approach, it is possible to train the monitoring system to do the instruction instrumentation. Then, instead of doing normal instruction instrumentation, we might only do, for example, method-calls instrumentation and with the learning data, the monitoring system should be able to infer the CPU usage of each call, whilst lowering the overhead.
+
+The results of our experiment shown in figure~\ref{overhead-of-monitoring} demonstrate the extensive impact of the \emph{Full monitoring} mode, which uses either \emph{Memory instrumentation} or \emph{CPU instrumentation}, has on the application. Thus, our \emph{Adaptive monitoring} mode, which uses \emph{Global monitoring} and switches to \emph{Full monitoring} or \emph{localized monitoring}, has the potential to reduce this accumulated overhead due to the fact that \emph{Global monitoring} has no appreciable overhead. 
+%The results of the evaluation are fundamentals because they justify the interest of our adaptative monitoring approach. 
+%Additionally, these results are the baseline to understand the rest of the evaluation. 
+
+\subsection{Overhead of Adaptive Monitoring vs Full Monitoring\label{sec:adaptive-vs-full}}
+The previous experiment highlights the potential of using \emph{Adaptive monitoring}. However, switching from \emph{Global monitoring} to either \emph{Full} or \emph{Localized monitoring} introduces an additional overhead due to having to instrument components and activate monitoring probes.
+Our second experiment compares the overhead introduced by the adaptive monitoring with the overhead of \emph{Full monitoring} as used in state-of-the-art monitoring approaches. 
+%The result of this experiment shows the potential interest of the adaptive monitoring approach.
+
+Table \ref{use-cases-sheet2} shows the tests we built for the experiment.
+We developed the tests by extending the template application. Faults were introduced by modifying an existing component to break compliance with its resource consumption contract.
+We reproduce each execution repetitively; thus, the faulty behaviour is triggered many times during the execution of the application. The application is not restarted.
+%\hl{We selected as heuristic in almost every case \textit{number-of-failures} which is the best because there is only a single faulty component.}\todo{must be explain later}
+
+\begin{table*}[!hb]
+\centering
+\caption{Features of use cases.\label{use-cases-sheet2}}
+\begin{tabular}{|c|p{2.1cm}|p{1.4cm}|p{2cm}|p{2.5cm}|}
+\hline Test Name & Monitored\newline Resource & Faulty\newline Resource & Heuristic & External Task \\ 
+\hline UC1 & CPU, Memory & CPU & number\newline of failures & Weka, training neural network \\ 
+\hline UC2 & CPU, Memory & CPU & number\newline of failures & dacapo, antlr \\ 
+\hline UC3 & CPU, Memory & CPU & number\newline of failures & dacapo, chart \\ 
+\hline UC4 & CPU & CPU & number\newline of failures & dacapo, xalan \\ 
+\hline UC5 & CPU, Memory & CPU & less number\newline of failures  & dacapo, chart \\ 
+\hline UC6 & Memory & CPU & number\newline of failures & Weka, training neural network \\ 
+\hline 
+\end{tabular} 
+\end{table*}
+
+
+Figure \ref{adaptive-vs-full} shows the execution time of running the use cases with different scenarios.
+Each scenario uses a specific monitoring policy (\emph{Full monitoring}, \emph{Adaptive monitoring with All Components}, \emph{Adaptive monitoring with Localized monitoring}, \emph{Global monitoring}).
+All these scenarios were executed with the heap explorer memory monitoring policy. 
+This figure shows that the overhead differences between \textit{Full monitoring} and \emph{Adaptive monitoring with All Components} is clearly impacted by scenarios that cause the system to transition too frequently between a lightweight Global and a fine-grain Adaptive monitoring.
+Such is the case for use cases UC3 and UC4 because the faulty component is inserted and never removed.
+%As we explained in section \ref{analysis}, 
+Using \emph{Adaptive monitoring} is beneficial if the overhead of \emph{Global monitoring} plus the overhead of switching back and forth to \emph{All Components monitoring} is less than the overhead of the \emph{Full monitoring} for the same execution period.
+If the application switches between monitoring modes too often then the benefits of adaptive monitoring are lost.
+
+The overhead of switching from \emph{Global monitoring} to \emph{full components} or \emph{Localized monitoring} comes from the fact that the framework must reload and instrument classes to activate the monitoring probes.
+Therefore, using \emph{Localized monitoring} reduces the number of classes that must be reloaded.
+This is shown in the third use-case of figure~\ref{adaptive-vs-full}, which uses a heuristic based on the number of failures.
+Because we execute the faulty component many times, the heuristic is able to select, monitor and identify the faulty component quickly. This reduces overhead by 92.98\%. We use the following equation to calculate overhead:
+
+\[ Gain=100-\frac{OurApproach-GlobalMonitoring}{FullMonitoring-GlobalMonitoring}*100 \]
+
+Although we don't show the results in the plot for the sake of clarity, we also evaluate the execution time for each use case using the instrumentation-based memory monitoring mode.
+The average gain in that case is 81.49\% and, as shown in previous section, in average it behaves worse than the \textit{Heap Exploration} mechanism.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+every axis legend/.append style={nodes={right}},
+ybar=0pt, legend style={at={(0.8,1)},
+anchor=north,legend columns=1, font=\tiny},
+ylabel={Time (seconds)},
+y label style={at={(0.04, 0.5)}},
+scaled y ticks = false,
+      y tick label style={/pgf/number format/fixed,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+      },
+xtick=data,ymin=0,
+width = 12cm,
+height = 5cm,
+bar width = 7,
+x tick label style={rotate=45,anchor=east, font=\small},
+ axis lines*=left, % Don't display the top and right lines
+ symbolic x coords={UC1,UC2,UC3,UC4,UC5,UC6}
+]
+% full monitoring
+\addplot[fill=black] coordinates 
+	{(UC1,613.000) (UC2,46.363) (UC3,63.899) (UC4,78.324) (UC5,49.144) (UC6,132.949)};
+% adaptive with all component
+%\addplot[fill=red] coordinates 
+%	{(UC1,432.744) (UC2,70.501) (UC3,198.554) (UC4,187.036) (UC5,32.340) (UC6,127.711)};
+% adaptive with all component and heap dump
+\addplot[fill=yellow, pattern=crosshatch] coordinates 
+	{(UC1,410.790) (UC2,61.808) (UC3,95.503) (UC4,204.479) (UC5,16.864) (UC6,123.381)};
+% adaptive with heuristic
+%\addplot[fill=green] coordinates 
+%	{(UC1,176.413) (UC2,16.741) (UC3,29.461) (UC4,19.470) (UC5,27.001) (UC6,123.813)};
+% adaptive with heuristic and heap dump
+\addplot[fill=pink, pattern=dots] coordinates 
+	{(UC1,169.467) (UC2,12.520) (UC3,16.403) (UC4,20.251) (UC5,15.110) (UC6,124.294)};
+% global monitoring
+\addplot[fill=cyan, pattern=north east lines] coordinates 
+	{(UC1,166.759) (UC2,10.646) (UC3,14.37) (UC4,20.860) (UC5,14.77) (UC6,120.16)};
+\legend{
+	Full monitoring, 
+	%Adaptive with All Components, 
+	Adaptive with All Components and Heap Exploration, 
+	%Localized monitoring, 
+	Localized monitoring with Heap Exploration,
+	Global Monitoring}
+\end{axis}
+\end{tikzpicture}
+\caption{Execution time for some use cases under different monitoring policies.}\label{adaptive-vs-full}
+\end{figure}
+
+\subsection{Overhead from switching monitoring modes, and the need of a good heuristic\label{sec:switch-heuristic}}
+As we explain in the previous experiments, even if using \emph{Localized monitoring} is able to reduce the overhead of the monitoring system, the switch between \emph{Global} and \emph{Localized monitoring} introduces additional overhead.
+If this overhead is too high, the benefits of adaptive monitoring are lost.
+
+In this experiment we show the impact of the application's size, in terms of number of components, and the impact of the component's size, in terms of number of classes, on adaptive monitoring. We also show that the choice of the heuristic to select suspected components for monitoring is important to minimize the overhead caused from repeated instrumentation and probe activation processes.
+
+For the use case, we created two components and we introduced them into the template application separately.
+Both components perform the same task, which is performing a \textit{primality test} on a random number and sending the number to another component.
+However, one of the components causes 115 classes to be loaded, while the other only loads 4 classes.
+%An additional component is in charge of generating random numbers to be consumed by the primality tester components.
+
+We used the same basic scenario with a varying number of \textit{primality testing's} components and component sizes.
+In this way, we were able to simulate the two dimensions of application size.
+The exact settings, leading to 12 experiments, are defined by the composition of the following constraints:
+\begin{itemize}
+	\item $N_{comp} = \left\lbrace 4, 8, 16, 32, 64, 128 \right\rbrace$  which defines the number of components for the application
+	\item $Size_{comp}=\left\lbrace 4, 115 \right\rbrace$ which defines the number of classes for a component
+\end{itemize} 
+
+With these use cases, we measured the delay to find the faulty component and the execution-time overhead caused by monitoring.
+Figures \ref{fig:delay-time-115} and \ref{fig:delay-time-4} show the delay to detect the faulty component with regards to the size of the application.
+In the first figure, the component size is 115 classes, and in the second figure, the component size is four classes.
+%Figures \ref{fig:execution-time-many-115} and \ref{fig:execution-time-many-4} show the overhead of monitoring based on the execution time of the main task and according to the size of the application. In the first one, the component size is 115 classes and in the second one, the component size is four classes.
+
+\input{chapter5/delayTime}
+\input{chapter5/executionTimeManyComponents}
+
+\subsubsection{Impact of the application size}
+%\paragraph{Impact of the application size}
+Using figures \ref{fig:delay-time-4} and \ref{fig:execution-time-many-4}, we see that the size of the application has an impact on the delay to detect faulty components, and also on the monitoring overhead.
+We also calculated the time needed to find the faulty component with the \emph{All components} mode after its initialization (the time needed to switch from \emph{Global monitoring}).
+This time is around 2 seconds no matter the size of the application.
+That is the reason the switch from \emph{Global monitoring} to \emph{All components} has such a large effect on overhead.
+
+These figures also show that using \emph{Localized monitoring} instead of \emph{All components} when switching from \emph{Global monitoring} helps reduce the impact of the application's size by reducing the number of components to monitor and the number of classes to instrument.
+However, we also see that using a sub-optimal heuristic may have negatively impacted the delay to detect faulty components.
+This can be explained by the multiple switches that the Random heuristic may often require to locate the faulty component.
+
+\subsubsection{Impact of the component size}
+%and \ref{fig:execution-time-many-115}, \ref{fig:execution-time-many-4}
+In figures \ref{fig:delay-time-115} and \ref{fig:delay-time-4} we can observe that the component size greatly impact the performance and the delay for ScapeGoat to find the faulty comopnent. 
+Similar to the explanation for the application's size, component size impacts the switch from \emph{Global monitoring} to \emph{Localized monitoring}, beacause of the class reloading and instrumentation.
+A good heuristic rastically reduces the number of transitions; thus, it has a huge impact on the delay. 
+When the components size increase, the choice of a good heuristics becomes even more important, because the cost of dynamic monitoring probes injection increase with the size of the components.
+
+\subsection{Threats to validity}
+Our experiments show the benefits of using adaptive monitoring instead of state-of-the-art monitoring approaches.
+As in every experimental protocol, our evaluation has some bias which we have tried to mitigate.
+All our experiments are based around the same case study. 
+We have tried to mitigate this issue by using an available real case study.
+We have also used different settings across our experiments, even if all of the experiments are based on the same case study.
+Thus, our experiments limit the validity of the approach to applications with the same characteristics of the presented case study.
+New experiments with other use cases are needed to broaden the validation scope of our approach.
+
+The evaluation of the heuristic mainly shows the potential impact of using an ideal heuristic. 
+More case study and experiments are needed to fully validate the value of our Models@run.time based heuristic.

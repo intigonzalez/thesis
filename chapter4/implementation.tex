@@ -1,0 +1,187 @@
+\section{Reference Implementation} \label{sec:kevoree}
+%\fixme{The beginning of this section needs work, it starts by saying we introduce kevoree, then introduces models@run.time, then kevoree.}
+
+Squirrel's reference implementation exploits the modesl@run.time approach and provides resource-awareness capabilities to the Kevoree component framework~\cite{Fouquet:2012:DCM:2304736.2304759}.
+%to support models@run.time.
+%We begin with a brief overview of Kevoree.
+%Built on top of dynamic component frameworks, models@run.time denotes model-driven approaches to tame the complexity of dynamic adaptation~\cite{Morin:2009:TDA:1555001.1555028}.
+Models@run.time denotes model-driven approaches to tame the complexity of dynamic adaptation~\cite{Morin:2009:TDA:1555001.1555028}.
+%It pushes the idea of reflection one step further by considering the reflection-layer as a model.
+The ``model at runtime'' is a reflection model that can be decoupled from the application (for reasoning, validation, and simulation purposes) and then automatically resynchronized.
+Models can manage not only the application's structural information (i.e., the architecture), but can also be populated with other information, such as runtime monitoring data.
+
+Kevoree is a component framework for distributed systems that builds and maintains a structural model of the system, following the models@run.time paradigm.
+%and builds a structural model of the distributed system.
+Kevoree is mainly used because: (i) it presents a snapshot of the distributed system, and (ii) it provides a language to drive the reconfigurations. 
+\textit{Component} and \textit{Channel} are two of the concepts used in Kevoree models.
+The former represents software units that provide the business value.
+The latter, with the same role as connectors, are in charge of inter-component communication.
+Channels encapsulate communication semantics (e.g., synchronous, unicast).
+
+\subsection{A resource-aware container for CPU and I/O reservation} \label{sec:cgroups-based-reservation}
+
+Our implementation leverages resource-reservation mechanisms at the system-level to provide containers for CPU and I/O reservation.
+More specifically, it maps the concept of \textit{container} onto a \textit{cgroup}.
+Both \textit{containers} and \textit{Kevoree components} are hierarchical structures that are easy to map onto cgroups' hierarchy.
+Indeed, a container deploys components and a component runs threads.
+To configure the container we setup a hierarchy of cgroups
+using the following rules:
+\begin{enumerate}
+\item
+%A fixed amount of resources are reserved for the Kevoree framework, which includes the components of the managed system. This serves as the upper resource-limit.
+%To implement this rule we execute the Kevoree framework under a cgroup, while unmanaged applications are expected to run under other cgroups for isolation.
+The Kevoree framework is started under a cgroup, using a fixed amount of resources that will be divided among the system's components. 
+% that determines the total resource pool. % are reserved (for both).
+%This value serves as the pool of resources the framework may use to deploy components.
+%On the one hand, it is the maximum amount of resource the container will use when all the threads inside are demanding.
+%On the other hand, it is the minimum amount it will receive when other applications outside the container are demanding.
+
+
+\item
+%We create a new resource-aware container for each component, represented by a cgroup.
+Each component gets a new resource-aware container, also represented by a cgroup.
+The component's contract is translated into a slice $S_c$ of the initial resource allotment, and the result is passed to
+%configuration parameters to the cgroup.
+the cgroup as configuration parameters.
+A slice represents the
+%minimum and maximum quantity of 
+resources the component has available.
+%This means that, although we support resource reservation, we are not supporting overcommitment.
+%Since the scheduling unit for cgroups is a thread, we assign threads to cgroups in order to enforce resource reservation.
+%However, we cannot assign threads directly to their component's cgroup because then all of them will obtain the same slice $S_c$.
+%What we want is to share $S_c$ among all the threads within a component.
+%Therefore, a \textit{hidden cgroup} is created that inherits the slice $S_c$ and provides a share to any thread assigned to it by using  \textit{Relative Shares Tunable Parameters}.
+
+\item Since the scheduling unit for cgroups is a thread, we assign the component's threads to the cgroup to enforce resource reservation.
+
+%\item Threads are assigned to the \textit{cgroup} created for the thread owner's component.
+\end{enumerate}
+
+
+\begin{figure}
+\centering
+\input{chapter4/figures/Comp2Cgroup.pgf}
+\caption{Reserving CPU by mapping components to cgroups} \label{fig:Mapping}
+\vspace{-0.5cm}
+\end{figure}
+
+This scheme is used for CPU, I/O throughput and network bandwidth.
+Each type of resource requires a different \textit{container type}.
+% since configuring the container depends on varying properties defined on each cgroup subsystem.
+Figure \ref{fig:Mapping} shows an example 
+%of how our implementation uses 
+using cgroups to reserve CPU for a system with two components.
+In the tree, every edge is labeled with the cgroup's CPU slice.
+% the cgroup obtains from its parent.
+A slice is set for Kevoree, while unmanaged apps are maintained in separate containers.
+Applying rule 2, CPU slices are assigned to \textit{Component 1} and \textit{Component 2} according to their resource contracts.
+Following rule 3, every thread in \textit{Component1} receives $ 33\% $ of the component's slice.
+%When configuring the containers, we apply rule 2 and assign \textit{Component 1} and \textit{Component 2} CPU slices according to their resource contracts.
+%Finally, slices for Kevoree and for the rest of the system are assigned.
+%In our case, we selected as description the number of instructions the container is able to execute because, as we show in section \ref{contracts}, our contracts use number of instructions in their definition. 
+%For instance, if we assume that our container is able to execute 1002000012 instructions per seconds and we use the contracts in listing \ref{} then we obtain slices as in Figure \ref{Mapping}.
+%\todo{Inti: create contracts for 2 components, 102345600 and 456789010 instructions}
+%Finally, slices for Kevoree and for the rest of the system are assigned.
+%This requires taking into account the trade-off between resource for components in Kevoree and for applications outside Kevoree.
+
+%Assigning little resources to Kevoree allows external applications to execute smoothly but the number of admitted components in Kevoree decreases.
+%On the contrary, if Kevoree uses a big slice then the performance of other applications is affected.
+
+\subsection{Containers for Memory reservation} \label{overview-memory-reservation}
+
+Memory reservation poses a unique challenge.
+% for the usage of cgroups from within the Java runtime.
+Although there is a cgroup-hierarchy for memory, it is not well suited for shared memory because the subsystem cannot precisely account for the consumption of each thread.
+As a result, if we use cgroups to deal with memory, accounting would depend on the behavior of the garbage collector, which is hard to predict.
+That makes cgroups inadequate to check or enforce component contracts in a single JVM process.
+We have devised two mechanisms
+%to represent containers for memory reservation.
+to serve as memory containers.
+In the first mechanism, all containers exist in a single process and resource limits are enforced by leveraging previous approaches
+%to resource monitoring for Java (e.g., using bytecode instrumentation to account for consumption).
+that use bytecode instrumentation to account for consumption.
+The second mechanism
+%delegates reservation to a lower level in the software stack by isolating
+isolates components into new processes and then uses cgroups. % for resource management.
+The rest of the section describes both solutions.
+
+\subsubsection{Memory management based on monitoring.}
+A memory reservation container ensures that its components have access to the memory they require.
+Memory requests should only fail if a component violates its contract.
+Implementing such a container is simple if memory monitoring is available at the application-level and memory requests are intercepted.
+%DO WE NEED THIS PART?
+%A container is a service that receives notifications when a component is violating its contract and then takes action to forbid future memory requests until a proper utilization level is reached.   
+We use Scapegoat \cite{gonzalezherrera:hal-00983045} for memory consumption monitoring by defining multiple memory-aware containers within a single JVM.
+In short, each container registers its component in ScapeGoat and receives a notification if a component violates its contract.
+%This has an impact on the application's performance 
+This introduces CPU and memory overhead for each component because of the instrumentation code.
+%the instrumentation code imposes penalties on CPU/memory during the execution time of each component.
+The main advantages are portability and simplicity.
+
+\subsubsection{Isolation of components in separate processes.}
+The second approach maps each container onto a separate process.
+Reservation is achieved using cgroups as described in section \ref{sec:cgroups-based-reservation}.\footnote{In practice, we use cgroups to reserve memory, but we also bound the Java Heap to limit the consumption in Java code.}
+%
+%Reducing deployment time and complexity is critical since we deal with continuous deployment; hence we aim at automating the process of component isolation.
+To do so, we start from an extended deployment model as shown in figure \ref{fig:Overview}.
+%A transformation follows the rules below is applied to the model:
+The model is then transformed using the following rules:
+\begin{enumerate}
+\item  Component isolation: each \textit{set of components} with a shared memory contract is isolated in a separate \textit{JVM node} within the same \textit{physical device}.
+%A contract regarding memory reservation is shared if the involved components reside in the same \textit{JVM node} in the source model.
+\label{rule1-model-transformation} 
+
+%\item Channel adjustment: Every channel that connects two components in the source model that is isolated in the target model (by the application of rule \ref{rule1-model-transformation}) is adjusted to reflect the semantics of the source model. This includes changing the channel type as well as modifying some of its properties.
+\item Channel adjustment: channels that connect isolated components are updated to reflect the semantics of the source model. This includes changing the channel type and modifying some of its properties.
+\end{enumerate}
+The resulting model can be deployed.
+%in the newly created Kevoree instances through a dedicated \textit{Kevoree Group}.
+
+%Figure~\ref{model_transformation} shows how to transform the model of a simple application.
+%In this case, we assume that every component has its own contract regarding memory reservation.
+%Following the rules, we only need to create an additional \textit{JVM node} and to adjust the \textit{channel} that connects components \textit{Video Recorder} and \textit{Video Coder}.  
+
+%\begin{figure*}
+%\centering
+%\input{figures/modeltransformation.pgf}
+%\caption{Transforming deployment model to achieve memory reservation} \label{model_transformation}
+%\end{figure*}
+
+\paragraph{Runtime initialization through cloning.}
+The approach to memory reservation based on isolation deploys each \textit{set of components} into separate processes.
+This involves two steps: creating new instances of the runtime, and deploying a \textit{set of components} on each instance.
+To reduce deployment time, instead of starting processes from scratch,
+%we create clones of a base runtime for new instances.
+new instances are cloned from a base runtime.
+The base runtime is created offline. %, is used to deploy components through fast cloning and configuration.
+Both steps, base runtime creation and cloning, are based on CRIU.\footnote{criu.org}
+This tool allows snapshoting a process and starting any number of clones from the snapshot.
+In essence this \textit{forks} the process.
+%creating in practice a sort of \textit{forking} that is hard to perform otherwise.
+%Afterwards, the cloned runtime is adapted by deploying a new model that includes an application's component.
+
+%The implementation includes two classes of Kevoree instances, the management instance class $R_M$ and the base-instance class $R_b$.
+%The former is a frond-end that interacts with external users and is in charge of: 1) modifying the model to support isolated deployment as section \ref{overview-memory-reservation} describes, 2) creating clones based on $R_b$ and, 3) sending messages to clones with the aim of deploying components.
+%The $R_b$ class of instance executes a component that implements the system's adaptation by waiting for a message that includes the new model to deploy.
+
+\paragraph{Channel for intra-node communication.}
+Channels are meant to send arbitrary POJO structures from one component to another.
+When components are isolated into separate processes,
+%a channel transforms a POJO structure twice:
+a channel must marshal and unmarshal the POJO using a representation suitable for inter-process communication.
+%i) marshal the POJO into a representation suitable for IPC in the source and, ii) unmarshaling it in the destination.
+In practice, a channel must copy data at least twice, no matter what IPC mechanism is used.
+%This fact has an impact on the class of IPC mechanism we can leverage.
+
+In this paper we propose a new channel for intra-node communication.
+Communication is performed through a message queue built on top of shared memory using an alternative high-performance framework to serialize objects.
+Each channel is mapped to a shared-memory region that hosts a synchronized queue of messages.
+This region contains three sections: an array of blocks to store message chunks, 
+a set of free blocks, and a circular queue in which an element points to a list of chunks.
+We use the procedure described in \cite{Unrau:708530} to synchronize senders and receivers, but we also support broadcast semantics without unnecessary additional copies.
+Our approach copies the POJO from the sender's heap to shared-memory during data marshaling, then every receiver makes a copy from shared-memory.
+The implementation uses a high-performance serialization framework\footnote{https://github.com/RuedigerMoeller/fast-serialization}
+% ~\cite{Moeller:2014:Online} 
+instead of Java's built-in serialization mechanism
+and is able to serialize arbitrary objects with better performance.
+%by using alternative binary representation and its own cached reflection mechanism.

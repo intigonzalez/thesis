@@ -1,0 +1,54 @@
+\section{Implementation}\label{sec:implementation}
+
+In this section, we briefly describe a reference implementation of the language proposed in the previous section. We present the main design decision we took and the current limitations of the implementation.
+
+The DSL is built on top of the XText framework.
+This framework eases the construction of the abstract-syntax tree during the parsing stage and it also provides high-quality tools for editing with a minimum effort.
+Our tool offers a compiler of our Domain Specific Language which generate C code.
+The C code is then used to produce a shared library.
+This library constitutes the runtime profiler which is in charge of efficiently collecting the data requested from the heap.
+
+We decided to use the Java Virtual Machine as runtime support for our reference implementation.
+As backend technology to explore the heap, we use JVMTI~\footnote{http://docs.oracle.com/javase/8/docs/platform/jvmti/jvmti.html} and the native agent mechanism.
+Around this mechanism we built a plugins' system which allows us to load/unload new memory's analysis without shutting down the JVM.
+The library generated from the DSL is a valid plugin we can load in a Java runtime.
+The generated code includes: i) the mechanism for efficiently traverse the heap, ii) the mechanism to collect the requested data, and iii) a mechanism to retrieve the data in both native format and Java generated structures. The current implementation is available online~\footnote{https://github.com/intigonzalez/heapexplorer\_language}
+
+The code generation process is based on a code template.
+Such a template implements a variant of listings~\ref{lst:onNodeFound},~\ref{lst:onNodeFoundData} and~\ref{onInitialization}.
+The template uses the JVMTI API to explore the content of the memory within a JVM.
+This API is also used to populate the built-in variables \textit{classes}, \textit{classloaders}, and so on.
+We also make use of the JNI API to collect meta-data, access fields in certain steps and build a Java representation of the analysis output that can be consumed by the application itself.
+
+The process of code generation is driven by the need of reducing the performance impact.
+In general, there are two ways of optimizing the impact of the memory's analysis.
+First, we can apply platform dependent optimizations.
+The second option is to apply platform independent optimizations; for instance, simplifying the evaluation of each expression.
+In our implementation, we use both platform dependent and independent optimizations.
+
+A set of platform dependent optimizations we perform is related to the construction of the built-in values \textit{threads}, \textit{threadgroups}, \textit{classes}, etc. 
+Since not all memory analysis depends on such values, we selectively skip the construction of them.
+For instance, in listing~\ref{assertion} there is no need to compute any of such values as is also unnecessary to identified the class of each object.
+Extending this idea to other cases (e.g., class of each object, its classloader, field names, etc.) is straightforward.
+To implement these optimizations, we used a parametrized code template, so the code generate depends on the values of these parameters which we can tune to satisfy our needs.
+
+An other optimization we perform is related to the existence of collections as data type in our DSL.
+These collections can be potentially large, in particular, the \textit{objects} value is costly to compute and keep in memory.
+This fact combined with the usage of operations on collections such as \textit{map} and \textit{filter} can harm the performance of an analysis.
+That is wait we devise two strategies to deal with collection values.
+User-defined and most built-in collections are keep in memory using linear space.
+On the contrary, we represent the built-in collection \textit{objects} as a generator.
+This representation is feasible because the mechanism provided by JVMTI to access the objects is based on callbacks.
+
+A last optimization is reducing the nodes of the graph that must be traversed
+As an illustration, we only produce code to explore primitive fields of each object, which are represented as leaf nodes in the graph, if there exist some expression accessing a field.
+
+As for platform independent optimizations, we mostly change the order in which boolean expressions are evaluated.
+We try to guarantee that subexpressions accessing collections and fields are evaluated as little as possible.
+
+The current implementation is limited in the number of optimization it applies.
+The main overhead reduction is achieved thanks to the execution model in which many paths of the graph are not traversed.
+Other benefits come from deciding at compilation time if some parts of the graph such as the leaf nodes must be explored or not.
+
+%Nonetheless, there are some aspects of the language as the evaluation of expressions that are not yet optimized.
+%Likewise, the runtime support for the language which is packed in a separate library can also be optimized.
