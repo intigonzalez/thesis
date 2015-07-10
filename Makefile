@@ -48,7 +48,8 @@ clean :
 	rm -f $(DOC).dvi $(DOC).aux $(DOC).lof $(DOC).log $(DOC).toc 
 	rm -f $(DOC).ps $(DOC).pdf
 	rm -f $(DOC).bbl $(DOC).blg
-##	rm -f $(DOC).idx $(DOC).ilg $(DOC).ind
+	rm -f macro.log
+	rm -f $(DOC).idx $(DOC).ilg $(DOC).ind
 
 diff : 
 	diff -b -B --brief -X .diffignore -r ../$(DOC)/ /mnt/usbstorage/$(DOC)/
