@@ -1,0 +1,297 @@
+ %% Il y a deux façons d'utiliser ce prototype de thèse:
+%%       soit vous pouvez pas blairer LaTeX,
+%%       soit vous en êtes un gourou.
+%% Dans le premier cas, il vous suffira de remplacer ce qu'il faut
+%% dans ce fichier pour obtenir presque automatiquement un manuscript qui
+%% ressemble à une thèse réglementaire.
+%%
+%% Dans le second cas, vous ne pourrez vous empêcher d'aller trafiquer
+%% le fichier these.sty pour rendre les choses encore plus automatiques
+%% (il y a sûrement un moyen de rendre plus élégante la mise en place
+%% du résumé sur la quatrième de couverture, par exemple)
+%% et l'adapter aux derniers caprices de la Scolarité.
+%% SVP, dans ce cas, faites profiter tout le monde de vos améliorations
+%% en renvoyant these.sty et un exemple de these.tex au ouaibemestre de l'ADOC.
+%%
+
+\documentclass[11pt]{book}
+%% En 12pt c'est possible aussi
+
+%% packages utilises
+%%---------------------
+\usepackage{emptypage}
+\usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage[frenchb,english]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{amssymb}
+\usepackage{these}
+\usepackage{array}
+\usepackage{floatflt,amssymb}
+%\usepackage[draft=true]{graphicx}
+\usepackage{graphicx}
+\usepackage{moreverb} %% pour le verbatim en boite
+%\usepackage{slashbox} %% pour couper les colonnes des tableaux en diagonale
+%\usepackage{showkeys} %% pour voir les labels
+\usepackage{multirow} %% pour regrouper un texte sur plusieurs lignes dans une table
+\usepackage{url} %% pour citer les url par \url
+\usepackage[all]{xy} %% pour la barre au dessus des symboles
+\usepackage{shorttoc} %% pour plusieurs tables des matières par la commande \shorttableofcontents{Titre}{profondeur}.
+\usepackage{textcomp} %% pour le symbol pour mille par \textperthousand.
+\usepackage{hyperref} %% pour la transformation en PDF, ça permet d'obtenir des liens sur les sections ...
+\usepackage[babel=true]{csquotes}
+\usepackage[right]{eurosym}
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+%\usepackage{algorithm2e}
+
+\usepackage{color}
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{green}{rgb}{0,1,0}
+\definecolor{blue}{rgb}{0,0,1}
+\definecolor{cyan}{rgb}{0.4,1,1}
+\definecolor{orange}{rgb}{1,0.7,0}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{purple}{rgb}{0.58,0,0.82}
+\definecolor{dkgray}{rgb}{0.3,0.3,0.3}
+
+\usepackage{lscape}
+%\usepackage{subfigure}
+\usepackage{listings}
+\usepackage{alltt}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usetikzlibrary{arrows,shadows,patterns, external}
+
+\tikzexternalize[prefix=auto-figures/]
+
+\usepackage[caption=false]{subfig}
+
+\usepackage{dblfloatfix}
+
+%\usepackage{todonotes}
+
+\usepackage{amssymb}% http://ctan.org/pkg/amssymb
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\todo}[1]{{{\em TODO}: \bf #1}}
+\newenvironment{mylisting}
+{\begin{list}{}{\setlength{\leftmargin}{2em}}\item\scriptsize\bfseries}
+{\end{list}}
+\newenvironment{mytinylisting}
+{\begin{list}{}{\setlength{\leftmargin}{1em}}\item\tiny\bfseries}
+{\end{list}}
+
+
+%
+% Command intended to create cool phrases in the beginning of each chapter
+%
+\newcommand{\coolphrase}[2]{
+\noindent\makebox[\linewidth]{\rule{\textwidth}{3pt}}
+
+\begin{verse}
+#1
+\end{verse}
+
+{\raggedleft{}\textit{- #2}}
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+
+%\centering
+\vspace{0.5cm}
+}
+
+
+
+%% macro/racourcis por les symboles et commandes usuelles
+\input{./macro}
+
+%% choix des profondeurs de section pour la table des matières
+%% 2= subsection, 3=subsubsection
+\setcounter{secnumdepth}{3}  %% Avec un numero.
+\setcounter{tocdepth}{2}     %% Visibles dans la table des matieres
+
+
+
+\makeindex %% crée l'index
+\def\underscore{\char`\_}
+
+%% c'est parti mon kiki !!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\hyphenation{im-pl\'e-men-ta-tion}
+%\hyphenation{con-train-tes}
+%\verb|\checkmark|: \checkmark \par
+%\verb|\cmark|: \cmark \par
+%\verb|\xmark|: \xmark
+
+
+
+\addtocounter{page}{-1}%ça c'est pour revenir à 0
+%\fontfamilly{phv}
+
+%%  1ere de Couverture:
+\titre{
+\begin{flushleft}
+Supporting \\ resource-awareness in \\ managed runtime environments.
+\end{flushleft}}
+%Approche à contraintes pour \\la sélection de \textit{Covering Array}.
+%\titre{Sélection de Coverring Array à l'aide des contraintes pl}
+
+
+%\soutenue
+%%   Laisser cette ligne en commentaire sauf pour la version finale.
+%%   (la premiere page contiendra "a soutenir le ..."
+%%   au lieu de "soutenue le ...")
+
+
+%% Les différents champs de la couverture...
+\datesout{18 November 2015}
+\Auteur{Inti}{Gonzalez-Herrera}
+
+\Labo{INRIA}
+\LaboEtendu{Rennes Bretagne Atlantique} % sauf INSA
+\ComposanteUniversitaire{} % sauf INSA
+
+%% La composition du jury : prénom, nom, titre
+%\President[M]{Thierry}{Jeron}{Directeur de recherche à l'INRIA}         %% le président du jury
+\Advisor{Benoit}{Baudry}{Chercheur, INRIA Rennes - Bretagne Atlantique}
+\Advisor{Johann}{Bourcier}{Maître de conférences, Université du Rennes 1}
+\Advisor{Olivier}{Barais}{Maître de conférences, Université du Rennes 1}
+\Rapporteur{John}{Doe}{Place 1}
+\Rapporteur{John}{Doe}{Place 1}
+%% Si vous avez N rapporteurs ça marche toujours...
+\Examinateur[Mme]{John}{Doe}{Place 1}
+\Examinateur[M]{John}{Doe}{Place 1}
+%% idem...
+
+%\ordre{00000}  %% le numéro d'ordre donné par la Sco
+\makethese{rennes1}    %% crée la couverture.
+
+
+%% une page blanche (deuxième de couverture)
+
+\newpage\thispagestyle{empty}\addtocounter{page}{-1}
+~\newpage\thispagestyle{empty}\addtocounter{page}{-1}
+
+%%  une page de citation (pas indispensable)
+
+
+%% Encore une page blanche pour que les remerciements arrivent
+%%  sur une page impaire
+
+\newpage\thispagestyle{empty}\addtocounter{page}{-1}
+~\newpage\thispagestyle{empty}\addtocounter{page}{-1}
+
+%\remerciements
+%\remerciements{Il faut vraiment que je dise merci ? :o)}
+%% vous n'êtes pas obligés d'utiliser cette commande
+%% mais elle vous donnera une idée de la chose
+
+\newpage\thispagestyle{empty}\addtocounter{page}{-1}
+
+%% pour cacher le numéro de page sur cette page blanche paire
+%% (à virer si vous avez plus d'une page de remerciements.)
+
+%%----------------------------%%
+%%                            %%
+%%  TABLE DES MATIERES        %%
+%%                            %%
+%%----------------------------%%
+
+%\newpage\thispagestyle{empty}
+
+%~\newpage
+\addcontentsline{toc}{chapter}{Table of content}
+\markboth{Table of content}{Table of content}
+\tableofcontents%%{Table des matières}
+
+%%----------------------------%%
+%%                            %%
+%%  CHAPITRES PRINCIPAUX      %%
+%%                            %%
+%%----------------------------%%
+
+\input{./introduction/introduction}
+%\part{Background and State of the Art}
+\input{./chapter1/chapter1}
+%\part{Contributions}
+\input{./chapter4/chapter4}
+\input{./chapter5/chapter5}
+\input{./chapter6/chapter6}
+%\part{Conclusions and Perspectives}
+%\input{./conclusion/conclusion}
+
+
+%%------------%%
+%%            %%
+%%  ANNEXES   %%
+%%            %%
+%%------------%%
+\appendix
+%\input{./glossaire/glossaire.tex}
+
+%%------------%%
+%%            %%
+%%  BIBLIO    %%
+%%            %%
+%%------------%%
+\bibliographystyle{alpha}
+\bibliography{./biblio/biblio_these}
+\addcontentsline{toc}{chapter}{Bibliographie}
+
+%%------------------%%
+%%                  %%
+%%  INDEX/TABLES    %%
+%%                  %%
+%%------------------%%
+%
+%\newpage
+%\cleardoublepage
+%\addcontentsline{toc}{chapter}{Table des matières}
+%\markboth{Table des matières}{Table des matières}
+%\sommaire[2]
+%\shorttableofcontents{Table des matières}{2}
+%\tableofcontents{Table des matières}
+%
+\newpage
+\cleardoublepage
+\addcontentsline{toc}{chapter}{Table des figures}
+\markboth{Table des figures}{Table des figures}
+\listoffigures
+%%
+%%\newpage
+%%\cleardoublepage
+%%\addcontentsline{toc}{chapter}{Liste des algorithmes}
+%%\markboth{Liste des algorithmes}{Liste des algorithmes}
+%%\listofalgorithms
+%%
+
+%%\newpage
+%%\cleardoublepage
+%%\addcontentsline{toc}{chapter}{Index}
+%%\markboth{Index}{Index}
+%%\printindex
+
+
+%\commentaire{%-------------------- debut commentaire -------------------
+%% Il faut mettre le résumé sur la quatrième de couverture.
+%% Suivant que votre liste de figures comporte un nombre pair
+%% ou impair de pages il faudra mettre un nombre pair ou impair
+%% de commandes \newpage.
+\newpage
+%\alignquatriemedecouv
+\cleardoublepage
+\input{./resume/resume.tex}
+
+\end{document}
+
+
