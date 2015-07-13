@@ -1,0 +1,6 @@
+*.log
+auto-figures/*
+*.out
+Hervieu_Aymeric.pdf
+these.dv.pdf
+these.auxlock

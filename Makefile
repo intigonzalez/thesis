@@ -7,10 +7,7 @@
 #    * les deux compilations de génération et d'inclusion de la table des matières ;
 #    * la conversion du document au format PostScript.
 
-#-------------------------
-# variables
-#-------------------------
-DOC = these#root du repertoire thèse
+DOC = these 
 
 TEX_FILES =	./remerciements/remerciements.tex \
                 ./introduction/introduction.tex \
@@ -18,15 +15,9 @@ TEX_FILES =	./remerciements/remerciements.tex \
                 ./chapter4/chapter4.tex \
                 ./chapter5/chapter5.tex \
                 ./chapter6/chapter6.tex \
-#                ./chapitre2/chapitre2.tex \
-#                ./chapitre3/chapitre3.tex \
-#                ./conclusion/conclusion.tex \
 		./glossaire/glossaire.tex \
 		./resume/resume.tex
 
-#-------------------------
-# commandes de compilation
-#-------------------------
 default: $(DOC).pdf
 
 quick: $(DOC).tex $(TEX_FILES)
