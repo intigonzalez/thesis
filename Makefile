@@ -7,18 +7,19 @@
 #    * les deux compilations de génération et d'inclusion de la table des matières ;
 #    * la conversion du document au format PostScript.
 
-DOC = these 
+DOC=these
 
-TEX_FILES =	./remerciements/remerciements.tex \
-                ./introduction/introduction.tex \
-                ./chapter1/chapter1.tex \
-                ./chapter4/chapter4.tex \
-                ./chapter5/chapter5.tex \
-                ./chapter6/chapter6.tex \
-		./glossaire/glossaire.tex \
-		./resume/resume.tex
+TEX_FILES =	these.tex \
+		acknowledgments/acknowledgment.tex \
+        introduction/introduction.tex \
+        chapter1/chapter1.tex \
+        chapter4/chapter4.tex \
+        chapter5/chapter5.tex \
+        chapter6/chapter6.tex \
+		glossary/glossary.tex \
+		resume/resume.tex
 
-default: $(DOC).pdf
+all: $(DOC).pdf
 
 quick: $(DOC).tex $(TEX_FILES)
 	latex $(DOC)

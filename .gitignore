@@ -4,3 +4,9 @@ auto-figures/*
 Hervieu_Aymeric.pdf
 these.dv.pdf
 these.auxlock
+*.toc
+/these.bbl
+/these.blg
+*.idx
+*.aux
+*.lof
