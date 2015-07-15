@@ -1,0 +1,1 @@
+SRC+=resume/resume.tex

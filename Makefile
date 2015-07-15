@@ -9,15 +9,17 @@
 
 DOC=these
 
-TEX_FILES =	these.tex \
-		acknowledgments/acknowledgment.tex \
-        introduction/introduction.tex \
-        chapter1/chapter1.tex \
-        chapter4/chapter4.tex \
-        chapter5/chapter5.tex \
-        chapter6/chapter6.tex \
-		glossary/glossary.tex \
-		resume/resume.tex
+SRC = these.tex
+
+
+include acknowledgments/make.mk
+include introduction/make.mk
+include chapter1/make.mk
+include chapter4/make.mk
+include chapter5/make.mk
+include chapter6/make.mk
+include glossary/make.mk
+include resume/make.mk
 
 all: $(DOC).pdf
 
@@ -30,7 +32,7 @@ $(DOC).pdf : $(DOC).tex $(DOC).bbl
 $(DOC).bbl : $(DOC).aux ./biblio/biblio_$(DOC).bib
 	bibtex $(DOC)
 
-$(DOC).aux: $(DOC).tex $(TEX_FILES)
+$(DOC).aux: $(DOC).tex $(SRC)
 	pdflatex -shell-escape $(DOC).tex
 
 #---------------------------
