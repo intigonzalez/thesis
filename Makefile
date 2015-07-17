@@ -11,7 +11,6 @@ DOC=these
 
 SRC = these.tex
 
-
 include acknowledgments/make.mk
 include introduction/make.mk
 include chapter1/make.mk
@@ -21,10 +20,16 @@ include chapter6/make.mk
 include glossary/make.mk
 include resume/make.mk
 
-all: $(DOC).pdf
+SRC_LOG=$(SRC:%.tex=%.log)
+SRC_LOG=$(SRC:%.tex=%.log)
+
+all: $(DOC).pdf exec-summary
 
 quick: $(DOC).tex $(TEX_FILES)
 	latex $(DOC)
+
+exec-summary: executive/executive.tex $(SRC)
+	pdflatex -shell-escape executive/executive.tex
 
 $(DOC).pdf : $(DOC).tex $(DOC).bbl
 	pdflatex -shell-escape $(DOC).tex
@@ -34,6 +39,7 @@ $(DOC).bbl : $(DOC).aux ./biblio/biblio_$(DOC).bib
 
 $(DOC).aux: $(DOC).tex $(SRC)
 	pdflatex -shell-escape $(DOC).tex
+
 
 #---------------------------
 # commandes "utilitaires"

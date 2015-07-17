@@ -1,1 +1,2 @@
-SRC+=introduction/introduction.tex
+SRC+=introduction/introduction.tex \
+	introduction/maintext.tex

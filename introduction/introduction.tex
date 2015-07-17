@@ -12,48 +12,13 @@
 This is the text
 }{inti}
 
-\section{Motivations and Overview}
+\input{introduction/maintext}
 
-Software systems are becoming even more pervasive nowadays.
-From simple applications for controlling home appliances to complex tools for dealing with productive processes, software systems are now found in any environment.
-The end-user's expectations have also grown along the development of the software industry.
-For instance, installing several applications provided by non-fully trusted sources in a mobile phone or closing a window in your office through a website are considered nowadays routinary  tasks which only require engineering effort.
-However, the software/hardware industry faces several problems while coping with these expectations.
-Among these challenges we find the need to handle millions of users, the ubiquity of resource-constrained devices, and the
-open nature of execution environments.   
+\todo{Hasta Aqui}
 
-The widespread usage of interconnected devices and the trend to use client/server architectures have led to a massive increment in the number of users some applications have to deal with.
-To support so many users, it is necessary to manage a massive computing infrastructure which is both complex and extremely costly.
-The emergence of cloud services was a \textit{natural} development of these infrastructures.
-Cloud services, which often are used to  build client/server applications,  are all about providing access to computing resources.
-They are shipped in many forms (e.g., virtual machines, software) but in general we can reduce them, using a rather simplistic model, to basic resources such as CPU cycles, memory, network bandwidth and storage capacity.
-This simplistic view is useful if we consider how important is for cloud services providers to reduce the usage of resources in order to increase efficiency.
-For instance, given the large nature of the cloud, a provider of platform as a service (PaaS) can reduce the operational costs if it manages to squeeze even a few thousand of bytes from each request.
-As a consequence, carefully managing resources such as CPU and memory becomes a primary concern for cloud service providers.
-
-Despite of the continuous evolution of hardware, demand of applications often surpasses hardware capabilities.
-This limitation of resources is particularly clear in wearable devices, but in the near future we can expect to see the same kind of concern in the emergent \textit{Internet of Things}.
-In this kind of devices it is fundamental to offer tools for properly sharing the scarce resources among applications.
-It is worth noting that managing resources has been a central problem in computer science and software engineer for a long time.
-However, I highlight the problem in this context for two reasons.
-First, because I think that new technologies to build applications for these devices allow better resource management techniques.
-Second, because it shows that limitations in resource quantity is still a concern for software developers.
-
-Open execution environments refer to the possibility of allowing the deployment of applications provided by different sources at any time, being these sources trustworthy or not.
-Since end-users are able to install many applications that share the execution environment, it is impossible for the developers of the runtime or of a single application to predict under what condition an application will be executing.
-Guarantying isolation among applications is of utmost importance because now it is possible to use these execution environments to build and massively deploy actuators that operate on the physical environment.
-A possible source of failure in these applications is the lack of resource isolation.
-In short, an application makes another to fail by consuming the resources needed for the later.
-
-The common concern in the three previous problems is that of making applications and execution environments aware of and capable of coping with resource limitations. 
-To the problem of 
-This thesis addresses the problem of supporting resource-aware programming in execution environments.
-Given their popularity, it focuses on facing the issue of resource-awareness in managed runtime environments (MREs) such as Java and the CLR.
-
-Existent solutions for resource management in MREs have two fundamental problems.
-First, they impose a significant performance overhead while monitoring the resource consumption of applications.
-Second, despite of the broad usage of MREs to execute component-based applications and to build domain-specific 
-abstractions, it is still had to provide tools to seamless deal with the resource management concern.
+\begin{comment}
+pepe
+\end{comment}
 
 \if 0 
 
