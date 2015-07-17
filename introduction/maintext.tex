@@ -47,14 +47,14 @@ Tackling these drawbacks, which are described below, is the goal of the present 
 
 \begin{itemize}
 \item Existent solutions impose \textbf{significant performance overhead} on the execution of applications.
-While this limitation does not affect the utilization of such solutions to, for instance, profile an application during the development phase, it does forbid using such techniques in a production environment due to the slowdown in execution time or the extra resources required.
-As a result, \textit{``poor''} solutions are used in those cases that require applications to be aware at runtime of the resource consumption and availability.
+While this limitation does not affect the utilization of such solutions to, for instance, profile an application during the development phase, it does make impractical using such techniques in a production environment due to the slowdown in execution time or the extra resources required.
+As a result, solutions with \textit{high} performance overhead or few provided features are used in those applications where being aware of resources at runtime is an strict requirement.
 
-\item Despite of the widespread utilization of MREs to execute application based on components and other abstractions, \textbf{creating resource management tools} for these abstractions is still \textbf{a complex task}.
+\item Despite of the widespread utilization of MREs to execute applications based on components and other abstractions, \textbf{creating resource management tools} for these abstractions is still \textbf{a complex task}.
 Indeed, creating abstractions such as domain-specific languages (DSLs) and components models is increasingly common.
 Plenty of tooling support exists for doing so, specially to define new DSLs.
 In addition, quite often these abstractions target MREs as backend technologies due to their safety.
-But creating these abstractions poses a challenge for abstractions' users when it comes to profiling, debugging and monitoring applications built using such abstractions.
+However, new abstractions poses a challenge for developers when it comes to profiling, debugging and monitoring applications that are built using them.
 The challenge emerges because the new abstractions are not always shipped along custom profilers and debuggers.
 As a consequence, developers find themselves using mainstream tools which are only able to cope with \textit{``classical''} concepts such as \textit{objects}, \textit{methods} and \textit{memory locations}, instead of more specific concepts.
 The reason for this is that defining tooling support for a specific abstraction is a time consuming task that must be balanced against the limited audience of such an abstraction.
