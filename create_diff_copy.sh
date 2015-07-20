@@ -87,7 +87,7 @@ git checkout-index -a -f --prefix="${CURRENT_VERSION}"
 git checkout-index -a -f --prefix="${DIFF_VERSION}"
 
 # export the specific tag version tree as it is to the folder that is being referenced by $3
-git checkout v0
+git checkout $1
 git checkout-index -a -f --prefix="${OLD_VERSION}"
 
 # let's go back to normal
