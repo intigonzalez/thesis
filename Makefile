@@ -45,7 +45,7 @@ create_diff_version:
         echo "$${number}" ; \
     done > files.txt
 	echo "executive/executive.tex" >> files.txt
-	./create_diff_copy.sh v0 /home/inti/Desktop/PhD_Diff/PhD_Copy /home/inti/Desktop/PhD_Diff/PhD_Old /home/inti/Desktop/PhD_Diff/Diff files.txt
+	./create_diff_copy.sh v1 /home/inti/Desktop/PhD_Diff/PhD_Copy /home/inti/Desktop/PhD_Diff/PhD_Old /home/inti/Desktop/PhD_Diff/Diff files.txt
 
 
 #---------------------------
