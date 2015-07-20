@@ -8,7 +8,7 @@
 #    * la conversion du document au format PostScript.
 
 DOC=these
-
+   
 SRC = these.tex
 
 include acknowledgments/make.mk
