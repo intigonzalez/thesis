@@ -46,9 +46,9 @@ create_diff_version:
 	@for number in $(SRC) ; do \
         echo "$${number}" ; \
     done > files.txt
-	echo "executive/executive.tex" >> files.txt
-	./create_diff_copy.sh - $(DIFF_VERSION_BASE_PATH)/PhD_Copy $(DIFF_VERSION_BASE_PATH)/PhD_Old $(DIFF_VERSION_BASE_PATH)/Diff files.txt
-	rm -f files.txt
+	@echo "executive/executive.tex" >> files.txt
+	@./create_diff_copy.sh - $(DIFF_VERSION_BASE_PATH)/PhD_Copy $(DIFF_VERSION_BASE_PATH)/PhD_Old $(DIFF_VERSION_BASE_PATH)/Diff files.txt
+	@rm -f files.txt
 
 
 #---------------------------
