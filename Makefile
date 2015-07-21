@@ -23,6 +23,8 @@ include resume/make.mk
 SRC_LOG=$(SRC:%.tex=%.log)
 SRC_LOG=$(SRC:%.tex=%.log)
 
+DIFF_VERSION_BASE_PATH=/home/inti/Desktop/PhD_Diff
+
 all: $(DOC).pdf exec-summary
 
 quick: $(DOC).tex $(TEX_FILES)
@@ -45,7 +47,8 @@ create_diff_version:
         echo "$${number}" ; \
     done > files.txt
 	echo "executive/executive.tex" >> files.txt
-	./create_diff_copy.sh v1 /home/inti/Desktop/PhD_Diff/PhD_Copy /home/inti/Desktop/PhD_Diff/PhD_Old /home/inti/Desktop/PhD_Diff/Diff files.txt
+	./create_diff_copy.sh - $(DIFF_VERSION_BASE_PATH)/PhD_Copy $(DIFF_VERSION_BASE_PATH)/PhD_Old $(DIFF_VERSION_BASE_PATH)/Diff files.txt
+	rm -f files.txt
 
 
 #---------------------------
