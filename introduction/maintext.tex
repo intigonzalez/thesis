@@ -1,29 +1,25 @@
-\section{Motivations and Overview}
+\section{Context and Motivations}
 
-Software systems are becoming even more pervasive nowadays.
-From simple applications for controlling home appliances to complex tools for dealing with industrial processes, software systems are now found in any environment.
-End-user's expectations have also grown along the development of the software industry.
-For instance, installing several applications provided by non-fully trusted sources in a mobile phone or closing a window in your office through a website are considered nowadays routinary  tasks which only require engineering effort.
-However, the software/hardware industry faces several problems while coping with these expectations.
-Among these challenges we find the need to handle millions of users, the ubiquity of resource-constrained devices, and the
-open nature of execution environments.   
+Software systems are more pervasive than ever nowadays.
+They are found in environments ranging from home appliances' controllers to complex tools for dealing with industrial processes.
+As a side effect, end-user's expectations have also grown along the development of the software/hardware industry.
+%For instance, installing applications provided by non-fully trusted sources in a mobile phone or closing a window in your office through a website are considered nowadays common tasks which only require engineering effort.
+However, the industry faces several challenges while coping with these expectations.
+A large number of such problems are related to the general issue of efficiently handling computational resources.
+Among the requirements of nowadays applications, that illustrate how the need of efficient resource management emerges as an issue over and over, are: the need of handling millions of users, the ubiquity of resource-constrained devices, and the open nature of execution environments.
 
-The widespread usage of interconnected devices and the trend to use client/server architectures have led to a massive increment in the number of users some applications have to deal with.
-To support so many users, it is necessary to manage a massive computing infrastructure which is both complex and extremely costly.
-The emergence of cloud services was a \textit{natural} development of these infrastructures.
-Cloud services, which often are used to  build client/server applications,  are all about providing access to computing resources.
-They are shipped in many forms (e.g., virtual machines, software) but in general we can reduce them, using a rather simplistic model, to basic resources such as CPU cycles, memory, network bandwidth and storage capacity.
-This simplistic view is useful if we consider how important is for cloud services providers to reduce the usage of resources in order to increase efficiency.
-For instance, given the large nature of the cloud, a provider of platform as a service (PaaS) can reduce the operational costs if it manages to squeeze even a few thousand of bytes from each request.
+The growing number of devices connected through client/server architectures have led to a massive increment in the number of users some applications have to deal with.
+These applications require a complex and extremely costly infrastructure that has naturally evolve into the \textit{cloud}.
+Although cloud services are shipped in different forms, using a rather simplistic model we can see them as mechanisms to provide basic computing resources such as CPU cycles, memory, network bandwidth and storage capacity.
+This view is useful if we consider how important is, for cloud service's providers, to reduce the usage of resources.
+For instance, given the large nature of the cloud, a platform as a service (PaaS) provider can reduce the operational costs if it manages to squeeze a few thousand bytes from each request.
 As a consequence, carefully managing resources such as CPU and memory becomes a primary concern for cloud service providers.
 
-Despite of the continuous hardware evolution, the demand of applications often surpasses hardware capabilities.
+Despite of the continuous hardware evolution, applications' demand often surpasses hardware capabilities.
 This limitation of resources is particularly clear in wearable devices, but in the near future we can expect to see the same kind of concern in the emergent \textit{Internet of Things}.
 In this kind of devices it is fundamental to offer tools for properly sharing the scarce resources among applications.
-It is worth noting that managing resources has been a central problem in computer science and software engineer for a long time.
-However, I highlight the problem in this context for two reasons.
-First, because I think that new technologies to build applications for these devices allow better resource management techniques.
-Second, because it shows that limitations in resource quantity is still a concern for software developers.
+It is worth noting that managing resources has been a central problem in software engineer for a long time.
+The problem is nevertheless highlighted because in my opinion new technologies to build applications for these devices allow and require better resource management techniques.
 
 Open execution environments refer to the possibility of allowing the deployment of applications provided by different sources at any time, being these sources trustworthy or not.
 Since end-users are able to install many applications that share the execution environment, it is impossible for the developers of the runtime or of a single application to predict under what condition an application will be executing.
@@ -31,19 +27,21 @@ Providing isolation among applications to guarantee a \textit{safe} behavior is 
 A possible source of failure in these applications is the lack of resource isolation.
 In short, an application makes another to fail by consuming the resources needed for the later.
 
+\section{Challenges}
+
 The common concern in the three previous problems is that of making applications and execution environments aware and capable of coping with resource limitations.
 This concern becomes even more relevant when, instead of looking at these problems in isolation, we observe them as problems that emerge together.
-For instance, resource-constrained devices providing an open executing environment are mainstream in wearable devices. 
-When an application includes features to react and modify its behavior after resource-related events occurs, it is said to be a resource-aware application.
-For a software system to handle this kind of features, it requires the appropriate runtime support.   
-This thesis addresses the problem of supporting resource-aware programming in execution environments.
+For instance, \textit{wearables} are nothing but resource-constrained devices providing an open executing environment. 
+When an application includes features to react and modify its behavior after resource-related events occur, it is said to be a resource-aware application.
+A software system requires the appropriate runtime support to provide such features.   
+\textit{This thesis addresses the problem of supporting resource-aware programming in execution environments}.
 In particular, it aims at offering \textit{efficient} support for collecting data about resource consumption, as well as \textit{efficient} mechanisms to reserve resources for specific applications.
 
 Runtime support for resource-aware programming highly depends on the target technology.
 After all, monitoring the memory consumption of \textit{C/C++} applications is different from capturing the memory consumption of a \textit{Lisp} program.
-This thesis focuses on facing the issue of resource-awareness in managed runtime environments (MREs) such as the Java Virtual Machine (JVM) and the Common Language Runtime (CLR).
-In the existent solutions to perform resource consumption monitoring and resource reservation in MREs, we find two fundamental drawbacks.
-Tackling these drawbacks, which are described below, is the goal of the present work.
+This research focuses on facing the issue of resource-awareness in managed runtime environments (MREs) such as the Java Virtual Machine (JVM) and the Common Language Runtime (CLR).
+In existent solutions to perform resource consumption monitoring and resource reservation in MREs, we find two important drawbacks.
+Tackling these drawbacks, which are described below, is the objective of the present work.
 
 \begin{itemize}
 \item Existent solutions impose \textbf{significant performance overhead} on the execution of applications.
@@ -54,38 +52,51 @@ As a result, solutions with \textit{high} performance overhead or few features a
 Indeed, creating abstractions such as domain-specific languages (DSLs) and components models is increasingly common.
 Plenty of tooling support exists for doing so, specially to define new DSLs.
 In addition, quite often these abstractions target MREs as backend technologies due to their safety.
-However, new abstractions poses a challenge for developers when it comes to profiling, debugging and monitoring applications that are built using them.
+However, new abstractions pose a challenge for developers when it comes to profiling, debugging and monitoring applications that are built using them.
 The challenge emerges because the new abstractions are not always shipped along custom profilers and debuggers.
 As a consequence, developers find themselves using mainstream tools which are only able to cope with \textit{``classical''} concepts such as \textit{objects}, \textit{methods} and \textit{memory locations}, instead of more specific concepts.
 The reason for this is that defining tooling support for a specific abstraction is a time consuming task that must be balanced against the limited audience of such an abstraction.
 \end{itemize}
  
+The challenges this research tackle can be summarized in the five research questions.
+These questions arises from the analysis of the drawbacks in the previous paragraphs.
+
+\begin{enumerate}
+\item How can we provide portable and efficient support for resource consumption monitoring in managed runtime environments?
+\item How can we leverage known system organizations to improve resource management efficiency?
+\item How can we reduce the cost of performing resource reservation in managed runtime environments where there exist many management techniques with different trade-off between cost and accuracy?
+\item How can we leverage the knowledge about the architecture of applications to drive a mechanism for resource management?
+\item How can we ease the definition and implementation of monitoring tools for new software abstractions?
+\end{enumerate}
+ 
 \section{Contributions}
 
-The outcomes of this thesis are three contributions that aim at reducing: the computational cost of performing resource management, and the complexity of building resource monitoring tools.
-Two of them target exclusively the problem of reducing the computational cost of performing resource management, which is what I consider more \textit{efficient} solutions, while the third one also target the problem of facilitating the construction of resource monitoring tools. 
-These contributions are briefly described in the rest of the section.
+The outcomes of this thesis are three contributions that aim at reducing the computational cost of performing resource management, and the complexity of building resource monitoring tools.
+Two of them target exclusively the problem of reducing the computational cost of performing resource management, which is what I consider more \textit{efficient} solutions, while the third one also targets the problem of easing the construction of resource monitoring tools. 
+These contributions are briefly described in the rest of this section.
 
+\textbf{An optimistic resource monitoring framework that reduces the cost of collecting resource consumption data.}
 Resource consumption monitoring is the foundation for resource-aware programming.
-In this thesis, a new approach built upon the idea of adaptive monitoring is presented.
+In this research, a new approach built upon the idea of adaptive monitoring is presented.
 The approach, namely Scapegoat, is based on fourth principles: i) often applications are built using abstractions such as components that we can use to identify and isolate the resource consumption, ii) since, in order to provided automatic resource management, MREs often reserve more resource than they need, we can use optimistic lightweight monitoring and still be sure we will be able to detect potential failures on time, iii) it is possible to \textit{quickly identify} the faulty component once a potential failure is spotted, and iv) there are previous monitoring mechanisms that we can leverage because they are exchangeable at runtime and offer different trade-offs between overhead and accuracy.
-Scapegoat was implemented and evaluated along this thesis and the results show its feasibility and efficiency.   
+Scapegoat was implemented and evaluated along this work and the results show its feasibility and efficiency.
 
-
+\textbf{A domain-specific language to build customized memory profilers that can be used both during development and in production.}
 Memory consumption monitoring at runtime or just plain memory profiling in MREs is a main concern for developers.
 This is because automatic memory management does not fully guarantee error-free memory management and, more importantly, it introduces performance issues.
 As mentioned, mainstream profilers are not able to deal with domain-specific concepts in an \textit{efficient} way.
-In this thesis, I propose a generative approach to create custom memory profilers for domain-specific abstractions such as DSLs and component models.
-The approach consists primarily in a DSL to define custom profilers and a profiler generator which targets heap memory exploration mechanisms such as the Java Virtual Machine Tool Interface (JVMTI).
+Along this thesis, I propose a generative approach to create customized memory profilers for domain-specific abstractions such as DSLs and component models.
+The approach consists primarily in a DSL to define profilers and a profiler generator which targets heap memory exploration mechanisms such as the Java Virtual Machine Tool Interface (JVMTI).
 The DSL has been devised with constrains that offer guaranties about the performance behavior of the generated profilers although these constrains reduce its expressive power.
-To evaluate the approach, the thesis presents a comparison between profilers generated with this approach, handwritten profilers and mainstream tools.
-The results of these comparison show that using this thesis's proposal makes possible to obtain profilers which behave close enough to handwritten solutions.
+To evaluate the approach, comparisons between profilers generated with this approach, handwritten profilers and mainstream tools are presented.
+The results of these comparisons show that using this thesis's proposal makes possible to obtain profilers which behave close enough to handwritten solutions.
 In addition, I discuss the benefits and expressiveness of the DSL.
 
+\textbf{A methodology to select components' binding at deployment time in order to reduce the computational cost of performing resource reservation.}
 Reserving resource for specific applications is another concern in resource-aware programming.
-In this thesis, I claim that providing \textit{efficient} resource reservation capabilities within component models is possible if resource-related concerns are considered not only during the design and implementation of the component model.
+In this research, I claim that providing \textit{efficient} resource reservation capabilities within component models is possible if resource-related concerns are considered not only during the design and implementation of the component model.
 Instead, I argue that it is worth using a lazy mechanism to choose the resource reservation technique for each component, and this choice can only be made by looking at the resource requirements of each component at deployment time.
 In short, I think that if a component model aims at supporting resource-aware component deployment then a \textit{methodology}, where both resource requirements and available technologies are decision variables to consider when we are binding components to system-level abstractions, results useful.
-Along this thesis, evidence for such claims are provided and a prototype named Squirrel is implemented to show the potential benefices of this \textit{methodology}.
+Along the present work, evidence for such claims are provided and a prototype named Squirrel is implemented to show the potential benefices of this \textit{methodology}.
 
-
+\section{Structure of the thesis}
