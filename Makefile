@@ -14,6 +14,7 @@ SRC = these.tex
 include acknowledgments/make.mk
 include introduction/make.mk
 include chapter1/make.mk
+include chapter2/make.mk
 include chapter4/make.mk
 include chapter5/make.mk
 include chapter6/make.mk
