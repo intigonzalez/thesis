@@ -6,7 +6,7 @@ As a side effect, end-user's expectations have also grown along the development 
 %For instance, installing applications provided by non-fully trusted sources in a mobile phone or closing a window in your office through a website are considered nowadays common tasks which only require engineering effort.
 However, the industry faces several challenges while coping with these expectations.
 A large number of such problems are related to the general issue of efficiently handling computational resources.
-Among the requirements of nowadays applications, that illustrate how the need of efficient resource management emerges as an issue over and over, are: the need of handling millions of users, the ubiquity of resource-constrained devices, and the open nature of execution environments.
+Among the requirements of applications that illustrate how the need of efficient resource management emerges as an issue over and over, are: the need of handling millions of users, the ubiquity of resource-constrained devices, and the open nature of execution environments.
 
 The growing number of devices connected through client/server architectures have led to a massive increment in the number of users some applications have to deal with.
 These applications require a complex and extremely costly infrastructure that has naturally evolve into the \textit{cloud}.
@@ -27,8 +27,6 @@ Providing isolation among applications to guarantee a \textit{safe} behavior is 
 A possible source of failure in these applications is the lack of resource isolation.
 In short, an application makes another to fail by consuming the resources needed for the later.
 
-\section{Challenges}
-
 The common concern in the three previous problems is that of making applications and execution environments aware and capable of coping with resource limitations.
 This concern becomes even more relevant when, instead of looking at these problems in isolation, we observe them as problems that emerge together.
 For instance, \textit{wearables} are nothing but resource-constrained devices providing an open executing environment. 
@@ -37,9 +35,12 @@ A software system requires the appropriate runtime support to provide such featu
 \textit{This thesis addresses the problem of supporting resource-aware programming in execution environments}.
 In particular, it aims at offering \textit{efficient} support for collecting data about resource consumption, as well as \textit{efficient} mechanisms to reserve resources for specific applications.
 
+\section{Challenges}
+
 Runtime support for resource-aware programming highly depends on the target technology.
 After all, monitoring the memory consumption of \textit{C/C++} applications is different from capturing the memory consumption of a \textit{Lisp} program.
 This research focuses on facing the issue of resource-awareness in managed runtime environments (MREs) such as the Java Virtual Machine (JVM) and the Common Language Runtime (CLR).
+
 In existent solutions to perform resource consumption monitoring and resource reservation in MREs, we find two important drawbacks.
 Tackling these drawbacks, which are described below, is the objective of the present work.
 
@@ -52,19 +53,19 @@ As a result, solutions with \textit{high} performance overhead or few features a
 Indeed, creating abstractions such as domain-specific languages (DSLs) and components models is increasingly common.
 Plenty of tooling support exists for doing so, specially to define new DSLs.
 In addition, quite often these abstractions target MREs as backend technologies due to their safety.
-However, new abstractions pose a challenge for developers when it comes to profiling, debugging and monitoring applications that are built using them.
-The challenge emerges because the new abstractions are not always shipped along custom profilers and debuggers.
+However, new abstractions pose a challenge for developers when it comes to profiling, debugging and monitoring applications that are built using them because such new abstractions are not always shipped along custom profilers and debuggers.
 As a consequence, developers find themselves using mainstream tools which are only able to cope with \textit{``classical''} concepts such as \textit{objects}, \textit{methods} and \textit{memory locations}, instead of more specific concepts.
 The reason for this is that defining tooling support for a specific abstraction is a time consuming task that must be balanced against the limited audience of such an abstraction.
 \end{itemize}
  
 The challenges this research tackle can be summarized in the five research questions.
 These questions arises from the analysis of the drawbacks in the previous paragraphs.
+It is worthwhile remembering that these questions refer to MREs.
 
 \begin{enumerate}
-\item How can we provide portable and efficient support for resource consumption monitoring in managed runtime environments?
-\item How can we leverage known system organizations to improve resource management efficiency?
-\item How can we reduce the cost of performing resource reservation in managed runtime environments where there exist many management techniques with different trade-off between cost and accuracy?
+\item How can we provide portable and efficient support for resource consumption monitoring?
+\item How can we reduce the cost of performing resource reservation when there exist so many management techniques with different trade-off between cost and accuracy?
+\item How can we leverage well-known abstractions used to build systems to improve resource management efficiency?
 \item How can we leverage the knowledge about the architecture of applications to drive a mechanism for resource management?
 \item How can we ease the definition and implementation of monitoring tools for new software abstractions?
 \end{enumerate}
@@ -72,7 +73,7 @@ These questions arises from the analysis of the drawbacks in the previous paragr
 \section{Contributions}
 
 The outcomes of this thesis are three contributions that aim at reducing the computational cost of performing resource management, and the complexity of building resource monitoring tools.
-Two of them target exclusively the problem of reducing the computational cost of performing resource management, which is what I consider more \textit{efficient} solutions, while the third one also targets the problem of easing the construction of resource monitoring tools. 
+Two of them target exclusively the problem of reducing the computational cost of performing resource management while the third one also targets the problem of easing the construction of resource monitoring tools. 
 These contributions are briefly described in the rest of this section.
 
 \textbf{An optimistic resource monitoring framework that reduces the cost of collecting resource consumption data.}
