@@ -47,7 +47,8 @@ In existent solutions to perform resource consumption monitoring and resource re
 Tackling these drawbacks, which are described below, is the objective of the present work.
 
 \begin{itemize}
-\item Existent solutions for resource consumption monitoring and reservation impose \textbf{significant performance overhead} on the execution of applications~\cite{}.
+\item Existent solutions for resource consumption monitoring and reservation impose \textbf{performance overhead} on the execution of applications~\cite{}.
+In particular, instrumentation-based mechanisms significantly reduce applications' performance~\cite{}.
 While this limitation does not affect the utilization of such mechanisms to, for instance, profile an application during the development phase~\cite{}, it does make impractical using such techniques in a production environment due to the slowdown in execution time or the extra resources required~\cite{}.
 As a result, solutions with \textit{high} performance overhead or few features are used in those applications where being aware of resources at runtime is a strict requirement.
 
