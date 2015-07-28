@@ -52,11 +52,11 @@ In particular, instrumentation-based mechanisms significantly reduce application
 While this limitation does not affect the utilization of such mechanisms to, for instance, profile an application during the development phase~\cite{}, it does make impractical using such techniques in a production environment due to the slowdown in execution time or the extra resources required~\cite{}.
 As a result, solutions with \textit{high} performance overhead or few features are used in those applications where being aware of resources at runtime is a strict requirement.
 
-\item Despite of the widespread utilization of MREs to execute applications based on components and other abstractions, \textbf{creating resource management tools} for these abstractions is still \textbf{a complex task}.
-Indeed, creating abstractions such as domain-specific languages (DSLs) and components models is increasingly common.
-Plenty of tooling support exists for doing so, specially to define new DSLs.
+\item Despite of the widespread utilization of MREs to execute applications based on components and other abstractions, \textbf{creating resource management tools} for these abstractions is still \textbf{a complex task}~\cite{}.
+Indeed, creating abstractions such as domain-specific languages (DSLs) and components models is increasingly common~\cite{}.
+Plenty of tooling support exists for doing so, specially to define new DSLs~\cite{}.
 In addition, quite often these abstractions target MREs as backend technologies due to their safety.
-However, new abstractions pose a challenge for developers when it comes to profiling, debugging and monitoring applications that are built using them because such new abstractions are not always shipped along custom profilers and debuggers.
+However, new abstractions pose a challenge for developers when it comes to profiling, debugging and monitoring applications that are built using them because such new abstractions are not always shipped along custom profilers and debuggers~\cite{}.
 As a consequence, developers find themselves using mainstream tools which are only able to cope with \textit{``classical''} concepts such as \textit{objects}, \textit{methods} and \textit{memory locations}, instead of more specific concepts.
 The reason for this is that defining tooling support for a specific abstraction is a time consuming task that must be balanced against the limited audience of such an abstraction.
 \end{itemize}
