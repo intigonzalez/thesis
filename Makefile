@@ -48,7 +48,7 @@ create_diff_version:
         echo "$${number}" ; \
     done > files.txt
 	@echo "executive/executive.tex" >> files.txt
-	@./create_diff_copy.sh - $(DIFF_VERSION_BASE_PATH)/PhD_Copy $(DIFF_VERSION_BASE_PATH)/PhD_Old $(DIFF_VERSION_BASE_PATH)/Diff files.txt
+	@./create_diff_copy.sh v2 $(DIFF_VERSION_BASE_PATH)/PhD_Copy $(DIFF_VERSION_BASE_PATH)/PhD_Old $(DIFF_VERSION_BASE_PATH)/Diff files.txt
 	@rm -f files.txt
 
 
