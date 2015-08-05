@@ -1,0 +1,97 @@
+\documentclass[11pt,a4paper]{paper}
+
+\usepackage[english]{babel}
+\usepackage{comment}
+\usepackage{color}
+
+\usepackage[margin=1.0in]{geometry}
+
+\newcommand{\todo}[1]{\textcolor[rgb]{1,0,0}{ToDo: #1} }
+
+\title{Supporting resource-awareness in managed runtime environments}
+
+\author{Inti Gonzalez-Herrera}
+
+\begin{document}
+
+\maketitle
+
+\section{Context}
+
+End-user's expectations have grown along the development of the software/hardware industry.
+A large number of problems that must be faced, while coping with these expectations, are related to the issue of efficiently handling computational resources to satisfy non-functional requirements.
+Indeed, sometimes applications must run atop resource-constrained devices or atop unsafe open runtime environments where efficient resource management is of utmost importance to guarantee applications' execution.
+To satisfy these requirements, applications and execution environments must be aware and capable of coping with resource limitations.
+When an application includes features to modify its behavior after resource-related events occur, it is said to be resource-aware.
+This thesis addresses the problem of supporting resource-aware programming in execution environments.
+In particular, it aims at offering efficient support for collecting data about resource consumption, as well as efficient mechanisms to reserve resources for specific applications.
+
+Nowadays, middleware are typically implemented using a managed runtime environment (MRE) such as Java, for example with OSGi.
+Many middleware support the open world assumption which enables features such as adding new functionalities after the initial deployment.
+To support the adaptability and manageability demanded by an open world runtime, it is possible to use Component-Based Software Engineer (CBSE).
+Alas, MREs such as Java were designed to execute a single application at a time, so they lack support for the kind of fine-grained resource management needed for components.
+
+Runtime support for resource-aware programming depends on the target technology.
+For instance, reserving memory for a Unix process is different that reserving memory for an OSGi bundle.
+%(i.e., the former problem involves creating a virtual address space while the latter demands the usage of a memory allocator and a garbage collector).
+Due to this fact, this research is limited to the issue of supporting resource-awareness in component-based software running on top of MREs.
+
+
+\section{Challenges}
+
+In existent solutions to perform resource consumption monitoring and resource reservation in MREs, we find two important drawbacks:
+
+\begin{itemize}
+\item Existent solutions for resource management impose \textbf{performance overhead} on applications.
+In particular, instru\-mentation-based mechanisms greatly reduce applications' performance.
+While this limitation does not affect the utilization of such mechanisms for profiling an application during the development phase, it does make impractical using such techniques in a production environment due to the slowdown in execution time.
+As a result, solutions with poor performance are used in those  cases where resource-awareness is a strict requirement.
+
+\item Despite of the utilization of MREs to execute applications based on components and other abstractions such as domain specific languages (DSLs), \textbf{creating resource management tools} for these abstractions is still \textbf{a complex task}.
+Often, new abstractions pose a challenge for developers when it comes to profiling and debugging applications that are built using them because they are not always shipped along custom profilers and debuggers.
+As a consequence, developers find themselves using tools which are only able to cope with \textit{``classical''} concepts such as \textit{objects}, and \textit{memory locations}, instead of more specific concepts.
+The reason for this is that defining tooling support for a specific abstraction is a time consuming task that must be balanced against its limited audience.
+\end{itemize}
+ 
+The challenges this research tackles are summarized in four research questions.
+These questions are limited to MREs and CBSE.
+
+\begin{enumerate}
+\renewcommand{\theenumi}{\textit{RQ\arabic{enumi}}}
+
+\item How can we provide efficient support for resource consumption monitoring?
+
+\item How can we choose what mechanism must be used to guarantee resource reservation with low overhead for each component?
+
+\item How can we leverage the knowledge about the architecture of applications to drive a mechanism for resource management?
+
+\item How can we ease the creation of monitoring tools for new software abstractions?
+\end{enumerate}
+ 
+\section{Contributions}
+
+This thesis presents three contributions that aim at reducing the computational cost of performing resource management, and the complexity of building resource monitoring tools.
+These contributions are briefly described below.
+
+\textbf{An optimistic resource monitoring framework that reduces the cost of collecting resource consumption data.}
+Resource consumption monitoring is the foundation for resource-aware programming.
+In this research, a new approach built upon the idea of adaptive monitoring is presented.
+The approach, namely Scapegoat, is based on fourth principles: i) often applications are built using components and we can use them to identify the resource consumption, ii) since, in order to provide automatic resource management, MREs often reserve more resource than they need, we can use optimistic lightweight monitoring and still be sure we will be able to detect potential failures on time, iii) it is possible to \textit{quickly identify} the faulty component once a potential failure is spotted, and iv) there are previous monitoring mechanisms that we can leverage because they are exchangeable at runtime and offer different trade-offs between overhead and accuracy.
+Scapegoat was implemented and evaluated along this work and the results show its feasibility and efficiency.
+
+\textbf{A methodology to select components' binding to reduce the computational cost of performing resource reservation.}
+Reserving resource for applications is another concern in resource-aware programming.
+This research claims that providing \textit{efficient} resource reservation capabilities for component models is possible if resource-related concerns are considered not only during the design and implementation of the component model.
+Instead, I argue that it is worth using a lazy mechanism to choose the resource reservation technique for each component, and this choice can only be made by looking at the resource requirements of each component at deployment time.
+In short, I think that if a component model aims at supporting resource-aware component deployment then a \textit{methodology}, where both resource requirements and available technologies are decision variables to consider when we are binding components to system-level abstractions, results useful.
+Along the present work, evidence for such claims are provided and a prototype named Squirrel is implemented to show the potential benefices of this \textit{methodology}.
+
+\textbf{An approach to build customized and efficient memory profilers that can be used both during applications' development, and also in a production environment.}
+Memory consumption monitoring and profiling are still important concerns in MREs because they cannot guarantee error-free memory management.
+In this thesis, a generative approach to create customized and efficient memory profilers for domain-specific abstractions such as DSLs and component models is proposed.
+The approach consists in a DSL to define profilers and a profiler generator which targets heap memory exploration mechanisms such as the Java Virtual Machine Tool Interface (JVMTI).
+The language has been devised with constrains that, although reduce its expressive power, offer better guaranties about the performance behavior of the generated profilers.
+To evaluate the approach, comparisons between profilers generated with this approach, handwritten profilers and mainstream tools are presented.
+The results show that the generated profilers have a behavior similar to that of handwritten solutions.
+
+\end{document}

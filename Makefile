@@ -31,8 +31,11 @@ all: $(DOC).pdf exec-summary
 quick: $(DOC).tex $(TEX_FILES)
 	latex $(DOC)
 
-exec-summary: executive/executive.tex $(SRC)
+exec-summary: executive/executive.tex $(SRC) ./biblio/biblio_$(DOC).bib
 	pdflatex -shell-escape executive/executive.tex
+	bibtex executive
+	pdflatex -shell-escape executive/executive.tex
+	pdflatex -shell-escape executive/reviewers.tex
 
 $(DOC).pdf : $(DOC).tex $(DOC).bbl
 	pdflatex -shell-escape $(DOC).tex
