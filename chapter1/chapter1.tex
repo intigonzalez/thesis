@@ -11,6 +11,448 @@
 
 \section{System support for resource awareness}
 
+
+\todo{This makes no sense at all}
+
+%\input{chapter1/fig/images.tex}
+
+\section{Resources Reservation}
+Computer systems consume resources to execute an application.
+The nature of resources varies in the sense that at certain point in time a given resource can be shared among applications or not.
+The classical example of shareable resource is memory.
+On the other hand, we have CPU which cannot be shared.
+
+Resource limitation has been a concern in computer science for a long time because writing applications for an environment with unlimited resources is easier than for real computer systems.
+Indeed, lots of work have been done to hide the resource-limitation problem, some examples are: multiplexing CPU usage and creating virtual memory subsystems.
+Operating systems and others runtime environments perform quite well offering resource abstractions to developers.
+However, resource limits are still there and they can produce applications failures. Moreover, the performance of applications is affected because resources management interfaces use to be quite general~\cite{Engler:1995:EOS:224056.224076}.
+
+Every single application is subject to failure due resource limitations. This risk is increased in embedded devices and other kind of resources constrained computer's systems. For many applications a failure related to resources limitation is not a big concern.
+Indeed, users can be unhappy if their text editor turn slow or even fail but most of the time nothing really important depends on it.
+Nevertheless, there are other applications where such failures are unacceptable.
+
+A system is considered critical if, for instance, its failure can produce financial losses, environmental damage, injuries of human beings or others  \cite{Knight:2002:SCS:581339.581406}.
+A more general definition is centred in businesses.
+For a business, a software application is critical if its failure stop the proper running of business \cite{Knight:2002:SCS:581339.581406}.
+For example, a system which handles customer's orders is critical for an online-selling business like eBay or Amazon.
+Another domain, where failure is not acceptable, is real-time applications.
+Real-time applications are those which demand an instantaneous response to external events \footnote{There are two kinds of real-time applications, 1) soft real-time applications and 2) hard real-time applications. Response time is relaxed in the former.}.
+Critical applications and real-time applications are two different sets \footnote{A computer game is real-time application because the need of real-time rendering, but it is not a critical application. On the other hand, a data-center is critical for most companies, but it is not a real-time application}.
+However, there are also applications that falls in both categories, but it is important to remember the difference because it has several implications.
+
+Even for non-critical and non-real-time applications, resource limitation is still important because it can prevent normal execution.
+%Of course, this is a matter of logic but in today's dynamic application it is a major concern.
+In the past, developers could easily define hardware requirements.
+However, nowadays dynamic applications can be deployed in resources constrained computer systems and several developers can add components at runtime; thus, it is not easy for developers to state when a given component will work.
+Resource limitation should not be a concern just for component's developers but also for middleware's developers.
+
+Response time is the major concern in real-time applications; therefore, CPU tends to be the main resource to ensure.
+For critical applications  as well as for general applications, resource's needs vary.
+Sometimes, it is more important to ensure network bandwidth, memory, or disk quota and so on.
+It depends on application requirements.
+The common factor is that the resource must be available when needed.
+Resource reservation is the only way to ensure availability.
+It can be as simple as marking a region of memory as owned by a single task or as complex as providing a task's scheduler for real-time systems where real-time applications have higher priority.
+There is a lot of related work in real-time's domain \cite{Kirsch:2005:PMR:1064979.1064986, Zuberi:1999:ESR:319151.319170, Higuera-Toledano:2012:YRJ:2388936.2388943, Alonso:2006:FJR:1167999.1168022}.
+Another interesting approach to resource management is the exokernel concept \cite{Engler:1995:EOS:224056.224076} where the notion of resource management and resource protection is decoupled.
+
+In Java world, resource reservation is almost non-existent.
+Resources are considered a low-level concept which must be handled by the runtime environment.
+Although most of the time this is a proper approach, there is an increasing interest in dealing with resources within Java applications.
+In the following sections we present previous approaches to the problem of resource reservation in Java domain, but also in operating systems and cloud computing.
+
+\subsection{Resource Containers}
+Banga et al. propose in \cite{Banga:1999:RCN:296806.296810} a new operating system abstraction for resource management.
+This abstraction, called resource containers, allows a fine-grained control over definition of independent task and its resources.
+The intended target of their work is server systems; but it is still relevant to other applications.
+
+Banga et al. state that in current operating systems there is an incorrect association between protection domain and resource principals.
+Indeed, the protection domain of a task is equal to the resource principal of this task.
+In current operating systems, a process is the abstraction for both, protection domain and resource principal.
+Reasons to use different entities for protection domain and resources principals can be, among others, security and performance.
+This kind of design decisions is very common in HTTP servers and time-consuming applications.
+
+Many examples are presented in \cite{Banga:1999:RCN:296806.296810} to highlight the problems.
+We show a summary of some examples in the following paragraphs.
+
+In applications accessing the network, the operating system kernel plays a major role.
+In such a case, the process is the correct unit for protection isolation.
+However, resources used by the kernel to satisfy application's requests are not charged to application.
+This issue has been addressed by both monolithic and micro-kernel operating systems \cite{Bao:2008:HPI:1384529.1375484}.
+The conclusion is that in client/server architecture resources consumed by the server in behalf of a client must be charged to resource principal of the client.
+This avoids denial-of-service attacks and is useful to ensure QoS.
+
+Some applications are split into different processes to guarantee fault isolation between component.
+These applications still perform a single task; hence, the natural protection domain is different to the desired resource principal.
+In such a case the desired unit of resource management is bigger than a process.
+However, nowadays operating systems manage resources per process instead of per task; therefore, the previous behaviour is not easy to implement.
+A similar scenario is common in extensible frameworks written in unsafe language where third-party extensions can be loaded.
+In Java world, this is a common scenario too because even if Java is a type-safe language, there are other ways to produce failure due to lack of isolation.
+
+Another scenario is possible.
+A single process can perform several independent tasks to avoid context-switching and to reduce IPC overhead.
+In this case the resource management unit is smaller than a process.
+Indeed, the resource unit is the set of all resources used for the process to accomplish a single task.
+This setting is common in current Java-based middlewares because many components share the memory heap inside a single JVM.
+The common solution is to provide an additional isolation unit on top of Java's classloaders.
+
+Even in more recent operating systems where thread assume some roles of resource principals (e.g CPU usage is not longer assigned to processes but to threads) process is still the resource principal for memory and files.
+However, the problem is not the size of resource principal.
+For instance, suppose we make threads the resource principal and processes the unit of protection domain, in such a case we still have the following scenario: we can multiplex a single thread between several independent tasks and hence one task is not isolated from the rest.
+
+The argument is that tying resource principals to static concepts as process, thread or Java instance is wrong because it reduces the set of solutions.
+A flexible definition of resource principal should provide developers with a better way to deal with different concerns like security and performance.
+
+A resource container is the new abstraction proposed in \cite{Banga:1999:RCN:296806.296810} to deal with resource principal for tasks. It is an entity which contains all the system resources used by a particular independent task \cite{Banga:1999:RCN:296806.296810}. Resource containers have attributes like scheduling parameters, resource limits and so on.
+
+As was mentioned, in classical operating systems there is a fixed binding between processes/threads and resource principal.
+In short, resource consumption of a process/thread is charged to the associate process.
+However, resource containers allow having dynamic binding between threads and resource principal and this under the control of application.
+In this way several scenarios are possible, for instance:
+\begin{itemize}
+\item Threads of different processes share a resource container.
+\item It is possible to multiplex a thread between several resource containers.
+\end{itemize}
+The resource usage is charged to the correct container and allocation algorithms can manage consumption in principals using different policies.
+Containers are just a mechanism to provide resource management to application developer and hence it can be used with several policies.
+Resource containers also form a hierarchy.
+Resource usage of a child is constrained by attributes of parent container.
+This allows easy controlling complete subsystems by defining special policies.
+
+To support containers, new operations are defined \cite{Banga:1999:RCN:296806.296810}. We briefly present the operations because a detailed explanation is not relevant to this work.
+\begin{itemize}
+\item Creating a new container.
+\item Set a container's parent.
+\item Container release.
+\item Sharing containers between processes.
+\item Access container attributes.
+\item Access container usage information.
+\item Binding a thread to a container.
+\item Binding a socket or a file to a container.
+\end{itemize}
+
+Note that in most middlewares implemented in Java we have a scenario were resource principal is bigger than the unit of isolation.
+The resource principal is the whole Java instance\footnote{This is not the case if you use something like Multitasking Virtual Machine} and the unit of isolation is the classloader. Independent activities share the resource principal.
+
+\subsection{Real-time programming in Java}
+Real-time is a term used to describe the desired behaviour of some applications.
+In such applications, there are real-world time requirements.
+For instances, in a computer game the desired frame rate can be established in 30 frames per second, therefore the renderer must render a frame in 2 seconds to avoid animation freezing.
+Time failure occurs if this requirement is not met.
+The previous example is considered a soft real-time application because a time failure is not considered catastrophic for the execution of such an application.
+On the other hand, hard real-time applications have strict time requirements.
+
+Designers of real-time applications need deterministic time response to articulate a system with desired properties.
+Designers of execution environments, like real-time operating systems and so on, devote huge effort to reduce non-deterministic performance effects because by lowering non-determinism the number of runnable RT applications increase.
+
+The nature of Java language and the JVM specification introduce non-determinism in time-response.
+Three sources of non-determinism are 1) dynamic class loading, 2) just in time compilation and 3) garbage collection as implementation of automatic memory management.
+Dynamic class loading affects because a class representation is loaded first time the application uses that class.
+Indeed, delay in application's execution and time failure can take place if the application load a class while it is responding to a real-time event.
+Time failure can be important even for soft RT application because loading a class may trigger additional dynamic class loading in a recursive way.
+This unlikely effect is worst because most JVM implementations use just in time compilation to speed up execution.
+Common techniques like adaptive compilation, where hot-spot bytecode is recompiled, may slow down RT application's execution with undesirable effects on time response.
+Finally, the garbage collector plays a major role in non-determinism of Java application.
+Most garbage-collection techniques perform a stop the world step at some point.
+Time spent collecting depends on many factors like rate of living objects, size of the heap and so on. Anyway, it is impossible to predict when a collection will be trigged and how long it will take.
+
+The Real-time Specification for Java was created to address some of the limitations of Java that prevent its use as RT execution environments. The RTSJ addresses several problematic areas, including scheduling, memory management, threading, synchronization, time, clocks, and asynchronous event handling.
+
+RTSJ is related to resource reservation because one of its main goal is to guarantee deterministic CPU time devoted to RT applications. Other features of RTSJ like threading system, synchronization, timer and event handling are not directly related to resource reservation; hence, we will skip it in the section.
+
+Memory management is the major source of non-deterministic response time in Java applications. The overhead imposes by garbage collection is high; therefore, only applications with larger scale and loose timing requirements can afford to rely on traditional GC technology.
+RTSJ addresses this problem with two different approaches.
+The former is providing two new memory regions to applications and the latter is providing a garbage collector with deterministic behaviour.
+It is important to note that the concern of these approaches is CPU reservation and have nothing to do with memory reservation.
+
+RTSJ provides two new memory regions in addition to the standard Java heap.
+The new memory areas are an immortal space and scoped spaces.
+An immortal space is shared between threads and no collection is done over objects in this space.
+Allocated objects in immortal space live until application's termination and thus an immortal space is a limited resource.
+On the other hand, scope spaces are created with fixed size and destroyed by application at programmer will.
+All objects in a given scoped area are released at the same time.
+RTSJ define rules to control the way objects in different areas interact with each others.
+Additional rules define the way objects in scoped space are finalized and when a memory area can be reused as scoped area.
+All these rules limit the usability of the approach because it enforces changes in Java programming model.
+Using immortal and scope memory areas is only recommended when GC pauses are non-acceptable.
+
+The second approach is useful when short GC pauses are acceptable. Core idea is to use a collector with the following properties:
+\begin{description}
+\item \textbf{Property 1}. No single GC pause exceeds some maximum upper bound.
+\item \textbf{Property 2}. GC will consume no more than some percentage of any given time window by controlling the number of pauses during that window.
+\end{description} 
+This means that RTSJ ensures a minimum percentage of CPU time to the mutator over any time interval.
+For instance, if the JVM implementing RTSJ was configured to ensure 80 $\%$ then in 60 seconds at least 48 seconds will be devoted to the mutator.
+
+Metronome GC is a solution developed as part of WebSphere Real Time \cite{Bacon03themetronome:}.
+Collection is scheduled at allocation time in most garbage collection methods, but this result in non-deterministic long GC pauses.
+Instead, the Metronome GC uses a time-based method of scheduling, which interleaves the collector and the application on a fixed schedule.
+The approach consists on dividing time in quanta of 500 microseconds.
+A quanta is devoted to a single activity, the mutator or the GC.
+The execution environment enforces a minimum amount of quanta to mutator.
+This ensure that Metronome GC conforms to property 2.
+Metronome performs collection during many short GC pauses, in order to do that the work is divided into several parts which require using write barrier and others technique to avoid costly operation like copying \cite{Bacon03themetronome:}.
+
+It is important to note that developers can specify the desired percentage for application and GC execution.
+However, using a number too high can produce out of memory exception although the rate of living object remains low. The reason is that the GC needs time to do its job.
+
+The main advantage of using this approach instead of immortal and scoped areas is related to the programming model.
+Any program written in Java can be executed with Metronome GC.
+Developers need to learn nothing.
+It is really an important advantage considering the way the classes library is implemented.
+Indeed, the core Java library is implemented with the assumption of GC existence and hence a lot of objects with short live are created and without a GC those libraries are useless.
+
+RTSJ uses other techniques not related to GC to guarantee deterministic response time. These techniques deal with the problem of just in time compilation. Although it result an interesting topic, it is not related to the current work. 
+
+
+\subsection{KaffeOS and MVM}
+The most common concern related to resource reservation in Java is memory reservation.
+The reason for this is the overhead imposed by automatic memory management.
+A natural approach to face such a problem is partitioning memory into different areas and assigning an area to every single task.
+In this section, we present two works which follow this approach.
+
+\emph{KaffeOS:} Despite of its name, KaffeOS is a Java Virtual Machine which provide the concept of process at virtual machine level \cite{back_processes_2000}.
+It offers abstractions like data isolation, safe termination, process forking and inter-process communication.
+KaffeOS isolates the data of each process by providing a per-application user heap where reference to a different user heap is forbidden.
+Figure \ref{fig:kaffeOSMemoryLayout} shows an example of configuration with several heaps.
+In KaffeOS, there are three classes of heaps, 1) user heaps where process's allocations take place, 2) shared heaps with fixed size used by many processes and 3) a global kernel heap used to allocate special data structures.
+Access rules are enforced through write barriers to ensure protection, safe termination and per-application garbage collection \cite{back_processes_2000}.
+
+%\begin{figure}
+%\caption{Memory layout in KaffeOS with three processes and some allocated objects}\label{fig:kaffeOSMemoryLayout}
+%\centering
+%\kaffeOSMemoryLayout
+%\end{figure}
+
+The main goal of KaffeOS is to offer isolation between tasks inside the JVM.
+However, it enforces a wrong programming model to deal with components.
+Using the process abstraction inside Java is just skipping chances that any MRE may offer.
+
+\emph{MVM:} Czajkowski et al. present the multitasking virtual machine in \cite{czajkowski_multitasking_2001}.
+The goal is to execute isolated Java virtual machine instances within a single operating system process.
+This is aimed to decreasing the memory consumption by sharing data structures like cache of code, constant pools and so on.
+Furthermore, starting new applications is speeded-up because the initialization process is not needed.
+As the goal includes isolation among instances, direct object sharing is forbidden.
+The approach has advantages, but also drawbacks.
+On one hand, it is remarkable that the Java programming model is not modified.
+On the other hand, the usability in middleware contexts is limited because if you want to isolate components in different instances then communications is only possible through Remote Method Invocation with all the negative impacts it implies.
+
+In MVM, the garbage collector has been modified to guarantee separation of resources between tasks.
+The collector uses a generational approach where the heap for old generation is shared among tasks.
+The new generation is represented with three spaces: 1) Eden space , 2) from-space and 3) to-space.
+The three of them with equal size.
+New objects are allocated from the Eden space and the from-space contains objects which survive some collections but are still young.
+The role of to-space is the traditional in semi-space collector. Like in any generational collector when an object become old it goes to old space.
+Figure \ref{fig:mvmMemory} shows the scheme.
+
+The disadvantage of using MVM to build middlewares is the high cost of RMI because by isolating Java instances, the communications between components running in different instances is slowed-down.
+
+%\begin{figure}
+%\caption{MVM with three tasks}\label{fig:mvmMemory}
+%\centering
+%\mvmMemoryLayout
+%\end{figure}
+
+
+\subsection{JAMUS} \label{JAMUS}
+%RAJE is an extension to the Java 2 platform implemented in the context of RASC project.
+%The project's aim is to support high-level resource-aware environments and applications.
+%To accomplish its goals, RAJE provides mechanisms to observe resource consumption and to use the information at any stage of components life-cycle \cite{guidec:hal-00342142}.
+
+The Java Accommodation of Mobile Untrusted Software (JAMUS) is a research platform dedicated to support the deployment of "untrusted" software components such as application programs and applets.
+Indeed, the source of software components could be "untrusted"; hence, it is mandatory to provide a safe runtime environment for components.
+JAMUS provides such an environment and it also guarantees QoS properties which are related to resources consumption. 
+
+%As a consequence, emphasis is put in JAMUS on providing a safe and guaranteed runtime environment for components, as well as guaranteed QoS as far as resource availability is concerned. 
+%By providing monitoring facilities RAJE become a useful platform to support adaptive systems, security-oriented systems and QoS-oriented systems.
+
+JAMUS follows a contractual approach to resource control.
+At deploy time, a software component must specify explicitly what resources it will need at runtime.
+On one hand, signing the contract means that the candidate component requests a specific service from the JAMUS platform.
+This contract also states that the component will not use resource others than those explicitly mentioned.
+On the other hand, the platform promises to provide all resources the component requires, but it reserves the right of punishing offensive components~\cite{JAMUS2002}.
+%Based on these contracts, JAMUS provides quality of service regarding resource availability.
+%It also provides relatively safe runtime environment, since no component can access or monopolize resources \cite{JAMUS2002}.
+Finally, components can specify their requirements regarding resource utilization in both qualitative and quantitative terms.
+As an example of qualitative requirement we have access right to sockets.
+Resource quotas are good examples of quantitative requirements.
+
+JAMUS implements a resource broker.
+Its role is to guarantee the availability of resources for deployed components.
+At start-up, it receives a description of available resources.
+%JAMUS provides a series of interfaces and classes that enable the specification of resource access conditions as "resource utilization profiles" \cite{JAMUS2002}.
+With that information, the broker builds and maintains a structure which represents its perception of resource availability.
+A component that applies for being deployed on the JAMUS platform must first pass the control-admission process.
+The requirements of this component must be expressed as a set of resource utilization profiles.
+Those requirements are examined by the broker to decide if the component can be admitted on the platform.
+Admission is based on a simple rule: a component can be deployed if the resources it requires are available on the platform in sufficient quality and quantity.
+Resources that a component requires are reserved for its sole usage until it reaches completion.
+The resource reservation is performed by updating the broker's perception about resources availability \cite{JAMUS2002}.
+
+After a successfully admission, a component start running on the platform.
+However, once a component has been accepted, it is considered as non-trustworthy.
+Indeed, an offensive component may attempt to access resources it did not explicitly ask for.
+To prevent such attacks, every component runs under the control of a dedicated component monitor, whose implementation relies on RAJE which is described in section \ref{RAJE}.
+When a monitor observes that the component is acting against the contract, it can punish the component. Sanctioning a component is done by forbidden the resource, or by killing the component.
+
+\subsection{Dynamic resource reservation} \label{CloudReservation}
+
+Sim\~{a}o et al. present in \cite{Simao:2012:VEJ:2310096.2310158} the Adaptive and Resource-Aware Java Virtual Machine, ARA-JVM, a work in progress to deal with resource management for cloud computing using high-level virtual machines.
+The goal is to build a cloud computing platform with special concern in resource consumption.
+The solution involves modifying a JVM to deal with nodes, task migration between nodes and transparent communication among nodes.
+From the perspective of resource-aware platform, the approach is interesting because resource reservation for application is done dynamically.
+An additional advantage of this approach is that it is transparent to application's developer.
+
+ARA-JVM is built upon several runtime instances.
+Each instance cooperates by sharing resources.
+To implement resource sharing, a global mechanism is needed to make both simple and complex adaptations.
+Moreover, a MRE with enhanced services is required at every node and upon that, a mechanism to aggregate individual VMs is used~\cite{Simao:2012:VEJ:2310096.2310158}.
+
+Applications are monitored to obtain precise information about resource consumption and application's progress.
+Such information is used to build a per application profile.
+When an application needs more resources, the platform selects an application with \textit{low} consumption which \textit{donates} part of its resources \cite{Simao:2012:VEJ:2310096.2310158}.
+It is important to note that moving resource can be explicit or implicit.
+For instances, by reducing the heap of certain application the memory released can be used by another application.
+In such a case the resource was moved in an implicit way.
+On the other hand, resources are explicitly moved when a new tenant is created.
+
+The current implementation is based on JikesRVM.
+On it, resource monitoring has been implemented in the form of JSR 284.
+Likewise, they use an external language to provide policies to the virtual machine at start-up time.
+The authors present experiments related to heap size modification where several policies about the growing ratio of the heap are compared~\cite{Simao:2012:VEJ:2310096.2310158}.
+
+Although, the dynamic handling of resources by discovering patterns of usage is an approach highly valuable and the research is still a work in progress, there are two problems with the approach.
+The former is a poor definition of application/component.
+The latter is lack of good experimenting scenarios.
+
+
+\subsection{Discussion}
+
+The most common solution to resource reservation per application in Java is based in isolates. This approach is implemented in MVM and KaffeOS. Although it is useful for some middleware like web server where the communications between applications is low, the approach is impractical for component-based applications due to the high performance overhead.
+
+There are some promising solutions for resource reservations based on implicit reservations, like the approaches presented in sections \ref{JAMUS} and \ref{CloudReservation}. Both solutions rely on resource accounting at virtual machine level. It is not clear how to extend the second solutions to deal with resource others than memory and CPU time. In the former solution the reservation of some resources like network bandwidth need a combination of resource monitoring and resource management policies. The performance overhead can be high. Moreover, it can be hard for application developers to specify in the contract the amount of resource a component needs.
+
+Resource containers is a promising approach to resource reservation within middleware but this abstraction cannot be implemented in the same way as was proposed for operating systems. The problem is that the approach requires using a complex API. This fact compromises the Java programming model and this situation is unacceptable because 1) previous developed components cannot take advantage and 2) abstractions of resources is compromised. The trend in programming languages is using dynamic languages or static languages with automatic memory management so, it is a nonsense modifying the Java programming model to reintroduce resource management. Of course, critical applications need a mechanism to avoid failing because resource limitations. However, there are other options like using DSLs to specify resource reservation concern and some weaving mechanism. The mechanism of resource containers for Java does not need being as flexible as the API for operating systems. The main concern is decoupling the resource principal of any fixed structure like thread or classloader.
+
+\section{Resource accounting in Java}
+In the context of today middleware systems, resources limitation is an important concern because it is easy to develop offensive applications which affect QoS. Resource-aware programming is about providing application developers with a way to change its behavior at runtime to take care of resource limit violations. The key to support resource-aware programming is resources accounting. Knowledge about the amount of resources consumed by an application can be used by the application to control itself or by an external agent to control offending applications.
+
+Traditionally, resources accounting has been performed at operating system level because this is the normal environment to run applications. Resources accounting is easy to implement inside the operating system. The reason to this is the classical view of operating system as a software layer to abstract, protect and multiplex resources. Moving application's execution to a higher layer pop up a problem related to resources accounting because MREs do not have direct access to real resources. Additionally, MREs offer higher abstraction like type-safe systems. Although type-safe systems do not remove the necessity to application's isolation, it offers chances to lightweight components communications. For instances, it offers the chance to avoid using complex interprocess communication mechanism. However, as some objects can be shared among applications it become hardest to account for some resources.
+
+Java virtual machine specification was built upon the idea that an operating system process is the resource container for a single java application so, you need as many JVM instances as java applications. However, JVM platform has been widely accepted like a tool to middlewares building and the notion of Java instance per Java application was rejected. Main reasons to this are related to language features. The problem with the new approach is the introduction of many QoS risks and even security risks. Isolation is a major concern in Java middlewares but addressing isolation at resources usage level is still a challenge.
+
+Resources accounting at virtual machine level is highly dependent on virtual machine implementation. For instances, thread's model affects the way CPU usage is accounting. In a virtual machine like Kaffe you can apply sampling method \cite{Nagpurkar:2006:ERP:1132462.1132465} but it is a better and even cheaper solution to perform direct accounting. The same problem emerge in memory accounting, memory-management policy you use will affect the accounting subsystem. Even more, the target operating system affect the resources accounting subsystem. For instance, in Unix family the \textbf{/proc} pseudo-filesystem provide information about resource usage but the exact location and the amount of information vary among implementations. This particular issue is really important for applications' developers because not all accounting systems offer the same accuracy.
+
+There is not ubiquitous Java virtual machine implementation. Instead, there are many implementations with different aims and providers. However, there is not official specification for resources accounting in Java. This mean developers can rely on specific solutions because lack of portability. Even more, different implementations at virtual machine level can provide disparate accuracy and services. For developers this mean rewriting resources accounting concern for different Java API.
+
+It is not an easy task ensure the quality of accounting. There are three agents running inside any MRE, 1) the mutator, 2) the garbage collector and 3) the supervisor which spend time jitting code and so on. The way this can interfere in accounting depends on implementation details. Some questions need to be answer, for instances:
+\begin{itemize}
+\item Is the garbage collector using a stop the world technique?
+\item Is the virtual machine just in time compiling the code or interpreting?
+\item How is implemented the threads' model?
+\end{itemize}
+However, the way developers use the virtual machine is even more important because considering that a single JVM instance can handle several user applications has a huge impact on resources accounting. For instance, if an object is shared for two components (a client which created the object and a server which need a reference) it is hard to define which component must carry on with the accounting for such object. It is even hardest to charge a component with the time spend by the garbage collector to release this object. Additionally, we must charge some application with spent time during garbage collection but the question is to know which application. We can generalize by noting that there are two main reason which make accounting a hard problem, the former is that implementation details can distort the accounting, the latter is that there is not formal definition of resource container or task in Java middleware. Developers started using JVM as platform for running middlewares but JVM specification did not evolve to support resources accounting in the new context.
+section
+In this chapter we present some methods to perform resources accounting in Java. There are two main approaches to resources accounting in Java 1) at user level and 2) at virtual machine level. Both approaches will be discussed in the following sections. 
+
+\subsection{Portable solution by bytecode rewriting}
+A well-known technique to resource accounting in Java is rewriting the bytecode of applications. This process can be done in three different moments.
+\begin{enumerate}
+\item At compilation time.
+\item In a post-compilation stage.
+\item At runtime. 
+\end{enumerate}
+By rewriting the bytecode at runtime, while the application is loading classes, an additional benefit is obtained because third party code could be used. In this approach at least one new Classloader must be defined in order to instrument the code. The Classloader injects code to estimate resources usage. The function of the injected code is to increment counters of resource usage. As it is impossible to know the exact execution path of a given method the solution must rely on control-flow graph. The classloader injects code at begin (or end) of every basic block in order to increment the counters. For some methods it is possible to infer statically the number of instructions to execute or the amount of memory to use but in general this kind of statical analysis is not available due to the complexity of algorithms. The range of operations that can be inserted vary from a simple counter update to calls to complex APIs. However, the concept is the same.
+
+A function to calculate n-th Fibonacci number is shown in listing \ref{lst:fib}. The associated control-flow graph and basic blocks is shown in figure \ref{fig:fibFlow}. For every basic block the instructions to be injected are shown. A similar process is used to account the memory consumption.
+
+Advantage of this approach is portability because the entire solution can be implemented in Java as part of a middleware. In place of the simple statement we are using a more complex code can be injected in order to implement an observer pattern. The observer can execute actions to stop the abnormal resource's consumption \cite{czajkowski_jres:_1998}.
+
+Disadvantage of bytecode rewriting is related to the high performance penalty imposed to applications. The performance penalty emerge in two dimensions, the former is CPU consumption because of the new instructions to execute and the latter is memory usage. Czajkowski et al. showed in \cite{czajkowski_jres:_1998} that the overhead can be higher than 15\% if the amount of allocated objects is high but this is only for memory usage accounting. Binder at al. in \cite{binder_portable_2001} found an overhead around 25\% for CPU usage accounting. According to Hulaas et al. in \cite{Hulaas:2004:PTP:1014007.1014024} an overhead of 40\% emerged when an approach based on bytecode rewriting is applied to SPEC JVM98.
+
+%\begin{lstlisting}[caption={Finding the n-th Fibonacci number}, label={lst:fib}, language={Java}]
+%int Fibonacci(n)
+%	if (n < 2) return n
+%	fi = 0
+%	fj = 1
+%	index = 2
+%	while (index <= n) 
+%		tmp = fi + fj
+%		fi = fj
+%		fj = tmp
+%		index ++
+%	return tmp
+%\end{lstlisting}
+
+A technique to profile Java Application is presented in \cite{Dmitriev:2004:PJA:974043.974067}. The basic approach is using bytecode rewriting to monitor resources usage. This work states that bytecode instrumentation impose high overhead over running systems so, a better way to handle monitoring is needed. In this approach, instrumentation's code can be inserted or removed at runtime. The approach is named dynamic bytecode instrumentation. Data collected in this way are presented in calling context tree format \cite{Ammons:1997:EHP:258916.258924}. The mechanism cannot be implemented without virtual machine support because semantic of Java virtual machine does not allow it. The author modified Hotspot Java VM to perform bytecode rewriting under demand, acting like a server. Most work inside JVM involved tunning the well-known mechanism of swapping between jitted code and bytecode interpretation.
+
+The solution is composed by two components, the former is a JVM which acts like a server and the latter is a client which instrument the code. A brief explanation is given below:
+\begin{enumerate}
+\item Client sends information about what is the root method to instrument.
+\item Server obtains call subgraph and send this information to client.
+\item Client rewrites bytecode in these methods and send back bytecode to server.
+\item Server swaps the current running bytecode by the instrumented one.
+\end{enumerate}
+Advantages of this approach are 1) lower overhead due dynamic bytecode rewriting and 2) dynamic discovering of call subgraph presenting results as resources consumed by a particular functional task.
+
+Although the original intend is profiling Java application one can think in using the mechanism to monitor resources usage. A lightweight monitoring technique can be used and under certain conditions dynamic bytecode instrumentation can be triggered for a suspicious task to obtain a fine-grained measure. It is easy to rollback the modification at any point to obtain performance advantages.
+
+Bytecode rewriting is useful to account resources in any entity we consider an independent task. We are not restricted by classloaders. We can even consider a thread is multiplexed between many independent task. By knowing the API used to multiplex the thread we can generate the proper instrumentation code.
+
+\begin{figure}
+
+\caption{Control-Flow Graph with Basic Blocks}\label{fig:fibFlow}
+\centering
+%\fibControlFlowGraph
+\end{figure}
+
+\subsection{Solutions at virtual machine level}
+A different approach is making changes at virtual machine level to account for resources usage. The exact nature of this method depend on virtual machine specification and implementation. For instance, some virtual machines have a specific way to deal with threads so, resources accounting is more or less hardest to implement. In some published results the programming model is not preserve and this fact changes the way resources are handled. As there are many considerations, it is hard to generalize. Instead of that we prefer to present related works which highlight trends in this field.
+
+\subsubsection*{Resource accounting in KaffeOS}
+In KaffeOS two resources are monitored, the former is memory consumption and the latter is CPU usage. Resources accounting is implemented inside the Java virtual machine as part of the processes handling policy \cite{back_processes_2000}.
+
+Memory accounting is easy to implement because every process has its own user heap so, the associates allocator and collector can account memory in every allocation and collection cycle. In fact, the amount of memory used is the sum of objects' size in user heap. The memory used in shared heaps is charged to all processes pointing to the heap. Finally, the kernel has been carefully implemented to keep the number of kernel objects low and many of them are allocates inside the user heap, for instance, the process data structure is allocate inside process's heap \cite{back_processes_2000}.
+
+As section \ref{Kaffe} explains, Kaffe threading model is implemented in user space so, CPU accounting is straightforward. Accounting is done per-process and both the user time and kernel time is measured. This is easy to implement because the separation between user heaps and kernel heaps and their collectors allows accounting CPU in kernel mode. The accuracy of CPU accounting is increased by minimizing the time spend in no-preemptible sections \cite{back_processes_2000}.
+
+\subsubsection*{Modifying the garbage collector}
+A different approach to memory accounting is modifying the garbage collector. Price et al. \cite{Price:2003:GCM:829515.830545} presents a solution where objects are no charged to its allocator but to any task having a reference. In their approach a single heap is used for all task and objects sharing semantic is respected. The main modification is in the tracing algorithm. For every task a set of roots is created. This set contains static fields of classes and stack maps of thread. A tracing with this set of roots is performed and memory consumption for the task is the sum of reachable objects. After repeating this procedure for every task, a final tracing is executed to find uncountable references. Due the nature of the modification, the task's order matter so, a shared object could be charged to different tasks. To avoid this problem the authors introduce uncountable references which stop the tracing algorithm and are charged to the allocator task.
+
+As the tracing stage varies between collector this methodology must be adapted. A particular challenge which need further modification are generational collectors. The technique is no applicable to conservative collectors and reference counting collectors.
+
+Finally, the overhead imposed for this technique is around 2 $\%$ for experiments executed. However, we consider that more realistic benchmark can be applied. The main advantage of the approach is that Java programming model can be applied. A limitation is using classloaders as definition of task.
+
+\subsubsection*{Multitasking Virtual Machine}
+
+Memory accounting is easy because only the objects in old space need to be dynamically accounted. The memory consumption of any task is the sum of size of eden space, from-space and to-space because this amount of memory is reserved to the task. The size of every objects allocated for the task which reside in old space is accounting too. Accounting for consumption in old space is performed in two moments, 1) when a collection in new space move an object from young generation to old generation and 2) when MVM collects old generation.
+
+The overhead of this solution to memory accounting is negligible. Of course this is a direct consequence of design decision in memory layout. However, it is important to note that each isolate in MVM is a single JVM instances. We will have the same problem of lack of resource accounting if we execute a middleware per isolate. Another major problem in MVM is its lack of support for CPU usage accounting.
+
+\subsubsection*{Resource accounting to support resource-aware programming \label{RAJE}}
+RAJE is an extension to the Java 2 platform implemented in the context of RASC project. The project's aim is to provide software components with means to express their hardware/software requirements and to use the information at any stage of components life-cycle \cite{guidec:hal-00342142}. The solution considers an application is mapped to a classloader. A resource register is associated with each application and some classes like Memory, CPU, Thread and so on are defined to represent resources. The standard API for Java threads was extended and an application can obtain the amount of resources used by calling some methods. Two models of resources monitoring are used, 1) synchronous monitoring and 2) asynchronous monitoring. The former allows a fine grain resource accounting but it is to expensive and it is not available for all resources. The latter allows accounting resources like CPU usage but it is less accurate.
+
+RAJE was implemented on top of Kaffe for Linux operating system. Some changes were necessary to easy capture CPU usage. Threads subsystem was ported to use native threads so, access to \textbf{/proc} pseudo file-system allows obtaining statistics. Memory accounting is done per-thread by intercepting allocations and collections at virtual machine level.
+
+Although the solution is not portable it offers to applications the ability of observe the resource consumption because every resource object could have any number of attached listeners. Resource objects expose a locking interface with the following semantic: locked resources cannot be used. This mechanism is enough to implement several resource's management policy.
+
+\subsection{Resource-aware programming interface}
+Any resource accounting mechanism must provide an API to allow the platform as well as te application to monitor resource usage. In early solutions \cite{czajkowski_jres:_1998, czajkowski_resource_2003}, the center idea was using observer pattern \cite{Gamma:1995:DPE:186897}. In this case, the resource principal assumes the role of \textit{subject} and monitors act as \textit{observers}. Modern solutions rely on Java Management Extensions. In additions to common extensions to control coarse-grained resources like threads, GC cycles and total memory consumption; you can add your own agents to monitor resource consumption to wherever level you want.
+
+In the other side of resource-aware programming, the side related to providing mechanism to adapt the application behavior, there are few options. The most common is provided for the Java runtime itself and it consist in stopping offensive threads or lowering its priority. There are other options which allow using capabilities \cite{Hawblitzel:1998:IMP:1268256.1268278} to revoke permissions. Although there are other solutions \cite{guidec:hal-00342142}, more general adaptation policies are less common and remains a challenges.
+
+\subsection{Discussion}
+In addition to resource accounting technique we have described, there are static methods to compute memory consumption and execution time \cite{Puffitsch:2010:WAH:1939345.1939394,Schoeberl:2010:WET:1780354.1780356}. However, these static analysis cannot be applied to an arbitrary application. To apply these methods, developers cannot use certain data structure from class library or they must avoid recursion. In the same way, some fragments of code must be annotated. There are others disadvantages like: lack of support for dynamic loading of code, ignoring garbage collector effect and low accuracy. Moreover, these solutions rely on the construction of Data-Flow Graph and some theoretical can emerge due exponential explosion in the number of state. Although the static analysis is useful for real-time applications, its use is not broadly applicable so, we decided to skip further explanations.
+
+The solutions to resource accounting at user level are too expensive to be considered in production middleware. However, the approach is applicable to part of an application. This can be used to support extensible applications by providing a mechanism to monitor untrusted code. Monitoring specific components within a system can be achieve dynamically or statically. In the former, the JVM machine must be customized because the native code of methods must be changed at runtime. The second solutions may rely on the usual mechanism to deploy components in contemporary middleware. That is, a component is uninstalled, instrumented and then reinstalled.
+
+A considerable advantage of using resource accounting at user level is the easy porting to new platform like Android. In such a case you can write a tool to instrument the code before building DEX files. In the other hand, a solution at virtual machine level involves changing the Dalvik VM. Perhaps, you can build a common infrastructure on top of Vmkit to perform resource accounting and then you can use this infrastructure to build a JVM and a Dalvik VM but, it is a very time consuming task.
+
+Solutions at virtual machine level are easier to implement. Moreover, the performance overhead tend to be slower because the control of resource is direct. However, the solution at virtual machine level is not good for developers of user applications. Perhaps, the best way to deal with resource accounting is by mixing the two approaches. Some resources can be accounted at user level and others to virtual machine level. We can think in offering a low-level API for resource accounting and using such API at user level to aggregate results in wherever structure we consider an independent task.
+
+Finally, it is important to note that there is an obvious lack of solutions for accounting of resources others than memory and CPU usage. The common approach to network usage accounting involves modifying the Java class library. This is not a big modification because all traffic is managed using a few functions. However, there are others network resources like sockets that are not controlled at all. The file system is other resource which is not considered in most publication. It means that resource accounting is still a challenge.
+
+
 \begin{itemize}
 \item CGroup
 \item FreeBSD
