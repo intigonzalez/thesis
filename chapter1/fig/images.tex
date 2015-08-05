@@ -1,0 +1,191 @@
+% Define block styles  
+\tikzstyle{codeInserted}=[draw, fill=white!20, text width=8.0em, text centered,
+  minimum height=1.5em,drop shadow, rounded corners]
+
+\tikzstyle{materia}=[draw, fill=blue!20, text width=8.0em, text centered,
+  minimum height=1.5em,drop shadow]
+\tikzstyle{blockStyle} = [materia, text width=8em, minimum width=10em,
+  minimum height=3em, rounded corners, drop shadow]
+\tikzstyle{oldblockStyle} = [materia, text width=8em, minimum width=17em,
+  minimum height=5em, rounded corners, drop shadow]
+\tikzstyle{smallblockStyle} = [materia, text width=3em, minimum width=2em, 
+  minimum height=3em, rounded corners, drop shadow]
+\tikzstyle{texto} = [above, text width=6em, text centered]
+\tikzstyle{linepart} = [draw, thick, color=black!50, -latex', dashed]
+\tikzstyle{line} = [draw, thick, color=black!50, -latex']
+\tikzstyle{ur}=[draw, text centered, minimum height=0.01em]
+ 
+% Define distances for bordering
+\newcommand{\blockdist}{1.3}
+\newcommand{\edgedist}{1.5}
+
+\newcommand{\block}[2]{node (p#1) [blockStyle]
+  {{\scriptsize{#2}}}}
+  
+\newcommand{\oldblock}[2]{node (p#1) [oldblockStyle]
+  {{\scriptsize{#2}}}}
+  
+\newcommand{\blockInserted}[2]{node (p#1) [codeInserted]
+  {{\scriptsize{#2}}}}
+  
+\newcommand{\smallbBock}[2]{node (p#1) [smallblockStyle]
+  {{\scriptsize{#2}}}}
+  
+%new
+\newcommand{\sharedHeap}[2]{node (p#1) [draw, fill=blue!20, text width=6.0em, text centered, minimum height=2.5em, rounded corners]
+  {{\scriptsize{#2}}}}
+
+% new
+\newcommand{\kaffeProcess}[2]{node (p#1) [draw, fill=blue!20, text width=3.0em, text centered, minimum height=7em, rounded corners]
+  {{\scriptsize{#2}}}}
+  
+\newcommand{\mvmMemoryLayout} {
+
+\begin{tikzpicture}[scale=0.9,transform shape]
+
+\path \oldblock {1} {Old Generation};
+
+\path (p1.north) +(-2.0,1.0) \smallbBock{2} {Eden};
+\path (p2.north) +(0.0,1.0) \smallbBock{3} {from};
+\path (p3.north) +(0.0,1.0) \smallbBock{4} {to};
+
+\path (p1.north) +(0.0,1.0) \smallbBock{5} {Eden};
+\path (p5.north) +(0.0,1.0) \smallbBock{6} {from};
+\path (p6.north) +(0.0,1.0) \smallbBock{7} {to};
+
+\path (p1.north) +(2.0,1.0) \smallbBock{8} {Eden};
+\path (p8.north) +(0.0,1.0) \smallbBock{9} {from};
+\path (p9.north) +(0.0,1.0) \smallbBock{10} {to};
+
+\begin{pgfonlayer}{background}
+        \path (p4.west)+(-0.20,0.80) node (g) {};
+        \path (p2.east)+(0.20,-0.8) node (h) {};
+         
+        \path[fill=yellow!20,rounded corners, draw=black!50, dashed]
+            (g) rectangle (h);
+     	\path (p4.north) +(0,0.5) node (asrs) {Task 1};         
+\end{pgfonlayer}
+
+\begin{pgfonlayer}{background}
+        \path (p7.west)+(-0.20,0.80) node (g) {};
+        \path (p5.east)+(0.20,-0.8) node (h) {};
+         
+        \path[fill=yellow!20,rounded corners, draw=black!50, dashed]
+            (g) rectangle (h);
+        \path (p7.north) +(0,0.5) node (asrs) {Task 2};           
+\end{pgfonlayer}
+
+\begin{pgfonlayer}{background}
+        \path (p10.west)+(-0.20,0.80) node (g) {};
+        \path (p8.east)+(0.20,-0.8) node (h) {};
+         
+        \path[fill=yellow!20,rounded corners, draw=black!50, dashed]
+            (g) rectangle (h);
+        \path (p10.north) +(0,0.5) node (asrs) {Task 3};       
+\end{pgfonlayer}
+\end{tikzpicture}
+}
+
+\newcommand{\kaffeOSMemoryLayout} {
+\begin{tikzpicture}[scale=0.9,transform shape]
+
+\path \oldblock {1} {Kernel Heap};
+
+\path(p1.north) + (-2,0.7) \sharedHeap{2} {Shared};
+\path(p1.north) + (2,0.7) \sharedHeap{3} {Shared};
+
+\path(p2.north) + (0,1.6) \kaffeProcess{4} {};
+\path(p2.north) + (2,1.6) \kaffeProcess{5} {};
+\path(p3.north) + (0,1.6) \kaffeProcess{6} {};
+
+\begin{pgfonlayer}{foreground}
+	\path (p4.west) + (0.3,0) node (g4) {};
+	\path (p5.west)+(0.8,0.3) node (g5) {};
+	\path (p5.west)+(0.3,-0.5) node (g51) {};
+	\path (p2.center)+(0.7,0.1) node (g2) {};
+	\path (p3.center)+(-0.7,0.1) node (g30) {};
+	\path (p3.center)+(0.7,0.1) node (g31) {};
+	\path (p1.center)+(1.8,0.3) node (g10) {};
+	\path (p1.center)+(-1.8,0.3) node (g11) {};
+	\path (p6.center)+(0,0.3) node (g6) {};
+
+	\path [line] (g4) --  node [above] {} (g2);
+	\path [line] (g51) --  node [above] {} (g2);
+	\path [line] (g5) --  node [above] {} (g51);
+	\path [line] (g5) --  node [above] {} (g30);
+	\path [line] (g30) --  node [above] {} (g31);
+
+	\path [line] (g4) --  node [above] {} (g11);
+	\path [line] (g10) --  node [bend left,above] {} (g6);
+
+	\path[fill=black!20, draw=black!50] (g4) circle (0.2);
+	\path[fill=black!20, draw=black!50] (g5) circle (0.2);
+	\path[fill=black!20, draw=black!50] (g2) circle (0.2);
+	\path[fill=black!20, draw=black!50] (g51) circle (0.2);
+	\path[fill=black!20, draw=black!50] (g30) circle (0.2);
+	\path[fill=black!20, draw=black!50] (g31) circle (0.2);
+	\path[fill=black!20, draw=black!50] (g10) circle (0.2);
+	\path[fill=black!20, draw=black!50] (g11) circle (0.2);
+	\path[fill=black!20, draw=black!50] (g6) circle (0.2);	
+\end{pgfonlayer}
+
+\begin{pgfonlayer}{background}
+        \path (p4.west)+(-0.16,1.90) node (g) {};
+        \path (p4.east)+(0.16,-1.55) node (h) {};
+         
+        \path[fill=yellow!20,rounded corners, draw=black!50, dashed]
+            (g) rectangle (h);
+     	\path (p4.north) +(0,0.2) node (asrs) {Process 1};         
+\end{pgfonlayer}
+
+\begin{pgfonlayer}{background}
+        \path (p5.west)+(-0.16,1.90) node (g) {};
+        \path (p5.east)+(0.16,-1.55) node (h) {};
+         
+        \path[fill=yellow!20,rounded corners, draw=black!50, dashed]
+            (g) rectangle (h);
+     	\path (p5.north) +(0,0.2) node (asrs) {Process 2};         
+\end{pgfonlayer}
+
+\begin{pgfonlayer}{background}
+        \path (p6.west)+(-0.16,1.90) node (g) {};
+        \path (p6.east)+(0.16,-1.55) node (h) {};
+         
+        \path[fill=yellow!20,rounded corners, draw=black!50, dashed]
+            (g) rectangle (h);
+     	\path (p6.north) +(0,0.2) node (asrs) {Process 3};         
+\end{pgfonlayer}
+
+\end{tikzpicture}
+}
+
+\newcommand{\fibControlFlowGraph} {
+\begin{tikzpicture}[scale=0.9,transform shape]
+ \path \block {1}{n$<$2};
+ \path (p1.south)+(2.5,-1.5) \block{2}{return n};
+ \path (p1.south)+(-2.5,-1.5) \block{3}{fi$=$0\\fj$=$0\\index$=$0\\};
+ \path (p3.south)+(0.0,-1.5) \block{4}{index$<=$n};
+ \path (p4.south)+(0,-1.5) \block{5}{tmp$=$fi$+$fj\\fi$=$fj\\fj$=$tmp\\index$++$\\};
+ \path (p5.south)+(0.0,-1.5)\block{6}{return fj}; 
+ \path (p5.east)+(4.0,0)\blockInserted{7}{cpuCounter$++$}; 
+ \path (p3.west)+(-4.0,0)\blockInserted{8}{cpuCounter$+=$3}; 
+ \path (p5.west)+(-4.0,-1.0)\blockInserted{9}{cpuCounter$+=$4};
+
+     
+  % Draw arrows between elements
+ \path [line] (p1.south) --  node [above] {} (p2.north);
+ \path [line] (p1.south) -- node [above] {} (p3.north);
+ \path [line] (p3.south) -- node [above] {} (p4.north);
+ \path [line] (p4.south) -- node [above] {} (p5.north);
+ \path [line] (p5.west) -- +(-1,0)-- +(-1,2.05) -- node [above] {} (p4.west);
+ \path [line] (p4.east) --+(1.0,0)--+(1, -4.2)-- node [above] {} (p6.east);
+ 
+ \path [linepart] (p7.north) -- (p2.south);
+ \path [linepart] (p7.north) -- (p1.south);
+ \path [linepart] (p7.west) -- (p4.east);
+ \path [linepart] (p7.west) -- (p6.east);
+ 
+ \path [linepart] (p8.east) -- (p3.west);
+ \path [linepart] (p9.east) -- (p5.west);
+\end{tikzpicture}
+}
