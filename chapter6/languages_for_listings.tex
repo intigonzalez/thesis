@@ -1,4 +1,4 @@
-\lstset{frame=tb,
+\lstset{frame=t,
   aboveskip=1mm,
   belowskip=1mm,
   showstringspaces=false,
@@ -19,7 +19,7 @@
 \lstdefinelanguage{AlgLang}
 {
 literate={aaa}{bbb}3,
-morekeywords={input, foreach, action, if, return, routine},
+morekeywords={input, foreach, action, if, return, routine, values},
 morekeywords={instances_for, have_id},
 sensitive=true,
 morecomment=[l]{//},
@@ -36,6 +36,29 @@ sensitive=true,
 morecomment=[l]{//},
 morecomment=[s]{/*}{*/},
 morestring=[b]",
+}
+
+\lstdefinelanguage{OCL}
+{
+literate={aaa}{bbb}3,
+morekeywords={context,inv,and,or,self},
+sensitive=true,
+morecomment=[l]{//},
+morecomment=[s]{/*}{*/},
+morestring=[b]",
+}
+
+\lstdefinelanguage{DSL2}
+{
+literate={aaa}{bbb}3,
+morekeywords={void, int, bool, in, is, or, and},
+morekeywords={membership, initialValues, updates, structure, initialObjects, create, using, constructor, foreach},
+sensitive=true,
+morecomment=[l]{//},
+morecomment=[s]{/*}{*/},
+morestring=[b]",
+ndkeywords={false, true, this, referrer, threads, this_structure},
+ndkeywordstyle=\color{blue}\bfseries
 }
 
 \lstdefinelanguage{OQL}

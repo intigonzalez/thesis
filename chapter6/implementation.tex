@@ -1,54 +1,82 @@
-\section{Implementation}\label{sec:implementation}
+\section{Tooling}\label{sec:implementation}
 
-In this section, we briefly describe a reference implementation of the language proposed in the previous section. We present the main design decision we took and the current limitations of the implementation.
+Our initial implementation of the language supports the definition of custom memory profilers for Java-based systems.~\footnote{Available at: https://github.com/intigonzalez/heapexplorer\_language}
+In short, any component framework, language or abstraction that is meant to run atop the JVM can take advantage of custom memory profilers.
 
-The DSL is built on top of the XText framework.
-This framework eases the construction of the abstract-syntax tree during the parsing stage and it also provides high-quality tools for editing with a minimum effort.
-Our tool offers a compiler of our Domain Specific Language which generate C code.
-The C code is then used to produce a shared library.
-This library constitutes the runtime profiler which is in charge of efficiently collecting the data requested from the heap.
+The usage of our DSL involves two different roles.
+Both roles are described in the rest of the section.
 
-We decided to use the Java Virtual Machine as runtime support for our reference implementation.
-As backend technology to explore the heap, we use JVMTI~\footnote{http://docs.oracle.com/javase/8/docs/platform/jvmti/jvmti.html} and the native agent mechanism.
-Around this mechanism we built a plugins' system which allows us to load/unload new memory's analysis without shutting down the JVM.
-The library generated from the DSL is a valid plugin we can load in a Java runtime.
-The generated code includes: i) the mechanism for efficiently traverse the heap, ii) the mechanism to collect the requested data, and iii) a mechanism to retrieve the data in both native format and Java generated structures. The current implementation is available online~\footnote{https://github.com/intigonzalez/heapexplorer\_language}
 
-The code generation process is based on a code template.
-Such a template implements a variant of listings~\ref{lst:onNodeFound},~\ref{lst:onNodeFoundData} and~\ref{onInitialization}.
-The template uses the JVMTI API to explore the content of the memory within a JVM.
-This API is also used to populate the built-in variables \textit{classes}, \textit{classloaders}, and so on.
-We also make use of the JNI API to collect meta-data, access fields in certain steps and build a Java representation of the analysis output that can be consumed by the application itself.
+\subsection{Abstraction developer}
 
-The process of code generation is driven by the need of reducing the performance impact.
-In general, there are two ways of optimizing the impact of the memory's analysis.
-First, we can apply platform dependent optimizations.
-The second option is to apply platform independent optimizations; for instance, simplifying the evaluation of each expression.
-In our implementation, we use both platform dependent and independent optimizations.
+The first role is played by people who use the DSL to define custom memory profilers.
+We envision that DSLs designers, component framework developers and engineers who design new software abstractions would be in charge of this role.
+For instance, now a DSL designer can ship a set of specific memory profilers along tools such as editors, simulators and compilers. 
 
-A set of platform dependent optimizations we perform is related to the construction of the built-in values \textit{threads}, \textit{threadgroups}, \textit{classes}, etc. 
-Since not all memory analysis depends on such values, we selectively skip the construction of them.
-For instance, in listing~\ref{assertion} there is no need to compute any of such values as is also unnecessary to identified the class of each object.
-Extending this idea to other cases (e.g., class of each object, its classloader, field names, etc.) is straightforward.
-To implement these optimizations, we used a parametrized code template, so the code generate depends on the values of these parameters which we can tune to satisfy our needs.
+Our DSL is built using the Xtext framework.
+Since Xtext aims at easing the development of textual DSLs, we created a textual editor based on our proposed concrete syntax.
+This editor provides syntax highlighting, error detection during editing, auto-completion, and compilation to native Java agents written in \textit{C++}.
 
-An other optimization we perform is related to the existence of collections as data type in our DSL.
-These collections can be potentially large, in particular, the \textit{objects} value is costly to compute and keep in memory.
-This fact combined with the usage of operations on collections such as \textit{map} and \textit{filter} can harm the performance of an analysis.
-That is wait we devise two strategies to deal with collection values.
-User-defined and most built-in collections are keep in memory using linear space.
-On the contrary, we represent the built-in collection \textit{objects} as a generator.
-This representation is feasible because the mechanism provided by JVMTI to access the objects is based on callbacks.
+To perform low-level tasks related to memory profiling, we use JVMTI~\footnote{http://docs.oracle.com/javase/8/docs/platform/jvmti/jvmti.html}.
+Around Java's native agent mechanism we built a \textit{plugins} system which allows us to load/unload custom memory profiles without shutting down the JVM.
+The JVMTI API is used to assign values to several built-in variables: \textit{classes}, \textit{classloaders}, \textit{threads} and \textit{objects}.
+In addition, we use the JNI API to build a Java representation of the profiler output that can be consumed from Java code.
 
-A last optimization is reducing the nodes of the graph that must be traversed
-As an illustration, we only produce code to explore primitive fields of each object, which are represented as leaf nodes in the graph, if there exist some expression accessing a field.
+The developer of the profiler must be aware of: the details of the abstraction for which the custom profiler is being built, our DSL's semantics, and its implementation's details.
+Indeed, the process of code generation is driven by the need of reducing the performance impact.
+In our implementation, we apply a set of platform dependent optimizations taking into account the profiler description.
+First, since a profiler does not always need built-in rvalues (e.g., \textit{threads}, \textit{threadgroups} and \textit{classes}, etc.), we selectively skip the construction of them.
+When possible, we also skip the construction of some structures (e.g., class of each object, its classloader, field names, etc.).
 
-As for platform independent optimizations, we mostly change the order in which boolean expressions are evaluated.
-We try to guarantee that subexpressions accessing collections and fields are evaluated as little as possible.
+An advice related to the performance of custom profilers is noteworthy.
+Even if we try to reduce the cost of using lists, applying nested operations on them harms the performance because doing so linearly increases the time complexity of evaluating an expression.
+In our implementation, using the built-in rvalue \textit{objects} in nested lambda expressions is particularly discouraged because it can easily contains many elements.
+Even worse, since it is costly to create a list of objects, we use a JVMTI-based iterator to access each object.
+This solution reduces memory consumption but increases execution time.
 
-The current implementation is limited in the number of optimization it applies.
-The main overhead reduction is achieved thanks to the execution model in which many paths of the graph are not traversed.
-Other benefits come from deciding at compilation time if some parts of the graph such as the leaf nodes must be explored or not.
+\subsection{Abstraction user}
 
-%Nonetheless, there are some aspects of the language as the evaluation of expressions that are not yet optimized.
-%Likewise, the runtime support for the language which is packed in a separate library can also be optimized.
+We envision that a set of specific custom profilers can be shipped in addition to the \textit{classic} artifacts that users of a software abstraction receive. 
+These specific profilers would support the abstraction usage.
+For instance, an user who is relying on a new extension of the Xtend language to build a system, might use specific profilers written in our DSL to understand the memory consumption and in general the behavior of the system.
+
+In our implementation, a custom profiler is a native library which can be plugged to the JVM.
+The user can switch on the profiler using a simple method call from a remote controller process or using a Java agent.
+The output is a Java structure containing the collected information.
+So far, we provide a mechanism to log the result of an arbitrary profiler.
+However, building a user interface to explore the results in a customized way is simply a matter of iterating over the results.  
+
+
+
+
+
+
+%The process of code generation is driven by the need of reducing the performance impact.
+%In general, there are two ways of optimizing the impact of the memory's analysis.
+%First, we can apply platform dependent optimizations.
+%The second option is to apply platform independent optimizations; for instance, simplifying the evaluation of each expression.
+%In our implementation, we use both platform dependent and independent optimizations.
+%
+%A set of platform dependent optimizations we perform is related to the construction of the built-in values \textit{threads}, \textit{threadgroups}, \textit{classes}, etc. 
+%Since not all memory analysis depends on such values, we selectively skip the construction of them.
+%For instance, in listing~\ref{assertion} there is no need to compute any of such values as is also unnecessary to identified the class of each object.
+%Extending this idea to other cases (e.g., class of each object, its classloader, field names, etc.) is straightforward.
+%To implement these optimizations, we used a parametrized code template, so the code generate depends on the values of these parameters which we can tune to satisfy our needs.
+%
+%An other optimization we perform is related to the existence of collections as data type in our DSL.
+%These collections can be potentially large, in particular, the \textit{objects} value is costly to compute and keep in memory.
+%This fact combined with the usage of operations on collections such as \textit{map} and \textit{filter} may harm the performance of an analysis.
+%That is why we devise two strategies to deal with collection values.
+%User-defined and most built-in collections are kept in memory using linear space.
+%On the contrary, we represent the built-in collection \textit{objects} as a generator.
+%This representation is feasible because the mechanism provided by JVMTI to access the objects is based on callbacks.
+%
+%A last optimization is reducing the nodes of the graph that must be traversed
+%As an illustration, we only produce code to explore primitive fields of each object, which are represented as leaf nodes in the graph, if there exist some expression accessing a field.
+%
+%As for platform independent optimizations, we mostly change the order in which boolean expressions are evaluated.
+%We try to guarantee that subexpressions accessing collections and fields are evaluated as little as possible.
+%
+%The current implementation is limited in the number of optimization it applies.
+%The main overhead reduction is achieved thanks to the execution model in which many paths of the graph are not traversed.
+%Other benefits come from deciding at compilation time if some parts of the graph such as the leaf nodes must be explored or not.

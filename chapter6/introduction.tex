@@ -43,40 +43,38 @@
 %The concepts of this language are highly coupled to the way the heap is traversed.
 %A program in this language is compiled into a backing technology that support, in an efficient way, the iteration over all objects and 
 
-There is currently a global trend in Software Engineering towards the systematic creation of new languages and tools to support specific  software developments~\cite{van2000domain,hutchinson2011empirical}. 
-The design of such new languages and platforms are done for good reasons, such as  having specific point of views on a particular system, simplifying software development, reducing errors, removing redundant tasks and improving software developers productivity. 
+There is currently a trend in Software Engineering towards the creation of new languages and tools to support specific  software developments~\cite{whittle2014state, van2000domain,hutchinson2011empirical}. 
+The design of such new languages and platforms are done for good reasons, such as  having specific point of views on a particular system, simplifying software development, reducing errors, removing redundant tasks and improving productivity. 
 
 This trend has led to the development of new research topics such as Software Language Engineering~\cite{sle}. Most of the research currently done in this community aims at improving the engineering of new software languages and their corresponding development tools, thus improving the efficiency of people in charge of designing new languages. 
-However, the research done in Software Language Engineering only tackles simulation and development tools such as Integrated Development Environment, and does not takes into account debugging and profiling tools which are essentials for software maintenance and optimization.
+However, the research done in Software Language Engineering only tackles simulation and \textit{basic} development tools such as syntax highlighting in Integrated Development Environments, and does not takes into account debugging and profiling tools which are essentials for software maintenance and optimization.
 Specific tools are especially needed to monitor running system in order to detect defects or abnormal behaviors~\cite{duesterwald2000software,Jovic:2011:CMY:2076021.2048081}.
 These tools have to be specific to the languages and platforms and have to exhibits small overhead to make their usage suitable with online system.
 
-Many of the newly designed languages and runtime platform are built on top of existing object oriented languages runtime such as the Java Virtual Machine. 
-Therefore people in charge of optimizing, debugging and maintaining software application can use the existing debugger and profiler of these platforms. 
-However, there is a paradigm mismatch between the  classical profiler used in Object oriented System and the newly designed  platforms and languages. 
-Indeed, the concepts introduced in these new languages may not exhibit a straightforward mapping to the underlying object oriented system. For example, in the case of the Spring framework~\cite{laddad2009aspectj}, some annotations like $@Aspect$ generate on the fly dynamic proxies. Existing profilers will show these proxies, which is not the right level of abstractions for developers. 
-
-
+Many of the newly designed languages and runtime platform are built on top of existing object oriented languages runtime such as the Java Virtual Machine (JVM). 
+Therefore people in charge of optimizing, debugging and maintaining software applications can use the existing debugger and profilers of these platforms. 
+However, there is a paradigm mismatch between the classical profilers used in object-oriented systems and the newly designed platforms and languages. 
+Indeed, the concepts introduced in these new languages may not exhibit a straightforward mapping to the underlying object-oriented system. For example, in the Spring framework~\cite{laddad2009aspectj}, some annotations like $@Aspect$ generate dynamic proxies on the fly. Existing profilers will present these proxies as normal objects, thus revealing a mismatch between the profiler and developer view. 
 
 In this paper, we focus on the problem of easily creating memory profiler for newly designed software languages and platforms. 
 We propose a tooled DSL which generates specific memory profilers to match the language concepts and provide useful information to the end user. 
 The generated memory profilers are specific to the new language and therefore exhibit information in terms of the concepts present in this language. 
 For example, in a component oriented system, our memory profiler will exhibit memory consumption in terms of components instead of objects.
 
-Another important point for our approach lies in its very limited overhead which makes it suitable to use for systems in production.
+Another important point for our approach lies in its limited overhead which makes it suitable to use for systems in production.
 Indeed, generating a specific profiler from an abstract definition of the role of this profiler enable us to produce very specific profiler which only monitor the relevant information.
 
 The contributions of this paper are as follows:
 \begin{itemize}
-\item A Domain Specific Language to describe the specific memory information to monitor and the mapping between these information and the language concepts. 
+\item A DSL to describe the specific memory information to monitor and the mapping between these information and the concepts of the abstraction. 
 \item A reference implementation which generates specific memory profiler suitable for on-line usage with very limited overhead.
-\item An evaluation of the Domain Specific Language expressiveness and the performance overhead of the generated memory profiler on three real world use cases.
+\item A discussion of the DSL expressiveness and an evaluation of the performance overhead of the generated memory profiler on three real world use cases.
 \end{itemize}
 
-The rest of this paper is organized as follows: in the next section we show with motivating scenarios why we need a new mechanism to specify user-defined memory analysis.
-A description of the DSL and the reference implementation are presented in sections
+The rest of this paper is organized as follows: in the next section we show with motivating scenarios why we need a new mechanism to specify custom memory profilers.
+A description of the DSL and its tooling support are presented in sections
 \ref{sec:approach} and \ref{sec:implementation}.
 In section~\ref{sec:expressiveness} we discuss the expressiveness of the language.
-Section~\ref{sec:evaluation} presents an evaluation of the approach.
+Section~\ref{sec:evaluation} presents an evaluation of the performance achieved by the custom profilers.
 Related works are discussed in section~\ref{sec:relatedwork}.
 Finally, section~\ref{sec:conclusions} gives the conclusions and presents future works.

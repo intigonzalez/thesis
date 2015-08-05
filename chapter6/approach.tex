@@ -1,307 +1,369 @@
 \section{Approach}\label{sec:approach}
 
-%Maybe start with something like, to coep with the presented problem, we propose to automatically generate profilers from an abstract description of its usage and, we propose a DSL to describe the profiler. Our approach is a tooled DSL which enable the description and generation of specific profiler.
-In this paper, we propose an approach to easily provide memory monitoring at runtime that can be used for in-production systems. 
-Our approach aims at providing a tool that can offer a good tradeoff between the effort needed to write the memory monitoring tool and the performance of this tool.
-To reach this goal, we propose a Domain Specific Language (DSL) and its code generator which aims at easily describing and generating efficient online memory analyzers. 
-
-
-Memory profilers aim at capturing relevant information regarding how an application use the objects in memory.
-The data captured by profilers can be as simple as the number of objects of a specific class, but it can also be complex information such as the list of possible memory leak sources.
-Most production ready profilers nowadays are able to provide different kinds of information - usually with queries and reports.
-
-
-Since our goal is to create specific profilers, we use along this paper the term memory analysis to refer to any kind of process to retrieve data about the objects in memory.
-For instance, finding the number of objects reachable from a given class object is a type of memory analysis.
-A second example is finding out if there is an instance of a class $A$ which is referencing an instance of class $B$.
-A last example is computing for each instance of the class \textit{String} its length and the number of references to it.
-We can notice that the nature of the output varies among these examples: an integer, a boolean and a compound value.
-
-In general, we see the execution of a memory analysis as a two steps process, i) finding a list of subgraph in the graph of live objects, and ii) computing properties on each subgraph.
-In our approach we constrain both, the kind of subgraph users can express and the properties that can be computed on such subgraphs.
-The reason to enforce these constrains is to guarantee the efficient execution of the analysis. 
+In this paper, we propose a tool to create custom memory profilers for managed runtime environments (MREs) such as Java.
+We are interested on easing the task of defining new profilers without sacrificing their performance regarding CPU consumption.
+Keeping the profiler's overhead as low as possible is of utmost importance for us because lightweight profilers can be use both during the development phase and during the application execution in a production environment.
+To reach this goal, we propose a Domain Specific Language (DSL) and its code generator which aims at describing and generating efficient online memory profilers. 
 
 We next present the syntax, semantic and usage examples of our domain-specific language.
 
-\subsection{Language Design}
-The full abstract syntax of the language is shown in Figure~\ref{fig:syntax}. 
-In this paper, we borrow mathematical symbols such as $\wedge$, $\vee$, $\in$ to simplify the description of the language.
-The reader should treat them as shorthand for the actual terminals defined in the language.
-Likewise, the definition of non-terminals such as \textit{id}, \textit{IntLit}, \textit{StringLit}, \textit{BoolLit} and \textit{RelOp} is omitted because they correspond to the usual identifier, literals for primitive types and relational operators which exist in most programming languages.  
-The four production rules for non-terminal \textit{a} is also worth to describe, note that it corresponds to the definition of a lambda expression which is surrounded by the terminals \textit{`['} and \textit{`]'} which are also special symbols in EBNF notation.
 
-\begin{figure}[!ht]
-\begin{align*}
-\textit{Analysis} =&\; \{ \textit{Type} \} \; \{ \textit{Set} \} \; \{ \textit{Instance} \} \\
-\textit{Type} =&\; \textit{id}:\left(\textit{\textbf{`table-of'}} \; \textit{id} \;|\; \textit{\textbf{`struct'}} \;  \{ \textit{Decl} \} \; \textit{\textbf{`end'}}\right) \\
-\textit{Decl} =&\; \textit{id}: \left( \textit{id} \;|\; \textit{\textbf{`int'}} \;|\; \textit{\textbf{`bool'}} \;|\; \textit{\textbf{`string'}} \right) \\
-\textit{Set} =&\; \textit{\textbf{`set-type'}} \: \textit{s} : \textit{Property} \: \{ \textit{Property} \} \\
-\textit{Property} =&\; \textit{DataID} \leftarrow \textit{e} \\
-\textit{DataID} =&\; \textit{\textbf{`roots'}} \;|\; \textit{\textbf{`membership'}} \;|\; \\   &\textit{\textbf{`on-inclusion'}} \;|\; \textit{Decl}  \\
-\textit{Instance} =&\; \textit{\textbf{`instances-for'}} \: \textit{id} \: \textit{\textbf{`have-names'}} = \textit{a} \\
-e  =&\; r \;|\; b \land b \;|\; b \lor b \;|\; \neg b \\
-r =&\; o \;|\; o \; \textit{RelOp} \; o \;|\; o \; \textit{\textbf{`is'}} \; \textit{id} \;|\;\\ 
-	& o \in \left(\textit{\textbf{`Unassigned'}} \;|\; \textit{\textbf{`Entity'}} \right) \\
-o =&\; \textit{Prefixed} \;|\; o + o \;|\; o - o \;|\; o * o \;|\; o / o\\
-\textit{Prefixed} =&\; -a \;|\; \textit{a} \left[ \textit{`.'} \textit{Member} \right] \\
-\textit{Member} =&\; \textit{id} \left[ \textit{`('} {e} \textit{`)'} \right] \{ \textit{`.'} \textit{Member} \} \\
-a =&\; \textit{id} \;|\; \textit{`('} e \textit{`)'} \;|\; \textit{Literal} \;|\; \\ 
-	&\textit{`['} \{\textit{Decl}\} `|' \{\textit{id} \leftarrow e\} \; [ \textit{\textbf{`ret'}} \; e ] \textit{`]'} \\
-\textit{Literal} =&\; \textit{IntLit} \;|\; \textit{StrLit} \;|\; \textit{BoolLit} \;|\; \textit{`\#['} \; \textit{Lst-Expr} \; \textit{`]'} \;|\; \\
-				&\textit{\textbf{`struct'}} \; \textit{id} \; \textit{Lst-Expr} \; \textit{\textbf{`end'}} \\
-\textit{Lst-Expr} =&\; e \; \{ \textit{`,'} \; e \}
-\end{align*}
-\line(1,0){250}
-\caption{DSL syntax in a simplified EBNF notation; the operators for concatenation and termination are not used.
-Note that the non-terminals \textit{id}, \textit{IntLit}, \textit{StrLit}, \textit{BoolLit} are undefined.
-They correspond to identifiers, integer constants, string constants as in Java and the boolean constants.}
-\label{fig:syntax}
+\subsection{Brief overview of the domain}
+
+Memory profilers aim at capturing information regarding how an application use memory.
+In an object-oriented runtime environment such as Java, this information can be as simple as the number of objects of a specific class, but it can also be  as complex  as the list of possible memory leak sources.
+Along this paper, the term memory profiler refers to any kind of process to retrieve data about the memory usage.
+Some examples include: computing the number of objects reachable from a specific class object; finding out if there is an instance of class $A$ which is referencing an instance of class $B$.
+A last example could be computing for each instance of the class \textit{String} its length and the number of references to it.
+It is worth mentioning that the data collected by a profiler may have an arbitrary type.
+For instance, in the previous examples the types are primitives integer, boolean and a non-primitive type.
+
+%The rest of this section introduces the vocabulary we use in the domain of memory profilers.
+
+In this paper, we are interested in \textbf{\textit{objects}} as in object-oriented programming.
+We also see an \textit{object} as an atomic entity that consumes memory to store the values of its attributes.
+We have  reduced the available operations on objects to: accessing attributes, obtaining the amount of memory used to represent the object, and accessing meta-data such as the class name.
+
+The \textbf{\textit{memory heap}} is the region of memory used to store dynamically allocated \textit{objects}.
+Although this concept is pervasive in general purposes programming languages, we are only interested on MREs such as Java where every \textit{object} must be allocated in this region.
+
+A \textbf{\textit{structure}} is an important concept in our domain.
+It consists of a set of related \textit{objects} in the \textit{memory heap}.
+The smallest non-empty \textit{structure} we can consider, is a structure containing a single object.
+The \textit{memory heap} is the universe of objects and each \textit{structure} is a subset of this universe.
+
+A \textbf{\textit{memory profile}} is a value associated to a \textit{structure} which can be derived out of the indivdual \textit{objects} included in the \textit{structure}. 
+An example of useful derived value for a \textit{structure} is its total size: $\textit{total\_size(S)} = \sum_{o \in S} {sizeof(o)}$.
+A common usage is to identify many \textit{structures} in the heap to obtain a \textit{memory profile} for each of them.
+These two steps: identifying \textit{structures} and computing their \textit{memory profile} correspond to what we call \textbf{\textit{memory profiling}}. 
+
+Finally, a \textbf{\textit{structure type}} provides a description of the behavior of a set of \textit{structures}. 
+In particular, it provides (i) a function to evaluate whether an object is member of the \textit{structure}, (ii) a way to define the values corresponding to the \textit{memory profile} of the \textit{structure}, and finally (iii) a factory to identify all  corresponding \textit{structures} in the \textit{memory heap}.
+
+\subsection{Abstract Syntax}\label{sec:abstract-syntax}
+
+The metamodel shown in figure~\ref{fig:as} describes the abstract syntax of our DSL.
+The main concept of this metamodel is a \textit{CustomProfiler} which is composed of \textit{UserDefined} types and a \textit{StructureFactory}.
+The concepts related to \textit{UserDefined} types are shown on the left part of the metamodel, while the right part describes the \textit{StructureFactory} which represents both the set of  structures to identify and the value to compute on these structures.
+
+\subsubsection{User-defined types}
+In addition to various \textit{BasicTypes} such as \textit{Integer}, \textit{String} and \textit{Boolean}, the language supports the definition of both \textit{Records} and \textit{Lists}.
+As expected, a \textit{record} contains \textit{fields} to hold values of previously defined types.
+Likewise, a \textit{list} refer to a \textit{base type}; hence all the members of a list must be of the same type.
+In a custom profiler, \textit{UserDefined} types can be composed in arbitrary ways as long as no type contains a recursive declaration.
+We can formalize such a constrain using OCL (Object Constraint Language~\footnote{http://www.omg.org/spec/OCL/}):
+
+\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:membership, language=OCL, frame=none, aboveskip=2mm, belowskip=2mm]
+context Record inv: 
+   not fields->oclAsSet()->closure(t)->exists(t | t = self)
+
+context List inv:
+   not baseType->oclAsSet()->closure(t)->exists(t | t = self)
+\end{lstlisting} 
+
+A \textit{List} has operations to manipulate any value which represent a list.
+Figure~\ref{fig:as} shows a subset of these operations.
+In general, these operations correspond to the set of \textit{standard} operations of any implementation of the list data type.
+
+\subsubsection{Defining structures to profile}
+Defining the \textit{StructureFactory} is the core of writing a custom profiler.
+A \textit{StructureFactory} contains an \textit{Expression} through the \textit{instances} relationship which indicates a pattern to identify structures in the memory heap.
+Notice that a single instance of \textit{StructureFactory} creates many data structures in memory; thus the \textit{Expression} corresponds to a list indicating that a new structure must be instantiated for each element of the list.
+Forcing the \textit{Expression} to be a \textit{List} can be easily formalized using OCL:
+
+\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:instances, language=OCL, frame=none, aboveskip=2mm, belowskip=2mm]
+context StructureFactory inv: instances.type.oclIsTypeOf(List)
+\end{lstlisting}
+
+Defining a new \textit{StructureFactory} implies defining its \textit{type} which is an instance of \textit{StructureType}.
+This concept describes the mechanism used to populate, out of objects, a structure and its information.
+In short, each structure in memory instanciated through a \textit{StructureFactory} has a type \textit{StructureType}.
+For example, we may be interested in finding all the \textit{SimplyLinkedList} in the memory snapshot depicted in figure~\ref{fig:simple_snapshot}.
+In such a case, there are two \textit{SimplyLinkedList}, but we only need one mechanism to identify them because they have the same pattern in memory. 
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.87\linewidth]{chapter6/fig/AS}
+\caption{Custom profiler Metamodel}
+\label{fig:as}
+\end{figure*}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.87\linewidth]{chapter6/fig/lists}
+\caption{Memory snapshot with three linked lists}
+\label{fig:simple_snapshot}
 \end{figure}
 
-A program in our DSL describes three elements: i) the non-terminal \textit{Type} defines new types of outputs for the analysis, ii) symbol \textit{Set} defines both a type of subgraph by declaring its pattern and how to compute the output for such type of subgraph, and iii) \textit{Instance} defines how many subgraphs of a type should be created and how to identified them.
+A \textit{StructureType} is composed of \textit{Assignments} that are used as \textit{initialValues} for each \textit{Variable} holding information - similar to a constructor in object-oriented programming.
+Once a new structure is created, the \textit{Assignments} are executed to assign the initial value of each \textit{Variable}.
+Observe that \textit{variables} do not refer to a \textit{Type}.
+Our DSL is strongly typed and the \textit{type} of each user-defined variable is inferred from its initial value.
+Nevertheless, there is a built-in variable in each \textit{StructureType} that is only accessible during initialization.
+Its type is predetermined as part of the language specification.
+We force the usage of the proper type using OCL:
 
-In addition to the built-in data types, our DSL provides support to define compound types such as structures and lists.
-As expected, these types can be arbitrarily composed to provide complex outputs.
-As shown in the syntax, the language includes primitive types.
-However it also includes the following built-in types: structures \textit{Object}, \textit{Class}, \textit{Classloader}, \textit{Thread} and \textit{ThreadGroup}; and lists of each structure.
-These types have the usual relationships: a \textit{Class} is an \textit{Object}, an \textit{Object} is instance of a \textit{Class}, a \textit{Class} was loaded for a \textit{Classloader} and so on.
-This means, for instance, that if $o$ is a value of type \textit{Object} then \textit{o.class.name} is the name of the class of this object while \textit{o.class.classloader} is the \textit{Classloader} that loaded the class.
-
-Every list type, either built-in or declared with \textit{table-of}, contains members to declaratively manipulate values of the list.
-The table~\ref{tab:members} contains a sample of such members.
-The complete set of members only includes those that can be implemented in constant or linear time.  
-
-\begin{table}
-\centering
-\begin{tabular}{|c|c|}
-\hline \textbf{Member} & \textbf{Return Type} \\ 
-%\hline (\textit{table-of} $T$).append(\textit{table-of} $T$) & \textit{table-of} $T$ \\ 
-\hline (\textit{table-of} $T$).foreach($T\to\textit{void}$) & void \\ 
-\hline (\textit{table-of} $T$).filter($T\to\textit{bool}$) & \textit{table-of} $T$ \\ 
-%\hline (\textit{table-of} $T$).forall($T\to\textit{bool}$) &  \textit{bool} \\ 
-\hline (\textit{table-of} $T$).exists($T\to\textit{bool}$) &  \textit{bool} \\ 
-%\hline (\textit{table-of} $T$).findfirst($T\to\textit{bool}$) & $T$ \\ 
-\hline (\textit{table-of} $T$).map($T \to M$) & $\textit{table-of} \; M$ \\ 
-\hline 
-\end{tabular} 
-\caption{Members defined for each lists type.}\label{tab:members}
-\end{table}
-
-The second element we defined in an analysis is the type of subgraph we want to find in the graph of live objects.
-This means that we want to identify subgraphs with a specific pattern and compute some values on them.
-As we already mentioned, this process contains two steps, subgraph identification and output calculation.
-The subgraph identification or matching step depends on two properties - \textit{roots} and \textit{membership}.
-To build a subgraph instance by matching, the graph of live object should be traversed.  
-The \textit{roots} property establishes the set of objects/nodes that belong to the subgraph before the traversal.
-Every time a node is visited during the traversal, and if it does not belong to another subgraph instance, the system evaluates the \textit{membership} property to decide if such a node must be included in the instance.
-This step is fully shown in listing~\ref{lst:onNodeFound}.
-
-\begin{lstlisting}[escapeinside={(*}{*)},caption=Routine executed for each reference traversed to calculate if a node belongs to a subgraph, label=lst:onNodeFound,float=!h, language=AlgLang]
-routine include_in_subgraph
-input:
-	(*$C$*) // subgraph instances
-	THIS // the current object being explored
-	Context
-action:
-	if (*$\exists {i \in 1..\left\vert{C}\right\vert}, \quad {\text{THIS} \in C_i}$*)
-		return stop_traversing_this
-	foreach (*$C_i \in C$*)
-		if (*$C_i\textit{.membership}$(\text{THIS}, \textit{Context})*)
-			(*$C_i \leftarrow C_i \cup \left\{\text{THIS}\right\}$*)
-			return traverse_this
-	return stop_traversing_this
+\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:instances, language=OCL, frame=none, aboveskip=2mm, belowskip=2mm]
+context StructureType inv:  initialValues->exists(a: Assignment | 
+     a.lvalue.name = 'initialObjects' and a.rvalue.type.oclIsTypeOf(List)
+   ) 
 \end{lstlisting}
 
-The step of values computation depends on user-defined properties and the \textit{on-inclusion} built-in property.
-Again, user-defined properties are evaluated once before the graph traversal while \textit{on-inclusion} is evaluated for each visited node.
-Listing~\ref{lst:onNodeFoundData} shows how this step uses the listing~\ref{lst:onNodeFound} to guarantee that the contribution of the new node to the output is added just once.
+In addition, a \textit{StructureType} contains a boolean \textit{expression} which is the \textit{membership function} used to decide whether an object should be included in the structure instance.
+Finally, it also contains a set of \textit{Assignments} to update the value of each \textit{variable} every time a new object is included in the structure.
+This set of \textit{Assignments} is used to compute the actual value of the memory profile.
+The major constraint regarding these \textit{updates} is that they must refer to already initialized \textit{variables} and the new assigned values must match the previous types.
+We formalize such a constrain using OCL:
 
-\begin{lstlisting}[escapeinside={(*}{*)},caption=Routine executed for each reference traversed to calculate the output value of a subgraph, label=lst:onNodeFoundData,float=!h, language=AlgLang]
-routine calculate_value_for_subgraph
-input:
-	(*$C$*) // subgraph instances
-	(*$\textit{THIS}$*) // the current object being explored
-	Context
-action:
-	if include_in_subgraph((*$C$*), THIS, Context) is traverse_this
-		Let (*$C_i \in C, THIS \in C_i$*) 
-			(*$C_i\textit{.output} \leftarrow C_i\textit{.on-inclusion}(\textit{THIS}, \textit{Context}, C_i\textit{.output}) $*)
+\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:lvalue, language=OCL, frame=none, aboveskip=2mm, belowskip=2mm]
+context StructureType inv:  updates->forAll(a: Assignament | 
+    self.initialValues->exists(aa : Assignament | 
+       aa.lvalue = a.lvalue and aa.rvalue.type = a.rvalue.type
+     ))
 \end{lstlisting}
 
-The overall strategy to match the subgraph resembles the strategy used by declarative approaches to graph query such as SPARQL~\cite{Buil-Aranda:2013:FQS:2435469.2435851} and Cypher~\cite{Holzschuher:2013:PGQ:2457317.2457351}.
-In this kind of query, it is common to provide initial starting points to accelerate the execution of the query. 
-Such starting points are member of the matched subgraph. 
+In our DSL, \textit{expressions} play a big role.
+For the sake of readability, figure~\ref{fig:as} only shows a couple of concepts related to them.
+However, it is noteworthy that, in addition to \textit{arithmetic}, \textit{boolean} and \textit{literals} for basic types, the language includes lambda expressions, literal for records and lists.
+Moreover, the language defines \textit{built-in rvalues} which are nothing but expressions initialized by the runtime within a specific scope.
+Instead of being user-defined, the types of these expressions are also defined by the runtime.
+There are two types of \textit{built-in rvalues}, target independent and dependent.
+Among the firsts, we have the list of  \textit{objects}, a reference to the \textit{current data structure} and a reference to the \textit{current object}.
+Target dependent \textit{rvalues} in Java include the list of \textit{loaded classes} and the list of \textit{threads}.
+The precise meaning of these \textit{rvalues} as well as their scopes are precisely discussed in sections~\ref{sec:concrete-syntax}, ~\ref{sec:semantic} and~\ref{sec:implementation} along the concrete syntax, the language semantic and the tooling support.
 
-The third element of a program is the definition of how many subgraph instances the system must identify.
-In our DSL, we make use of the type pattern along with a declarative approach to describe the instance we are interested in and to avoid its explicit enumeration.
-The procedure to create the instances is shown in listing~\ref{onInitialization}.
-It basically iterates over all the \textit{Instance} constructors and set up the initial values of each subgraph. 
+Finally, if we use the memory snapshot depicted in figure~\ref{fig:simple_snapshot}, calculating the number of nodes belonging to a specific \textit{SimplyLinkedList} is an example that illustrates the language's concepts.
+To solve this problem we can instantiate the metamodel of our DSL as follow:
+\begin{itemize}
+\item Define a \textit{StructureFactory} in which the \textit{instances} property is a list which contains the objects \textit{list0} and \textit{list1}.
+\item Instantiate a \textit{StructureType} where the built-in variable \textit{initialObjects} receives as value a list with one member - list0 or list1.
+      The other properties of this \textit{StructureType} instance are detailed in the next steps: 
+      \begin{enumerate}
+      \item Define a variable \textit{n} with initial value zero.
+      \item Define a membership function which return true if an object is instance of \textit{NodeEntry} and it is referenced by an object for which the membership function also return true. Observe how this recursive function returns true for each element in \textit{list0} because the initial object's list contains object \textit{list0}. 
+      \item Update the variable \textit{n} by increasing its value by one.
+      \end{enumerate}  
+\end{itemize}
+Further details about this example are discussed in the next section.
 
-\begin{lstlisting}[escapeinside={(*}{*)},caption=Using classes of tuples to define the set $C$., label=onInitialization,float=!h, language=AlgLang]
-input:
-	(*$\textit{ST}$*) // types of subgraphs
-	V // living objects 
-	Context
-action:
-	(*$C \leftarrow \emptyset $*) // subgraph instances
-	foreach (*${T}_i \in {ST}$*)
-		(*$\textit{Subgraphs} \leftarrow {ST}_i\textit{.names}\left({V}, \textit{Context}\right)$*)
-		foreach (*$S_j \in \textit{Subgraphs}$*)
-				initialize (*$\textit{roots}$*) using (*$\textit{Context}$*)
-				initialize (*$\textit{user-defined properties}$*)
-		(*$C \leftarrow C \cup \textit{Subgraphs}$*)
-	return (*$C$*)
-	
+\subsection{Concrete Syntax}\label{sec:concrete-syntax}
+
+A textual concrete syntax has been defined for our DSL allowing the domain expert to define a custom memory profiler.
+As an example, the next listing shows how to compute the length of each \textit{SimplyLinkedList} in the memory snapshot depicted in figure~\ref{fig:simple_snapshot}.
+The mechanism is based on counting the number of \textit{NodeEntry} referenced by the \textit{SimplyLinkedList}.
+Each \textit{NodeEntry} is used to wrap one element of data and to point to the next element.
+
+\begin{lstlisting}[escapeinside={(*}{*)}, 
+label=lst:listLengt, language=DSL2,
+numbersep=2pt,
+numbers=left,
+numberstyle=\color{black}\scriptsize,
+frame=none
+]
+create structure foreach e:objects.filter(l| l is SimplyLinkedList) using
+  constructor
+    initialObjects = #[e] // a list literal with one element: e
+    n = 0
+  membership (this is NodeEntry) and (referrer in this_structure)
+  updates 
+    n = n + 1
 \end{lstlisting}
 
-The complete execution of a program in our language is as follow. Subgraph instances are initialized using listing~\ref{onInitialization}.
-Afterward, all the references in the graph of objects are traversed running listing~\ref{lst:onNodeFoundData}.
-The output data for all subgraph instances has been collected after all the references are traversed once.
+In the example, only one \textit{StructureFactory} is necessary.
+In line 1, we define the list of structures we are interested in.
+We do so by selecting instances of class \textit{SimplyLinkedList} as elements of the \textit{StructureFactory}.
+Since there are two simply linked lists in the memory snapshot, we are going to build two structures.
+Observe the usage of a built-in \textit{rvalue} named \textit{objects} which contains all the objects in memory.
+The valid scope of this rvalue is in both the definition of the set of structures and the computation of the initial values.
+Thereafter, lines 2-4 specify the initial values.
+Line 3 in particular initializes the set of objects included in the structure.
+Notice the usage of a list literal to include the object referenced by \textit{e}.
+In the initialization scope, the rvalue \textit{e} is equal to one of the element within the list of structures - either \textit{list0} or \textit{list1}.
 
-Finally, in listings~\ref{lst:onNodeFound},~\ref{lst:onNodeFoundData} and~\ref{onInitialization} we use built-in properties that are defined by the user.
-These properties must have access to some data describing the content of the memory in order to successfully identify subgraphs and calculate output values.
-Such data is wrapped in what we call execution context.
-In our DSL there are two different execution contexts: \textit{global context} and \textit{local context}.
-The former includes built-in values such as: i) lists of \textit{objects}, \textit{threads}, \textit{classes}, etc. , and ii) a value called \textit{Entity} representing a subgraph instance.
-The latter only contains the object \textit{THIS} which is being visited, a label of the reference representing its type, \textit{REFERRER} which is the object referencing the visited and again the \textit{Entity} value.
-The \textit{global context} is available in listing~\ref{onInitialization} while the \textit{local context} is available in both listings~\ref{lst:onNodeFound} and~\ref{lst:onNodeFoundData}.
+In line 6 we define the membership function, which is used to determine if an object is part of the structure.
+There are four built-in rvalues during the evaluation of the function as well as during the update of the variables.
+First, the value named \textit{this} is the current visited object. 
+The \textit{membership} boolean \textit{expression} aims at determining if this object is part of the \textit{structure} or not. 
+The value \textit{this\_structure} identifies the structure.
+As our runtime profiler will traverse the graph of in memory objects following references between objects, the object through which we have reached the \textit{this} object is known as \textit{referrer}.
+The last value, which is target dependent, is the kind of reference.
+Operator \textbf{is} checks if \textit{this} is an instance of class \textit{NodeEntry}.
+Likewise, operator \textbf{in} checks whether the \textit{referrer} is already a member of the structure.
+Finally, line 8 updates the length of the list when an object is detected as member of the structure.
 
-%The idea of the approach is highly driven by the motivating scenario discussed in section~\ref{sec:motivation}.
-%In short, we propose to split the set of living objects in different disjoint subsets and we associate arbitrary extracted information to each subset.
-%In order to keep the overhead as low as possible, we propose collecting such information in a single
-%traversal of the graph.
-%In the rest of this section, we presents the details of the approach.
+\subsection{Semantics}\label{sec:semantic}
 
-%Let $G=(V,E)$ be a graph representing the living objects in the heap.
-%The approach aims at building a set $C$ of tuples with the form $T_i=\langle{Id}_i,O_i, s_i, m_i, a_i, D_i\rangle$
-%where members of a tuple $T_i$ are described as follows:
+An instance of our metamodel is compiled into a custom memory profiler.
+This compilation produces a library written in \textit{C++} which is in charge of collecting the desired information from the runtime environment.
+The generated source code has two parts.
+First, for each \textit{StructureType} in the model, the compiler generates a subclass of \textit{AbstractStructureType} which is shown below.
+Every subclass contains attributes to store the variables used in the associated \textit{StructureType}.
+In the listing below, the class \textit{Context} holds the built-in values we mention in the previous section.
+\begin{lstlisting}[language=C++, frame=none,
+numbers=left,
+numberstyle=\color{black}\scriptsize,]
+class AbstractStructureType {
+public:
+	void initialize(Context& ctx) = 0;
+	bool membership(Context& ctx) = 0;
+	void update(Context& ctx) = 0;
+}
+\end{lstlisting}
 
-%The first member of the tuple is an unique identifier of such a tuple.
-%Although it may look redundant it actually helps during the practical implementation of the approach.
+The second part of the generated code is formed by a set of initialization routines, one for each \textit{StructureFactory}.
+Each routine creates a list of structures with a specific \textit{AbstractStructureType} - the \textit{T} parameter in the listing.
+Formally, the signature and behavior of these routines are as follow:
+\begin{lstlisting}[language=C++, frame=none,
+numbers=left,
+numberstyle=\color{black}\scriptsize,]
+template <typename T> void
+[name](Context& ctx, std::vector<AbstractStructureType*>& s){
+  for (Object obj : ctx.instances) {
+    AbstractStructureType* ns = new T();
+    ctx.e = obj;
+    ns->initialize(ctx);
+    s.add(ns); // not valid in the STL, but simpler to read
+  }
+}
+\end{lstlisting}
+An important concern during the transformation lies on efficiently mapping our concepts to \textit{C++} concepts.
+Moreover, since each target platform provides facilities to get metadata regarding the objects in memory, using such facilities efficiently is specially important in order to reduce the performance overhead due to profiling.
 
-%The second member of the tuple, $O_i$, is a set of living objects with the properties described below.
-%\begin{align*}
-%    \cup_{i \in 1..\left\vert{C}\right\vert}{O_i} \subseteq V \\
-%    \forall {i,j \in 1..\left\vert{C}\right\vert}, \quad {O_i \cap O_j = \emptyset}
-%\end{align*}
-%
-%The set $D_i$ describes the information we want to collect from the heap.
-%The definition below depends on three sets: i) the set $\textit{Labels}$ which contains a unique
-%name for each member in $D_i$, ii) the set $\textit{Types}$ which describe the type of each label, and
-%the set $\textit{Values}$ which is the universe of valid values for a given type. 
-%\[ D_i := \left\{ (l, t ,v) \vert l \in{\textit{Labels}}, t\in{\textit{Types}},v\in{\textit{Values}} \right\} \]
-%
-%The functions $s_i$, $m_i$ and $a_i$  are called initialization, membership and action functions respectively. These functions are used to define the sets $O_i$ and $D_i$ during the traversal of
-%the graph $G$.
-%\begin{align}
-%	s_i \colon  \mathcal{P}(V) &\to \mathcal{P}(V) \label{eq:a1} \\
-%	m_i \colon V &\to \left\{{true, false}\right\} \label{eq:a2} \\
-%	a_i \colon V\times{D_i} &\to D_i \label{eq:a3}
-%\end{align}
-%
-%In our modeling, we also cluster tuples in $C$ into different classes.
-%A class of tuples is a tuple with the form $TC=\langle{f_i,s_i,m_i,a_i}\rangle$ where
-%$s_i$, $m_i$ and $a_i$ follow the definitions~\ref{eq:a1},~\ref{eq:a2},~\ref{eq:a3} while
-%the form of $f_i$, which we call instantiation function, is defined below:
-%\begin{align*}
-%f_i \colon \mathcal{P}(V) \to \mathcal{P}(C)
-%\end{align*}
+The final profiler is built using both the generated code and a template algorithm.
+The template is target dependent, but in general we use the underline target facilities to collect meta-data, access fields in certain steps, traverse the objects in memory and also to populate the built-in rvalues.
+A simplified version of the used algorithm is shown below:
+\begin{lstlisting}[escapeinside={(*}{*)},
+frame=tb, label=lst:template, language=AlgLang,
+numbers=left,
+numberstyle=\color{black}\scriptsize]
+values:
+   structures: vector<AbstractStructureType*>
+routine:
+   foreach (initialization rountine (*$R_i$*) associated to a StructureFactory)
+      create context
+	  call (*$R_i$*)(context, structures)
+   foreach (r: references among objects)
+      if (r.target has no membership)
+         create context // context.this = r.target
+         S = structures.findfirst(s | s.membership(context))
+         make context.this a member of S
+         S.update(context)
+   return structures 
+\end{lstlisting}
+There are two loops in the algorithm. 
+The former loop is in charge of creating the set of structures the program is intended to collect information about.
+The creation of the context in line 5 depends on the target platform.
+It basically creates values such as the list of objects in memory or the list of loaded classes.
+The latter loop traverses all the references among objects in memory.
+During each iteration, the algorithm finds the first structure for which the membership function is true.
+Notice that we only select the first because for some memory accounting problems, it is too hard to define a membership functions that build disjoints structures~\cite{dsn/09/geoffray/ijvm, cbse/14/attouchi/monitoring}.
+Thereafter, the information for such a structure is updated.
 
-%The need for the concept of classes of tuples is better understood using the motivating example.
-%In the case of accounting memory consumption for OSGi bundle, we have two classes of tuples.
-%The first class is composed by tuples that represent a single bundle, but all of them use the same
-%Java abstractions.
-%The second class of tuples contains the set of objects that are consumed by the Java runtime itself.
-%It is clear that we cannot list all the tuples because we cannot know in advance how many bundles will be running. However, we can list all the classes of tuples.
+%The complete execution of a program in our language is as follow. Subgraph instances are initialized using listing~\ref{onInitialization}.
+%Afterward, all the references in the graph of objects are traversed running listing~\ref{lst:onNodeFoundData}.
+%The output data for all subgraph instances has been collected after all the references are traversed once.
 
-%To build the set of tuples $C$, our approach performs the following steps.
-%It begins by executing the code shown in listing~\ref{onInitialization} to create and initial version of $C$.
-%In the code, we first create instances of each class of tuples using the functions $f_i$.
-%Then, we initialized each tuple with its initial version of $O_i$ and $D_i$.
-
-%In this paper, we define a DSL that implements the presented concepts.
-%This language provides constructors to specify the kind of information you want to collect, in other words, these constructors allow you to define $Types$ and $D_i$.
-%The language also provides constructors to define the classes of tuples, which implies the definition of the functions $f_i$, $s_i$, $m_i$ and $a_i$.
+%Finally, in listings~\ref{lst:onNodeFound},~\ref{lst:onNodeFoundData} and~\ref{onInitialization} we use built-in properties that are defined by the user.
+%These properties must have access to some data describing the content of the memory in order to successfully identify subgraphs and calculate output values.
+%Such data is wrapped in what we call execution context.
+%In our DSL there are two different execution contexts: \textit{global context} and \textit{local context}.
+%The former includes built-in values such as: i) lists of \textit{objects}, \textit{threads}, \textit{classes}, etc. , and ii) a value called \textit{Entity} representing a subgraph instance.
+%The latter only contains the object \textit{THIS} which is being visited, a label of the reference representing its type, \textit{REFERRER} which is the object referencing the visited and again the \textit{Entity} value.
+%The \textit{global context} is available in listing~\ref{onInitialization} while the \textit{local context} is available in both listings~\ref{lst:onNodeFound} and~\ref{lst:onNodeFoundData}.
 
 \subsection{Language Usage}
 
-There are several possibilities for using our DSL in the course of regular software maintenance.
+There are several possibilities for using our DSL in the various stage of an application lifecycle.
 These include checking: local data structure invariants, reachability properties, memory consumption properties and combinations of those.
 Below, we show some examples to highlight possible usage of our language. 
  
-Listing~\ref{assertion} shows an example to assert the existence of a value satisfying some properties, independently of which data structure contains it. 
+The first example shows how to assert the existence of a value satisfying some properties, independently of which object contains it. 
 The result is obtained through the use of a filter on the list of objects.
-The result of listing~\ref{assertion} will be $true$ if the heap contains an object with an attribute named $data$ with a value comprised between $3.141$ and $3.142$.
+The assertion successes if the heap contains an object with an attribute named $data$ with a value comprised between $3.141$ and $3.142$.
 
 \begin{lstlisting}[escapeinside={(*}{*)},
-caption={
-Detecting if an object satisfying certain property exists.
-Observe that we are not using the keyword \textit{ret}.
-We avoid it for the sake of clarity.
-The reader should treat along this paper any final expression $e$ within a lambda as \textit{ret} $e$. },
-label=assertion,float=!h, language=DSL]
-set_type all: 
-	roots (*$\leftarrow$*) objects(*{.filter}*)([it | it.data > 3.141 (*$\wedge$*) it.data < 3.142])
-	membership (*$\leftarrow$*) false
-	on_inclusion (*$\leftarrow$*) [ fault (*$\leftarrow$*) true ]
-	fault : bool (*$\leftarrow$*) false
-instances_for all have_names = "all-jvm"
+%label=assertion, 
+numbersep=2pt,
+numbers=left,
+numberstyle=\color{black}\scriptsize,
+language=DSL2,frame=none]
+create structure foreach e:#["whole-jvm"] using
+  constructor
+    initialObjects = #[]
+    existValue = false
+  membership true
+  updates 
+    existValue = existValue or (this.data > 3.141 and this.data < 3.142)
 \end{lstlisting}
 
-The goal of listing~\ref{pseudojbb} is to detect a known bug identified in~\cite{Aftandilian:2009:GAU:1543135.1542503}.
-This listing aims at finding if an object of type $Order$ is present 
+The goal of next listing is to detect a bug identified in~\cite{Aftandilian:2009:GAU:1543135.1542503}.
+This listing aims at finding if there exists an instance of the class $Order$
 with the value of its field $field$ being equal to $specialValue$.
-This technique is used to detect if one object has been garbage collected or if someone still hold a reference on it preventing its garbage collection.
-\begin{lstlisting}[escapeinside={(*}{*)},caption=Detecting a knwon bug in pseudojbb., label=pseudojbb,float=!h, language=DSL]
-set_type all: 
-	roots (*$\leftarrow$*) objects(*{.filter}*)([it | it is Order])
-	membership (*$\leftarrow$*) false
-	on_inclusion (*$\leftarrow$*) [ fault (*$\leftarrow$*) fault (*$\lor$*) THIS.field = specialValue ]
-	fault : bool (*$\leftarrow$*) false
-instances_for all have_names = "all-jvm"
+This technique is used to detect if one object has been garbage collected or if someone still holds a reference on it preventing its garbage collection.
+
+\begin{lstlisting}[escapeinside={(*}{*)},
+%caption=Detecting a knwon bug in pseudojbb., 
+%label=pseudojbb,
+%float=!h, 
+frame=none,
+numbersep=2pt,
+numbers=left,
+numberstyle=\color{black}\scriptsize,
+language=DSL2]
+create structure foreach e:#["whole-jvm"] using
+  constructor
+	initialObjects = #[]
+	fault = false
+  membership  true
+  updates
+    fault = fault or (this is Order and this.field = specialValue)
 \end{lstlisting}
 
 The next example computes a combination of reachability and memory consumption properties.
 It calculates the number of objects, and their total memory consumption, that are reachable from the threads.
-We can notice in listing~\ref{kevoreeaccounting} how the membership property discard those objects that are not referenced by an already included object.  
+We can notice how the membership property discards those objects that are not referenced by an already included object.  
 
-\begin{lstlisting}[escapeinside={(*}{*)},caption=Calculating objects reachables from threads, label=kevoreeaccounting,float=!h, language=DSL]
-	roots (*$\leftarrow$*) threads
-	membership (*$\leftarrow$*) THIS (*$\in$*) Unassigned (*$\land$*) REFERRER (*$\in$*) ENTITY
-	on_inclusion (*$\leftarrow$*) [      
-		nbObjects (*$\leftarrow$*) nbObjects + 1  
-		nbSize (*$\leftarrow$*) nbSize + THIS.size
-	]
-	nbObjects : int (*$\leftarrow$*) 0 // user-defined properties attached to each instance
-	nbSize : int (*$\leftarrow$*) 0 
-instances_for all have_names = "all-jvm"
+\begin{lstlisting}[escapeinside={(*}{*)},
+caption={Calculating objects reachables from threads},
+label=kevoreeaccounting,
+%float=!h, 
+numbersep=2pt,
+frame=t,
+numbers=left,
+numberstyle=\color{black}\scriptsize,
+language=DSL2]
+create structure foreach e:#["whole-jvm"] using
+  constructor
+    initialObjects = threads
+    nbObjects = 0 
+    nbSize = 0 
+  membership ( this in None and referrer in this_structure )
+  updates 
+    nbObjects = nbObjects + 1  
+    nbSize = nbSize + this.size
 \end{lstlisting}
 
 We can also express complex structures in memory.
 For instance, to find the consumption of K3-Al object namely \textit{K3Object} as described in section~\ref{sec:motivation}, we must find all instances of \textit{HashMap.Entry} that have \textit{K3Object} as the \textit{key}. These entries should be added to the consumption of the object \textit{K3Object} as well as all the objects reachable from the \textit{HashMap.Entry.value}.
 To come out with this solution a good understanding of how K3-Al implements aspects is required.
 The rationale here is that K3-Al stores the state of aspects in a separate HashMap, using as key the object to be aspectized.
-\begin{lstlisting}[escapeinside={(*}{*)},caption=Computing the consumption of each K3-Al Object along with its aspects., label=k3,float=!h, language=DSL]
-set_type all: 
-	roots (*$\leftarrow$*) objects(*{.filter}*)([it | it is K3Object (*$\land$*) it(*{.id}*) = ENTITY.name])
- 	membership (*$\leftarrow$*) (REFERRER (*$\in$*) ENTITY (*$\land$*) THIS (*$\in$*) Unassigned ) (*$\lor$*)
-		( THIS is HashMap.Entry (*$\land$*) 
-		  THIS.key (*$\in$*) ENTITY (*$\land$*) THIS.key is K3Object)
-	on_inclusion (*$\leftarrow$*) [ nbSize (*$\leftarrow$*) nbSize + THIS.size ]
- 	nbSize : int (*$\leftarrow$*) 0 
-instances_for all have_names = objects(*{.filter}*)([it|it is K3Object]).map([it|it(*{.id}*)]) 
-\end{lstlisting}
 
-Finally, we can use the language to compute the consumption of the \textit{top components}. This kind of analysis account for the consumption of the root objects $O$ to the \textit{classloader} that loaded the class of $ O $. It is often used as a rough approximation of OSGi bundles' consumption. 
-
-\begin{lstlisting}[escapeinside={(*}{*)},caption=Calculating the consumption of top components, label=topcomponents,float=!h, language=DSL]
-set_type Component: 
-	roots (*$\leftarrow$*) classloaders(*{.filter}*)([ it | (*{it.id}*) = ENTITY.name ])  
-	membership (*$\leftarrow$*) THIS (*$\in$*) Unassigned (*$\land$*) (
-					(ref_kind = root (*$\land$*) THIS.class.classloader (*$\in$*) ENTITY) (*$\lor$*)
-					(ref_kind (*$\neq$*) root (*$\land$*) REFERRER (*$\in$*) ENTITY)
-				 )
-	on_inclusion (*$\leftarrow$*) [ nbSize (*$\leftarrow$*) nbSize + THIS.size ]
-	nbSize : int (*$\leftarrow$*) 0
-instances_for Component have_names = classloaders.map([ it | (*{it.id}*) ])  
+\begin{lstlisting}[escapeinside={(*}{*)},
+%caption=Computing the consumption of each K3-Al Object along with its aspects., 
+%label=k3,
+%float=!h, 
+numbersep=2pt,
+frame=none,
+numbers=left,
+numberstyle=\color{black}\scriptsize,
+language=DSL2]
+create structure foreach e:objects(*{.filter}*)([it|it is K3Object]) using
+  constructor
+    initialObjects = #[e]
+    nbSize = 0
+  membership (referrer in this_structure and this in None ) or
+    (this is HashMap.Entry and this.key in this_structure and 
+      this.key is K3Object)
+  updates
+    nbSize = nbSize + 1
 \end{lstlisting}

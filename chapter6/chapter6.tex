@@ -1,17 +1,20 @@
 \selectlanguage{english}
-\chapter{Efficient Memory Analysis In Production}
-\markboth{Efficient Memory Analysis In Production}{Chapter6}
+\chapter{Building Efficient Domain-Specific Memory Profilers}
+\markboth{Building Efficient Domain-Specific Memory Profilers}{Chapter6}
 
 %#Context  
-Domain-specific abstractions are increasingly used in industry to ease the development of complex applications. These abstractions take various forms, (e.g., internal domain specific language (DSL), external DSL, macros or active annotations, \dots). Workbenches exist to easily define and provide tooling over such abstractions. For example, DSL workbenches now provide facilities for both language definition and language tooling (e.g., checkers, editor or code generators). 
+Domain-specific abstractions are increasingly used in industry to ease the development of applications. These abstractions take various forms, (e.g., domain-specific languages (DSL), macros, component models). Workbenches exist to define tooling over such abstractions. For example, DSL workbenches support the development of editors and code generators. 
 % #Problem 
-However, profiling applications that has been partially developed using those domain specific abstractions still requires significant development efforts for keeping the traceability links between abstractions and runtime data-structure. This effort must be balanced with the limited audience of these abstractions. Besides, even if automatic memory management through garbage collection is a common feature nowadays, applications in production still suffer from memory-related issues such as memory leaks and excessive consumption that require efficient profiling.  If some profilers are able to represent such abstractions through arbitrary queries, they cannot be efficiently embedded at runtime due to poor performances of the evaluation of these queries.  
-%#Contribution
+However, profiling applications which use these abstractions requires significant development efforts to keep the traceability links between these abstractions and the runtime data-structures. This effort must be balanced with the limited audience of these abstractions. 
+Sate of the art profilers are able to represent such abstractions through generic query evaluation, but they suffer from bad performance issue. 
 
-In this paper, we propose an approach to ease the efficient analysis of the memory during the production stage. Our approach provides a DSL for expressing the mapping between abstractions and runtime data structure.
-It leverages the traversal mechanism to efficiently collect the data specified through these mappings.   
+%#Contribution
+In this paper, we propose an approach to ease the development of efficient memory analysis tools to be used during the production stage.
+Our approach provides a DSL to express the mapping between abstractions and runtime data structure.
+At runtime, the generated  memory analysis tools leverage the object graph traversal mechanism to efficiently collect the specific memory data required.
 %#Evaluation
-To evaluate our approach, we compare an initial implementation against: i) an efficient but complex to develop solution, and ii) a solution based on existent tools which offer poor performance. The results show that our approach offers a better trade-off between usability and performance than previous solutions.
+To evaluate our approach, we compare memory analysis tools produced with our DSL against: i) hand written optimized solutions, and ii) solutions based on existing tools which offer lower performance.
+The results show that our approach offers performance gain compared to previous solutions, and simplify the definition of memory analysis tools.
 
 \input{chapter6/languages_for_listings}
 
@@ -29,7 +32,7 @@ To evaluate our approach, we compare an initial implementation against: i) an ef
 
 \input{chapter6/evaluation}
 
-\input{chapter6/RelatedWork}
+%\input{chapter6/RelatedWork}
 
 \section{Conclusions and Future Works}\label{sec:conclusions}
 

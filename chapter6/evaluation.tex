@@ -1,32 +1,25 @@
-\section{Evaluation}\label{sec:evaluation}
+\section{Evaluating performance of profilers}\label{sec:evaluation}
+%\todo{Add research questions}
+
 In this section we evaluate the implementation of our approach with several experiments.
-%The evaluation is performed in two parts.
 To do so, we present a set of experiments to evaluate the performance overhead of executing different memory analysis.
-%Afterward, we discuss the expressiveness of our DSL by comparing it against existent solutions.
-%In this section we evau the potential benefits of our approach, in particular we want to show how it reduces the overhead in comparison to other generic approaches based on profilers.
-%We also want to show the benefits on reduced complexity by showing the number of lines needed to code a monitor of memory consumption with both our approach and plain JVMTI.
-A goal of this section is to show that our approach induces small overhead across different applications and types of analysis produced with our approach. Since such analysis exhibit different levels of complexity, we cover a wide spectrum of use even if we are running the experiments with few types of analysis.
-We evaluate the performance of our DSL with several experiments:
-% Stress clearly that this evaluation is about the analysis performance on different usage
+A goal of this section is to show that our approach induces low overhead across different applications and types of analysis.
+Since such analysis exhibit different levels of complexity, we cover a wide spectrum of use even if we are running the experiments with few types of analysis.
+%We evaluate the performance of our DSL with several experiments:
+ These experiments aim at answering the following research questions:
 \begin{enumerate}
-\item In a first experiment, we assess the overhead on total execution time produced by the periodic computation of the analysis described in listing~\ref{kevoreeaccounting}.
-This is a controlled experiment, which uses a macro-benchmark, intended to check how a \textit{generic} analysis behaves on different applications.
-In this experiment we measure the overhead of our approach, but we also compare it against the overhead produced by other solutions.
-%Test the global time to finish a task while performing a particular analysis many times 
-
-\item In a second experiment, we assess the execution time needed to perform a periodic memory analysis instead of focusing on the total application execution time.
-Since the analysis execution time depends on the number of relevant objects in the heap, we vary the input size of the benchmark suite which directly impact the number of objects in memory.
-% Assessing the impact of various analysis on the execution performance. This analysis iterate overall the object in memory. We perform the same analysis regularaly on the program but with different input size (meaning different application size with a varying number of objects in memory which impact the analysis performance)
-
-\item In a third experiment, we perform memory analysis on actual applications including \textit{Eclipse}, \textit{NetBean} and others to assess the overhead of the analysis in listing~\ref{topcomponents} on ``real use'' scenarios.
-All these applications are built on top of OSGi and this experiment aims at comparing the analysis time of our approach against the time used by well-established memory profilers.  
-% Check the performance on real applications (not benchmark) which both show the overhead and highlight that our approach is feasible on real application. Again another analysis to show the expressiveness of the DSL.
+\item \textbf{RQ1. Does our approach produce profilers with lower overhead than state-of-the-art tools when used to perform many iterations of memory analysis at runtime?} To answer this question, we assess the overhead on total execution time produced by the periodic computation of a specific analysis.
+In this experiment we measure and compare the overhead of our approach against the overhead produced by other solutions.
+\item \textbf{RQ2. Is significant the difference between the time needed to execute a single analysis with our approach in comparison to previous solutions? }
+In a second experiment, we measure the execution time needed to perform a single memory analysis step instead of focusing on the total application execution time.
+\item \textbf{RQ3. Does the advantage of our approach remain for real applications? }
+ Finally, we perform memory analysis on actual applications including \textit{Eclipse}, \textit{NetBean} and others to assess the overhead of profiling in ``real life'' scenarios. 
 \end{enumerate}
 
-In general, all experiments show that the overhead of our DSL is small and has less impact on production applications than well-known memory profilers.
+In general, these experiments show that our DSL produces specific profilers with lower overhead for applications running in production environments than well-known memory profilers.
 
 \subsection{Methodology and Setup}\label{sec:MethodologyAndSetup}
-Our system is implemented on top of JVMTI, thus we compare our results using the HotSpot Java Virtual Machine version 1.7.0\_76, with a heap size of 2GiB for all the experiments.
+Our system is implemented on top of JVMTI, thus we compare our results using the HotSpot JVM version 1.7.0\_76, with a heap size of 2GiB for all the experiments.
 Across this section we use Eclipse Memory Analyzer 1.4.0 (Eclipse MAT),  a production ready memory profiler, to perform several experiments.
 We use  this tool in console user interface (CLI) mode that executes the desired analysis on a separate process.
 In short, when performing a memory analysis on a JVM instance \textit{A}, we dump its heap and invoke Eclipse MAT in a separate JVM instance to collect profiling data.
@@ -98,7 +91,7 @@ The values are shown as the percentage with respect to the baseline which in thi
 It is noteworthy that our approach performs close to the handwritten solution.
 Moreover, our solution outperforms the \textit{Heap Dump + Eclipse MAT} approach even when the latter is executing mostly on a separate process without halting the JVM during the analysis.
 
-\subsection{Comparing Analysis Time for Simple Assertion}
+\subsection{Comparing Analysis Time for an Assertion}
 
 In the previous section we show the overhead on the total execution time for different analysis mechanisms.
 However, these mechanisms are not executed under the same conditions.
@@ -108,14 +101,24 @@ Therefore, in this experiment we compare only the analysis time using well-known
 Since the analysis time depends on the number of objects visited during the computation, we assess in this experiment the behavior of our approach with a memory analysis that must iterate over all objects to complete.
 For the same reason, we repeat the analysis with varying input size, which implies different number of objects in memory, to the macro-benchmarks.
 
-\begin{lstlisting}[escapeinside={(*}{*)},caption=Detecting that there is no instance of a given class., label=lst:SimpleAssertion,float=!h, language=DSL]
-set_type all: 
-	roots (*$\leftarrow$*) #[]
-	membership (*$\leftarrow$*) true
-	on_inclusion (*$\leftarrow$*) [ fault (*$\leftarrow$*) fault (*$\lor$*) THIS is UnusedClass ]
-	fault : bool (*$\leftarrow$*) false
- 
-instances_for all have_names = "Check class is not used"
+The \textbf{assertion} used in this experiment checks \textbf{if there exist an instance of a specific class in the heap}.
+The following listing shows how to implement such an assertion in our DSL.
+The \textit{StructureType} definition guarantees that all objects are visited by defining the \textit{membership} property as the \textit{true} constant.
+\begin{lstlisting}[escapeinside={(*}{*)},
+%caption=Detecting if there exists an instance of a specific class, 
+%label=lst:SimpleAssertion,
+%float=!h,
+frame=none, 
+language=DSL2,numbers=left,
+numbersep=2pt,
+numberstyle=\color{black}\scriptsize,]
+create structure foreach e:#["jvm"] using
+   constructor
+      initialObjects = #[]
+      exists = false
+   membership  true
+   updates
+      exists = exists or (this is UnusedClass)
 \end{lstlisting}
 
 \begin{figure*}[!ht]
@@ -193,17 +196,13 @@ x tick label style={rotate=45,anchor=east, font=\small},
 \hspace{1cm}
 \end{figure*}
 
-Listing~\ref{lst:SimpleAssertion} shows the analysis we execute in this experiment.
-It is a simple assertion to check that there does not exist any instance of a given class in the application.
-The \textit{set\_type} definition guarantees that all objects are visited by defining the \textit{membership} property as the \textit{true} constant.
-
-The set up of the experiment is as follow.
+The setting of the experiment is as follow.
 The DaCapo benchmark suite is used with two different input sizes, default and large.
 Before the final test, twenty warm-ups are executed in order to ensure long enough execution time.
 A separate thread periodically checks the assertion and records the analysis time.
 The average analysis time along the complete execution of a benchmark (i.e., xalan, fop, ...) is used as data point.
 Ten of these data points are obtained through repetition of the previous step and used as final measurement for a pair of benchmark and analysis approach.
-As in the previous experiment, we use a handwritten JVMTI agents and an Eclipse MAT extension to efficiently check the assertion with those tools.
+As in the previous experiment, we use a handwritten JVMTI agents and an Eclipse MAT extension to check the assertion with those tools.
 
 Figures~\ref{fig:analysisTimeDefaultSize} and~\ref{fig:analysisTimeLargeSize} present the results of the experiments.
 In both cases, default and large input size, our DSL is in between the handwritten JVMTI agent and the Eclipse MAT approach.
@@ -211,29 +210,49 @@ In comparison to Eclipse MAT, our approach on average reduces the analysis time 
 As expected, the analysis time increases with the number of objects, the slowdown shown between default and large input size is of 8.42\%.
 
 \subsection{Analysis Time in Real Scenarios}
-To evaluate the overhead of our approach in actual applications, we execute an analysis to determine the memory consumption that can be related to each Java classloader.
-This strategy is common on many Java-based component frameworks because modules' dependencies are often isolated in classloaders; hence, a classloader is a runtime representation related to the component abstraction in such frameworks.
-Since OSGi is a widely used framework, we chose several applications build on top of OSGi or supporting it to execute the analysis described in listing~\ref{topcomponents}.
-Often, production ready memory profilers include built-in analysis for OSGi bundles or some form of component reports.
-For instance, Eclipse MAT provides a report to compute the memory retained for top level classloaders.
+To evaluate the overhead of our approach in actual applications, 
+we compute the memory consumption of bundles in real OSGi-based systems.
+Since OSGi is a widely used framework, we chose applications built on top of OSGi or supporting it.
+The custom profiler definition is based on the idea that bundle consumption is the consumption of a Java classloader.
+Such a strategy is common when measuring memory consumption for Java-based component frameworks because modules are often isolated and represented through classloaders.
+The complete profiler's definition is shown below:
+\begin{lstlisting}[escapeinside={(*}{*)},
+%caption=Calculating the consumption of top components,
+%label=topcomponents,
+%float=!h, 
+frame=none,
+numbers=left,
+numbersep=2pt,
+numberstyle=\color{black}\scriptsize,
+language=DSL2]
+create structure foreach e:classloaders using
+  constructor
+    initialObjects = #[e]
+    nbSize = 0
+  membership  (this in None) and 
+    ((ref_kind = root and this.class.classloader in this_structure) or
+	(ref_kind (*$\neq$*) root and referrer in this_structure))
+  updates
+    nbSize = nbSize + this.size
+\end{lstlisting}
 
 This experiment aims at evaluating the analysis time for each application using our approach and \textit{Heap Dump + Eclipse MAT}.
-In this experiment, each application is executed until it goes idle, then the memory analysis is executed and its execution time is measured.
+In this experiment, each application is executed. Once it is initialized, the memory analysis is performed and its execution time measured.
 This process is repeated ten times for each application and analysis approach in order to use the average as final measurement.
-Our DSL computes the analysis in listing~\ref{topcomponents} while \textit{Heap Dump + Eclipse MAT} executes a standard analysis namely \textit{top components} reports.
+We use \textit{Heap Dump + Eclipse MAT}  to compute the memory retained for top level classloaders using  a standard analysis named \textit{top components} reports. 
 
-To execute the memory analysis from within the applications, we implemented extensions for each application. 
-For instance, we implemented an Eclipse plugin, a NetBean module and so on.
+To execute the memory analysis from within the applications, we implemented extensions for each application (e.g., an Eclipse plugin, a NetBean module).
 These extensions are in charge of triggering the analysis.
 It was necessary because in our approach the analysis must be executed by the JVM that is being profiled.
 In this experiment, we perform the analysis on the following systems: Eclipse Luna~\cite{luna}, NetBeans 8.0\cite{netbeans}, dotCMS 3.1~\cite{dotcms}, Cytoscape 3.2.1~\cite{cytoscape}, Glassfish 4.1~\cite{glassfish},  Liferay 6.2.2~\cite{liferay}, WildFly 8.2~\cite{wildfly}.
 
-Figure~\ref{fig:analysisTime} presents the analysis time for several applications and two analysis approaches. Our DSL outperform other solutions in all applications.
+Figure~\ref{fig:analysisTime} presents the analysis time for several applications and two analysis approaches.
+Our DSL outperforms other solutions for all applications.
 The gain is 3x-19x with an average of 8x.
 This gain is due to two factors.
 First the Eclipse MAT solution invests some time parsing the dump file and creating the internal indexes to accelerate queries' response time.
 Second, the \textit{top components} report in Eclipse MAT can only be implemented using its query language in terms of the function \textit{retainedHeapSize} which calculates the amount of memory retained for a given object.
-Since this function is costly to compute, Eclipse MAT spends a considerable amount of the time on it while building the \textit{top components} report. All the evaluation code is available online~\footnote{https://github.com/intigonzalez/heapexplorer\_language}.
+Since this function is costly to compute, Eclipse MAT spends a considerable amount of the time on it while building the \textit{top components} report. The evaluation code is available online~\footnote{https://github.com/intigonzalez/heapexplorer\_language}.
 
 \begin{figure}[!b]
 \centering
@@ -262,7 +281,7 @@ x tick label style={rotate=45,anchor=east, font=\small},
 \legend{Our Approach, Heap Dump + Eclipse MAT}
 \end{axis}
 \end{tikzpicture}
-\caption{Analysis time for real applications. It shows the time needed to compute an analysis just once. The analysis aims at finding the consumption of the top components as shown in listing~\ref{fig:analysisTime}.\label{fig:analysisTime}}
+\caption{Analysis time for real applications. It shows the time needed to compute an analysis just once. The analysis aims at finding the consumption of the top components\label{fig:analysisTime}}
 \end{figure}
 
 %The results shown in figure~\ref{fig:evaluation} confirm the conclusions already discussed.
