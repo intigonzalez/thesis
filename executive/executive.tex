@@ -1,6 +1,10 @@
-\documentclass[11pt]{paper}
+\documentclass[11pt,a4paper]{paper}
 
 \usepackage[english]{babel}
+\usepackage{comment}
+\usepackage{color}
+
+\newcommand{\todo}[1]{\textcolor[rgb]{1,0,0}{ToDo: #1} }
 
 \title{Supporting resource-awareness in managed runtime environments}
 
@@ -11,4 +15,8 @@
 \maketitle
 
 \input{./introduction/maintext}
+
+\bibliographystyle{alpha}
+\bibliography{./biblio/biblio_these.bib}
+
 \end{document}
