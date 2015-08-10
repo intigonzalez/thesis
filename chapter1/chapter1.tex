@@ -7,10 +7,82 @@
 
 \coolphrase {Hey, look at this}{Inti Gonzalez-Herrera}
 
-\section{Resource Awareness}
+\section{Resource Aware Programming}
 
-\section{System support for resource awareness}
+Esta seccion describe y define lo que entendemos por resource aware programming. Esto no es muy sencillo puesto que no hay una definion muy formal que digamos. De hecho, este es un termino al que se hace referencia en varios lugares para referirse a la capacidad de ciertos sistemas de software para adaptar su funconamiento en base ala existencia de recursos.
 
+Es valido destacar en este punto,  la relacion que tiene esto con los sistemas adaptables y reconfigutrables y en defintiva con el concepto general de MAPE Loop.
+
+Debe resaltarse en un parrafo inicial como todo lo que hace una computadora esta en definitiva asociado con recursos.
+
+Como lo vemos, hay tres cualidades que pueden pedirse cuando se quiere ser resource aware:
+\begin{itemize}
+\item Resource consumption monitoring
+\item Resource reservation
+\item Observing resource availability (overcommitment) 
+\end{itemize}
+
+Ademas, se persiguen objetivos como los siguientes cuando se quiere ser resource aware:
+\begin{itemize}
+\item Mejorar eficiencia
+\item Mejorar parametros de calidad de la aplicacion como availability
+\item Asegurar resource isolation para critical applications
+\item Garantizar cuotas de uso para distintios usuarios
+\end{itemize}
+
+Un punto escencial aqui es establecer bien claro cual es la diferencia entre:
+\begin{itemize}
+\item resource awareness vs real-time
+\item resource reservation vs scheduling
+\end{itemize}
+
+El objetivo de esta seccion es dar una fundamentacion clara sobre las motivaciones que guian esta tesis y mostrar los temas en los que estara enfocada.
+
+Es una seccion general que sin embargo tendra citas lo mas actualizadas posible en las secciones cables. La longitud estimada es de 2 a 3 paginas.
+
+\section{Managed Runtime Environments}
+
+Esta seccion sencillamente presenta las principales caracteristicas de un ambiente de ejecucion manaejado.
+Esta es una seccion de background donde sencillamente se establecen las caracteristicas de estos sistemas con las uqe tenemos que lidiar y que repercuten en las decisiones que tomamos en nuestro trabajo.
+
+Por ejemplo, debemos discutir como en MREs se esconde intencionalmente el aspecto de manejo de recursos para facilitar el desarrollo de aplicaciones.
+
+Discutir en particular la cuestion de la memoria.
+
+Discutir las ideas de carga dinamica de codigo y commo esto se puede usar para cosas buenas como crear component framewroks pero complica las cosas porque ya no se cumplen las condiciones de mundo cerrado.
+
+Esta es una seccion informativo, es util para poner al lector en contexto y para que pueda comprender elementos que vienen a continuacion.
+
+Su longitud estimada es de 1 a 2 paginas.
+
+\section{Basic/System support for resource awareness}
+
+Esta seccion presenta una serie de metodos para gestionar recursos. En primer lugar explica que nos estamos limitando a accounting y reservation. Despues comienza discutiendo metodos general que no son solo para MRE. A continuacion se hace un recorrido por metodos que estan orientados a MREs pero no a abstracciones en especifico. Esta ultima parte va a estar dificil de hacer peor veremos. 
+
+La siguiente es una lista no exahustiva de cosas a discutir/mencionar
+
+\begin{itemize}
+\item CGroup
+\item FreeBSD
+\item Processes
+\item Threads
+\item Resource Principals
+\item MVM
+\item KaffeVM
+\item Android approach
+\item \dots
+\end{itemize}
+
+Aqui entonces vienen los resultados de la discusion de esta parte del estado del arte.
+Estas conclusiones deben mostrarse preferentemente en la forma de tabla donde se contrasten las diferencia en diferentes variables. Algunas de las variables para comparar son:
+
+\begin{itemize}
+\item es usable en MREs?
+\item Puede manejar time shared resources y otros?
+\item cual es el rendimiento?
+\end{itemize}
+
+Al final la seccion concluira mostrando como ninguna de las tecnicas es completamente satisfactoria. Claro, para medir satisfactoriedad debemos constrastar sus caracteristicas contrar caracteristicas deseadas que probablemente se definiran en la seccion de resource aware o en el principio de esta seccion. Esta parte tiene que hacerse de forma tal que lleve a la conclusion logica de que algo mas es necesario. Pero tiene queser creible.
 
 \todo{This makes no sense at all}
 
@@ -451,13 +523,6 @@ A considerable advantage of using resource accounting at user level is the easy 
 Solutions at virtual machine level are easier to implement. Moreover, the performance overhead tend to be slower because the control of resource is direct. However, the solution at virtual machine level is not good for developers of user applications. Perhaps, the best way to deal with resource accounting is by mixing the two approaches. Some resources can be accounted at user level and others to virtual machine level. We can think in offering a low-level API for resource accounting and using such API at user level to aggregate results in wherever structure we consider an independent task.
 
 Finally, it is important to note that there is an obvious lack of solutions for accounting of resources others than memory and CPU usage. The common approach to network usage accounting involves modifying the Java class library. This is not a big modification because all traffic is managed using a few functions. However, there are others network resources like sockets that are not controlled at all. The file system is other resource which is not considered in most publication. It means that resource accounting is still a challenge.
-
-
-\begin{itemize}
-\item CGroup
-\item FreeBSD
-\item \dots
-\end{itemize}
 
 \begin{comment}
 
