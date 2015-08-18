@@ -40,19 +40,19 @@ A software system requires the appropriate runtime support to provide such featu
 \textit{This thesis addresses the problem of supporting resource-aware programming in execution environments}.
 In particular, it aims at offering efficient support for collecting data about resource consumption, as well as efficient mechanisms to reserve resources for specific applications.
 
-Nowadays, middleware are regularly implemented using a managed runtime environment (MRE) such as Java~\cite{Bruneton:2006:FCM:1152333.1152345,Fouquet:2014:DED:2602576.2611461,OracleEJB3.0,Becker:2010:PCM:1712605.1712651,Carlson2006127}, for example with OSGi, because of its safety, flexibility, and mature  development environment.
+Nowadays, middleware are regularly implemented using a managed runtime environment (MRTE) such as Java~\cite{Bruneton:2006:FCM:1152333.1152345,Fouquet:2014:DED:2602576.2611461,OracleEJB3.0,Becker:2010:PCM:1712605.1712651,Carlson2006127}, for example with OSGi, because of its safety, flexibility, and mature  development environment.
 These middleware often provide open world features such as the possibility of adding new functionalities after the initial system deployment.
 To support the adaptability and manageability demanded by an open world runtime, it is possible to use  Component-Based Software Engineer (CBSE)~\cite{gruntz2002component,Duclos:2002:DUN:508386.508394, Bruneton:2006:FCM:1152333.1152345}.
-Alas, MREs such as Java were designed to execute only a single application at a time, so they lack full support for fine-grain resource management.
+Alas, MRTEs such as Java were designed to execute only a single application at a time, so they lack full support for fine-grain resource management.
 
 Runtime support for resource-aware programming highly depends on the target technology.
 For instance, reserving memory for a native Unix process is different that reserving memory for an OSGi bundle (i.e., the former problem involves creating a virtual address space~\cite{Stallings2014} while the latter demands the usage of a memory allocator and a garbage collector~\cite{OSGiAlliance2014,alpern2000jalapeno,Richard2012,Geoffray:2010:VSM:1837854.1736006}).
-Due to this fact, this research is limited to the issue of supporting resource-awareness in component-based software systems running on top of MREs.
+Due to this fact, this research is limited to the issue of supporting resource-awareness in component-based software systems running on top of MRTEs.
 
 
 \section{Challenges}
 
-In existent solutions to perform resource consumption monitoring and resource reservation in MREs, we find two important drawbacks.
+In existent solutions to perform resource consumption monitoring and resource reservation in MRTEs, we find two important drawbacks.
 Tackling these drawbacks, which are described below, is the objective of the present work.
 
 \begin{itemize}
@@ -61,10 +61,10 @@ In particular, instrumentation-based mechanisms significantly reduce application
 While this limitation does not affect the utilization of such mechanisms to, for instance, profile an application during the development phase~\cite{czajkowski_jres:_1998,binder_extending_2005,binder_portable_2001,Maebe06javana:a,Moret:2011:PBI:1960275.1960292, Hulaas:2008:PTL}, it does make unsuitable using such techniques in a production environment~\cite{Dmitriev:2004:PJA:974043.974067}.
 As a result, solutions with \textit{high} performance overhead or few features are used in those applications where being aware of resources at runtime is a strict requirement.
 
-\item Despite of the widespread utilization of MREs to execute applications based on components and other abstractions, \textbf{creating resource management tools} for these abstractions is still \textbf{a complex task}.
+\item Despite of the widespread utilization of MRTEs to execute applications based on components and other abstractions, \textbf{creating resource management tools} for these abstractions is still \textbf{a complex task}.
 Indeed, creating abstractions such as domain-specific languages (DSLs) ~\cite{van2000domain,Fowler:2010:DSL:1809745} and components models is increasingly common ~\cite{van2000domain,hutchinson2011empirical,whittle2014state}.
 Plenty of tooling support exists for doing so, specially to define new DSLs~\cite{raey,Merkle:2010:TMT:1869542.1869564,Eysholdt:2010:XIY:1869542.1869625}.
-In addition, quite often these abstractions target MREs as backend technologies due to their safety.
+In addition, quite often these abstractions target MRTEs as backend technologies due to their safety.
 However, new abstractions pose a challenge for developers when it comes to profiling, debugging and monitoring applications that are built using them because such new abstractions are not always shipped along custom profilers and debuggers~\cite{Kolomvatsos:2012:DAC:2148250.2148478,Wu:2008:GGD:1394966.1394970,Mannadiar:2010:DDM:1964571.1964595,Lindeman:2011:DDD:2047862.2047885,Wu:2005:TDL:1094855.1094920,Faith1998}.
 As a consequence, developers find themselves using mainstream tools which are only able to cope with \textit{``classical''} concepts such as \textit{objects}, \textit{methods} and \textit{memory locations}, instead of more specific concepts.
 The reason for this is that defining tooling support for a specific abstraction is a time consuming task that must be balanced against the limited audience of such an abstraction.
@@ -72,7 +72,7 @@ The reason for this is that defining tooling support for a specific abstraction 
  
 The challenges this research tackle can be summarized in the five research questions.
 These questions arises from the analysis of the drawbacks in the previous paragraphs.
-It is worthwhile remembering that these questions refer to MREs and CBSE.
+It is worthwhile remembering that these questions refer to MRTEs and CBSE.
 
 \begin{enumerate}
 \renewcommand{\theenumi}{\textit{RQ\arabic{enumi}}}
@@ -98,7 +98,7 @@ These contributions are briefly described in the rest of this section.
 \textbf{An optimistic resource monitoring framework that reduces the cost of collecting resource consumption data.}
 Resource consumption monitoring is the foundation for resource-aware programming.
 In this research, a new approach built upon the idea of adaptive monitoring is presented.
-The approach, namely Scapegoat, is based on fourth principles: i) often applications are built using abstractions such as components that we can use to identify and isolate the resource consumption, ii) since, in order to provided automatic resource management, MREs often reserve more resource than they need, we can use optimistic lightweight monitoring and still be sure we will be able to detect potential failures on time, iii) it is possible to \textit{quickly identify} the faulty component once a potential failure is spotted, and iv) there are previous monitoring mechanisms that we can leverage because they are exchangeable at runtime and offer different trade-offs between overhead and accuracy.
+The approach, namely Scapegoat, is based on fourth principles: i) often applications are built using abstractions such as components that we can use to identify and isolate the resource consumption, ii) since, in order to provided automatic resource management, MRTEs often reserve more resource than they need, we can use optimistic lightweight monitoring and still be sure we will be able to detect potential failures on time, iii) it is possible to \textit{quickly identify} the faulty component once a potential failure is spotted, and iv) there are previous monitoring mechanisms that we can leverage because they are exchangeable at runtime and offer different trade-offs between overhead and accuracy.
 Scapegoat was implemented and evaluated along this work and the results show its feasibility and efficiency.
 
 \textbf{A methodology to select components' binding at deployment time in order to reduce the computational cost of performing resource reservation.}
@@ -109,7 +109,7 @@ In short, I think that if a component model aims at supporting resource-aware co
 Along the present work, evidence for such claims are provided and a prototype named Squirrel is implemented to show the potential benefices of this \textit{methodology}.
 
 \textbf{A domain-specific language to build customized and efficient memory profilers that can be used both during applications' development, and also in a production environment.}
-Memory consumption monitoring and profiling are important concerns in applications that target MREs because even automatic memory management is not capable of guarantying error-free memory management and, more importantly, it introduces performance issues.
+Memory consumption monitoring and profiling are important concerns in applications that target MRTEs because even automatic memory management is not capable of guarantying error-free memory management and, more importantly, it introduces performance issues.
 %As mentioned, mainstream profilers are not able to deal with domain-specific concepts in an \textit{efficient} way.
 Along this thesis, a generative approach to create customized and efficient memory profilers for domain-specific abstractions such as DSLs and component models is proposed.
 The approach consists primarily in a DSL to define profilers and a profiler generator which targets heap memory exploration mechanisms such as the Java Virtual Machine Tool Interface (JVMTI).

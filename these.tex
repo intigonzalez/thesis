@@ -52,11 +52,15 @@
 \usepackage{pgfplotstable}
 \usetikzlibrary{arrows,shadows,patterns, external}
 
-\tikzexternalize[prefix=auto-figures/]
+\usepackage{multirow}
+
+%\tikzexternalize[prefix=auto-figures/]
 
 \usepackage[caption=false]{subfig}
 
 \usepackage{dblfloatfix}
+
+\usepackage[tikz]{bclogo}
 
 %\usepackage{todonotes}
 
@@ -87,6 +91,20 @@
 \noindent\makebox[\linewidth]{\rule{\textwidth}{2pt}}
 \vspace{0.3cm}
 }
+
+%
+% Command used to create notes that are not mandatory to read in order to understand the 
+% core contribution of the thesis
+%
+
+\newcommand{\extracomment}[2] {
+\vspace{0.2cm}
+\begin{bclogo}[arrondi=0.1, logo=\bccrayon]{#1}
+#2
+\end{bclogo}
+\vspace{0.2cm}
+} 
+
 
 %% macro/racourcis por les symboles et commandes usuelles
 \input{./macro}
