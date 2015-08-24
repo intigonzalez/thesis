@@ -1,0 +1,80 @@
+\section{Introduction}\label{sec:intro}
+%\assignedtodo{Olivier}{Improve (add and update) bibliography}
+
+Modern computing systems, such as home automation, pervasive and ubiquitous systems are becoming a larger part of our lives.
+The tight connection with our living environment introduces new needs for these systems, such as the co-evolution of the system with its environment~\cite{rouvoy2009music}, the adaptation of the system to available resources~\cite{poladian2004dynamic} and to users' behaviors~\cite{kakousis2010survey}, and the reliability of the system in front of faulty or malicious behaviors~\cite{ghosh2007self}.
+Modern component frameworks assist software developers in coping with these new needs by providing introspection, reconfiguration, advanced technical services, among other facilities~\cite{garlan2004rainbow}.
+These frameworks provide extensible middleware and assist developers in managing technical issues such as security, transaction management, or distributed computing.
+They also support the simultaneous execution of multiple software components on the same virtual machine \cite{OSGI:r5,Kevoree,bruneton06}.
+% layer based ?
+
+While component frameworks simplify the programming model for software developers~\cite{heineman2001component}, the isolation between the various components is limited because they are collocated on the same virtual machine~\cite{geoffray2009jvm}.
+This allows components to communicate efficiently and to share references to complex objects, something which is generally not possible when crossing the process boundary.
+However, one faulty software artifact may compromise the whole system by, for example, consuming all available resources on the machine.
+Furthermore, because these systems evolve in open environments where humans have central roles, software developers are unable to anticipate all future configurations of the application  at design-time \cite{baresi2006toward}.
+In these highly unpredictable environments, detecting irregular behavior and maintaining the system in a consistent state is an important concern that can be addressed through continuous monitoring.
+
+State of the art monitoring systems \cite{FrenotS04,KregerHaroldWilliamson03,Binder200645} extract steady data-flows of system parameters, such as the time spent executing a component, the amount of I/O and memory used, and the number of calls to a component.
+The overhead that these monitoring systems introduce into applications is high, which makes it unlikely for them to be used in production systems.
+Results presented in \cite{Binder:2009:PPV:1464245.1464249} show that overhead due to fine-grain monitoring systems can be up to a factor of 4.3.
+Our experiments, presented in this paper, show that overhead grows with the size of the monitored software.
+Thus, overhead greatly limits the scalability and usage of monitoring systems.
+
+In this paper, we address excessive overhead in monitoring approaches by introducing an optimistic adaptive monitoring system that provides lightweight global monitoring under normal conditions, and precise and localized monitoring when problems are detected.
+Although our approach reduces the accumulated amount of overhead in the system, it also introduces a delay in finding the source of a faulty behaviour.
+Our objective is to provide an acceptable trade-off between the overhead and the delay to identify the source of faulty behaviour in the system.
+Our approach targets component-models written in object-oriented languages, and it is only able to monitor the resource consumption of components running atop a single execution environment.
+In this paper, we discuss how we can leverage our proposal to provide the foundations for resource consumption monitoring in distributed environments. 
+
+Our optimistic adaptive monitoring system is based on the following principles:
+\begin{itemize}
+\leftskip -.2in % see comments below
+%\parindent -4in % see comments below
+ \item \textbf{Contract-based resource usage.}
+The monitoring system follows component-based software engineering principles. 
+Each component is augmented with a contract that specifies their expected or previously calculated resource usage~\cite{Beugnard:1999:MCC:619042.621275}. 
+The contracts specify how a component uses memory, I/O and CPU resources.
+ \item \textbf{Localized just-in-time injection and activation of monitoring probes.} 
+Under normal conditions our monitoring system performs a lightweight global monitoring of the system. 
+When a problem is detected at the global level, our system activates local monitoring probes on specific components in order to identify the source of the faulty behaviour.
+The probes are specifically synthesized according to the component's contract to limit their overhead.
+Thus, only the required data are monitored (e.g., only memory usage is monitored when a memory problem is detected), and only when needed.
+  \item \textbf{Heuristic-guided search of the problem source.} 
+We use a heuristic to reduce the delay of locating a faulty component while maintaining an acceptable overhead.
+This heuristic is used to inject and activate monitoring probes on the suspected components. 
+However, overhead and latency in finding the faulty component are greatly impacted by the precision of the heuristic.
+A heuristic that quickly locates faulty components will reduce both delays and the accumulated overhead of the monitoring system.
+We propose using Models@run.time techniques in order to build an efficient heuristic.
+%the precision of the heuristic has a big impact to select quickly the good component to monitor.
+%Our heuristic leverage the use of models@run.time by assigning a greater probability to recently updated components 
+%Our heuristic leverages the use of Models@Runtime, and begins by monitoring the most recently updated components since they are more likely to have introduced faulty behaviors.
+
+\end{itemize}
+
+%Our heuristic is based on ... 
+%The quality of the heuristic has a deep impact on the performance and the delay of our approach.
+%We have evaluated various heuristic to evaluate their quality in quickly spoting the right faulty components.
+The evaluation of our optimistic adaptive monitoring system shows that, in comparison to other state-of-the-art approaches, the overhead of the monitoring system is reduced by up to 92.98\%.
+%a reduction of the overhead in comparison to state-of-the-art monitoring systems by a factor of 80\%.
+Regarding latency, our heuristic reduces the delay to identify the faulty component when changing from global, lightweight monitoring to localized, just-in-time monitoring.
+%\todo{add a sentence about the second use case}
+We also present a use case to highlight the possibility of using Scapegoat on a real application, that shows how to automatically find buggy components on a scalable modular web application.
+
+The remainder of this paper is organized as follows.
+Section~\ref{sec:background} presents the background on Models@run.time and motivates our work through a case study which is used to validate the approach.
+Section~\ref{sec:approach} provides an overview of the Scapegoat framework.
+It highlights how the component contracts are specified, how monitoring probes are injected and activated on-demand, how the ScapeGoat framework enables the definition of heuristics to detect faulty components without activating all the probes, and how we benefit from Models@run.time to build efficient heuristics.
+Section~\ref{sec:evaluation} validates the approach through a comparison of detection precision and detection speed with other approaches.
+Section~\ref{sec:WebStudy} presents a use case based on an online web application\footnote{http://cloud.diversify-project.eu/} which leverages software diversity for safety and security purposes.
+In section~\ref{sec:discussion} highlights interesting points and ways to apply our approach to other contexts.
+Finally, section~\ref{sec:related} discusses related work and section~\ref{sec:conclusion} discusses the approach and presents our conclusion and future work.
+
+% Problème : Tradeoff précision/exhaustivité et overhead du monitoring. 
+
+% Problématique. Comment offrir une capacité à monitorer de telles applications qui offre un compromis entre précision de la détection et consommation de resource. 
+
+%Adaptive monitoring based on heuristic to detect efficiently (quick and precise) unregular component behavior. 
+
+%Software developpers have used these middlewares to produce various applications, some of which are quite huge and highly modular : \todo{XX} components are needed to start the \todo{XX} JEE server. \todo{have another examples in the context of pervasive.}
+
+%The growing size of these applications increases the chance of introducing faulty components when updating applications. 

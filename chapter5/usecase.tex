@@ -1,0 +1,29 @@
+\subsection{Motivating example\label{sec:motivatingexample}}
+
+In this section we present a motivating example for the use of an optimistic adaptive monitoring process in the context of a real-time crisis management system in a fire department. 
+During a dangerous event, many firefighters are present and need to collaborate to achieve common goals.
+%In a situation where many firefighters are present and need to collaborate to handle a dangerous event, 
+Firefighters have to coordinate among themselves and commanding officers need to have an accurate real-time view of the system.
+
+The Daum project\footnote{\url{https://github.com/daumproject}} provides a software application that supports firefighters in these situations.
+The application runs on devices with limited computational resources because it must be mobile and taken on-site.
+%As the software have to be mobile to take it on site, it is running on devices with limited computation resources.
+It provides numerous services for firefighters depending on their role in the crisis. In this paper we focus on the two following roles:
+\begin{itemize}
+\leftskip -.2in
+ \item A collaborative functionality that allows commanding officers to follow and edit tactical operations. The firefighters' equipment include communicating sensors that report on their current conditions.
+ \item A drone control system which automatically launches a drone equipped with sensors and a camera to provide a different point-of-view on the current situation.
+\end{itemize}
+
+%\todo{I don't get this for example. It is not relate to the previous sentence.}For example, one service is related to firefighter information monitoring to know the location, activity and health status of each firefighter involved on the crisis but also to get some information on their environment (e.g. temperature, toxic gas). Another service is in charge of the management of victims. They must be redirected according to their needs.
+
+As is common in many software applications, the firefighter application may have a potentially infinite number of configurations. These configurations depend on the number of firefighters involved, the type of crisis, the available devices and equipment, among other parameters. 
+Thus, it is generally not possible to test all configurations to guarantee that the software will always function properly. 
+Consequently, instead of testing all configurations, there is a need to monitor the software's execution to detect faulty behaviours and prevent system crashes. 
+However, fine-grained monitoring of the application can have excessive overhead that makes it unsuitable with the application and the devices used in our example.
+Thus, there is a need for an accurate monitoring system that can find faulty components while reducing overhead.
+
+The Daum project has implemented the firefighter application using a Component Based Software Architecture.  The application makes extensive use of the Kevoree\footnote{\url{http://www.kevoree.org}\label{note:kevoree}} component model and runtime presented below.
+
+% Using our adaptive monitoring solution, we are able to reduce the overhead of the monitoring process keeping enough well response time to find faulty behaviors.
+

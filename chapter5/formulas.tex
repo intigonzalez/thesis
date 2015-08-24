@@ -1,0 +1,77 @@
+
+During adaptive monitoring, the monitoring system transits between either \textit{Global} lightweight monitoring (G) and \textit{All Components} or full monitoring (F), or Global and \textit{Specific} monitoring based on heuristics (H).
+We can describe the transitions back and forth as:
+\begin{subequations}
+\begin{align}
+G \rightarrow F \label{tA1}
+\\F \rightarrow G \label{tA2}
+\end{align}
+\end{subequations}
+\begin{subequations}
+\begin{align}
+G \rightarrow H \label{tH1}
+\\ H \rightarrow G \label{tH2}
+\end{align}
+\end{subequations}
+Different monitoring modes have different times to detect a failure.
+We denote by $T_{df}(F),T_{df}(G),T_{df}(M_x)$ the time to detect failure of full, global and subset monitoring respectively. 
+We know by construction that relations \eqref{dt0}, \eqref{dt1} and \eqref{dt2} hold.
+This means that full monitoring should detect both the existence of a fault and the source of a fault faster than adaptive monitoring because all components are continuously checked instead of just a lightweight global check\footnote{It should be noted that the lightweight global monitoring mode can only detect the existence of a fault but not the source of the fault. To detect the source of the fault, more intrusive, per-component monitoring is required}.
+However, there is no direct relationship between the two variants of adaptive monitoring (i.e., \eqref{dt1} and \eqref{dt2}) because the delay depends on the time needed to probe and instrument components (varies according to the number and size of classes), and the quality of the heuristic in targeting faulty components as quickly as possible.
+The former element affects the delay when \textit{all components} are instrumented.
+The latter depends on the ability of the heuristic to include the faulty component inside the set of suspected faulty components.
+\begin{subequations}
+\begin{align}
+T_{df}(F) \le T_{df}(G) \label{dt0}
+\\ T_{df}(F) \le T_{df}(G) + \sum_{i=0}^{j}(T_{trans}(C_i) + T_{df}(M_i)) \label{dt1}
+\\ T_{df}(F) \le T_{df}(G) + T_{trans}(all) + T_{df}(M_{all}) \label{dt2}
+\end{align}
+\end{subequations}
+%The experiments have shown the impact of monitoring policies over performance.
+Another important dimension is the global overhead of each policy on the running system.
+The following relations apply to this dimension.
+Relation \eqref{overheadRelations1} is true because Full monitoring is always costlier than lightweight Global monitoring.
+Relations \eqref{overheadRelations2} and \eqref{overheadRelations3} are true if a single faulty behaviour occurs during the execution of the application.
+However, these relations do not apply when the number of failures and the number of transitions grow.
+It is also impossible to establish a relation between the two adaptive monitoring policies because, once again, it depends on the size of the application and the quality of the heuristic in quickly finding the source of faults. 
+\begin{subequations}
+\begin{align} 
+ O(F) > O(G) \label{overheadRelations1}
+\\ O(F) > O(G) + O_{trans}(all) + O(M_{all}) \label{overheadRelations2}
+\\ O(F) > O(G) + \sum_{i=0}^{j}(O_{trans}(C_i) + O(M_i)) \label{overheadRelations3}
+\end{align}
+\end{subequations}
+Only relationship \eqref{overheadRelations1} is independent of the application.
+The other relationships depend on time.
+We can express overhead as a time dependent function.
+For instance, let $O_F(t)$,  $O_A(t)$ be the overhead in the application due to Full monitoring and Adaptive monitoring with all components respectively.
+Where: 
+\begin{equation*}
+O_F(t)\approx const
+\end{equation*}
+\begin{equation*} 
+O_A(t) = 
+	\begin{cases}
+   		O(G) & \text{if in G state} \\
+   		O_{trans}(all) & \text{if changing state in t} \\
+   		O(M_{all})=O(F) & \text{if in A state}
+  	\end{cases} 
+\end{equation*}
+The integral expresses the overhead in a given amount of time.
+The relation \eqref{eq:overhead-time} is true under two conditions.
+On the one hand, if time spent in global monitoring is bigger than time spent in other states.
+On the other hand, if the overhead due to transitions is small.
+A similar analysis is applicable to adaptive monitoring based on heuristics.
+\begin{equation}
+\int O_F(t)\,dt > \int O_A(t)\,dt \label{eq:overhead-time}
+\end{equation}
+The first condition is reasonably met through the two following factors.
+First, we can expect that most applications have few failures in comparison to the global execution time of the application.
+Second, the application container should provide an adaptation mechanism to remove the source of failure when a contract violation is identified.
+This adaptation would allow the system to transition back into global monitoring.
+
+Following the previous analysis we can conclude that the overhead of the monitoring framework depends on the following factors: the time spent in global monitoring, the number of transitions performed to intrusive monitoring, the quality of the heuristic, and the size of the application.
+Likewise, the quality of the heuristic and the size of the application affect the delay to detect failures.
+%We can now see that the behavior of \textit{all monitoring} strategy is due to the hostile execution environment we are using.
+%The behavior change completely if we introduce an adaptation mechanism to remove the faulty component instead of allowing the its uncontrolled execution.
+

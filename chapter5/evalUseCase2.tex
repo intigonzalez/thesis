@@ -16,7 +16,7 @@ The web application is currently online\footnote{http://cloud.diversify-project.
 
 \begin{figure*}[!bt]
 	\centering
-	\includegraphics[scale=0.45]{chapter5/figures/webapp}
+	\includegraphics[scale=0.45]{./chapter5/figures/webapp2}
 	\caption{\label{fig:webapp}Architecture of MdMS along with Scapegoat and additional components to adapt th system.}
 \end{figure*}
 
@@ -87,7 +87,7 @@ On average, the overhead due to monitoring with both instruction instrumentation
 The values in this section are better even if we are monitoring both resources because we are using the adaptive approach.
    
 
-\input{chapter5/webAppResults}
+\input{./chapter5/webAppResults}
 
 In these experiments, we evaluate the accuracy of the output and its quality in terms of the time needed to find the faulty component.
 ScapeGoat always spots the correct \textit{sosie}.
@@ -99,7 +99,6 @@ This behavior is consistent with the experiments in section~\ref{sec:evaluation}
 It shows that ScapeGoat can spot faulty components with an acceptable delay in a real application.
 
 \subsection{Discussion of the use case}
-%\todo{do something here. JOHANN}
 This use case shows that ScapeGoat is able to provide useful information in real applications.
 It also highlights how the framework can help select software variants at runtime in the context of software diversity.
 Or, more generally, in the field of software oriented architectures where many stakeholders may provide the same services, Scapegoat can help to choose services.

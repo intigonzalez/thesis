@@ -1,0 +1,50 @@
+\section{Discussion}\label{sec:discussion}
+
+%Using adaptive monitoring is no novelty by itself.
+In our proposal, the novelty lays on defining a set of conditions and devising a technical solution that allow us to safely
+change the granularity level of monitoring.
+Thanks to the existence of these conditions and monitoring technologies is possible to implement what we call \textit{optimistic monitoring}.
+It is then worth discussing whether it is possible to use the general idea of optimistic monitoring to observe applications' properties other than resource consumption.
+For instance, it would be useful to apply the general idea of our proposal to detect at runtime whether a system meets certain Quality of Service (QoS) requirements.
+To support the implementation of optimistic monitoring to observe a given property, such a property must meet the following necessary conditions:
+\begin{itemize}
+\item \textbf{Many monitoring technologies exist}. There exists more than one technology to monitor the property and they produce different performance overhead on the application execution.
+For instance, in our framework we provide lightweight global monitoring based on the Java Management API~\footnote{http://docs.oracle.com/javase/7/docs/api/java/lang/management/package-summary.html}, and 
+a more heavy monitoring method based on bytecode instrumentation.
+
+\item \textbf{Monitoring technologies are replaceable at runtime}. It is possible to turn on/off a monitoring technology many times during the execution of an application.
+Moreover, the cost of these operations in term of performance overhead are \textit{acceptable}.
+For instance, in Java it is possible to activate/deactivate instruction instrumentation and doing so has a reasonable cost as we show in section~\ref{sec:evaluation}.
+On the contrary, it would not be possible to adapt the monitoring framework to deal with memory if only memory instrumentation was available.
+
+\item \textbf{Being optimistic makes sense}. It is reasonable to expect that the monitored property \textit{quite often} have values that we can monitor using a \textit{lightweight} technology.
+For instance, in the case of resource consumption monitoring we can expect that most misbehaviors would be detected during components' development.
+Hence, we only care about the specific consumption of each component once we detect a global problem.
+
+\item \textbf{Being optimistic and lazy does not make the system crash}. We must guarantee that no matter what monitoring technique is being used, we are always able to eventually detect a problem, and the detection happens on time to notify such an event to a manager in charge of fixing the system.
+For instance, as we show, switching among monitoring techniques might impact the time to detect what are the faulty components.
+However, our implementation makes the assumption that, once we detect a misuse of the CPU, we are able to switch fast enough to localized monitoring and we can still spot the faulty component consuming excessive CPU cycles. 
+
+\item \textbf{There are likely culprits}. We require a mechanism to \textit{easily} spot faulty components.
+This mechanism must be based on a sort of heuristic that minimizes the time required to detect the offenders.
+For instance, we show in section~\ref{sec:evaluation} how using a good heuristic greatly reduce the performance overhead and detection time.
+\end{itemize}
+
+This set of conditions might guide the implementation of a framework to monitor properties in reconfigurable software system.
+They are useful as questions to answer before attempting an implementation. 
+
+%\assignedtodo{Johann}{
+%* Modify the mechanism we use to compute initial contract as reviewer 3 suggested. (Instead of an experimental computation performed a priori, a learning-based approach can also improve the framework). Explain why not: we need an oracle.\\
+%}
+
+Properly defining contracts for each component is one of the most complicated requirements of our approach.
+Since we focus on finding whether a contract is violated at runtime, we consider it as a problem which is orthogonal to our approach, and we just assume the preexistence of such contracts.
+Nonetheless, we acknowledge than in practice is difficult to find the values to fill the kind of contract we refer to. The challenge when on of such contracts is being written is to figure out a consumption's upper bound which is close enough to the real consumption along the application execution. In this paper, we use a priori experimentation to build the contracts.
+To use this approach it is necessary to executed the components several time using the monitoring framework with full monitoring mode activated.  
+
+
+Another solution that can be used to infer the contract is the use of static analysis techniques to infer resource usage contract~\cite{Pasquale93,hofmann2003static,jost2010static}. Such techniques can be used only if we are in a white-box component application where we can get access to component source code.  
+
+Finally, this problem of contract can be reversed and we can use ScapeGoat to check contract correctness. Indeed, in an open-world system when we integrate existing piece of software together, it is well known that design by contract~\cite{meyer1992applying} was an important contribution to avoid software integration issue~\cite{jazequel1997design}. In that trend, contracts can also be seen as specification for reuse. Like other specifications, they will often be handwritten by humans. As these contracts will be used to check components assembly correctness, it is required that these contracts are correct. In this context, ScapeGoat can also be used to detect inconsistencies between component implementation and component contracts. When ScapeGoat detects a problem, it can come from an implementation error but it can also highlight a component contract bug. 
+
+

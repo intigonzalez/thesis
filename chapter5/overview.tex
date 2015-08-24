@@ -1,0 +1,51 @@
+\section{Overview of the approach}
+
+
+\subsection{Kevoree at a glance}
+% Se proteger un peu plus sur Kevoree pour big node / placer plus de ref / comparaison ?
+\noindent Kevoree is an open-source dynamic component model,\footnoteremember{kevoree}{http://www.kevoree.org\label{note:kevoree}} which relies on models at runtime~\cite{BlairBF09} to properly support the dynamic adaptation of distributed systems. Models@runtime basically pushes the idea of reflection~\cite{morin09a} one step further by considering the reflection layer as a real model that can be uncoupled from the running architecture (e.g. for reasoning, validation, and simulation purposes) and later automatically resynchronized with its running
+instance. 
+% Current Models@run.time approaches~\cite{models@runtime} provide higher-level abstractions and control on top of existing component-based platforms running on powerful nodes (Java-based), with no real support for distribution. Kevoree, as described in the following sub-sections, provides a solution to address the distributed and sporadic environment typically encountered in IoT infrastructures.
+
+
+ Kevoree has been influenced by previous work that we carried out in the DiVA project~\cite{morin09a}.
+With Kevoree we push our vision of Models@run.time~\cite{morin09f} farther.  
+In particular, Kevoree provides a proper support for distributed Models@run.time. 
+To this aim we introduce the \emph{Node} concept to model the infrastructure topology and the \emph{Group} concept to model semantics of inter node communication during synchronization of the reflection model among nodes.
+Kevoree includes a \emph{Channel} concept to allow for multiple communication semantics between remote\emph{Components} deployed on heterogeneous nodes. 
+All Kevoree concepts (Component, Channel, Node, Group) obey the object type design pattern~\cite{johnson_type_1997} to separate deployment artifacts from running artifacts.  
+Kevoree supports multiple kinds of execution node technology (e.g.~Java, Android, MiniCloud, FreeBSD, Arduino, \dots\footnoterecall{kevoree}). 
+
+
+\subsection{Dynamic Adaptation with Kevoree}
+Kevoree aims at providing advanced adaptation capabilities to different types of nodes:
+\begin{itemize}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+\item 
+\noindent{\bf Level 1: Parametric adaptation.} Dynamic update of parameter values, e.g. change of sampling rate in a component that wraps a physical sensor (adaptation of instance properties).
+
+\item 
+\noindent{\bf Level 2: Architectural adaptation.} Dynamic addition or removal of bindings or components, e.g. replication of software components and channels on different nodes to perform load balancing (adaptation of instances graph).
+
+\item 
+\noindent{\bf Level 3: Dynamic provisioning of types.} Hot deployment of component types that were not foreseen before the initial deployment of the system. 
+This allows for system evolution by enabling parametric and architectural reconfigurations, including management of instances for types that are added and managed dynamically (adaptation of types).
+
+\item 
+\noindent{\bf Level 4: Adaptation for remote management.} Nodes supporting level~4 adaptation participate in a remote management layer, which supervises less powerful nodes. 
+This layer monitors remote nodes by requesting their current Kevoree model;
+the layer triggers dynamic adaptation of nodes by sending precomputed reconfiguration scripts to them. 
+This remote adaptation process supports seamless management of less powerful nodes by a more powerful one, which has enough resources to build and evaluate new and appropriate  configurations.
+\end{itemize}
+
+The adaptation engine relies on a model comparison between two Kevoree models to compute a  script for a safe system reconfiguration;
+execution of this script brings the system from its current configuration to the new selected configuration~\cite{morin09a}. 
+Model comparison yields  a delta-model defining changes (using CRUD operations) that should be applied on the source model to obtain the target model. 
+Planification algorithms~\cite{daubert} use this delta-model as input in order to defined an efficient schedule of the adaptation steps. 
+The delta-model is finally compiled into a Kevoree script. 
+The Kevoree Script language (KevScript for short) is a core language for describing reconfiguration.
+KevScript  is comparable to FScript for Fractal Component Model~\cite{DBLP:journals/adt/DavidLLC09}. 
+Execution of a KevScript directly adapts a Kevoree system, without the need for  a full Kevoree model definition. 
+Such adaptation scripts are written by designers, or they can be generated  by automated processes ({\em e.g.} within a  control loop managing the Kevoree system).

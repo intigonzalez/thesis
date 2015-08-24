@@ -1,28 +1,6 @@
 \section{Background and motivating example}\label{sec:background}
 
-\subsection{Motivating example\label{sec:motivatingexample}}
-
-In this section we present a motivating example for the use of an optimistic adaptive monitoring process in the context of a real-time crisis management system in a fire department. 
-During a dangerous event, many firefighters are present and need to collaborate to achieve common goals.
-Firefighters have to coordinate among themselves and commanding officers need to have an accurate real-time view of the system.
-
-The Daum project\footnote{\url{https://github.com/daumproject}} provides a software application that supports firefighters in these situations.
-The application runs on devices with limited computational resources because it must be mobile and taken on-site.
-It provides numerous services for firefighters depending on their role in the crisis. In this paper we focus on the two following roles:
-\begin{itemize}
-\leftskip -.2in
- \item A collaborative functionality that allows commanding officers to follow and edit tactical operations. The firefighters' equipment include communicating sensors that report on their current conditions.
- \item A drone control system which automatically launches a drone equipped with sensors and a camera to provide a different point-of-view on the current situation.
-\end{itemize}
-
-As is common in many software applications, the firefighter application may have a potentially infinite number of configurations. These configurations depend on the number of firefighters involved, the type of crisis, the available devices and equipment, among other parameters. 
-Thus, it is generally not possible to test all configurations to guarantee that the software will always function properly. 
-Consequently, instead of testing all configurations, there is a need to monitor the software's execution to detect faulty behaviours and prevent system crashes. 
-However, fine-grained monitoring of the application can have excessive overhead that makes it unsuitable with the application and the devices used in our example.
-Thus, there is a need for an accurate monitoring system that can find faulty components while reducing overhead.
-
-The Daum project has implemented the firefighter application using a Component Based Software Architecture.  The application makes extensive use of the Kevoree\footnote{\url{http://www.kevoree.org}\label{note:kevoree}} component model and runtime presented below.
-
+\input{./chapter5/usecase.tex}
 
 \subsection{Kevoree}
 Kevoree is an open-source dynamic component platform, which relies on Models@run.time~\cite{BlairBF09} to properly support the dynamic adaptation of distributed systems.
@@ -32,11 +10,17 @@ The following subsections detail the background on component-based software arch
 \subsubsection{Component-based software architecture}
 
 Software architecture aims at reducing complexity through abstraction and separation of concerns by providing a common understanding of component, connector and configuration~\cite{xadl,Medvidovic:2000,VanOmmering-et-al-00}.
-One of the benefits is that it facilitates the management of dynamic architectures, which becomes a primary concern in the Future Internet and Cyber-Physical Systems~\cite{DBLP:journals/ase/NittoGMPP08}.
-Such systems demand techniques that let software react to changes by self-organizing its structure and self-adapting its behaviour. Many works~\cite{cbse-conference} have shown the benefits of using component-based approaches in such open-world environments~\cite{baresi2006toward}.
+One of the benefits is that it facilitates the management of dynamic architectures, which becomes a primary concern in the Future Internet and Cyber-Physical Systems~\cite{DBLP:journals/ase/NittoGMPP08, Johnson:2015:CSM:2735960.2735979}.
+Such systems demand techniques that let software react to changes by self-organizing its structure and self-adapting its behavior~\cite{PanzicaLaManna:2012:LDU:2304736.2304764, Johnson:2015:CSM:2735960.2735979, Zhang:2009:MVD:1509239.1509262}.
+Many works~\cite{cbse-conference} have shown the benefits of using component-based approaches in such open-world environments~\cite{baresi2006toward, Caporuscio:2010:AIA:1985522.1985547, Perez-Palacin:2010:PAO:1712605.1712614}.
 
-To satisfy the needs for adaptation, several component models provide solutions to dynamically reconfigure a software architecture through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components. 
-In practice, component-based (and/or service-based) platforms like Fractal~\cite{bruneton06}, OpenCOM~\cite{Coulson04acomponent}, OSGi~\cite{OSGI:r5} or SCA~\cite{SEINTURIER:2011:INRIA-00567442:1} provide platform mechanisms to support dynamic architectures.
+To satisfy the needs for adaptation, several component models provide solutions to dynamically reconfigure a software architecture through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components~\cite{Porter:2014:RMC:2602458.2602471, Zheng:2014:RCC:2679601.2680405, Irmert:2008:RAS:1370018.1370036, Ghezzi:2010:QDD:2163764.2163774}. 
+In practice, component-based (and/or service-based) platforms like Fractal~\cite{bruneton06}, OpenCOM~\cite{BlairCULJ04}, OSGi~\cite{OSGI:r5} or SCA~\cite{SEINTURIER:2011:INRIA-00567442:1} provide platform mechanisms to support dynamic architectures.
+
+%As a result, component-based platforms offer a challenging playground for building adaptive monitoring framework as they raise a new challenge in easing the open-world paradigm and they can be an element of the solution. 
+
+%In this context, traditional software development, based on the closed-world assumption that the  boundary between system and environment is known and unchanging does not work.
+
 
 \subsubsection{Models@run.time}
 Built on top of dynamic component frameworks, Models@run.time denote model-driven approaches that aim at taming the complexity of dynamic adaptation.
@@ -47,7 +31,11 @@ In other words, the ``model at runtime'' is a reflection model that can be decou
 This model can not only manage the application's structural information (i.e., the architecture), but can also be populated with behavioural information from the specification or the runtime monitoring data.
 
 
-\subsubsection*{The Kevoree framework\label{sec:kevoree}}	
+\subsubsection{The Kevoree framework\label{sec:kevoree}}	
+% Se proteger un peu plus sur Kevoree pour big node / placer plus de ref / comparaison ?
+%Language
+
+%\todo{THIS SECTION IS VERY UNCLEAR!!!}
 
 Kevoree provides multiple concepts that are used to create a distributed application that allows dynamic adaptation. The \emph{Node} concept is used to model the infrastructure topology and the \emph{Group} concept is used to model the semantics of inter-node communication, particularly when synchronizing the reflection model among nodes. 
 Kevoree includes a \emph{Channel} concept to allow for different communication semantics between remote \emph{Components} deployed on heterogeneous nodes. 
@@ -58,8 +46,13 @@ Kevoree supports multiple execution platforms (e.g.,~Java, Android, MiniCloud, F
 %Tools
 Moreover, Kevoree comes with a set of tools for building dynamic applications (a graphical editor to visualize and edit configurations, a textual language to express reconfigurations, several checkers to valid configurations). 
 
+%The remainder of this section describes the main concepts of the Kevoree component model that are useful to understand the scapegoat approach.
+%\todo{One sentence to explicit how Kevoree and Model@Runtime help the development of our approach}
+
 As a result, Kevoree provides a promising environment by facilitating the implementation of dynamically reconfigurable applications in the context of an open-world environment.
 Because our goal is to design and implement an adaptive monitoring system, the introspection and the dynamic reconfiguration facilities offered by Kevoree suit the needs of the ScapeGoat framework.
+%As a result, component-based platforms offer a challenging playground for building adaptive monitoring framework as they raise a new challenge in easing the open-world paradigm and they can be an element of the solution. 
+
 
 
 %\subsection{Dynamic Adaptation with Kevoree}
