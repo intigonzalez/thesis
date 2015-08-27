@@ -1,43 +1,126 @@
 %------------------------------%
 \selectlanguage{english}
-\chapter{Abstraction and resource management}
+\chapter{Abstraction-oriented resource awareness}
 \label{chap:abstractions_and_resource_management}
-\markboth{Abstraction and resource management}{Chapter2}
+\markboth{Abstraction-oriented resource awareness}{Chapter2}
 %------------------------------%
 
 \coolphrase {Hey, look at this}{Inti Gonzalez-Herrera}
 
-\section{CBSE and Resource Aware}
+Defining and using abstractions is a main part of building software products.
+New abstractions are usually layered atop existent software systems in order to fulfill specific goals
+- ease development, improve security, provide extensibility.
+Often, these abstractions can be seen as isolated software entities that consume computational resources (e.g., process, thread).
+Since abstractions are the building block of applications, it is of utmost importance to control their behavior regarding resource usage.
+  
+This chapter describes two abstractions that are frequently used on top of MRTEs: components (section \ref{sec:components-oriented-resource-awareness}), and domain-specific languages (DSLs) (section \ref{sec:DSL-on-MRTEs})
+Comprehensive discussions, on how these abstractions consume resources, are presented.
+In particular, we are interested on two phenomenons.
+First, we tackle (section \ref{sec:component-leverage}) the issue of how we can leverage component-based architectures, to reduce the overhead of dealing with resources, by specializing resource management techniques.
+
+Second, since new abstractions are constantly created nowadays, having generic and efficient mechanisms for controlling how they use resources may simplify the process of providing resource awareness support.
+We then present the state of the art on supporting some forms of resource accounting for arbitrary abstractions (section \ref{sec:resource-awareness-for-dsl}).
+
+\section{Developer's View versus Runtime's View} \label{sec:chapter2-introduction}
+
+As mentioned, building abstractions is at the core of software development.
+They are meant to tackle a large number of problems in software engineering, ranging from providing better representation of the business logic to supporting application's extensibility.
+Interestingly, abstractions are not built from scratch; instead, they are implemented upon other abstractions provided by the runtime environment.
+This leads to the well-known layered architecture where complex features are created using more simple concepts.
+In th field of operating systems, processes are built relying on low-level concepts such as hardware interrupts, context-switch, and MMU hardware.
+In the area of programming languages, recursive routines are implemented upon basic hardware stack manipulation.
+
+The beauty of abstractions lies on the fact that they are meant to be blindly used.
+In other words, once a new abstraction is implemented and its invariants defined, you can use it without a complete understanding of the implementation details.
+Nevertheless, this has profound implications on the software development process because, from the moment a new abstraction is used, developers start thinking in abstraction's terms.
+For instance, showing only plain assembler instructions while debugging applications is no longer good choice once you start coding your applications in a language that includes high-level concepts such as routines, loops, and conditional-statements.
+In the same way, when a profiler is used to check the memory consumption of Java-based applications, the data produced is expected to reflect terms such as \textit{object} and \textit{class}.
+To summarize, tools such as editors, debuggers, and profilers must be updated to make them aware of each new abstraction introduced in the development cycle.
+In this thesis we say that a mismatch exists, between the developer's view and the tooling's view, when the concepts managed by the developers are not clearly reflected in the tools.
+
+In using MRTEs to develop and run applications, this kind of mismatch often occurs.
+A couple of illustrative examples are give below.
+
+Usually, many OSGi bundles are deployed on top of a single JVM instance.
+Due to the communication mechanism used in OSGi, where objects are routinely shared, it is complex to decide which bundle should be accounted for the consumption of a particular object.
+As a consequence, monitoring per-bundle memory consumption is not straightforward. 
+A possible solution is deciding that an object $O$ is being consumed by a bundle if $O$'s class was loaded using the classloader $C$ associated with such a bundle.
+Since we know how to represent a bundle using Java concepts, this solution is feasible.
+Given the widespread usage of OSGi, memory profilers often support collecting data on per-bundle memory usage.
+However, similar abstractions (components models), equally implemented atop of Java, are not properly supported by such tooling support.
+Hence, data must be manually aggregated when an application using a poorly supported abstraction is profiled.
+
+Many of the newly designed DSls are built on top of existing object-oriented languages runtime such as the JVM. 
+Therefore, people in charge of optimizing, debugging and maintaining software applications can use the existing debugger and profilers of these platforms. 
+However, there is clear mismatch between the classical profilers used in object-oriented systems and the newly designed languages. 
+Indeed, the concepts introduced in these new DSLs may not exhibit a straightforward mapping to the underlying object-oriented system.
+As a consequence, it may be time consuming and complex to use a classical profiler to check applications that are based on these new languages.
+
+\section{Component-oriented Resource Awareness} \label{sec:components-oriented-resource-awareness}
+
+Software architecture aims at reducing complexity through abstraction and separation of concerns by providing a common understanding of component, connector and configuration~\cite{xadl,Medvidovic:2000,VanOmmering-et-al-00}.
+One of the benefits is that it facilitates the management of dynamic architectures, which becomes a primary concern in the Future Internet and Cyber-Physical Systems~\cite{DBLP:journals/ase/NittoGMPP08, Johnson:2015:CSM:2735960.2735979}.
+Such systems demand techniques that let software react to changes by self-organizing its structure and self-adapting its behavior~\cite{PanzicaLaManna:2012:LDU:2304736.2304764, Johnson:2015:CSM:2735960.2735979, Zhang:2009:MVD:1509239.1509262}.
+Many works~\cite{cbse-conference} have shown the benefits of using component-based approaches in such open-world environments~\cite{baresi2006toward, Caporuscio:2010:AIA:1985522.1985547, Perez-Palacin:2010:PAO:1712605.1712614}.
+
+To satisfy the needs for adaptation, several component models provide solutions to dynamically reconfigure a software architecture through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components~\cite{Porter:2014:RMC:2602458.2602471, Zheng:2014:RCC:2679601.2680405, Irmert:2008:RAS:1370018.1370036, Ghezzi:2010:QDD:2163764.2163774}. 
+In practice, component-based (and/or service-based) platforms like Fractal~\cite{bruneton06}, OpenCOM~\cite{BlairCULJ04}, OSGi~\cite{OSGI:r5} or SCA~\cite{SEINTURIER:2011:INRIA-00567442:1} provide platform mechanisms to support dynamic architectures.
 
 
-Discutir aqui que problemas nuevos surgen cuando se quiere hacer resource management en component-basedsystems. Por ejemplo, a quien se le asigna el consumo.
+\begin{quote}
+\textit{[\dots] software components are executable units of independent production, 
+acquisition, and deployment that can be composed into a functioning system.
+To enable composition, a software component adheres to a particular component
+model and targets a particular component platform.
+}
+\end{quote}
 
-To be specific, for the purposes of this book, software components
-are executable units of independent production, acquisition, and deployment
-that can be composed into a functioning system. To enable composition, a
-software component adheres to a particular component model and targets a
-particular component platform.
+\subsection{Component Models}
+\subsubsection{EJB}
+\subsubsection{Fractal}
+\subsubsection{OSGi}
+\subsubsection{ROBOcop}
+\subsubsection{Kevoree}
 
-By enforcing a strict separation between interface and implementation and by making software
-architecture explicit, component-based programming can facilitate the implementation and
-maintenance of complex software systems [1]. Indeed, these two principles form the basis for two
-essential properties: adaptability and manageability. Their role as units of software deployment and
-configuration in particular, are well understood: they allow for pre-runtime adaptation in order to
-suit arbitrary deployment environments (construction of dedicated software infrastructures), evolution
-in requirements and technical evolution (maintenance), and organizational evolution (integration,
-interoperation). When seen as runtime structures, components can serve as the basis for software
-reconfiguration. By fully delineating subsystem boundaries, they provide a natural scope for
-reconfiguration actions and a natural target for system instrumentation and supervision. Coupled with
-the use of meta-programming techniques, component-based programming can hide from application
-programmers some of the complexity inherent in the handling of non-functional aspects in a software
-system, such as distribution and fault tolerance, as exemplified by the container concept in Enterprise
-Java Beans (EJB), CORBA Component Model (CCM), or Microsoft .Net
+Built on top of dynamic component frameworks, Models@run.time denote model-driven approaches that aim at taming the complexity of dynamic adaptation.
+It basically pushes the idea of reflection~\cite{morin09a} one step further by considering the reflection-layer as a real model: ``something simpler, safer or cheaper than reality to avoid the complexity, danger and irreversibility of reality''.
+In practice, component-based and service-based platforms offer reflection APIs that allow instrospecting the application (e.g., which components and bindings are currently in place in the system) and dynamic adaptation (e.g., changing the current components and bindings).
+While some of these platforms offer rollback mechanisms to recover after an erroneous adaptation~\cite{leger2010reliable}, the purpose of Models@run.time is to prevent the system from actually enacting an erroneous adaptation. 
+In other words, the ``model at runtime'' is a reflection model that can be decoupled from the application (for reasoning, validation, and simulation purposes) and then automatically resynchronized.
+This model can not only manage the application's structural information (i.e., the architecture), but can also be populated with behavioural information from the specification or the runtime monitoring data.
 
-It is likely that components of different qualities (level of performance, resource efficiency,
-robustness, degree of certification, and so on) will be available at different
-prices.
+Kevoree provides multiple concepts that are used to create a distributed application that allows dynamic adaptation. The \emph{Node} concept is used to model the infrastructure topology and the \emph{Group} concept is used to model the semantics of inter-node communication, particularly when synchronizing the reflection model among nodes. 
+Kevoree includes a \emph{Channel} concept to allow for different communication semantics between remote \emph{Components} deployed on heterogeneous nodes. 
+All Kevoree concepts (\textit{Component}, \textit{Channel}, \textit{Node}, \textit{Group}) obey the object type design pattern~\cite{johnson_type_1997} in order to separate deployment artifacts from running artifacts.  
 
-\section{Query languages about memory management}
+%Platforms
+Kevoree supports multiple execution platforms (e.g.,~Java, Android, MiniCloud, FreeBSD, Arduino). For each target platform it provides a specific runtime container. 
+%Tools
+Moreover, Kevoree comes with a set of tools for building dynamic applications (a graphical editor to visualize and edit configurations, a textual language to express reconfigurations, several checkers to valid configurations). 
+
+As a result, Kevoree provides a promising environment by facilitating the implementation of dynamically reconfigurable applications in the context of an open-world environment.
+Because our goal is to design and implement an adaptive monitoring system, the introspection and the dynamic reconfiguration facilities offered by Kevoree suit the needs of the ScapeGoat framework.
+
+
+\subsection{Extra-functional Properties}
+\begin{itemize}
+\item Describe las diferentes categorias mencionadas por Ivica.
+\item Describe el problema de conteo indirecto contra directo.
+\item Describe la cuestion del contrato
+\end{itemize}
+\section{State of the art of resource management for components} \label{sec:component-leverage}
+\begin{itemize}
+\item Describe las soluciones de kouther
+\item ver que mas se puede describir
+\end{itemize}
+
+\section{Domain-Specific Languages and MRTEs} \label{sec:DSL-on-MRTEs}
+
+\section{Resource Awareness for Domain-specific Abstractions} \label{sec:resource-awareness-for-dsl}
+
+\subsection{Languages to deal with resource aware}
+
+\subsection{Query languages about memory management}
 
 \begin{enumerate}
 \item DiSL: a domain-specific language for bytecode instrumentation, Marek, Villazon, Zheng, Ansaloni, Binder, Qi, AOSD'12
@@ -61,4 +144,26 @@ prices.
 
 
 
-\section{Languages to deal with resource aware}
+\section{Conclusions}
+
+Discutir aqui que problemas nuevos surgen cuando se quiere hacer resource management en component-based systems. Por ejemplo, a quien se le asigna el consumo.
+
+By enforcing a strict separation between interface and implementation and by making software
+architecture explicit, component-based programming can facilitate the implementation and
+maintenance of complex software systems [1]. Indeed, these two principles form the basis for two
+essential properties: adaptability and manageability. Their role as units of software deployment and
+configuration in particular, are well understood: they allow for pre-runtime adaptation in order to
+suit arbitrary deployment environments (construction of dedicated software infrastructures), evolution
+in requirements and technical evolution (maintenance), and organizational evolution (integration,
+interoperation). When seen as runtime structures, components can serve as the basis for software
+reconfiguration. By fully delineating subsystem boundaries, they provide a natural scope for
+reconfiguration actions and a natural target for system instrumentation and supervision. Coupled with
+the use of meta-programming techniques, component-based programming can hide from application
+programmers some of the complexity inherent in the handling of non-functional aspects in a software
+system, such as distribution and fault tolerance, as exemplified by the container concept in Enterprise
+Java Beans (EJB), CORBA Component Model (CCM), or Microsoft .Net
+
+It is likely that components of different qualities (level of performance, resource efficiency,
+robustness, degree of certification, and so on) will be available at different
+prices.
+
