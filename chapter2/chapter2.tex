@@ -43,18 +43,35 @@ A couple of illustrative examples are give below.
 
 Usually, many OSGi bundles are deployed on top of a single JVM instance.
 Due to the communication mechanism used in OSGi, where objects are routinely shared, it is complex to decide which bundle should be accounted for the consumption of a particular object.
-As a consequence, monitoring per-bundle memory consumption is not straightforward. 
-A possible solution is deciding that an object $O$ is being consumed by a bundle if $O$'s class was loaded using the classloader $C$ associated with such a bundle.
-Since we know how to represent a bundle using Java concepts, this solution is feasible.
-Given the widespread usage of OSGi, memory profilers often support collecting data on per-bundle memory usage.
-However, similar abstractions (components models), equally implemented atop of Java, are not properly supported by such tooling support.
-Hence, data must be manually aggregated when an application using a poorly supported abstraction is profiled.
+A possible approach is deciding that an object $O$ is being consumed by a bundle if $O$'s class was loaded using the classloader $C$ associated with such a bundle.
+Then, we can use this mechanism to monitor per-bundle memory consumption. 
+However, a profiler must perform considerable amount of processing to collect such kind of data because it is not straightforwardly available in the JVM. 
+%Since we know how to represent a bundle using Java concepts, this solution is feasible.
+Given the widespread usage of OSGi, memory profilers often support collecting data regarding per-bundle memory usage.
+Unfortunately, similar abstractions (components models), equally implemented atop of Java, are often not properly supported by such tools because they are not as popular as OSGi.
+Hence, data must be manually aggregated when an application using a poorly supported abstraction is profiled; this is, of course, a considerable burden for developers.
 
-Many of the newly designed DSls are built on top of existing object-oriented languages runtime such as the JVM. 
+Many of the newly designed DSLs are built on top of existing object-oriented languages runtime such as the JVM. 
 Therefore, people in charge of optimizing, debugging and maintaining software applications can use the existing debugger and profilers of these platforms. 
-However, there is clear mismatch between the classical profilers used in object-oriented systems and the newly designed languages. 
+However, there is clear mismatch between classical profilers used in object-oriented systems and the newly designed languages. 
 Indeed, the concepts introduced in these new DSLs may not exhibit a straightforward mapping to the underlying object-oriented system.
 As a consequence, it may be time consuming and complex to use a classical profiler to check applications that are based on these new languages.
+
+For instance, active annotations allow developers to participate in the translation process of Xtend source code to Java code via library.
+Such mechanism is often used directly by developers to introduce their own abstraction or defining their own internal DSL. 
+For example, in the K3-AL\footnote{Available at https://github.com/diverse-project/k3/wiki} project, we use active annotations to create an open-class mechanism on top of Java \cite{Clifton:2000:MMO:353171.353181}. 
+As a result, the annotation processor change the program structure to implement this feature. 
+It adds some methods indirection (to $AASpect$), create new set of objects that represents the state of one conceptual object ($AASpectProperty$), use the Xtend extension method feature, etc\dots.
+Figure~\ref{fig:k3-diagram} shows the result of this translation process. 
+The left part illustrates the code written by the developer, the middle part shows the developer view (the code that can be written to use the open-class mechanism), the right part describes the runtime view.
+In this case, an instance of an open-class is not represented by a single JVM object; instead, it is represented by several scatter objects.  
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.9\linewidth]{chapter2/fig/famous}
+\caption{Translation process used for building developer abstraction using annotations}
+\label{fig:k3-diagram}
+\end{figure*}
 
 \section{Component-oriented Resource Awareness} \label{sec:components-oriented-resource-awareness}
 
@@ -78,6 +95,13 @@ model and targets a particular component platform.
 \subsection{Component Models}
 \subsubsection{EJB}
 \subsubsection{Fractal}
+This paper presents FRACTAL \cite{Bruneton:2006:FCM:1152333.1152345}, a hierarchical and reflective component model with sharing.
+Components in this model can be endowed with arbitrary reflective capabilities, from plain black-box objects to
+components that allow a fine-grained manipulation of their internal structure.
+The paper describes JULIA, a Java implementation of the model, a small but efficient runtime framework, which relies on
+a combination of interceptors and mixins for the programming of reflective features of components.
+The paper presents a qualitative and quantitative evaluation of this implementation, showing that
+component-based programming in FRACTAL can be made very efficient. 
 \subsubsection{OSGi}
 \subsubsection{ROBOcop}
 \subsubsection{Kevoree}
@@ -120,27 +144,155 @@ Because our goal is to design and implement an adaptive monitoring system, the i
 
 \subsection{Languages to deal with resource aware}
 
+\paragraph{DiSL: a domain-specific language for bytecode instrumentation, \cite{Marek:2012:DEL:2162037.2162046,Marek2012}}
+Dynamic program analysis tools support numerous software engineering tasks, including profiling, debugging, and re-
+verse engineering.
+Prevailing techniques for building dynamic analysis tools are based on low-level abstractions
+that make tool development tedious, error-prone, and expensive. To simplify the development of dynamic analysis tools,
+some researchers promoted the use of aspect-oriented programming (AOP). However, as mainstream AOP languages
+have not been designed to meet the requirements of dynamic analysis, the success of using AOP in this context remains
+limited. For example, in AspectJ, join points that are important for dynamic program analysis (e.g., the execution of
+bytecodes or basic blocks of code) are missing, access to reflective dynamic join point information is expensive, data
+passing between woven advice in local variables is not supported, and the mixing of low-level bytecode instrumentation
+and high-level AOP code is not foreseen. In this talk, we present DiSL [1], a new domain-specific aspect language for
+bytecode instrumentation.
+DiSL uses Java annotation syntax such that standard Java compilers can be used for compiling
+DiSL code. The language features an open join point model, novel constructs inspired by weave-time evaluation of
+conditional join points and by staged execution, and access to custom static and dynamic context information.
+Moreover, the DiSL weaver guarantees complete bytecode coverage.
+We have implemented several dynamic analysis tools in DiSL,
+including profilers for the inter- and intra-procedural control
+flow, debuggers, dynamic metrics collectors integrated in the
+Eclipse IDE to augment the static source views with dynamic information, and tools for workload characterization.
+These tools are concise and perform equally well as implementations using low-level techniques. DiSL has also been
+conceived as an intermediate language for future domain-specific analysis languages, as well as for AOP languages.
+
+\paragraph{Javana: A System for Building Customized Java Program Analysis Tools, \cite{Maebe06javana:a}}
+Understanding the behavior of applications running on high-level
+language virtual machines, as is the case in Java, is non-trivial because of the tight entanglement at the lowest execution level between the application and the virtual machine.
+
+This paper proposes Javana, a system for building Java program analysis tools.
+Javana provides an easy-to-use instrumentation infrastructure that allows
+for building customized profiling tools very quickly.
+Javana runs a dynamic binary instrumentation tool underneath
+the virtual machine. The virtual machine communicates with the
+instrumentation layer through an event handling mechanism for
+building a vertical map that links low-level native instruction pointers and memory addresses to high-level language concepts such as
+objects, methods, threads, lines of code, etc.
+The dynamic binary instrumentation tool then intercepts all memory accesses and instructions executed and provides the Javana end user with high-
+level language information for all memory accesses and natively
+executed instructions.
+
+We demonstrate the power of Javana through a number of applications: memory address tracing, vertical cache simulation and
+object lifetime computation.
+For each of these applications, the instrumentation specification requires only a small number of lines
+of code.
+Developing similarly powerful profiling tools within a virtual machine (as done in current practice) is both time-consuming
+and error-prone; in addition, the accuracy of the obtained profiling
+results might be questionable as we show in this paper.
+\paragraph{Flexible and efficient profiling with aspect-oriented programming, \cite{Binder:2006:FEM:1173706.1173733}}
+Many profilers for virtual execution environments, such as the Java virtual machine (JVM), are implemented with low-level bytecode instrumentation techniques, which is tedious, error-prone, and complicates maintenance and extension of the tools.
+In order to reduce the development time and cost, we promote building profilers for the JVM using high-level aspect-oriented programming (AOP).
+We show that the use of aspects yields concise profilers that are easy to develop, extend, and maintain, because low-level
+instrumentation details are hidden from the tool developer.
+In order to build efficient profilers, we introduce inter-advice communication, an extension to common AOP languages that enables efficient data passing
+between advices that are woven into the same method using local variables.
+We illustrate our approach with two case studies.
+First, we show that an existing, instrumentation-based tool for listener latency
+profiling can be easily recast as an aspect.
+Second, we present an aspect for comprehensive calling context profiling.
+In order to reduce profiling overhead, our aspect parallelizes application execution and profile
+creation, resulting in a speedup of 110\% on a machine with more than two cores, compared with a primitive, non-parallel approach
+\paragraph{A portable and customizable profiling framework for Java based on bytecode instruction counting, \cite{Binder2005}}
+Prevailing profilers for Java, which rely on standard, native-code profiling interfaces, are not portable, give imprecise results due to serious measurement perturbation, and cause excessive overheads.
+In contrast, program transformations allow to generate reproducible profiles in a fully portable way with significantly less overhead.
+This paper presents a profiling framework that instruments Java programs at the bytecode level to build context-sensitive execution profiles at runtime.
+The profiling framework includes an exact profiler as well as a sampling profiler.
+User-defined profiling agents can be written in pure Java, too, in order to customize the runtime processing of profiling data.
+\paragraph{Profiling with AspectJ, \cite{Pearce:2007:PA:1248445.1248448}}
+This paper investigates whether AspectJ can be used for efficient profiling of Java programs.
+Profiling differs from other applications of AOP (e.g. tracing), since it necessitates efficient and often complex
+interactions with the target program.
+As such, it was uncertain whether AspectJ could achieve this goal.
+Therefore, we investigate four common profiling problems (heap usage, object lifetime, wasted time and
+time-spent) and report on how well AspectJ handles them.
+For each, we provide an efficient implementation,
+discuss any trade-offs or limitations and present the results of an experimental evaluation into the costs
+of using it.
+Our conclusions are mixed. On the one hand, we find that AspectJ is sufficiently expressive
+to describe the four profiling problems and reasonably efficient in most cases.
+On the other hand, we find several limitations with the current AspectJ implementation that severely hamper its suitability for
+profiling.
+
+\paragraph{Controlled dynamic performance analysis, \cite{Reiss:2008:CDP:1383559.1383566}}
+We are interested in obtaining detailed performance information
+on-the-fly from long-running systems without adversely affecting
+the performance of the systems.
+We have developed a methodology consisting of a framework, DYPER, and a number of
+specialized agents called proflets each of which analyzes a
+different performance aspect.
+DYPER gathers performance information with a guaranteed maximum overhead that is
+dynamically settable by the programmer using priorities set by the
+proflets.
+Moreover, the type of information that the system can
+provide is generally only available for tools that generally have too
+much overhead to be usable in production or long-running
+systems.
+DYPER includes the ability to control and display
+performance data as the program is run.
+
+\paragraph{A meta-aspect protocol for developing dynamic analyses, \cite{Achenbach:2010:MPD:1939399.1939415} }
+Dynamic aspect-oriented programming has been widely used
+for the development of dynamic analyses to abstract over low-level program instrumentation.
+Due to particular feature requirements in different analysis domains like debugging or testing, many different aspect
+languages were developed from scratch or by extensive compiler or interpreter extensions.
+We introduce another level of abstraction in form of a meta-aspect protocol to separate the host language from the analysis
+domain.
+A language expert can use this protocol to tailor an analysis-specific aspect language, based on which a domain expert can develop
+a particular analysis.
+Our design enables a flexible specification of the join point model, configurability of aspect deployment and scoping, and
+extensibility of pointcut and advice language.
+We present the application of our design to different dynamic analysis domains.
+\paragraph{Comprehensive Profiling Support in the Java Virtual Machine. \cite{Liang1999}}
+Existing profilers for Java applications typically rely on custom instrumentation in the Java virtual machine, and measure only limited types of resource consumption. Garbage collection and multi-threading pose additional challenges to profiler design and implementation.
+
+In this paper we discuss a general-purpose, portable, and extensible approach for obtaining comprehensive profiling information from the Java virtual machine. Profilers based on this framework can uncover CPU usage hot spots, heavy memory allocation sites, unnecessary object retention, contended monitors, and thread deadlocks. In addition, we discuss a novel algorithm for thread-aware statistical CPU time profiling, a heap profiling technique independent of the garbage collection implementation, and support for interactive profiling with minimum overhead. 
+\paragraph{Profiling Field Initialisation in Java, \cite{Nelson2013}}
+\todo{No cre que sea muy bueno}
+Java encourages programmers to use constructor methods to
+initialise objects, supports final modifiers for documenting fields which
+are never modified and employs static checking to ensure such fields
+are only ever initialised inside constructors. Unkel and Lam observed
+that relatively few fields are actually declared final and showed using
+static analysis that many more fields have final behaviour, and even more
+fields are stationary (i.e. all writes occur before all reads). We present
+results from a runtime analysis of 14 real-world Java programs which
+not only replicates Unkel and Lam’s results, but suggests their analysis
+may have under-approximated the true figure. Our results indicate a
+remarkable 72-82% of fields are stationary, that final is poorly utilised by
+Java programmers, and that initialisation of immutable fields frequently
+occurs after constructor return. This suggests that the final modifier for
+fields does a poor job of supporting common programming practices.
+\paragraph{A dynamic optimization framework for a Java just-in-time compiler, \cite{Suganuma:2001:DOF:504311.504296}}
+The high performance implementation of Java Virtual Machines (JVM) and just-in-time (JIT) compilers is directed toward adaptive compilation optimizations on the basis of online runtime profile information. This paper describes the design and implementation of a dynamic optimization framework in a production-level Java JIT compiler. Our approach is to employ a mixed mode interpreter and a three level optimizing compiler, supporting quick, full, and special optimization, each of which has a different set of tradeoffs between compilation overhead and execution speed. a lightweight sampling profiler operates continuously during the entire program's exectuion. When necessary, detailed information on runtime behavior is collected by dynmiacally generating instrumentation code which can be installed to and uninstalled from the specified recompilation target code. Value profiling with this instrumentation mechanism allows fully automatic code specialization to be performed on the basis of specific parameter values or global data at the highest optimization level. The experimental results show that our approach offers high performance and a low code expansion ratio in both program startup and steady state measurements in comparison to the compile-only approach, and that the code specialization can also contribute modest performance improvement.
+
+\paragraph{Complete and Platform-Independent Calling Context Profiling for the Java Virtual Machine, \cite{Sarimbekov201161}}
+Calling context profiling collects statistics separately for each calling context. Complete calling context profiles that faithfully represent overall program execution are important for a sound analysis of program behavior, which in turn is important for program understanding, reverse engineering, and workload characterization. Many existing calling context profilers for Java rely on sampling or on incomplete instrumentation techniques, yielding incomplete profiles; others rely on Java Virtual Machine (JVM) modifications or work only with one specific JVM, thus compromising portability. In this paper we present a new calling context profiler for Java that reconciles completeness of the collected profiles and full compatibility with any standard JVM. In order to reduce measurement perturbation, our profiler collects platform-independent dynamic metrics, such as the number of method invocations and the number of executed bytecodes. In contrast to prevailing calling context profilers, our tool is able to distinguish between multiple call sites in a method and supports selective profiling of (the dynamic extent of) certain methods. We have evaluate the overhead introduced by our profiler with standard Java and Scala benchmarks on a range of different JVMs.
+
 \subsection{Query languages about memory management}
 
-\begin{enumerate}
-\item DiSL: a domain-specific language for bytecode instrumentation, Marek, Villazon, Zheng, Ansaloni, Binder, Qi, AOSD'12
+In DeAl~\cite{Reichenbach:2010:GCE:1869459.1869482}, the authors propose a language to compute heap assertions at garbage collection time.
+The language design is motivated by concerns of efficiency as our approach.
+There is however a large number of differences, first DeAl is only able to compute boolean outputs while our DSL is intended to produce arbitrary data type as output which also includes boolean values.
+DeAl is a purely declarative language while our DSL contains a much more complex execution model.
+In exchange for the declarative style and the focus on assertions, DeAl is able to guarantee formal properties about the computation that we cannot provide. 
 
-\item Flexible and efficient profiling with aspect-oriented programming, Binder, Ansaloni, Villazón and Moret, CPE, 2011
-
-\item A portable and customizable profiling framework for Java based on bytecode instruction counting, Binder, PLAS'05
-
-\item Profiling with AspectJ, Pearce, Webster, Berry and Kelly, SPE, 2007.
-
-\item Controlled dynamic performance analysis, Reiss, WOSP'08
-
-\item A meta-aspect protocol for developing dynamic analyses M Achenbach, K Ostermann, RV'10
-
-\item Comprehensive Profiling Support in the Java Virtual Machine. S Liang, D Viswanathan, COOTS'99
-
-\item Profiling Field Initialisation in Java, Nelson, Pearce, Noble, RV'13.
-
-\item A dynamic optimization framework for a Java just-in-time compiler, Toshio Suganuma, Yasue, Kawahito, Komatsu, Nakatani, OOSPLA'01.
-\end{enumerate}
+In~\cite{Xu:2013:PML:2491509.2491511} the authors propose a framework to detect memory leaks associated with Java containers.
+To do so, the framework explores the status of each container object with the goal of identifying leak patterns. The approach is based on finding objects which are keeping references to removed bundles. LeakBots~\cite{Mitchell03leakbot:an} is an automated tool to detect memory leaks. It makes heavy
+use of information recollected from the heap in order to identify the more likely structures leading to a leak.
+These tools collect data from the heap in order to automatically pinpoint a particular memory issue.
+The methods to collect the data are handwritten for efficiency reasons.
+Lots of data collected in these works is also available with our approach.
 
 
 
