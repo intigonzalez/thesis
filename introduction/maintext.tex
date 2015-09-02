@@ -36,21 +36,22 @@ To satisfy these requirements, the goal is that of making applications and execu
 This is even more relevant because often such requirements emerge together
 (e.g., \textit{smartphones} are resource-constrained devices providing an open executing environment).
 When an application includes features to react and modify its behavior after resource-related events occur, it is said to be resource-aware~\cite{Boldrini:2008:CRA:1549824.1550106,Peddemors:2007:NRA:1256316.1256338,Alhaisoni:2010:RTO:1664767.1664770,Polo:2011:RAS:2414338.2414352,Bulej:2012:PAC:2408860.2410068,autili2012hybrid}.
-A software system requires the appropriate runtime support to provide such features.   
-\textit{This thesis addresses the problem of supporting resource-aware programming in execution environments}.
-In particular, it aims at offering efficient support for collecting data about resource consumption, as well as efficient mechanisms to reserve resources for specific applications.
-
-Nowadays, middleware are regularly implemented using a managed runtime environment (MRTE) such as Java~\cite{Bruneton:2006:FCM:1152333.1152345,Fouquet:2014:DED:2602576.2611461,OracleEJB3.0,Becker:2010:PCM:1712605.1712651,Carlson2006127}, for example with OSGi, because of its safety, flexibility, and mature  development environment.
+A software system requires the appropriate runtime support to provide such features.
+Nowadays, applications executing atop managed runtime environments (MRTE), such as Java, are among the systems that can benefit from this kind of support.
+Indeed, MRTEs are regularly used to implement middleware ~\cite{Bruneton:2006:FCM:1152333.1152345,Fouquet:2014:DED:2602576.2611461,OracleEJB3.0,Becker:2010:PCM:1712605.1712651,Carlson2006127}, for example with OSGi, because of their safety, flexibility, and mature development environment.
 These middleware often provide open world features such as the possibility of adding new functionalities after the initial system deployment.
 To support the adaptability and manageability demanded by an open world runtime, it is possible to use  Component-Based Software Engineer (CBSE)~\cite{gruntz2002component,Duclos:2002:DUN:508386.508394, Bruneton:2006:FCM:1152333.1152345}.
-Alas, MRTEs such as Java were designed to execute only a single application at a time, so they lack full support for fine-grain resource management.
+Alas, some MRTEs, such as Java, were designed to execute only a single application at a time, so they lack full support for fine-grained resource management.
 
-Runtime support for resource-aware programming highly depends on the target technology.
+  
+\textit{This thesis addresses the problem of supporting resource-aware programming in execution environments}.
+In particular, it aims at offering efficient support for collecting data about the consumption of computational resources (e.g., CPU, memory), as well as efficient mechanisms to reserve resources for specific applications.
+Unfortunately, the mechanisms needed to support resource-aware programming highly depends on the target technology.
 For instance, reserving memory for a native Unix process is different that reserving memory for an OSGi bundle (i.e., the former problem involves creating a virtual address space~\cite{Stallings2014} while the latter demands the usage of a memory allocator and a garbage collector~\cite{OSGiAlliance2014,alpern2000jalapeno,Richard2012,Geoffray:2010:VSM:1837854.1736006}).
 Due to this fact, this research is limited to the issue of supporting resource-awareness in component-based software systems running on top of MRTEs.
 
 
-\section{Challenges}
+\section{Challenges} \label{sec:intro-challenges}
 
 In existent solutions to perform resource consumption monitoring and resource reservation in MRTEs, we find two important drawbacks.
 Tackling these drawbacks, which are described below, is the objective of the present work.
@@ -70,14 +71,14 @@ As a consequence, developers find themselves using mainstream tools which are on
 The reason for this is that defining tooling support for a specific abstraction is a time consuming task that must be balanced against the limited audience of such an abstraction.
 \end{itemize}
  
-The challenges this research tackle can be summarized in the five research questions.
+The challenges this research tackle can be summarized in the following research questions.
 These questions arises from the analysis of the drawbacks in the previous paragraphs.
 It is worthwhile remembering that these questions refer to MRTEs and CBSE.
 
 \begin{enumerate}
 \renewcommand{\theenumi}{\textit{RQ\arabic{enumi}}}
 
-\item How can we provide portable and efficient support for resource consumption monitoring?
+\item How can we provide portable and efficient support for resource consumption monitoring? \label{rq:rq1}
 
 \item How can we choose what mechanism must be used to guarantee resource reservation with low overhead for each component?
 \begin{comment}

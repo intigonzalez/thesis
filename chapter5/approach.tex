@@ -1,4 +1,4 @@
-\section{The ScapeGoat framework\label{sec:approach}}
+\section{The Scapegoat framework\label{sec:approach}}
 %\section{Adaptive optimistic monitoring with the ScapeGoat framework\label{sec:approach}}
 
 %\todo{Completely change this section !!! We need to make the link with the background here, and to provide a picture with an overview}
@@ -25,18 +25,18 @@ Our optimistic adaptive monitoring system extends the Kevoree platform with the 
 \subsection{Specifying component contracts} \label{componentcontract}
 %\assignedtodo{Inti}{Improve the contract as reviewer 3 suggested. (more relevant if using patterns based on the evolution of %values rather than maximum values)}
 
-In both the Kevoree and ScapeGoat approaches, we follow the contract-aware component classification~\cite{Beugnard:1999:MCC:619042.621275}, which applies B. Meyer's Design-by-Contract principles~\cite{Meyer:1992:ADC:618974.619797} to components.
+In Scapegoat, we follow the contract-aware component classification~\cite{Beugnard774917}, which applies B. Meyer's Design-by-Contract principles~\cite{Meyer:1992:ADC:618974.619797} to components.
 %This framework proposes to apply B. Meyer's Design by Contract~\cite{Meyer:1992:ADC:618974.619797} principles to components with an attempt at generalization.
 %ScapeGoat mainly introduces the fourth level of contract (\textit{Quality of Service}) in Kevoree in supporting the specification of instant worst case situation for memory consumption, CPU and Input/Output resource consumption and time period average for the same resources kinds. 
-In fact, ScapeGoat provides Kevoree with \textit{Quality of Service} contract extensions that specify the worst-case values of the resources the component uses.
+In fact, Scapegoat provides Kevoree with \textit{Quality of Service} contract extensions that specify the worst-case values of the resources the component uses.
 The resources specified are memory, CPU, I/O and the time to service a request.
-The exact semantic of a contract in ScapeGoat is: \textit{the component will consume at most $X$ resource if it receives at most $N$ requests on its provided ports.}  
+The exact semantic of a contract in Scapegoat is: \textit{the component will consume at most $X$ resource if it receives at most $N$ requests on its provided ports.}  
 %The resources specified are memory, CPU, I/O and request throughput.  
 
 For example, for a simple Web server component we can define a contract on the number of instructions per second it may execute \cite{Binder200645} and the maximum amount of memory it can consume.
 The number of messages can be specified per component or per component-port.
 In this way, the information can be used to tune the usage of the component roughly or detailedly.
-An example is shown in Listing~\ref{contractspec}.\footnote{Contract examples for the architecture presented in section~\ref{sec:motivatingexample} can be found at \url{http://goo.gl/uCZ2Mv}.} This contract extension follows the component interface principle~\cite{Henzinger03}, and allows us to detect if the problem comes from the component implementation or from a component interaction.
+An example is shown in Listing~\ref{contractspec}.\footnote{Examples of contract for the architecture presented in section~\ref{sec:scapegoat-motivaing-example} can be found at \url{http://goo.gl/uCZ2Mv}.} This contract extension follows the component interface principle~\cite{Henzinger03}, and allows us to detect if the problem comes from the component implementation or from a component interaction.
 That is, we can distinguish between a component that is using excessive resources because it is faulty, or because other components are calling it excessively.
 
 
@@ -144,8 +144,7 @@ These two mechanisms differ in i) when the computation to account for consumptio
 Computations in the first mechanism are spread throughout the execution of the application, short and lightweight operations are executed every time a new object instance is created or destroyed.
 Objects are always accounted to the component that creates them.
 Computations in the second mechanism occur only on demand but are intensive because they involve traversing the graph of living objects in the heap.
-The accounting policy follows the paradigm of assigning objects to the component that is holding them and, if an object is reachable from more than one component, it is accounted to either one randomly, as suggested in~\cite{Geoffray5270296}.
-In this paper, we call this second mechanism \textbf{Heap Exploration}.
+The accounting policy follows the paradigm of assigning objects to the component that is holding them and, if an object is reachable from more than one component, it is accounted to either one randomly, as suggested in~\cite{Price:2003:GCM:829515.830545,dsn/09/geoffray/ijvm}; we call this second mechanism \textbf{Heap Exploration}.
 
 
 %\todo{For Walter: Review this paragraph}
@@ -161,7 +160,7 @@ However, if the subset of components is determined to be healthy, the system sta
 This occurs until the faulty component is found.
 %If no components are found to be faulty and the problem still exists at the global level, the entire process is repeated.
 If no components are found to be faulty, we fallback to global monitoring. If the problem still exists the entire process is restarted. This can occur in cases where, for example, the faulty behavior is transient or inconsistent.
-The monitoring mechanism implemented in ScapeGoat is summarized in listing \ref{algo:monitoring}.
+The monitoring mechanism implemented in Scapegoat is summarized in Listing \ref{algo:monitoring}.
 
 \lstset{frame=tb,
   aboveskip=3mm,
@@ -184,7 +183,7 @@ The monitoring mechanism implemented in ScapeGoat is summarized in listing \ref{
   numberfirstline=true
 }
 
-\begin{lstlisting}[escapeinside={(*}{*)},caption=The main monitoring loop implemented in ScapeGoat,label=algo:monitoring,float=!h]
+\begin{lstlisting}[escapeinside={(*}{*)},caption=The main monitoring loop implemented in Scapegoat,label=algo:monitoring,float=!h]
 monitor(C: Set<Component>, heuristic : Set<Component>(*$\rightarrow$*)Set<Component>)
 	init memory probes ((*${c \mid c \in C \wedge c.memory\_contract\ne\emptyset}$*))
 	while container is running
@@ -207,17 +206,17 @@ fine-grain monitoring( C : Set<Component> )
 \end{lstlisting}
 
 
-As a result, at any given moment, applications must be in one of the following monitoring modes:
+As a result, we consider that applications are executing under the conditions of one of the following monitoring modes:
 \begin{itemize}
 \leftskip -.2in
 	\item \textbf{No monitoring.} The software is executed without any monitoring probes or modifications.
-	\item \textbf{Global monitoring.} Only global resource usage is being monitored, such as the CPU usage and memory usage at the Java Virtual Machine (JVM) level.
+	\item \textbf{Global monitoring.} Only global resource usage is being monitored, such as the CPU and memory usage at the Java Virtual Machine (JVM) level.
 	\item \textbf{Full monitoring.} All components are being monitored for all types of resource usage. This is equivalent to current state-of-the-art approaches.
 	\item \textbf{Localized monitoring.} Only a subset of the components are monitored.
 	\item \textbf{Adaptive monitoring.} The monitoring system changes from Global monitoring to Full or Localized monitoring if a faulty behaviour is detected.
 %	\item When we are using adaptive monitoring and the heuristic we are using is $h(C) = C$ we call this \textbf{All Components} strategy.
 \end{itemize}
-For the rest of this paper we use the term \textbf{all components} for the adaptive monitoring policy that indicates that the system changes from \emph{global monitoring} mode to \emph{full monitoring} mode if and when a faulty behaviour is detected.
+For the rest of this chapter we use the term \textbf{all components} for the adaptive monitoring policy that indicates that the system changes from \emph{global monitoring} mode to \emph{full monitoring} mode if and when a faulty behaviour is detected.
 
 %\begin{figure}[!h]
 %	\centering
@@ -226,7 +225,7 @@ For the rest of this paper we use the term \textbf{all components} for the adapt
 %	\end{figure}
 
 
-\subsubsection{ScapeGoat's architecture}
+\subsubsection{Scapegoat's architecture}
 
 The Scapegoat framework is built using the Kevoree component framework.
 Scapegoat extends Kevoree by providing a new Node Type and three new Component Types:
@@ -239,7 +238,7 @@ Moreover, it intercepts and wraps class loading mechanisms to record a component
 Such information is used later to (de)activate the probes.
 \item \textbf{Monitoring Component.}
 This component type is in charge of checking component contracts. 
-Basically, it implements a complex variant of the algorithm in listing \ref{algo:monitoring}.
+Basically, it implements a complex variant of the algorithm in Listing \ref{algo:monitoring}.
 It communicates with other components to identify suspected components.
 % and to adapt the system after a fault is identified.
 %todo: WHAT DOES THIS MEAN? Additionally, it makes use of another software artifact to deal with the (de)activation of probes. 
@@ -249,20 +248,20 @@ It is in charge of implementing the heuristic that ranks the components from the
 \item \textbf{Adaptation component.}
 This component type is in charge of dealing with the adaptation of the application when a contract violation is detected.
 It is also a customizable component.
-The adaptation strategy whenever a faulty component is discovered is out os scope of this paper.
+The adaptation strategy whenever a faulty component is discovered is out os scope of this thesis.
 Nevertheless, several strategies may be implemented in Scapegoat, such as removing faulty components or slowing down communication between components when the failure is due to a violation in the way one component is using another.
 \end{itemize}
 
-\subsubsection{Extensibility of the ScapeGoat Framework}
+\subsubsection{Extensibility of the Scapegoat Framework}
 %\todo{For Walter: Review this section}
 %\todo{We need to talk about three things: the heuristics, the admission control and the contracts semantics or implementation extensibility}
 
-The scapegoat framework has been built with the idea of being as generic as possible, thus supporting various extensions and specializations.
-In this section we discuss the extension points provided by the ScapeGoat framework.
+The Scapegoat framework has been built with the idea of being as generic as possible, thus supporting various extensions and specializations.
+In this section we discuss the extension points provided by the Scapegoat framework.
 
 %Defining heuristics to rank components is a part of the framework that can be specialized 
 Heuristics used to rank suspected faulty components can be highly specialized
-and, as we show in section~\ref{sec:evaluation}, have a remarkable impact on the behavior of ScapeGoat.
+and, as we show in section~\ref{sec:evaluation}, have a remarkable impact on the behavior of Scapegoat.
 A new heuristic is created by defining a component that implements an interface to provide a ranking of the suspected components.
 To do so, a context is sent with each ranking request on this component.
 This context is composed of three elements, 
@@ -270,27 +269,31 @@ i) a model that describes the components and links of the deployed application,
 %ii) a models' history which contains all the models that have been deployed on the platform, and 
 ii) a history that contains all the models that have been deployed on the platform, and 
 iii) a history of failures composed of metadata regarding what components have failed as well as why and when it happened.
-In this paper, we present three heuristics.
+In this thesis, we present three heuristics.
 The first heuristic is proposed in section~\ref{sec:heuristic-based-on-modeling} and shows how we can leverage the Models@Run.time paradigm to guide the framework in finding the component that is behaving abnormally.
-Due to their simplicity, the other two heuristics are presented in section~\ref{sec:evaluation} where we use them to evaluate the behavior of ScapeGoat.
+Due to their simplicity, the other two heuristics are presented in section~\ref{sec:evaluation} where we use them to evaluate the behavior of Scapegoat.
 
-The mechanism for creating new heuristics is based on the strategy design pattern. Fig~\ref{fig:strategy} illustrates this extension point. 
+The mechanism for creating new heuristics is based on the strategy design pattern. Figures \ref{fig:strategy-class} and \ref{fig:strategy-sequence} illustrates this extension point. 
 
 
-\begin{figure}[!h]
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.9\textwidth]{./chapter5/figures/strategy}
-\caption{\label{fig:strategy}Scapegoat's extensibility}
+\includegraphics[width=0.9\textwidth]{./chapter5/figures/strategy-class}
+\caption{\label{fig:strategy-class}Heuristic extension point in Scapegoat. This illustrates the class diagram.}
 \end{figure}
 
-
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\textwidth]{./chapter5/figures/strategy-sequence}
+\caption{\label{fig:strategy-sequence}A sequence diagram showing how the extension point to define heuristics in Scapegoat is used.}
+\end{figure}
 
 A second extensible aspect of the framework is the admission control system.
 The framework provides an API to hook user-defined actions when new components are submitted for deployment.
 Basic data describing the execution platform in terms of resource availability, information about the already deployed components and the new component's contract are sent to the user-defined admission control system.
 On each request, the admission control system has to accept or refuse the new component.
-In this paper, we are using an approach which check the theoretical availability of resources whenever a component is deployed, and accept the new component if the contract can fit in the remaining available resources.
-ScapeGoat is meant to support other policies as, for instance, overcommitment.
+We are using an approach that checks the theoretical availability of resources whenever a component is deployed, and accepts the new component if the contract can fit in the remaining available resources.
+Scapegoat is meant to support other policies as, for instance, overcommitment.
  
 A last element that can be specialized to user needs is the contracts semantic.
 In section~\ref{componentcontract} we describe how we interpret the contract in this work.
@@ -305,14 +308,14 @@ It is worth noting that modifying the semantic of the contract would likely invo
 
 \subsubsection{Implementation strategy}
 Scapegoat aims at minimizing monitoring overhead when the framework is monitoring the global behavior of the JVM. 
-To achieve this, ScapeGoat uses as few probes as possible when executing in global monitoring mode.
-Only when it is necessary, ScapeGoat activates the required probes.
+To achieve this, Scapegoat uses as few probes as possible when executing in global monitoring mode.
+Only when it is necessary, the framework activates the required probes.
 This features are implemented in the framework in three modules that are in charge of different concerns: a module to activate/deactivate the probes, a module to collect the resource usage, and a module to compute what components should be carefully monitored.
 In this section we focus on the modules for activating/deactivating probes and for collecting information of resource usage because they required considerable engineering effort.
 Notice, however, that this module is executed on demand when the framework already decides the monitoring mode to use and what components to monitor.
 
 \paragraph{Module to activate/deactivate probes}
-In ScapeGoat  we use bytecode instrumentation to perform localized monitoring.
+In Scapegoat  we use bytecode instrumentation to perform localized monitoring.
 However, instead of doing as previous approaches that manipulate the bytecode that defines components just when the component's code is executed for the first time, we modify the bytecode many times during components' life.
 Every time the monitoring mode is changed we either activate or deactivate the probes by simply inserting them in the bytecode or by removing them. 
 Implementing this mechanism at per-component basis requires knowing all the classes that have been loaded for a component.
@@ -351,7 +354,7 @@ On the contrary, the second mechanism is only useful to collect information abou
 The advantages of this method are: we can leverage the proposed optimistic monitoring because it executes only on demand, and it has no impact on the number of objects allocated in memory because no \textit{weak references} are used.
 However, in this method an object $O$ is consumed not for the component that allocates it but for those components that held references to it.
 As a consequence, in certain occasions the framework states that an object is being consumed for many components at the same time. 
-We built this solution on top of the JVM Tool Interface (JVMTI) by implementing the algorithm proposed in~\cite{Price:2003:GCM:829515.830545, Geoffray5270296}, with the main difference being that our solution works without modifying the garbage collector.
+We built this solution on top of JVMTI by implementing the algorithm proposed in~\cite{Price:2003:GCM:829515.830545, dsn/09/geoffray/ijvm}, with the main difference being that our solution works without modifying the garbage collector.
 In summary, this algorithm simply try to find those objects that are reachable from the references of each component.
 It does so by traversing the graph of live object using as the component instance and its threads as roots of the traversal. 
 Since our approach does not require a modification to the garbage collector, it is portable and works with different garbage collector implementations.
@@ -372,8 +375,8 @@ Suspected components are the first to be monitored.
 %With this in mind, our approach is a trade-off between low monitoring overhead and the delay introduced to identify the faulty component (i.e., overhead versus latency).
 %Thus, the overall performance of our approach is tightly coupled to the performance of our heuristic in accurately finding faulty components.
 
-Our framework can support different heuristics, which can be application or domain-specific.
-In this paper we propose a heuristic that leverages the use of the Models@run.time approach to infer the faulty components.
+Our framework supports the definition of different heuristics, which can be application or domain-specific.
+In this chapter we propose a heuristic that leverages the use of the Models@run.time approach to infer the faulty components.
 The heuristic is based on the assumption that the cause of newly detected misbehavior in an application is likely to come from the most recent changes in the application.
 This can be better understood as follows:
 \begin{itemize}
@@ -385,7 +388,7 @@ This can be better understood as follows:
 We argue that when a problem is detected it is probable that recent changes have led to this problem, or else, it would have likely occurred earlier.
 If recently changed components are monitored and determined to be healthy, it is probable that the problem comes from direct interactions with those components.
 Indeed, changes to interactions can reveal dormant issues with the components.
-The algorithm used for ranking the components is presented in more detail in listing \ref{algo:heuristic}.
+The algorithm used for ranking the components is presented in more detail in Listing \ref{algo:heuristic}.
 %todo: WHAT???? Note that in this heuristic, each subset of components to be finely monitored is composed for one element of the list.
 In practice, we leverage the architectural-based history of evolutions of the application, which is provided by the Models@run.time approach.
 %The heuristic starts at the most recently changed components, because they are more likely to have introduced the problem, and we iteratively move to older components.
@@ -423,11 +426,11 @@ private sort (S : Set<Component>, H : History) : list<Component>
 
 Listing~\ref{algo:heuristic} shows two routines, but only routine \textit{ranker} is public.
 It can be called by the monitoring system when it is necessary to figure out in what order components must be carefully monitored. 
-After initializing an empty list which will hold the rank, the algorithm starts to iterate in line 4 over the history of models that have been installed in the system.
+After initializing an empty list which will hold the rank, the algorithm starts to iterate in line 6 over the history of models that have been installed in the system.
 As mentioned, this history contains a sorted set of models that describe what components have been installed in the system.
-Within each iteration, the algorithm first computes in line 5 the set of components that were installed at such a point in time.
+Within each iteration, the algorithm first computes in line 8 the set of components that were installed at such a point in time.
 Afterwards, these components are added to the result.
-The next step, executed at lines 8 and 9, is finding those components that are directly connected to components that were added to the application at this point in time.
+The next step, executed at lines 12 and 13, is finding those components that are directly connected to components that were added to the application at this point in time.
 Finally, these \textit{neighbors} are added to the rank after being sorted.
 Routine \textit{sort} simply sorts a set of components using as criteria the time at which components where installed in the system.
 

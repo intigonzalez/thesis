@@ -1,4 +1,4 @@
-We have built several use cases based on a template application from our motivating example in section \ref{sec:motivatingexample}.
+We have built several use cases based on a template application from our motivating example in section \ref{sec:scapegoat-motivaing-example}.
 We reused an open-source crisis-management application for firefighters that has been built with Kevoree components.
 We use two functionalities of the crisis-management application.
 The first one is for managing firefighters.
@@ -41,7 +41,7 @@ In this section, \emph{Memory instrumentation} refers to the technique for accou
 In this experiment, we compare the following instrumentation levels: \emph{No monitoring}, \emph{Global monitoring}, \emph{Memory instrumentation}, \emph{Instructions instrumentation}, \emph{Memory and instructions instrumentation} (i.e., Full monitoring).
 We also evaluate the impact on performance of the two fine-grain memory monitoring approaches we proposed: instrumentation-based and heap-dump-based.
 
-In this set of experiments we used the DaCapo 2006 benchmark suite \cite{DaCapo:paper}. 
+In this set of experiments we used the DaCapo 2006 benchmark suite \cite{Blackburn:2006:DBJ:1167473.1167488}. 
 We developed a Kevoree component to execute this benchmark~\footnote{\url{http://goo.gl/V5T6De}}.
 The container was configured to use full monitoring and the parameters in the contract are upper bounds of the real consumption\footnote{Scripts are generated from those available at \url{http://goo.gl/FR8LC7}.}.
 
@@ -84,7 +84,7 @@ x tick label style={rotate=45,anchor=east, font=\small},
 \end{figure}
 
 Figure \ref{overhead-of-monitoring} shows the execution time of several DaCapo tests under different scenarios when only instrumentation is used to provide fine-grain monitoring.
-First, we wish to highlight that Global monitoring introduces no overhead compared with the \emph{No monitoring} mode.
+First, we wish to highlight that \emph{Global monitoring} introduces no overhead compared with the \emph{No monitoring} mode.
 Second, the overhead due to memory accounting is lower than the overhead due to instruction accounting.
 This is very important because, as we described in section \ref{monitorContainer}, memory probes cannot be deactivated dynamically.
 
@@ -101,7 +101,7 @@ In short, our solution can reach similar values if we include the mentioned opti
 On the other hand, the values we report are far lower than the values reported in \cite{Binder:2009:PPV:1464245.1464249} for hprof.
 Hence, we consider that our solution is comparable to state of the art approaches in the literature.
 
-In figure~\ref{overhead-of-monitoring-with_heapexplorer} we compare the execution time of the same benchmarks but using different memory monitoring approaches.
+In Figure~\ref{overhead-of-monitoring-with_heapexplorer} we compare the execution time of the same benchmarks but using different memory monitoring approaches.
 This comparison is important because, as explained in section~\ref{monitorContainer}, the two approaches have different CPU footprint.
 These are controlled experiments where, in order to stress the technique, we demand the execution of a \textit{heap exploration} step every two seconds, which is not the expected usage pattern.
 On the contrary, the memory instrumentation technique is executed with the expected usage pattern.
@@ -152,12 +152,12 @@ x tick label style={rotate=45,anchor=east, font=\small},
 \caption{Comparison of execution time for tests using two different memory monitoring techniques\label{overhead-of-monitoring-with_heapexplorer}}
 \end{figure}
 
-The results of our experiment shown in figures~\ref{overhead-of-monitoring} and~\ref{overhead-of-monitoring-with_heapexplorer} demonstrate the extensive impact of the \emph{Full monitoring} mode, which uses either \emph{Memory instrumentation} or \emph{CPU instrumentation}, has on the application. Thus, our \emph{Adaptive monitoring} mode, which uses \emph{Global monitoring} and switches to \emph{Full monitoring} or \emph{localized monitoring}, has the potential to reduce this accumulated overhead due to the fact that \emph{Global monitoring} has no appreciable overhead. 
+The results of our experiment shown in Figures~\ref{overhead-of-monitoring} and~\ref{overhead-of-monitoring-with_heapexplorer} demonstrate the extensive impact of the \emph{Full monitoring} mode, which uses either \emph{Memory instrumentation} or \emph{CPU instrumentation}, has on the application. Thus, our \emph{Adaptive monitoring} mode, which uses \emph{Global monitoring} and switches to \emph{Full monitoring} or \emph{localized monitoring}, has the potential to reduce this accumulated overhead due to the fact that \emph{Global monitoring} has no appreciable overhead. 
 %The results of the evaluation are fundamentals because they justify the interest of our adaptative monitoring approach. 
 %Additionally, these results are the baseline to understand the rest of the evaluation. 
 
-In addition, we plan to study alternatives to improve instruction accounting. %These alternatives are about using peak monitoring and learning monitoring.
-For example, we plan to study the use of machine learning for monitoring \cite{tesauro2006hybrid}. Based on a machine learning approach, it is possible to train the monitoring system to do the instruction instrumentation. Then, instead of doing normal instruction instrumentation, we might only do, for example, method-calls instrumentation and with the learning data, the monitoring system should be able to infer the CPU usage of each call, whilst lowering the overhead.
+%In addition, we plan to study alternatives to improve instruction accounting. %These alternatives are about using peak monitoring and learning monitoring.
+%For example, we plan to study the use of machine learning for monitoring \cite{tesauro2006hybrid}. Based on a machine learning approach, it is possible to train the monitoring system to do the instruction instrumentation. Then, instead of doing normal instruction instrumentation, we might only do, for example, method-calls instrumentation and with the learning data, the monitoring system should be able to infer the CPU usage of each call, whilst lowering the overhead.
 
 \subsection{Overhead of Adaptive Monitoring vs Full Monitoring\label{sec:adaptive-vs-full}}
 The previous experiment highlights the potential of using \emph{Adaptive monitoring}. However, switching from \emph{Global monitoring} to either \emph{Full} or \emph{Localized monitoring} introduces an additional overhead due to having to instrument components and activate monitoring probes.
@@ -178,7 +178,7 @@ We reproduce each execution repetitively; thus, the faulty behaviour is triggere
 \hline UC2 & CPU, Memory & CPU & number\newline of failures & dacapo, antlr \\ 
 \hline UC3 & CPU, Memory & CPU & number\newline of failures & dacapo, chart \\ 
 \hline UC4 & CPU & CPU & number\newline of failures & dacapo, xalan \\ 
-\hline UC5 & CPU, Memory & CPU & less number\newline of failures  & dacapo, chart \\ 
+\hline UC5 & CPU, Memory & CPU & less number\newline of failures\newline first  & dacapo, chart \\ 
 \hline UC6 & Memory & CPU & number\newline of failures & Weka, training neural network \\ 
 \hline 
 \end{tabular} 
@@ -188,7 +188,7 @@ We reproduce each execution repetitively; thus, the faulty behaviour is triggere
 Figure \ref{adaptive-vs-full} shows the execution time of running the use cases with different scenarios.
 Each scenario uses a specific monitoring policy (\emph{Full monitoring}, \emph{Adaptive monitoring with All Components}, \emph{Adaptive monitoring with Localized monitoring}, \emph{Global monitoring}).
 All these scenarios were executed with the heap explorer memory monitoring policy. 
-This figure shows that the overhead differences between \textit{Full monitoring} and \emph{Adaptive monitoring with All Components} is clearly impacted by scenarios that cause the system to transition too frequently between a lightweight Global and a fine-grain Adaptive monitoring.
+This Figure shows that the overhead differences between \textit{Full monitoring} and \emph{Adaptive monitoring with All Components} is clearly impacted by scenarios that cause the system to transition too frequently between a lightweight Global and a fine-grain \emph{Adaptive monitoring}.
 Such is the case for use cases UC3 and UC4 because the faulty component is inserted and never removed.
 %As we explained in section \ref{analysis}, 
 Using \emph{Adaptive monitoring} is beneficial if the overhead of \emph{Global monitoring} plus the overhead of switching back and forth to \emph{All Components monitoring} is less than the overhead of the \emph{Full monitoring} for the same execution period.
@@ -196,7 +196,7 @@ If the application switches between monitoring modes too often then the benefits
 
 The overhead of switching from \emph{Global monitoring} to \emph{full components} or \emph{Localized monitoring} comes from the fact that the framework must reload and instrument classes to activate the monitoring probes.
 Therefore, using \emph{Localized monitoring} reduces the number of classes that must be reloaded.
-This is shown in the third use-case of figure~\ref{adaptive-vs-full}, which uses a heuristic based on the number of failures.
+This is shown in the third use-case of Figure~\ref{adaptive-vs-full}, which uses a heuristic based on the number of failures.
 Because we execute the faulty component many times, the heuristic is able to select, monitor and identify the faulty component quickly. This reduces overhead by 92.98\%. We use the following equation to calculate overhead:
 
 \[ Gain=100-\frac{OurApproach-GlobalMonitoring}{FullMonitoring-GlobalMonitoring}*100 \]
@@ -218,7 +218,7 @@ every axis legend/.append style={nodes={right}},
 ybar=0pt, legend style={at={(0.8,1.2)},
 anchor=north,legend columns=1, font=\tiny},
 ylabel={Time (seconds)},
-y label style={at={(0.04, 0.5)}},
+y label style={at={(0.02, 0.5)}},
 scaled y ticks = false,
       y tick label style={/pgf/number format/fixed,
       /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
@@ -282,7 +282,7 @@ The exact settings, leading to 12 experiments, are defined by the composition of
 
 With these use cases, we measured the delay to find the faulty component and the execution-time overhead caused by monitoring.
 Figures \ref{fig:delay-time-115} and \ref{fig:delay-time-4} show the delay to detect the faulty component with regards to the size of the application.
-In the first figure, the component size is 115 classes, and in the second figure, the component size is four classes.
+In the first Figure, the component size is 115 classes, and in the second Figure, the component size is four classes.
 %Figures \ref{fig:execution-time-many-115} and \ref{fig:execution-time-many-4} show the overhead of monitoring based on the execution time of the main task and according to the size of the application. In the first one, the component size is 115 classes and in the second one, the component size is four classes.
 
 \input{./chapter5/delayTime}
@@ -290,7 +290,7 @@ In the first figure, the component size is 115 classes, and in the second figure
 
 \subsubsection{Impact of the application size}
 %\paragraph{Impact of the application size}
-Using figures \ref{fig:delay-time-4} and \ref{fig:execution-time-many-4}, we see that the size of the application has an impact on the delay to detect faulty components, and also on the monitoring overhead.
+Figures \ref{fig:delay-time-4} and \ref{fig:execution-time-many-4} show the size of the application has an impact on the delay to detect faulty components, and also on the monitoring overhead.
 We also calculated the time needed to find the faulty component with the \emph{All components} mode after its initialization (the time needed to switch from \emph{Global monitoring}).
 This time is around 2 seconds no matter the size of the application.
 That is the reason the switch from \emph{Global monitoring} to \emph{All components} has such a large effect on overhead.
@@ -301,7 +301,7 @@ This can be explained by the multiple switches that the Random heuristic may oft
 
 \subsubsection{Impact of the component size}
 %and \ref{fig:execution-time-many-115}, \ref{fig:execution-time-many-4}
-In figures \ref{fig:delay-time-115} and \ref{fig:delay-time-4} we can observe that the component size greatly impact the performance and the delay for ScapeGoat to find the faulty comopnent. 
+In Figures \ref{fig:delay-time-115} and \ref{fig:delay-time-4} we can observe that the component size greatly impact the performance and the delay for ScapeGoat to find the faulty comopnent. 
 Similar to the explanation for the application's size, component size impacts the switch from \emph{Global monitoring} to \emph{Localized monitoring}, beacause of the class reloading and instrumentation.
 A good heuristic rastically reduces the number of transitions; thus, it has a huge impact on the delay. 
 When the components size increase, the choice of a good heuristics becomes even more important, because the cost of dynamic monitoring probes injection increase with the size of the components.

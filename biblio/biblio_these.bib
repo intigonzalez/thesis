@@ -826,6 +826,26 @@
   Bibsource                = {DBLP, http://dblp.uni-trier.de}
 }
 
+@InCollection{Bocciarelli2015425,
+  Title                    = {Chapter 14 - A model-driven method for the design-time performance analysis of service-oriented software systems },
+  Author                   = {Paolo Bocciarelli and Andrea D’Ambrogio},
+  Booktitle                = {Modeling and Simulation of Computer Networks and Systems },
+  Publisher                = {Morgan Kaufmann},
+  Year                     = {2015},
+
+  Address                  = {Boston},
+  Editor                   = {Obaidat, Mohammad S. and Nicopolitidis, Petros and Zarai, Faouzi },
+  Pages                    = {425 - 450},
+
+  Abstract                 = {Service-oriented architecture (SOA) is one of the prominent architectural paradigms recently adopted in the software development field. According to \{SOA\} principles, a distributed software system can be seen as an orchestration of software services deployed and executed onto networked hosts. The design-time analysis of SOA-based software systems demands new approaches that take into account both the inherent complexity and the architectural characteristics of such systems. In this respect, simulation-based approaches have proven to be effective to obtain quantitative predictions of system performance. Specifically, this chapter explains distributed simulation as a valuable technique to deal with the intrinsic distributed nature of SOA-based systems. Unfortunately, the adoption of distributed simulation requires a significant expertise and a considerable effort due to the complexity of currently available distributed simulation standards and technologies. This chapter introduces an automated method to reduce the effort and make distributed simulation easier to use. The method takes as input a design model of the SOA-based software system and yields as output the corresponding simulation model, ready to be deployed and transparently executed onto either a local or a distributed simulation engine. The design model is specified as a \{UML\} (Unified Modeling Language) model extended by use of the SoaML (Service-oriented architecture Modeling Language) profile, while the simulation model is specified in jEQN, a domain-specific language for the simulation of \{EQN\} (Extended Queueing Network) models. jEQN is part of SimArch, a layered architecture that eases the use of distributed simulation by hiding all the implementation details of the distributed execution platform. The proposed method is founded on the use of automated model transformations, with specific reference to standards and languages provided by the \{MDA\} (Model Driven Architecture). The joint use of automated model transformations and SimArch allows the user to effortlessly obtain, at design time, the performance-oriented distributed simulation model of the SOA-based system under development, thus giving system designers the ability to predict the performance behavior of the to-be system and/or to evaluate the impact on performance of different design alternatives. The chapter also presents an example application that shows how involved stakeholders can effectively benefit from the application of the proposed method. },
+  Doi                      = {http://dx.doi.org/10.1016/B978-0-12-800887-4.00014-6},
+  ISBN                     = {978-0-12-800887-4},
+  Keywords                 = {SOA},
+  Owner                    = {inti},
+  Timestamp                = {2015.09.01},
+  Url                      = {http://www.sciencedirect.com/science/article/pii/B9780128008874000146}
+}
+
 @InProceedings{Boldrini:2008:CRA:1549824.1550106,
   Title                    = {Context and Resource Awareness in Opportunistic Network Data Dissemination},
   Author                   = {Boldrini, Chiara and Conti, Marco and Passarella, Andrea},
@@ -954,6 +974,36 @@
   Url                      = {http://dx.doi.org/10.1016/j.entcs.2005.02.056}
 }
 
+@InProceedings{Broenink2012,
+  Title                    = {Model-driven robot-software design using integrated models and co-simulation},
+  Author                   = {Broenink, J.F. and Yunyun Ni},
+  Booktitle                = {Embedded Computer Systems (SAMOS), 2012 International Conference on},
+  Year                     = {2012},
+  Month                    = {July},
+  Pages                    = {339-344},
+
+  Abstract                 = {The work presented here is on a methodology for design of hard real-time embedded control software for robots, i.e. mechatronic products. The behavior of the total robot system (machine, control, software and I/O) is relevant, because the dynamics of the machine influences the robot software. Therefore, we use two appropriate Models of Computation, which represent continuous-time equations for the machine / robot part, and discrete event / discrete time equations for the control software part.},
+  Doi                      = {10.1109/SAMOS.2012.6404197},
+  Keywords                 = {control engineering computing;digital simulation;discrete time systems;embedded systems;robots;continuous time equations;cosimulation;discrete event equations;discrete time equations;integrated models;model driven robot software design;real-time embedded control software;Computational modeling;Hardware;Object oriented modeling;Robots;Safety;Software;Solid modeling}
+}
+
+@Article{brosig2015a,
+  Title                    = {Quantitative Evaluation of Model-Driven Performance Analysis and Simulation of Component-based Architectures},
+  Author                   = {Fabian Brosig AND Philipp Meier AND Steffen Becker AND Anne Koziolek AND Heiko Koziolek AND Samuel Kounev},
+  Journal                  = {Software Engineering, IEEE Transactions on},
+  Year                     = {2015},
+
+  Month                    = {Feb},
+  Number                   = {2},
+  Pages                    = {157-175},
+  Volume                   = {41},
+
+  Abstract                 = {During the last decade, researchers have proposed a number of model transformations enabling performance predictions. These transformations map performance-annotated software architecture models into stochastic models solved by analytical means or by simulation. However, so far, a detailed quantitative evaluation of the accuracy and efficiency of different transformations is missing, making it hard to select an adequate transformation for a given context. This paper provides an in-depth comparison and quantitative evaluation of representative model transformations to, e.g., Queueing Petri Nets and Layered Queueing Networks. The semantic gaps between typical source model abstractions and the different analysis techniques are revealed. The accuracy and efficiency of each transformation are evaluated by considering four case studies representing systems of different size and complexity. The presented results and insights gained from the evaluation help software architects and performance engineers to select the appropriate transformation for a given context, thus significantly improving the usability of model transformations for performance prediction.},
+  Doi                      = {10.1109/TSE.2014.2362755},
+  ISSN                     = {0098-5589},
+  Keywords                 = {Accuracy;Analytical models;Phase change materials;Predictive models;Software architecture;Stochastic processes;Unified modeling language;D.2.10.h Quality analysis and evaluation;D.2.11 Software architectures;D.2.2 Design tools and techniques}
+}
+
 @InCollection{Brun:2009:ESS:1573856.1573860,
   Title                    = {Software Engineering for Self-Adaptive Systems},
   Author                   = {Brun, Yuriy and Marzo Serugendo, Giovanna and Gacek, Cristina and Giese, Holger and Kienle, Holger and Litoiu, Marin and M\"{u}ller, Hausi and Pezz\`{e}, Mauro and Shaw, Mary},
@@ -1080,6 +1130,19 @@
 
   Doi                      = {10.1109/CCGRID.2006.31},
   Keywords                 = {message passing;shared memory systems;MPI implementation;MPICH2 architecture;Nemesis;dedicated communication channel;high performance network;internode communication;intranode communication context;low-latency message passing;low-level communication subsystem;message passing communication subsystem;point-to-point benchmark;scalable message passing interface;shared memory systems;Communication channels;Computer architecture;Computer science;Concurrent computing;Context;Hardware;Laboratories;Mathematics;Message passing;Scalability}
+}
+
+@InProceedings{Bures2006,
+  Title                    = {SOFA 2.0: Balancing Advanced Features in a Hierarchical Component Model},
+  Author                   = {Bures, T. and Hnetynka, P. and Plasil, F.},
+  Booktitle                = {Software Engineering Research, Management and Applications, 2006. Fourth International Conference on},
+  Year                     = {2006},
+  Month                    = {Aug},
+  Pages                    = {40-48},
+
+  Abstract                 = {Component-based software engineering is a powerful paradigm for building large applications. However, our experience with building application of components is that the existing advanced component models (such as those offering component nesting, behavior specification and checking, dynamic reconfiguration to some extent, etc.) are subject to a lot of limitations and issues which prevent them from being accepted more widely (by industry in particular). We claim that these issues are specifically related to (a) the lack of support for dynamic reconfigurations of hierarchical architectures, (b) poor support for modeling and extendibility of the control part of a component, and (c) the lack of support for different communication styles applied in inter-component communication. In this paper, we show how these problems can be addressed and present an advanced component system SOFA 2.0 as a proof of the concept. This system is based on its predecessor SOFA, but it incorporates a number of enhancements and improvements},
+  Doi                      = {10.1109/SERA.2006.62},
+  Keywords                 = {object-oriented programming;software architecture;SOFA 2.0 advanced component system;component-based software engineering;hierarchical architectures;hierarchical component model;intercomponent communication;Application software;Computer science;Informatics;Mathematical model;Mathematics;Physics;Power engineering and energy;Runtime environment;Service oriented architecture;Software engineering}
 }
 
 @InProceedings{burmako2013scala,
@@ -1298,6 +1361,23 @@
   Author                   = {Geoff Coulson and Gordon Blair and Paul Grace and Ackbar Joolia and Kevin Lee and Jo Ueyama},
   Booktitle                = {In Proc. IASTED Software Engineering and Applications (SEA?04},
   Year                     = {2004}
+}
+
+@Article{Crnkovic2011,
+  Title                    = {A Classification Framework for Software Component Models},
+  Author                   = {Crnkovic, I. and Sentilles, S. and Vulgarakis, A. and Chaudron, M.R.V.},
+  Journal                  = {Software Engineering, IEEE Transactions on},
+  Year                     = {2011},
+
+  Month                    = {Sept},
+  Number                   = {5},
+  Pages                    = {593-615},
+  Volume                   = {37},
+
+  Abstract                 = {In the last decade, a large number of different software component models have been developed, with different aims and using different principles and technologies. This has resulted in a number of models which have many similarities, but also principal differences, and in many cases unclear concepts. Component-based development has not succeeded in providing standard principles, as has, for example, object-oriented development. In order to increase the understanding of the concepts and to differentiate component models more easily, this paper identifies, discusses, and characterizes fundamental principles of component models and provides a Component Model Classification Framework based on these principles. Further, the paper classifies a large number of component models using this framework.},
+  Doi                      = {10.1109/TSE.2010.83},
+  ISSN                     = {0098-5589},
+  Keywords                 = {object-oriented programming;pattern classification;component based development;component model classification framework;object oriented development;software component models;Bismuth;Data models;Packaging;Software components;component composition.;component lifecycle;extra-functional properties;software component models}
 }
 
 @Article{czajkowski2012multitasking,
@@ -2002,6 +2082,31 @@ overhead of I-JVM compared to the JVM on which it is based is below
   ISBN                     = {0132091518, 9780132091510}
 }
 
+@Electronic{OracleEJB3.0,
+  Title                    = {JSR 345. Enterprise JavaBeansTM,Version 3.2 EJB Core Contracts andRequirements Version 3.2},
+
+  Address                  = {http://www.oracle.com/technetwork/java/docs-135218.html},
+  Author                   = {EJB 3.2 Expert Group},
+  Month                    = {May},
+  Url                      = {http://www.oracle.com/technetwork/java/docs-135218.html},
+  Year                     = {2013},
+
+  Owner                    = {inti},
+  Timestamp                = {2015.08.02}
+}
+
+@Book{GRUNTZ2002,
+  Title                    = {Component Software: Beyond Object-Oriented Porgramming},
+  Author                   = {DOMINIK GRUNTZ and STEPHAN MURER},
+  Editor                   = {Clemens Szyperski},
+  Publisher                = {ACM Press},
+  Year                     = {2002},
+  Edition                  = {Second Edition},
+
+  Owner                    = {inti},
+  Timestamp                = {2015.08.27}
+}
+
 @Article{gruntz2002component,
   Title                    = {Component Software: Beyond Object-Oriented Programming},
   Author                   = {Gruntz, Dominik and Murer, Stephan and Szyperski, C},
@@ -2017,6 +2122,24 @@ overhead of I-JVM compared to the JVM on which it is based is below
   Number                   = {4},
   Pages                    = {101--104},
   Volume                   = {42}
+}
+
+@Article{DiGuglielmo20132013,
+  Title                    = {On the integration of model-driven design and dynamic assertion-based verification for embedded software },
+  Author                   = {Giuseppe Di Guglielmo and Luigi Di Guglielmo and Andreas Foltinek and Masahiro Fujita and Franco Fummi and Cristina Marconcini and Graziano Pravadelli},
+  Journal                  = {Journal of Systems and Software },
+  Year                     = {2013},
+  Number                   = {8},
+  Pages                    = {2013 - 2033},
+  Volume                   = {86},
+
+  Abstract                 = {Model-driven design (MDD) aims at elevating design to a higher level of abstraction than that provided by third-generation programming languages. Concurrently, assertion-based verification (ABV) relies on the definition of temporal assertions to enhance functional verification targeting the correctness of the design execution with respect to the expected behavior. Both \{MDD\} and \{ABV\} have affirmed as effective methodologies for design and verification of \{HW\} components of embedded systems. Nonetheless, \{MDD\} and \{ABV\} individually suffer some limitations that prevent their integration in the embedded-software (ESW) design and verification flow. In particular, \{MDD\} requires the integration of an effective methodology for monitoring specification conformance, and dynamic \{ABV\} relies on simulation assumptions, satisfied in the \{HW\} domain, but which cannot be straightforward guaranteed during the execution of ESW. In this work, we present a suitable combination of \{MDD\} and dynamic \{ABV\} as an effective solution for \{ESW\} design and verification. A suite composed of two off-the-shelf tools has been developed for supporting this integrated approach. The \{MDD\} tool, i.e., radCASE, is a rapid-application-development environment for \{ESW\} that provides the user with a comprehensive approach to cover the complete modeling and synthesis process of ESW. The dynamic \{ABV\} environment, i.e., radCHECK, integrates computer-aided and template-based assertion definition, automatic checker generation, and effective stimuli generation, making dynamic \{ABV\} really practical to check the correctness of the radCASE outcome. },
+  Doi                      = {http://dx.doi.org/10.1016/j.jss.2012.08.061},
+  ISSN                     = {0164-1212},
+  Keywords                 = {Model-driven design},
+  Owner                    = {inti},
+  Timestamp                = {2015.09.01},
+  Url                      = {http://www.sciencedirect.com/science/article/pii/S0164121212002506}
 }
 
 @InProceedings{Guidec:2003:JMP:1899290.1899304,
@@ -2035,6 +2158,23 @@ overhead of I-JVM compared to the JVM on which it is based is below
   Location                 = {Ljubljana, Slovenia},
   Numpages                 = {8},
   Url                      = {http://dl.acm.org/citation.cfm?id=1899290.1899304}
+}
+
+@Article{Gutierrez2015,
+  Title                    = {A Model-Driven approach for functional test case generation },
+  Author                   = {J.J. Guti\'errez and M.J. Escalona and M. Mej\'ias},
+  Journal                  = {Journal of Systems and Software },
+  Year                     = {2015},
+  Pages                    = {214 - 228},
+  Volume                   = {109},
+
+  Abstract                 = {Abstract Test phase is one of the most critical phases in software engineering life cycle to assure the final system quality. In this context, functional system test cases verify that the system under test fulfills its functional specification. Thus, these test cases are frequently designed from the different scenarios and alternatives depicted in functional requirements. The objective of this paper is to introduce a systematic process based on the Model-Driven paradigm to automate the generation of functional test cases from functional requirements. For this aim, a set of metamodels and transformations and also a specific language domain to use them is presented. The paper finishes stating learned lessons from the trenches as well as relevant future work and conclusions that draw new research lines in the test cases generation context. },
+  Doi                      = {http://dx.doi.org/10.1016/j.jss.2015.08.001},
+  ISSN                     = {0164-1212},
+  Keywords                 = {Software quality assurance},
+  Owner                    = {inti},
+  Timestamp                = {2015.09.01},
+  Url                      = {http://www.sciencedirect.com/science/article/pii/S0164121215001703}
 }
 
 @InProceedings{Hofig:2011,
@@ -2084,6 +2224,54 @@ overhead of I-JVM compared to the JVM on which it is based is below
   Volume                   = {41},
 
   Editor                   = {IEEE}
+}
+
+@InProceedings{Harkema:2002:PMJ:584369.584388,
+  Title                    = {Performance Monitoring of Java Applications},
+  Author                   = {Harkema, M. and Quartel, D. and Gijsen, B. M. M. and van der Mei, R. D.},
+  Booktitle                = {Proceedings of the 3rd International Workshop on Software and Performance},
+  Year                     = {2002},
+
+  Address                  = {New York, NY, USA},
+  Pages                    = {114--127},
+  Publisher                = {ACM},
+  Series                   = {WOSP '02},
+
+  Acmid                    = {584388},
+  Doi                      = {10.1145/584369.584388},
+  ISBN                     = {1-58113-563-7},
+  Keywords                 = {performance measurement and monitoring of java applications},
+  Location                 = {Rome, Italy},
+  Numpages                 = {14},
+  Url                      = {http://doi.acm.org/10.1145/584369.584388}
+}
+
+@Book{Heineman2001,
+  Title                    = {Component-based Software Engineering: Putting the Pieces Together},
+  Author                   = {George T. Heineman and William T. Councill},
+  Publisher                = {Addison-Wesley},
+  Year                     = {2001},
+
+  Owner                    = {inti},
+  Timestamp                = {2015.08.31}
+}
+
+@Article{Henriksson2005101,
+  Title                    = {Improving Software Quality in Safety-Critical Applications by Model-Driven Verification },
+  Author                   = {Anders Henriksson and Uwe Aßman and James Hunt},
+  Journal                  = {Electronic Notes in Theoretical Computer Science },
+  Year                     = {2005},
+  Note                     = {Proceedings of the Ninth International Workshop on Formal Methods for Industrial Critical Systems (FMICS 2004)Formal Methods for Industrial Critical Systems 2004 },
+  Pages                    = {101 - 117},
+  Volume                   = {133},
+
+  Abstract                 = {We propose a new development scheme for quality-aware applications, quality-driven development (QDD), based on the Model-Driven Architecture (MDA) of Object Management Group OMG. We argue that software development in areas, such as real-time systems, should not only rely on code verification, but also on design verification, and show that a slightly extended \{MDA\} process offers the opportunity to integrate system development together with design verification. As an instance of the method, we present the MDA-based tool environment of the \{HIDOORS\} project [Karlsruhe James Hunt. Forschungszentrum Informatik. High-integrity distributed object- oriented real-time systems. http://www.hidoors.org]. In this environment, a real-time model checker is interpreted as a platform in the sense of MDA. \{UML\} designs can be annotated with verification markup, which is not only compiled to code, but also to a design verification model of the verification platform, the model-checker. In this way, model-checking for real-time designs is integrated into the model-driven development process and allows for early verification. The approach can easily be transfered to other verification techniques. We give a preliminary classification of the possible verification platforms and analyse their interplay. The analysis reveals that for quality-aware application areas, the standard \{MDA\} approach should be extended by one or more \{MDA\} stacks for model-driven verification (MDV). The resulting approach, quality-driven development (QDD), is, to our knowledge, the first systematic approach to integrate code generation and verification in model-driven development. },
+  Doi                      = {http://dx.doi.org/10.1016/j.entcs.2004.08.060},
+  ISSN                     = {1571-0661},
+  Keywords                 = {Model Driven Architetcture},
+  Owner                    = {inti},
+  Timestamp                = {2015.09.01},
+  Url                      = {http://www.sciencedirect.com/science/article/pii/S1571066105050267}
 }
 
 @InProceedings{henrio2009asynchronous,
@@ -2186,6 +2374,25 @@ information integration},
 
   Location                 = {Stanford, USA},
   Numpages                 = {11}
+}
+
+@InCollection{Holzmann2004,
+  Title                    = {Model-Driven Software Verification},
+  Author                   = {Holzmann, GerardJ. and Joshi, Rajeev},
+  Booktitle                = {Model Checking Software},
+  Publisher                = {Springer Berlin Heidelberg},
+  Year                     = {2004},
+  Editor                   = {Graf, Susanne and Mounier, Laurent},
+  Pages                    = {76-91},
+  Series                   = {Lecture Notes in Computer Science},
+  Volume                   = {2989},
+
+  Doi                      = {10.1007/978-3-540-24732-6_6},
+  ISBN                     = {978-3-540-21314-7},
+  Language                 = {English},
+  Owner                    = {inti},
+  Timestamp                = {2015.09.01},
+  Url                      = {http://dx.doi.org/10.1007/978-3-540-24732-6_6}
 }
 
 @InProceedings{Holzschuher:2013:PGQ:2457317.2457351,
@@ -2450,6 +2657,26 @@ information integration},
   Numpages                 = {12}
 }
 
+@InProceedings{Jung:2011:LAI:2000292.2000296,
+  Title                    = {A Layered Approach for Identifying Systematic Faults of Component-based Software Systems},
+  Author                   = {Jung, Min Yang},
+  Booktitle                = {Proceedings of the 16th International Workshop on Component-oriented Programming},
+  Year                     = {2011},
+
+  Address                  = {New York, NY, USA},
+  Pages                    = {17--24},
+  Publisher                = {ACM},
+  Series                   = {WCOP '11},
+
+  Acmid                    = {2000296},
+  Doi                      = {10.1145/2000292.2000296},
+  ISBN                     = {978-1-4503-0726-0},
+  Keywords                 = {component-based software engineering, layered fault model, systematic faults},
+  Location                 = {Boulder, Colorado, USA},
+  Numpages                 = {8},
+  Url                      = {http://doi.acm.org/10.1145/2000292.2000296}
+}
+
 @InProceedings{Kalkov:2012:REA:2388936.2388955,
   Title                    = {A Real-time Extension to the Android Platform},
   Author                   = {Kalkov, Igor and Franke, Dominik and Schommer, John F. and Kowalewski, Stefan},
@@ -2520,6 +2747,24 @@ information integration},
   Address                  = {Los Alamitos, CA, USA},
   ISSN                     = {0018-9162},
   Publisher                = {IEEE Computer Society Press}
+}
+
+@Article{Kiffe2009,
+  Title                    = {Model-driven Test Case Generation in HiL Testing},
+  Author                   = {Kiffe, Gerhard and Siegl, Sebastian and Prester, Florian and Beisser, Martin and Seel, Martin},
+  Journal                  = {ATZautotechnology},
+  Year                     = {2009},
+  Number                   = {5},
+  Pages                    = {56-59},
+  Volume                   = {9},
+
+  Doi                      = {10.1007/BF03247142},
+  ISSN                     = {1865-6536},
+  Language                 = {English},
+  Owner                    = {inti},
+  Publisher                = {Springer Automotive Media},
+  Timestamp                = {2015.09.01},
+  Url                      = {http://dx.doi.org/10.1007/BF03247142}
 }
 
 @InProceedings{Knight:2002:SCS:581339.581406,
@@ -2708,6 +2953,26 @@ information integration},
   Author                   = {Laddad, Ramnivas},
   Publisher                = {Manning Publications Co.},
   Year                     = {2009}
+}
+
+@InProceedings{Lau:2014:SCM:2602458.2611456,
+  Title                    = {Software Component Models: Past, Present and Future},
+  Author                   = {Lau, Kung-Kiu},
+  Booktitle                = {Proceedings of the 17th International ACM Sigsoft Symposium on Component-based Software Engineering},
+  Year                     = {2014},
+
+  Address                  = {New York, NY, USA},
+  Pages                    = {185--186},
+  Publisher                = {ACM},
+  Series                   = {CBSE '14},
+
+  Acmid                    = {2611456},
+  Doi                      = {10.1145/2602458.2611456},
+  ISBN                     = {978-1-4503-2577-6},
+  Keywords                 = {composition, software component models, software components},
+  Location                 = {Marcq-en-Bareul, France},
+  Numpages                 = {2},
+  Url                      = {http://doi.acm.org/10.1145/2602458.2611456}
 }
 
 @InProceedings{Liang1999,
@@ -3069,6 +3334,20 @@ information integration},
   Publisher                = {IEEE Computer Society Press}
 }
 
+@InProceedings{Miettinen2008,
+  Title                    = {A Method for the Resource Monitoring of OSGi-based Software Components},
+  Author                   = {Miettinen, T. and Pakkala, D. and Hongisto, M.},
+  Booktitle                = {Software Engineering and Advanced Applications, 2008. SEAA '08. 34th Euromicro Conference},
+  Year                     = {2008},
+  Month                    = {Sept},
+  Pages                    = {100-107},
+
+  Abstract                 = {This paper introduces a novel method and a prototype tool for the resource monitoring of OSGi-based software components. The OSGi Service Platform enables the cooperation of multiple Java based components within a single Java Virtual Machine (JVM), introducing challenges for resource monitoring as the JVM conceals the resource consumption information of separate OSGi components. When addressing this challenge as a research problem, a method based on arranging execution threads of components to separate groups is presented. The presented method and prototype tool enable the identification of the resource consumption of individual accountable components executed within a single JVM. The prototype monitoring tool is used for validating the presented resource monitoring method and is also overviewed in this paper, providing an insight view to the JVM from a resource consumption perspective.},
+  Doi                      = {10.1109/SEAA.2008.24},
+  ISSN                     = {1089-6503},
+  Keywords                 = {Java;middleware;program testing;software performance evaluation;virtual machines;JVM;Java virtual machine;OSGi-based software components;multiple Java based components;resource consumption;resource monitoring;Application software;Condition monitoring;Java;Software performance;Software prototyping;Software systems;Software testing;Software tools;Virtual machine monitors;Virtual machining}
+}
+
 @InCollection{Mitchell03leakbot:an,
   Title                    = {LeakBot: An Automated and Lightweight Tool for Diagnosing Memory Leaks in Large Java Applications},
   Author                   = {Mitchell, Nick and Sevitsky, Gary},
@@ -3092,6 +3371,21 @@ information integration},
   Month                    = may,
   Note                     = {https://github.com/RuedigerMoeller/fast-serialization},
   Year                     = {2014}
+}
+
+@Article{Moffett2013,
+  Title                    = {Verifying Protocol Conformance Using Software Model Checking for the Model-Driven Development of Embedded Systems},
+  Author                   = {Yann Moffett and Juergen Dingel and Alain Beaulieu},
+  Journal                  = {IEEE Transactions on Software Engineering},
+  Year                     = {2013},
+  Number                   = {9},
+  Pages                    = {1307-13256},
+  Volume                   = {39},
+
+  Address                  = {Los Alamitos, CA, USA},
+  Doi                      = {http://doi.ieeecomputersociety.org/10.1109/TSE.2013.14},
+  ISSN                     = {0098-5589},
+  Publisher                = {IEEE Computer Society}
 }
 
 @Article{Moreau:2005:RAP,
@@ -4022,16 +4316,16 @@ and make our checkers available.
   Url                      = {http://doi.acm.org/10.1145/504311.504296}
 }
 
-@Electronic{OracleEJB3.0,
-  Title                    = {JSR-000220 Enterprise JavaBeans 3.0},
-
-  Address                  = {http://www.oracle.com/technetwork/java/docs-135218.html},
-  Author                   = {Sun Microsystems, Inc.},
-  Url                      = {http://www.oracle.com/technetwork/java/docs-135218.html},
-  Year                     = {2007},
+@Book{SZYPERSKI2002,
+  Title                    = {Component Software: Beyond Object-Oriented programming},
+  Author                   = {CLEMENS SZYPERSKI and DOMINIK GRUNTZ and STEPHAN MURER},
+  Editor                   = {CLEMENS SZYPERSKI},
+  Publisher                = {Addison-Wesley},
+  Year                     = {2002},
+  Edition                  = {Second Edition},
 
   Owner                    = {inti},
-  Timestamp                = {2015.08.02}
+  Timestamp                = {2015.08.27}
 }
 
 @InProceedings{Takayama:2012:MTH:2370216.2370292,
@@ -4234,6 +4528,16 @@ and make our checkers available.
   Doi                      = {10.1109/MS.2013.65},
   ISSN                     = {0740-7459},
   Keywords                 = {software engineering;MDE;model-driven engineering;MDE;model driven engineering practice;software design;software design methodologies}
+}
+
+@InProceedings{Winter2002,
+  Title                    = {The PECOS Software Process},
+  Author                   = {M. Winter and C. Zeidler and C. Stich},
+  Booktitle                = {Workshop on Components-based Software Development Processes, ICSR 7},
+  Year                     = {2002},
+
+  Owner                    = {inti},
+  Timestamp                = {2015.09.01}
 }
 
 @Article{Wolf:1997:CRR:597008.597056,
@@ -4477,11 +4781,6 @@ and make our checkers available.
 @Misc{arduinoWeb,
   Title                    = {{Arduino web site}},
   Note                     = {\url{http://www.arduino.cc/}}
-}
-
-@InProceedings{Autili:2013:HAR:2489326.2489677,
-  Owner                    = {inti},
-  Timestamp                = {2015.08.02}
 }
 
 @Misc{cytoscape,

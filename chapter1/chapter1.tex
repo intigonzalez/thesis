@@ -42,9 +42,9 @@ Likewise, poor QoS in multimedia systems is associated to complex resource manag
 Finally, resource-aware networking can be used to improve QoS properties such as data availability \cite{Boldrini:2008:CRA:1549824.1550106} and P2P video streaming \cite{Pianese:2007:RLA:1326320.1326323,Alhaisoni:2010:RTO:1664767.1664770}.
 
 \item \textbf{Support per-customer resource quotas.}
-In Software as a Service (SaaS), it is necessary to guarantee per-user quotas.
-Although using a separated instance of the application for each user, along system-level capabilities to manage resources as we discuss in section ~\ref{sec:resource-reservation-related}, is a solution; this approach leads to excessive resource consumption.
-Instead, the trend is to design multi-tenant applications that are able to schedule the incoming requests in order to guarantee per-user quotas while sharing as most part of the application as possible \cite{KrSpAhKo2014_CCGrid_ResourceIsolation,KrWeKo2013-icwe-MTBenchmark}.    
+In Software as a Service (SaaS), it is necessary to guarantee per-tenant quotas.
+Although using a separated instance of the application for each tenant, along system-level capabilities to manage resources as we discuss in section ~\ref{sec:resource-reservation-related}, is a solution; this approach leads to excessive resource consumption.
+On the contrary, one other solution is to design multi-tenant applications - which share most applications' code - by scheduling incoming requests in order to guarantee per-tenant quotas \cite{KrSpAhKo2014_CCGrid_ResourceIsolation,KrWeKo2013-icwe-MTBenchmark}.    
 
 \item \textbf{Ensure resource isolation for critical applications.}
 Strong isolation among applications is often required when critical applications \cite{Knight:2002:SCS:581339.581406} share a platform with untrusted software systems.
@@ -340,7 +340,7 @@ In cases where there is no numerical value published, we discuss the reasons tha
 In the rest of this section, different approaches related to resource management are presented.
 Section \ref{sec:resource-consumption-monitoring-related} discusses some techniques for the monitoring of resource usage in MRTEs.
 A summary of many approaches to reserve resource in MRTEs is presented in section \ref{sec:resource-reservation-related}.
-Finally, section \ref{sec:discussion-related-work} summarizes what the strengths and weaknesses of each approach are.
+Finally, section \ref{sec:discussion-related-work} summarizes the strengths and weaknesses of each approach.
 This last section also highlights what are the limitations of state-of-the-art approaches.
 
 \subsection{Resource consumption monitoring} \label{sec:resource-consumption-monitoring-related}
@@ -536,7 +536,7 @@ Once a component is accepted on the platform, its execution is monitored to veri
 
 \subsection{Remarks on existent mechanisms} \label{sec:discussion-related-work}
 
-Many approaches for resource accounting and reservation have been proposed; table \ref{tab:approaches-accounting-reservation} summarizes the properties of those techniques presented in sections \ref{sec:resource-consumption-monitoring-related} and \ref{sec:resource-reservation-related}.
+Many approaches for resource accounting and reservation have been proposed; Table \ref{tab:approaches-accounting-reservation} summarizes the properties of those techniques presented in sections \ref{sec:resource-consumption-monitoring-related} and \ref{sec:resource-reservation-related}.
 The table is split in three sections: first, a set of approaches that target solely resource accounting; second, approaches that aim at solving both resource accounting and resource reservation; and finally, techniques that only face the problem of reservation.
 This table shows a clear picture of existent trade-offs in the design of solutions to support resource aware programming.
 It also gives on insight of some good practices that help to create better solutions.

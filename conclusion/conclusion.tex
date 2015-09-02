@@ -8,6 +8,24 @@
 
 \section{Conclusions}
 
+
+\subsection{Scapegoat}
+
+\paragraph{On reducing the overhead of instrumentation}
+In addition, we plan to study alternatives to improve instruction accounting. %These alternatives are about using peak monitoring and learning monitoring.
+For example, we plan to study the use of machine learning for monitoring \cite{tesauro2006hybrid}. Based on a machine learning approach, it is possible to train the monitoring system to do the instruction instrumentation. Then, instead of doing normal instruction instrumentation, we might only do, for example, method-calls instrumentation and with the learning data, the monitoring system should be able to infer the CPU usage of each call, whilst lowering the overhead.
+
+\paragraph{Scapegoat's perspectives}
+The work presented in this chapter opens various research perspectives. 
+Scapegoat currently uses code injection at load-time to perform fine-grained monitoring. 
+The adaptive monitoring approach we have presented provides good results, but we believe we can reduce the overhead of CPU and memory monitoring by using a modified JVM and injecting specialized bytecode to cooperate with it.
+The modified JVM would account for the resources at a low-level, while the instrumentation code could provide application-level information like the component boundaries. 
+This should result in a more efficient solution than calculating resource usage at the application-level only.
+A second research perspective consists in proposing appropriate reactions when the source of a problem is discovered by Scapegoat. 
+Indeed, reconfiguration policies when a resource-consumption problem is found could range from resource limitations for faulty components, to a replacement of the component or of part of the application, to degrading the applications functionality.
+In the context of distributed systems, the set of possible reconfigurations is larger and can include moving components across the distributed infrastructure.
+It is necessary to choose how to efficiently reconfigure the system to deal with the discovered fault.
+
 \begin{comment}
 
 \subsection{Transfert du monde académique vers l'industrie }

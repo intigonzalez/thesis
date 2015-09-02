@@ -1,14 +1,14 @@
-\section{ScapeGoat to spot faulty components in a scalable diverse web application}\label{sec:WebStudy}
+\section{Scapegoat to spot faulty components in a scalable diverse web application}\label{sec:WebStudy}
 In this section, we present another application that benefits from the Scapegoat approach.
 Although the general goal of spotting components that behave abnormally regarding resource consumption remains the same, with this use case we highlight the possibility of using Scapegoat 
 %on a real application 
-%and a specific usage of ScapeGoat 
+%and a specific usage of Scapegoat 
 to automatically find buggy components on a scalable modular web application.
 The section \ref{MdMS} presents an introduction to the application use case, while the remainder of the section deals with the experimental setup and the results.
 
 
 \subsection{Use case presentation}\label{MdMS}
-We are applying the ScapeGoat approach to check resource consumption contracts on a web application called MdMS.\footnote{https://github.com/maxleiko/mdms-ringojs}
+We are applying the Scapegoat approach to check resource consumption contracts on a web application called MdMS.\footnote{https://github.com/maxleiko/mdms-ringojs}
 This application offers a web Content Management System based on the Markdown language for editing posts. 
 MdMS uses a typical architecture (as shown in Figure \ref{fig:webapp}) for scalable web applications: a load-balancer connected to a set of workers (called MdMS Sosie in the Figure \ref{fig:webapp}), which are themselves connected to a distributed database to retrieve the application specific content.
 The worker layer of this application can be duplicated across various machines to support a growing number of clients.
@@ -17,7 +17,7 @@ The web application is currently online\footnote{http://cloud.diversify-project.
 \begin{figure*}[!bt]
 	\centering
 	\includegraphics[scale=0.45]{./chapter5/figures/webapp2}
-	\caption{\label{fig:webapp}Architecture of MdMS along with Scapegoat and additional components to adapt th system.}
+	\caption{\label{fig:webapp}Architecture of MdMS along with Scapegoat and additional components to adapt the system.}
 \end{figure*}
 
 The main characteristic of MdMS is that all workers are not pure clones but diverse implementations of the MdMS server stack~\cite{alliermulti}.
@@ -30,12 +30,12 @@ A \textit{sosie} is a variant of a program that exhibits the same functionality 
 While the construction of \textit{sosies} focuses on preserving functional correctness, it ignores all the non-functional aspects of the program.
 Consequently, a \textit{sosie} offers no guarantee regarding its resource consumption and may contain memory leaks or other overhead on resource consumption that can significantly impact the performance of MdMS.
 
-In this experiment, we use ScapeGoat to monitor the resource consumption of the various \textit{sosies} of the MdMS workers.
+In this experiment, we use Scapegoat to monitor the resource consumption of the various \textit{sosies} of the MdMS workers.
 This technique enables us to identify \textit{sosies} in a production environment that do not behave according to the resource consumption contracts, allowing the system to remove these workers and use other \textit{sosies}.
-Our goal in this experiment is to answer the following research question:
+Our goal in this experiment is to answer the following question:
 
 \begin{itemize}
- \item Does ScapeGoat correctly identify the faulty components in a system which includes many variants of the same component?   
+ \item Does Scapegoat correctly identify the faulty components in a system which includes many variants of the same component?   
 \end{itemize}
 
 \subsection{Experimental setup}
@@ -45,7 +45,7 @@ The stress produced by these requests increases the resource consumption on the 
 Figure~\ref{fig:webapp} depicts the server side's configuration.
 Since MdMS is a web application developed on top of RingoJS~\footnote{https://github.com/ringo/ringojs}, a JavaScript runtime written in Java, our \textit{sosies} include the RingoJS framework and the application that has been wrapped into Kevoree components.
 
-In this experiment, we deploy many of these components as back-end servers of the web application and we use ScapeGoat to monitor the consumption of each server.
+In this experiment, we deploy many of these components as back-end servers of the web application and we use Scapegoat to monitor the consumption of each server.
 Their contracts regarding resource consumption were built using the mechanism described in section \ref{sec:measurement_metodology} but with the original MdMS worker as a reference component.
 The application also contains a component acting as a front-end that evenly distributes the requests among back-end servers.
 This load balancer implements a plain round robin policy.
@@ -64,7 +64,7 @@ The experiment is configured as follows.
 Using the diversification technique described in~\cite{baudry2014tailored}, we synthesized 20 \textit{sosies} of the MdMS workers.
 These \textit{sosies} are used to execute the application with a varying number of back-ends (from 4 to 10).
 One particular \textit{sosie} has been modified by hand to ensure that it violates the original component's contract.
-We execute all the described components as well as the ScapeGoat components on a single instance of Kevoree.
+We execute all the described components as well as the Scapegoat components on a single instance of Kevoree.
 
 \subsection{Experimentation results}
 
@@ -90,22 +90,22 @@ The values in this section are better even if we are monitoring both resources b
 \input{./chapter5/webAppResults}
 
 In these experiments, we evaluate the accuracy of the output and its quality in terms of the time needed to find the faulty component.
-ScapeGoat always spots the correct \textit{sosie}.
+Scapegoat always spots the correct \textit{sosie}.
 It does so because it is an iterative process that continues until finding the faulty component.
-In addition, ScapeGoat does not output false positives during these experiments.
+In addition, Scapegoat does not output false positives during these experiments.
 The delay to detect faulty components is shown in Figure~\ref{fig:delay-time-web-app}.
 In this case, the values remain close to 2 seconds no matter the number of \textit{sosies} used nor the execution time.
 This behavior is consistent with the experiments in section~\ref{sec:evaluation} because we are also using a good heuristic for the use case.
-It shows that ScapeGoat can spot faulty components with an acceptable delay in a real application.
+It shows that Scapegoat can spot faulty components with an acceptable delay in a real application.
 
 \subsection{Discussion of the use case}
-This use case shows that ScapeGoat is able to provide useful information in real applications.
+This use case shows that Scapegoat is able to provide useful information in real applications.
 It also highlights how the framework can help select software variants at runtime in the context of software diversity.
 Or, more generally, in the field of software oriented architectures where many stakeholders may provide the same services, Scapegoat can help to choose services.
-Moreover, this use case leads to a distributed usage of ScapeGoat, where the policies for admission control and resource consumption monitoring can be coordinated among distributed devices.
+Moreover, this use case leads to a distributed usage of Scapegoat, where the policies for admission control and resource consumption monitoring can be coordinated among distributed devices.
 
-Finally, in systems where there are many variants of the same component or service, ScapeGoat provides essential information to drive application reconfiguration.
-For example, the adaptation component in figure~\ref{fig:webapp} may use Scapegoat's faulty component selection to replace a faulty \textit{sosie} or to modify the scheduling policy in the load balancer.
+Finally, in systems where there are many variants of the same component or service, Scapegoat provides essential information to drive application reconfiguration.
+For example, the adaptation component in Figure~\ref{fig:webapp} may use Scapegoat's faulty component selection to replace a faulty \textit{sosie} or to modify the scheduling policy in the load balancer.
 
 
 

@@ -1,8 +1,8 @@
 %-----------------------------%
 \selectlanguage{english}
-\chapter{ScapeGoat: Spotting the Faulty Component in Reconfigurable Software Systems}
+\chapter{Scapegoat: Spotting the Faulty Component in Reconfigurable Software Systems}
 \label{chp:scapegoat}
-\markboth{ScapeGoat: Spotting the Faulty Component in Reconfigurable Software Systems}{Chapter5}
+\markboth{Scapegoat: Spotting the Faulty Component in Reconfigurable Software Systems}{Chapter5}
 %-----------------------------%
 
 \coolphrase {
@@ -23,7 +23,7 @@
 	\emph{McNulty} - [\dots] You let him do this?\hspace*{50 mm} 
 	\vspace{1 mm}
 	
-	\emph{Witness} - Naw man. We catch him and kick his ass. [\dots]\hspace*{15 mm} 
+	\emph{Witness} - Naw man. We catch him and kick his [\dots]\hspace*{22 mm} 
 	\vspace{1 mm}
 	
 	\emph{McNulty} - I got to ask you [\dots] -- if he did that every time -- why\hspace*{3 mm} \\
@@ -44,43 +44,43 @@
 }{The Wire, Season 1, Episode 1}
 
 
-Modern component frameworks support continuous deployment and simultaneous execution of multiple software components on
-top of the same virtual machine.
-However, isolation between the various components is limited.
-A faulty version of any one of the software components can compromise the whole system by consuming all available resources.
-In this paper, we address the problem of efficiently identifying faulty software components running simultaneously in a single virtual machine.
-Current solutions that perform permanent and extensive monitoring to detect anomalies induce high overhead on the system,
-and can, by themselves, make the system unstable.
-In this paper we present an optimistic adaptive monitoring system to determine the faulty components of an application.
-Suspected components are finely analyzed by the monitoring system, but only when required.
-Unsuspected components are left untouched and execute normally.
-Thus, we perform localized \textit{just-in-time} monitoring that decreases the accumulated overhead of the monitoring system.
-We evaluate our approach on two case studies against a state-of-the-art monitoring system and show that our technique correctly
-detects faulty components, while reducing overhead by an average of 92.98\%.
+%Modern component frameworks support continuous deployment and simultaneous execution of multiple software components on
+%top of the same virtual machine.
+%However, isolation between the various components is limited.
+%A faulty version of any one of the software components can compromise the whole system by consuming all available resources.
+%In this paper, we address the problem of efficiently identifying faulty software components running simultaneously in a single virtual machine.
+%Current solutions that perform permanent and extensive monitoring to detect anomalies induce high overhead on the system,
+%and can, by themselves, make the system unstable.
+%In this paper we present an optimistic adaptive monitoring system to determine the faulty components of an application.
+%Suspected components are finely analyzed by the monitoring system, but only when required.
+%Unsuspected components are left untouched and execute normally.
+%Thus, we perform localized \textit{just-in-time} monitoring that decreases the accumulated overhead of the monitoring system.
+%We evaluate our approach on two case studies against a state-of-the-art monitoring system and show that our technique correctly
+%detects faulty components, while reducing overhead by an average of 92.98\%.
 
 
-\section{Introduction}\label{sec:intro}
+%\section{Introduction}\label{sec:intro}
 
-Modern computing systems, such as home automation, pervasive and ubiquitous systems are becoming a larger part of our lives.
-The tight connection with our living environment introduces new needs for these systems, such as the co-evolution of the system with its environment, the adaptation of the system to available resources and to users' behaviours, and the reliability of the system in front of faulty or malicious behaviours.
-Modern component frameworks assist software developers in coping with these new needs by providing introspection, reconfiguration, advanced technical services, among other facilities.
-These frameworks provide extensible middleware and assist developpers in managing technical issues such as security, transaction management, or distributed computing.
-They also support the simultaneous execution of multiple software components on the same virtual machine \cite{OSGI:r5,Kevoree,bruneton06}.
-% layer based ?
+%Modern computing systems, such as home automation, pervasive and ubiquitous systems are becoming a larger part of our lives.
+%The tight connection with our living environment introduces new needs for these systems, such as the co-evolution of the system with its environment, the adaptation of the system to available resources and to users' behaviours, and the reliability of the system in front of faulty or malicious behaviours.
+%Modern component frameworks assist software developers in coping with these new needs by providing introspection, reconfiguration, advanced technical services, among other facilities.
+%These frameworks provide extensible middleware and assist developpers in managing technical issues such as security, transaction management, or distributed computing.
+%They also support the simultaneous execution of multiple software components on the same virtual machine \cite{OSGI:r5,Kevoree,bruneton06}.
+%% layer based ?
+%
+%While component frameworks simplify the programming model for software developers, the isolation between the various components is limited because they are collocated on the same virtual machine.
+%This allows components to communicate efficiently and to share references to complex objects, something which is generally not possible when crossing the process boundary.
+%However, one faulty software artifact may compromise the whole system by, for example, consuming all available resources on the machine.
+%Furthermore, because these systems evolve in open environments where humans have central roles, software developers are unable to anticipate all future configurations of the application  at design-time \cite{baresi2006toward}.
+%In these highly unpredictable environments, detecting irregular behaviour and maintaining the system in a consistent state is an important concern that can be addressed through continuous monitoring.
 
-While component frameworks simplify the programming model for software developers, the isolation between the various components is limited because they are collocated on the same virtual machine.
-This allows components to communicate efficiently and to share references to complex objects, something which is generally not possible when crossing the process boundary.
-However, one faulty software artifact may compromise the whole system by, for example, consuming all available resources on the machine.
-Furthermore, because these systems evolve in open environments where humans have central roles, software developers are unable to anticipate all future configurations of the application  at design-time \cite{baresi2006toward}.
-In these highly unpredictable environments, detecting irregular behaviour and maintaining the system in a consistent state is an important concern that can be addressed through continuous monitoring.
-
-State of the art monitoring systems \cite{FrenotS04,KregerHaroldWilliamson03,Binder200645} extract steady data-flows of system parameters, such as the time spent executing a component, the amount of I/O and memory used, and the number of calls to a component.
+State of the art monitoring systems \cite{FrenotS04,KregerHaroldWilliamson03,Binder200645} collect data about the internal state of applications at runtime, such as the time spent executing a component, the amount of I/O and memory used, and the number of calls to a component.
 The overhead that these monitoring systems introduce into applications is high, which makes it unlikely for them to be used in production systems.
 Results presented in \cite{Binder:2009:PPV:1464245.1464249} show that overhead due to fine-grain monitoring systems can be up to a factor of 4.3.
 Our experiments, presented in this paper, show that overhead grows with the size of the monitored software.
 Thus, overhead greatly limits the scalability and usage of monitoring systems.
 
-In this paper, we address excessive overhead in monitoring approaches by introducing an optimistic adaptive monitoring system that provides lightweight global monitoring under normal conditions, and precise and localized monitoring when problems are detected.
+In this chapter, we address excessive overhead in monitoring approaches by introducing an optimistic adaptive monitoring system - Scapegoat - that provides lightweight global monitoring under normal conditions, and precise and localized monitoring when problems are detected.
 Although our approach reduces the accumulated amount of overhead in the system, it also introduces a delay in finding the source of a faulty behaviour.
 Our objective is to provide an acceptable trade-off between the overhead and the delay to identify the source of faulty behaviour in the system.
 
@@ -90,7 +90,7 @@ Our optimistic adaptive monitoring system is based on the following principles:
 %\parindent -4in % see comments below
  \item \textbf{Contract-based resource usage.}
 The monitoring system follows component-based software engineering principles. 
-Each component is augmented with a contract that specifies their expected or previously calculated resource usage~\cite{Beugnard:1999:MCC:619042.621275}. 
+Each component is augmented with a contract that specifies their expected or previously calculated resource usage~\cite{Beugnard774917}. 
 The contracts specify how a component uses memory, I/O and CPU resources.
  \item \textbf{Localized just-in-time injection and activation of monitoring probes.} 
 Under normal conditions our monitoring system performs a lightweight global monitoring of the system. 
@@ -109,13 +109,13 @@ The evaluation of our optimistic adaptive monitoring system shows that, in compa
 Regarding latency, our heuristic reduces the delay to identify the faulty component when changing from global, lightweight monitoring to localized, just-in-time monitoring.
 We also present a use case to highlight the possibility of using Scapegoat on a real application, that shows how to automatically find buggy components on a scalable modular web application.
 
-The remainder of this paper is organized as follows.
-Section~\ref{sec:background} presents the background on Models@run.time and motivates our work through a case study which is used to validate the approach.
+The remainder of this chapter is organized as follows.
+Section~\ref{sec:scapegoat-motivaing-example} motivates our work through a case study which is used to validate the approach.
 Section~\ref{sec:approach} provides an overview of the Scapegoat framework.
-It highlights how the component contracts are specified, how monitoring probes are injected and activated on-demand, how the ScapeGoat framework enables the definition of heuristics to detect faulty components without activating all the probes, and how we benefit from Models@run.time to build efficient heuristics.
-Section~\ref{sec:evaluation} validates the approach through a comparison of detection precision and detection speed with other approaches.
-Section~\ref{sec:WebStudy} presents a use case based on an online web application\footnote{http://cloud.diversify-project.eu/} which leverages software diversity for safety and security purposes.
-Finally, section~\ref{sec:related} discusses related work and section~\ref{sec:conclusion} discusses the approach and presents our conclusion and future work.
+It highlights how the component contracts are specified, how monitoring probes are injected and activated on-demand, how the Scapegoat framework enables the definition of heuristics to detect faulty components without activating all the probes, and how we benefit from Models@run.time to build efficient heuristics.
+Section~\ref{sec:evaluation} evaluates the approach through a comparison of detection precision and detection speed with other approaches.
+Section~\ref{sec:WebStudy} presents a use case based on an online web application\footnote{http://cloud.diversify-project.eu/} that leverages software diversity for safety and security purposes.
+Finally, Section~\ref{sec:conclusion} discusses the approach and presents the conclusions of this chapter.
 
 \input{chapter5/background.tex}
 \input{chapter5/approach.tex}
@@ -123,25 +123,21 @@ Finally, section~\ref{sec:related} discusses related work and section~\ref{sec:c
 %\input{chapter5/related_work.tex}
 
 \section{Conclusions}\label{sec:conclusion}
-In this paper we presented ScapeGoat, an adaptive monitoring framework to perform lightweight yet efficient monitoring of Component-Based Systems.
-In ScapeGoat, each component is augmented with a contract that specifies its resource usage, such as peak CPU and memory consumption.
-ScapeGoat uses a global monitoring mode that has low overhead on the system, and an on-demand fine-grained localized monitoring mode that performs extensive checking of the components' contracts.
+In this chapter we presented Scapegoat, an adaptive monitoring framework to perform lightweight yet efficient monitoring of Component-Based Systems.
+In Scapegoat, each component is augmented with a contract that specifies its resource usage, such as peak CPU and memory consumption.
+Scapegoat uses a global monitoring mode that has low overhead on the system, and an on-demand fine-grained localized monitoring mode that performs extensive checking of the components' contracts.
 The system switches from the global monitoring mode to the localized monitoring mode whenever a problem is detected at the global level in order to identify the faulty component.
 Furthermore, we proposed a heuristic that leverages information produced by the Models@run.time approach to quickly predict the faulty components. 
 
-ScapeGoat has been implemented on top of the Kevoree component framework which uses the Models@run.time approach to tame the complexity of distributed dynamic adaptations.
-The evaluation of ScapeGoat shows that the monitoring system's overhead is reduced by up to 92.98\% in comparison with state-of-the-art full monitoring systems. 
+Scapegoat has been implemented on top of the Kevoree component framework which uses the Models@run.time approach to tame the complexity of distributed dynamic adaptations.
+The evaluation of Scapegoat shows that the monitoring system's overhead is reduced by up to 92.98\% in comparison with state-of-the-art full monitoring systems. 
 The evaluation also presents the benefits of using a heuristic to predict the faulty component.
 In our second part of the evaluation, we highlighted the benefit of scapegoat on a classical web server architecture to dynamically determine faulty components.
-This second usage also exposes the capacity of ScapeGoat to be applied to different application domains and confirms its relatively low overhead on the running system.
-This paper contributes to the state of the art by providing a monitoring framework which adapts its overhead depending on current execution conditions and leverages the architectural information provided by Models@run.time to drive the search for the faulty component.
+This second example also exposes the capacity of Scapegoat to be applied to different application domains and confirms its relatively low overhead on the running system.
+Scapegoat contributes to the state of the art by providing a monitoring framework which adapts its overhead depending on current execution conditions and leverages the architectural information provided by Models@run.time to drive the search for the faulty component.
 
-The work presented in this paper opens various research perspectives. 
-Scapegoat currently uses code injection at load-time to perform fine-grain monitoring. 
-The adaptive monitoring approach we have presented provides good results, but we believe we can reduce the overhead of CPU and memory monitoring by using a modified JVM and injecting specialized bytecode to cooperate with it.
-The modified JVM would account for the resources at a low-level, while the instrumentation code could provide application-level information like the component boundaries. 
-This should result in a more efficient solution than calculating resource usage at the application-level only.
-A second research perspective consists in proposing appropriate reactions when the source of a problem is discovered by ScapeGoat. 
-Indeed, reconfiguration policies when a resource-consumption problem is found could range from resource limitations for faulty components, to a replacement of the component or of part of the application, to degrading the applications functionality.
-In the context of distributed systems, the set of possible reconfigurations is larger and can include moving components across the distributed infrastructure.
-It is necessary to choose how to efficiently reconfigure the system to deal with the discovered fault.
+The approach proposed in this chapter contributes to answer two research questions that were presented in the introduction of this thesis (see Section \ref{sec:intro-challenges}).
+In particular, it answers \textit{RQ1} (\textit{How can we provide portable and efficient support for resource consumption monitoring?}) by describing a monitoring framework that produces low performance overhead and is fully portable.
+Likewise, our proposal partially answers \textit{RQ3} (\textit{How can we leverage the knowledge about the architecture of applications to drive
+a mechanism for resource management?}) by using knowledge about the structure of applications to drive the behavior of the framework.
+
