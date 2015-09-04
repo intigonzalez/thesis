@@ -5,21 +5,21 @@
 \markboth{Abstraction-oriented resource awareness}{Chapter2}
 %------------------------------%
 
-\coolphrase {Hey, look at this}{Inti Gonzalez-Herrera}
+\coolphrase {Where is the `any' key?}{Homer Simpson, in response to the message, ``Press any key''}
 
 Defining and using abstractions is a main part of building software products.
 New abstractions are usually layered atop existent software systems in order to fulfill specific goals
 - ease development, improve security, provide extensibility.
-Some kinds of abstractions have well-defined boundaries (e.g., process, thread), and it is possible to identify how they consume computational resources.
+Some kind of abstractions have well-defined boundaries (e.g., process, thread), and it is possible to identify how they consume computational resources.
 Due to the fact that abstractions are the building block of applications, it is of utmost importance to control their behavior regarding resource usage.
   
-This chapter describes two abstractions that are frequently used on top of MRTEs: components (section \ref{sec:components-oriented-resource-awareness}), and domain-specific languages (DSLs) (section \ref{sec:DSL-on-MRTEs}).
+This chapter describes two abstractions that are frequently used on top of MRTEs: components (Section \ref{sec:components-oriented-resource-awareness}), and domain-specific languages (DSLs) (Section \ref{sec:DSL-on-MRTEs}).
 Comprehensive discussions on how these abstractions consume resources are presented.
-In particular, we are interested on two phenomenons.
-First, we tackle (section \ref{sec:component-leverage}) the issue of how we can leverage component-based architectures - to reduce the overhead of dealing with resources - by specializing resource management techniques.
+In particular, we are interested in two phenomenons.
+First, we tackle (Section \ref{sec:component-leverage}) the issue of how we can leverage component-based architectures - to reduce the overhead of dealing with resources - by specializing resource management techniques.
 
 Second, since new abstractions are constantly created nowadays, having generic and efficient mechanisms for controlling how they use resources may simplify the process of providing resource awareness support.
-We then present the state of the art on supporting some forms of resource accounting for arbitrary abstractions (section \ref{sec:resource-awareness-for-dsl}).
+We then present the state of the art on supporting some forms of resource accounting for arbitrary abstractions (Section \ref{sec:resource-awareness-for-dsl}).
 
 \section{Developer's View versus Runtime's View} \label{sec:chapter2-introduction}
 
@@ -105,9 +105,9 @@ A brief description of these dimensions is given below:
 This dimension embodies properties such as \textit{modeling capabilities}, which describe component model's support for the modeling and the design of component-based systems and components; 
 \textit{implementation support}, which basically describes the language that can be used to develop components; and \textit{deployment capabilities}, which describe whether components can be deployed at runtime.
 
-In this thesis, we are interested on component models that provide \textit{modeling capabilities} during the development phase.
+In this thesis, we are interested in component models that provide \textit{modeling capabilities} during the development phase.
 However, we also require minimal support for querying a system architecture at runtime. 
-In addition, we are only interested on component models that target MRTEs, such as Java and .Net.
+In addition, we are only interested in component models that target MRTEs, such as Java and .Net.
 Finally, to satisfy the needs for adaptation, several component models provide solutions to dynamically reconfigure a software architecture through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components~\cite{Porter:2014:RMC:2602458.2602471, Zheng:2014:RCC:2679601.2680405, Irmert:2008:RAS:1370018.1370036, Ghezzi:2010:QDD:2163764.2163774}. 
 In practice, component-based (and/or service-based) platforms like Fractal~\cite{bruneton06}, OpenCOM~\cite{BlairCULJ04}, OSGi~\cite{OSGI:r5} or SCA~\cite{SEINTURIER:2011:INRIA-00567442:1} provide platform mechanisms to support dynamic architectures; this requires the capability of deploying components at runtime.
 Since, we are dealing with the problem of supporting resource awareness in open environments, we focus on those component models that allow component deployment at runtime.
@@ -209,7 +209,7 @@ Likewise, if the service is poorly implemented, in indirect accounting the user 
 
 In the next section, we provide a very brief overview of some component models and their main characteristics.
 The discussion is limited to component models that have been either designed from scratch or implemented to target MRTEs.
-Since we are interested on software systems that evolve at runtime, the discussion is also limited to component models that allow component deployment at runtime.
+Since we are interested in software systems that evolve at runtime, the discussion is also limited to component models that allow component deployment at runtime.
 The list is not exhaustive; instead, it should be understood as a provision of some characteristic examples.
 Nevertheless, a component model - Kevoree -  is discussed in further details because the contributions in chapters \ref{chp:scapegoat} and \ref{chp:squirrel}
 are implemented and evaluated using such a component model.
@@ -292,6 +292,19 @@ Because our goal is to design and implement an adaptive monitoring system, the i
 \item generacion de canales de comunicacion
 \item ver que mas se puede describir
 \end{itemize}
+
+
+Franz Brosch, Heiko Koziolek, Barbora Buhnova, Ralf Reussner: Architecture-Based Reliability Prediction with the Palladio Component Model. IEEE Trans. Software Eng. 38(6): 1319-1339 (2012)
+
+Sam Malek, Marija Mikic-Rakic, Nenad Medvidovic: A Style-Aware Architectural Middleware for Resource-Constrained, Distributed Systems. IEEE Trans. Software Eng. 31(3): 256-272 (2005)
+
+Anne Koziolek, Ralf Reussner: Towards a generic quality optimisation framework for component-based system models. CBSE 2011: 103-108
+
+Marco Autili, Paolo Di Benedetto, Paola Inverardi: Context-Aware Adaptive Services: The PLASTIC Approach. FASE 2009: 124-139
+
+Mauro Caporuscio, Antinisca Di Marco, Paola Inverardi: Model-based system reconfiguration for dynamic performance management. Journal of Systems and Software 80(4): 455-473 (2007)
+
+Marco Autili, Paolo Di Benedetto and Paola Inverardi, Hybrid Approach for Resource-based Comparison of Adaptable Java Applications (2012), in: Journal of Science of Computer Programming (SCP)
 
 \section{Domain-Specific Languages and MRTEs} \label{sec:DSL-on-MRTEs}
 

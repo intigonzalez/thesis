@@ -7,50 +7,70 @@
 
 \coolphrase {Hey, look at this}{Inti Gonzalez-Herrera}
 
-\section{Resource Aware Programming} \label{sec:resource-awareness}
+In this chapter, the context of this thesis, the general problem it faces, and the limitations of existent approaches, are introduced.
+The ideas behind resource-aware programming are discussed in Section~\ref{sec:resource-awareness},
+where the mechanisms required to support resource awareness in a runtime environment are also presented.
+Since our work focuses on managed runtime environments, Section~\ref{sec:mrtes} briefly presents the features of this kind of systems that hinder resource-aware programming.
+Afterwards, Section~\ref{sec:resource-awareness-related-work} discusses the advantages and limitations of existent solutions to deal with resource consumption monitoring and reservation (two subproblems to tackle to support resource-aware programming).
+Finally, this chapter concludes by highlighting the lack of proper support to develop applications that can take advantage of resource awareness, and stating what is needed to improve such support.
+
+\section{Resource-Aware Programming} \label{sec:resource-awareness}
 
 Efficient use of computational resources is an essential concern in software systems because it can reduce the costs of the infrastructure needed to execute applications.
 Resource management is nevertheless particularly challenging when many stakeholders share a platform.
-As a consequence, a traditional approach for resource management in applications is to relay on the runtime environment (e.g., resource management is traditionally the main role of operating systems); and using the environment's generic API to access resources.
+As a consequence, a traditional approach for resource management in applications is to rely on the runtime environment (e.g., managing resources is traditionally a main concern of operating systems); and using the environment's generic API to access resources.
 Although there are many advantages associated to this approach, it is known that applications built upon such generic interfaces often show relative poor performance \cite{engler1995exokernel}.
 The problem arises because the implementation of a general purpose abstraction must cover many use-cases.
 This results in complex execution paths where few assumptions regarding how the abstraction will be used can be made.
 It has been shown that the performance of many resource intensive systems can be improved by carefully specializing resource management at the application level \cite{engler1995exokernel,Belay:2014:IPD:2685048.2685053,Marinos:2014:NSS:2619239.2626311}.
 
-The principle of bypassing a generic implementation in favor of a specialized one has been widely applied in computer science and software engineering \cite{engler1995exokernel, Munro1996,Dragos:2009:CGT:1565824.1565830, muller,Marinos:2014:NSS:2619239.2626311}.
+The principle of bypassing a generic implementation in favor of a specialized one has been widely applied in computer science and software engineering \cite{engler1995exokernel, Munro1996,Dragos:2009:CGT:1565824.1565830,Marinos:2014:NSS:2619239.2626311}.
 Since resource usage is a key concern for any software system, specializing resource management is potentially beneficial for many applications.
-Along this thesis, we use the term \textit{resource-aware} to refer to those applications/systems that observe, carefully manage, and are aware of computational resources in order to improve their performance. 
+In this thesis, we use the term \textit{resource-aware} to refer to those applications/systems that observe, carefully manage, and are aware of computational resources in order to improve their performance. 
 At first, this definition might look too broad, but in reality most applications limit themselves to carefully use the resource allocations facilities offered by runtime environments.
 Take for example a web server that uses a pool of threads to attend requests.
 By using this pool the server is in fact carefully managing resource, but with this feature alone it is not able to observe whether the pool's size should be decreased/increased.
-The key issue in the definition used in this thesis is that three elements must be present in an application/system in order to be classified as \textit{resource-aware}: observation, management, and behavior modification. 
-Finally, our understanding of the idea of resource-aware applications/systems is in fact closely related, but not limited, to that of the Monitor-Analyze-Plan-Execute Loop (MAPE) \cite{Brun:2009:ESS:1573856.1573860}.
-Indeed, if we consider the monitoring part as observing the resource availability and consumption, then it is simple to see how the rest of the MAPE Loop can be considered resource management and behavior modification.
+The key issue in the definition used in this thesis is that three elements must be present in an application/system in order to be classified as \textit{resource-aware}: observation, management, and behavior modification.
 
-Applying resource-aware techniques to develop a software system can be motivated by the need to satisfy functional or non-functional requirements.
-Among these requirements we find the following:
+ 
+Finally, our understanding of the idea of resource-aware applications/systems is in fact closely related, but not limited, to that of \textit{Autonomic Computing} \cite{Horn2001,kephart03,Brun:2009:ESS:1573856.1573860}.
+Figure \ref{fig:resource-aware-vs-autonomic-computing} depicts an example of how the MAPE-K loop can be instantiated to build an autonomic manager that is aware of resource consumption.
+During monitoring, two variables are considered: CPU usage and memory availability.
+In this abstract example, the analyze phase determines whether some components are misbehaving.
+Next, a plan to replace the faulty components is built.
+The last step in the loop involves reconfiguring the system to effectively replace the faulty components.
+Some knowledge is needed to guide the process; in this case, information on the architecture of the system, its components, and how they are couple, may result beneficial.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.3]{./chapter1/fig/mape-k.png}
+\caption{Resource-aware programming can be seen as a particular case of \textit{autonomic computing.}} \label{fig:resource-aware-vs-autonomic-computing}
+\end{figure}
+
+Applying resource-aware techniques to develop a software system can be motivated by the need to satisfy both functional and non-functional requirements.
+Among the non-requirements we find the following:
 
 \begin{itemize}
 \item \textbf{Improve performance.}
 Considerable amount of work showing the potential advantages of specializing resource management to enhance system performance have been published.
-Of particular interest are use-cases that show how to reduce the execution time \cite{Polo:2011:RAS:2414338.2414352}, improve the response time \cite{no se} or increase the number of requests a web server is able to handle \cite{engler1995exokernel,Belay:2014:IPD:2685048.2685053}.
+Some interesting use-cases are, for instance, reducing the execution time \cite{Polo:2011:RAS:2414338.2414352}, and increasing the number of requests a web server is able to handle \cite{engler1995exokernel,Belay:2014:IPD:2685048.2685053}.
 
 \item \textbf{Guarantee certain Quality of Service (QoS).} 
 Often, when the quality of a service is evaluated, we consider properties that are related to either the resources allocated to execute the service or the mechanisms used to manage resources.
-For instance, misbehaviors in a property such as response time can be associated to low resource availability \cite{uno aquji,Chechik-2009}.
+For instance, misbehaviors in a property such as response time can be associated to low resource availability \cite{Chechik-2009,autili2012hybrid}.
 Likewise, poor QoS in multimedia systems is associated to complex resource management mechanisms in the operating system kernel \cite{Black1997}.
 Finally, resource-aware networking can be used to improve QoS properties such as data availability \cite{Boldrini:2008:CRA:1549824.1550106} and P2P video streaming \cite{Pianese:2007:RLA:1326320.1326323,Alhaisoni:2010:RTO:1664767.1664770}.
 
 \item \textbf{Support per-customer resource quotas.}
 In Software as a Service (SaaS), it is necessary to guarantee per-tenant quotas.
-Although using a separated instance of the application for each tenant, along system-level capabilities to manage resources as we discuss in section ~\ref{sec:resource-reservation-related}, is a solution; this approach leads to excessive resource consumption.
+Although using a new application instance for each tenant is a solution; this approach leads to excessive resource consumption.
 On the contrary, one other solution is to design multi-tenant applications - which share most applications' code - by scheduling incoming requests in order to guarantee per-tenant quotas \cite{KrSpAhKo2014_CCGrid_ResourceIsolation,KrWeKo2013-icwe-MTBenchmark}.    
 
 \item \textbf{Ensure resource isolation for critical applications.}
 Strong isolation among applications is often required when critical applications \cite{Knight:2002:SCS:581339.581406} share a platform with untrusted software systems.
 In this context, resource usage isolation is an important concern because one application can make a second application crash by simply monopolizing the computational resources.
 In this scenario, application containment \cite{Kamp00jails:confining,Soltesz:2007:COS:1272998.1273025,Madhavapeddy:2015:JJS:2789770.2789809} is a useful mechanism to support resource-aware isolation.
-Providing specialized application containment requires extensive runtime environment support, based on approaches such as \textit{unikernels} \cite{Madhavapeddy:2013:ULO:2499368.2451167,Kivity:2014:OVO:2643634.2643642}, that has been under heavy development after the widespread adoption of distributed and cloud services.  
+Providing specialized application containment requires extensive runtime environment support, based on approaches such as \textit{unikernels} \cite{Madhavapeddy:2013:ULO:2499368.2451167, Kivity:2014:OVO:2643634.2643642, Madhavapeddy:2015:JJS:2789770.2789809}, that has been under heavy development after the widespread adoption of distributed and cloud services.  
 
 \end{itemize}
 
@@ -72,7 +92,7 @@ Applications that are aware of extra resource availability are able to temporari
 In addition, applications can nicely modify their behavior to collaborate with other systems that share a platform if they are aware of their consumption, the resource availability and also of what other applications demand.
 \end{itemize}
 
-Along this work, we focus on two of these features: \textit{resource consumption monitoring} and \textit{resource reservation}.
+In this research, we focus on two of these features: \textit{resource consumption monitoring} and \textit{resource reservation}.
 In particular, this thesis devotes a significant amount of space discussing how to deal with the problem of efficiently monitoring the quantity of resources consumed by different parts of an application.
 
 \todo{Fill the box}
@@ -138,7 +158,7 @@ However, developers that use mature languages such as \textit{C++} or \textit{Ob
 
 In 1995 the first mainstream managed runtime environment (MRTE), Java, was created. It became a success even if it was not the first language providing built-in features such as automatic memory management, dynamic loading of portable code, or support for the object-oriented paradigm due to three main reasons: the level of maturity of many technical solutions on topics such as just-in time (JIT) compilation, the growing speed-up of hardware, and the advantages offered by the concept of \textit{managed} languages.
 Since then, it has become clearer that modern languages demand features which require a considerable runtime support.
-These features include the following:
+These features include the following \cite{Cierniak2005}:
 
 \begin{itemize}
 \item \textbf{\textit{Portability}}:
@@ -182,7 +202,7 @@ Memory allocation follows a ``simple guideline'': a thread belonging to the muta
 
 To understand what the garbage collector does, it is worth looking at how the memory heap is organized.
 The heap contains a set of allocated blocks with varying size.
-A memory block can represent an \textit{object} as in object-oriented programming or an array, but along this description we use the generic term object as a synonymous of memory block. 
+A memory block can represent an \textit{object} as in object-oriented programming or an array, but in this description we use the generic term object as a synonymous of memory block. 
 Objects contain primitive values that represent the internal state of applications, but they also contain references to other objects.
 Due to the way in which applications allocate memory, after some times the heap has a large set of objects that are connected by references, forming a directed-graph.
 In this graph, edges are references and most nodes are just objects.
@@ -231,10 +251,10 @@ This greatly reduces the complexity of developing applications.
 On the negative side, applications may suffer some performance penalties and also lack of control.
 As mentioned in section \ref{sec:resource-awareness}, the lost of control makes the language inappropriate in scenarios that require further assistance to deal with resources.
 
-Among the core features present in MRTEs that impact the implementation of resource-aware applications we identify: i) automatic memory management, ii) dynamic code loading, iii) support for concurrent programming, and iv) the usage of high-level abstractions that do not map exactly to resources.
+Among the core features present in MRTEs that impact the implementation of resource-aware applications we identify: automatic memory management; ii) dynamic code loading; iii) support for concurrent programming; and iv) the usage of high-level abstractions, such as managed threads and classloaders,  that do not always correspond to the concepts (process, thread) traditionally used to handle resources.
 In addition, there are implementation-specific limitations that obstruct the development of resource-aware solutions.
-For instance, it has been largely discussed \cite{} the lack of modularization in the Java HotSpot implementation of the JVM.
-Likewise, there are many dependency relationships among different sections of code within the Java standard library that hinder resource management related tasks \cite{moxi, binder}.
+For instance, it has been largely discussed \cite{Doyle2002,Fong:2004:PVM:1028976.1029010,1420998} the lack of modularization in the Java HotSpot implementation of the JVM; this makes hard both the addition of new features that aim at dealing with specific concerns, and the adoption of these extensions.
+Likewise, there are many dependency relationships among different sections of code within the Java standard library that hinder resource management related tasks \cite{Blackburn2008,Kell:2012:JOE:2414740.2414747}.
 
 \begin{comment}
 
@@ -258,11 +278,11 @@ Su longitud estimada es de 1 a 2 paginas.
 %\section{Basic/System support for resource awareness}
 
 Many solutions to deal with the problems of resource consumption monitoring, control and management have been proposed.
-In reviewing the body of knowledge related to this topic, we are interested on solutions with specific properties.
+In reviewing the body of knowledge related to this topic, we are interested in solutions with specific properties.
 In particular, we only consider those solutions that can be applied to MRTEs.
 This section presents a summarized review of different approaches that we can leverage to support resource aware programming in MRTEs.
 The objective is to determine how well suited are existent approaches for supporting resource awareness in MRTEs.
-By using a set of properties we are able to compare different solutions.
+By focusing a common set of properties, we are able to compare different solutions.
 In the rest of this section the following properties are briefly discussed for each approach: 
 
 \begin{itemize}
@@ -272,7 +292,7 @@ The mechanisms for monitoring and managing them differ considerably due to two r
 In the first place, this happens because the hardware/platform support for resource management varies depending on the type of resource.
 However, this is also the result of intrinsic differences on the way resources are consumed.
 As a consequence, solutions to face resource related issues are often limited to a few type of resources.
-In this thesis, we are interested on the following resources: \textit{CPU}, \textit{Memory}, \textit{Network Bandwidth}, and \textit{IO Throughput}, \todo{disk quotas}.
+In this thesis, we are interested in the following resources: \textit{CPU}, \textit{Memory}, \textit{Network Bandwidth}, and \textit{IO Throughput}.
 It is noteworthy that some approaches are able to deal with many resources and others with just one resource.
 Adding this to the fact that there is no natural order of importance among the type of resources, we can see that this property is \textit{nominal} and \textit{multivalued}.  
 
@@ -296,12 +316,12 @@ In this thesis, we rely on this second criteria.
 There is a second portability aspect to consider: how easy is to write a contract on resource consumption.
 For instance, it is hard to define a contract regarding resource consumption if we want to execute a workload in a target platform while at the same time we control the consumed resources (e.g., 10\% of CPU is probably enough to complete a workload in a development platform, but how much is the equivalent value in an other platform?).
 The problem arises because there is a potential hardware/software mismatch between the development platform and the target platform.
-Hence, writing the contract using architecture dependent metrics is not the proper solution to this problem \cite{no se}.
+Hence, writing the contract using architecture dependent metrics is insufficient when dealing with heterogeneous environments \cite{Daly2001, Dufour:2003:DMJ:949343.949320}.
 On the contrary, using values with the same meaning in both the development and target platforms for writing the contract is a solution that eases the specification of resource consumption contracts.
-In this thesis, we have identified few solutions with this feature.
 In this thesis, we call \textit{fully portable} to those approaches that are OS independent, MRTE independent and support the definition of a contract using a common metric in the development and target environment.
-%Since all of them are portable regarding the first portability aspect, we call them \textit{fully portable}.
-However, it is worth mentioning that the problem of defining contracts for specific platforms has been discussed elsewhere using other approaches \cite{otros}.
+Additional advantages of using platform-independent metrics to analysis the dynamic behavior of applications are discussed in Section \ref{sec:contracts}.
+However, it is worth mentioning that the problem of defining contracts related to resource consumption for specific platforms has been discussed elsewhere using other approaches \cite{Lambert200897, Pathak:2012:ESI:2168836.2168841}.
+
 
 In summary, portability is an \textit{ordinal} property which can take the following values: \textit{OS Specific}, \textit{MRTE Specific}, \textit{Portable} and  \textit{Fully portable}.
 
@@ -332,14 +352,19 @@ Second, some approaches can be applied in the context of MRTEs, but they have be
 Finally, conducting further experiments to evaluate how each approach behaves under similar conditions is not only extremely time consuming but also impractical because some approaches rely too heavily on specific platforms or they are no longer available for experimentation.
 Fortunately, most results have been presented as the percent of overhead produced by the addition of resource management capabilities to an already existent system.
 Thus, we can use these values as measurements for the comparison.
-Along this section, we use the \textit{ordinal} labels \textit{low}, \textit{medium} and \textit{high} to denote the performance overhead.
-We also show the numerical value when it is available.
-In cases where there is no numerical value published, we discuss the reasons that let us to label a method with a given value.
+
+In this section, we use the \textit{ordinal} labels \textit{low}, \textit{medium} and \textit{high} to denote the performance overhead.
+This labels are used to associate a measure of quality to individual approaches. 
+The definition of these label is as follow: \textit{low} overhead indicates values under 10\%, \textit{medium} overhead denotes values under 100 \%, and any other value is considered \textit{high} overhead.
+A reader might disagree with these definitions because, for instance, it might be argued that these definitions should be relative to the context of use (5\% may be to much overhead in certain domains).
+However, we are only using these labels to compare methods to each other.
+In any case, we also present the numerical value of overhead when it is available; if no numerical value is published, we discuss the reasons that let us to label a method with a given value.
 \end{itemize}
 
 In the rest of this section, different approaches related to resource management are presented.
-Section \ref{sec:resource-consumption-monitoring-related} discusses some techniques for the monitoring of resource usage in MRTEs.
-A summary of many approaches to reserve resource in MRTEs is presented in section \ref{sec:resource-reservation-related}.
+To do so, the aforementioned properties are discussed for each individual mechanism.
+Section \ref{sec:resource-consumption-monitoring-related} covers some techniques for the monitoring of resource usage in MRTEs.
+A summary of approaches to reserve resource in MRTEs is presented in section \ref{sec:resource-reservation-related}.
 Finally, section \ref{sec:discussion-related-work} summarizes the strengths and weaknesses of each approach.
 This last section also highlights what are the limitations of state-of-the-art approaches.
 
@@ -354,18 +379,18 @@ Among the techniques partially reused are the following:
 
 \textit{Sampling} is a technique where a separate agent is periodically executed to collect data about what an application is doing.
 In a common scenario, the sampler captures the value of the program counter (PC) for each thread executing within the application.
-Afterwards, this data is used along a symbol table to identify which routines were executing most of the time.
+Afterwards, these data are used with symbol table to identify which routines were executing most of the time.
 Additional information such as the calling context can be collected in order to build a calling-context tree.
 Sampling has an indisputable advantage: a low performance overhead which depends on the data collected and the sampling rate.
 Moreover, the data collected can exhibit a good accuracy when the sampling rate is properly chosen.  
 Nevertheless, it is not able to collect data regarding the consumption of resources such as memory.
 
 \textit{Instrumentation} techniques are based on the idea of adding instructions to the application to collect data regarding its behavior.
-The instructions added, which are known as \textit{probes}, are able to collect information about many events such as method entry, memory allocation, execution time, system call and much more \cite{}.
+The instructions added, which are known as \textit{probes}, are able to collect information about many events, such as method entry, memory allocation, execution time, system calls, and others \cite{Ayers:2005:TFF:1064978.1065035,Sarimbekov201161,Ansaloni:2010:RDE:1712605.1712616}.
 In summary, a fundamental advantage of using instrumentation to collect resource consumption information is that the possibilities are almost countless because you have access to everything the application is doing.
 Alas, there is a trade-off between the number/complexity of the added probes and the resultant performance overhead: more probes implies higher overhead.
 As a consequence, reducing the number of probes and the complexity of each probe is of special interest for any instrumentation-based approach.
-In addition, it is worth mentioning that approaches exist to reduce the performance impact by temporally disabling at runtime those probes that are not necessary \cite{}.   
+In addition, it is worth mentioning that approaches exist to reduce the performance impact by temporally disabling at runtime those probes that are not necessary \cite{Dmitriev:2004:PJA:974043.974067,citeulike:481405,Gregg:2011:DDT:1971960}.   
 
 \textit{Reusing thread and process monitoring approaches} is another common strategy.
 This is possible because MRTEs' implementations are usually built upon OS abstractions.
@@ -395,11 +420,16 @@ Network resources accounting is achieved by manually modifying the few Java clas
 Listing \ref{lst:bytecode-rewriting} shows how a method is rewritten to notify about memory allocations.
 An additional advantage of using bytecode rewriting for instrumentation is that no access to the application's source code is required.
 
-\begin{figure}[ht]
-\begin{minipage}[t]{0.45\textwidth}
-\centering
 \begin{lstlisting}
-Sample createSample(int n) {
+\end{lstlisting}
+
+
+\begin{figure}[ht]
+\begin{mdframed}
+\begin{minipage}[t]{0.45\textwidth}
+\begin{lstlisting}[language=java,basicstyle=\footnotesize]
+Sample createSample(int n)
+{
 
   Sample s = new Sample(n);
 
@@ -410,10 +440,11 @@ Sample createSample(int n) {
 }
 \end{lstlisting}
 \end{minipage}
-\hspace{0.2cm}
+\hspace{0.6cm}
 \begin{minipage}[t]{0.45\textwidth}
-\begin{lstlisting}
-Sample createSample(int n) {
+\begin{lstlisting}[language=java,basicstyle=\footnotesize]
+Sample createSample(int n)
+{
   Account.newObj(Sample.SIZE);
   Sample s = new Sample(n);
   Account.newArray(INT, n);
@@ -424,6 +455,7 @@ Sample createSample(int n) {
 }
 \end{lstlisting}
 \end{minipage}
+\end{mdframed}
 \caption{A method is rewritten to collect data about memory consumption.}\label{lst:bytecode-rewriting}
 \end{figure}
 
@@ -449,6 +481,10 @@ However, in \cite{dsn/09/geoffray/ijvm} an overhead up to 18\% is reported using
 The differences are likely the effect of using different JVMs and GC implementations.
 Although the overhead is low/medium, it is noteworthy that a MRTE using this approach suffers this overhead on every collection cycle.
 Moreover, the technique cannot be applied if reference counting is used and it remains unclear whether it is possible to integrate the approach in a concurrent collector.
+Similarly, an approach to trace objects in Java is proposed in \cite{Lengauer:2015:AEO:2668930.2688037}, where a modified JVM is presented.
+This approach is able to capture events related to the allocation and movement of objects.
+Relevant data, such as the thread and method responsible for the allocation, is collected after each event.
+Although the mechanism requires an additional phase, which is not evaluated in terms of performance, to determine when and object was deallocated, it still results interesting because the performance overhead reported ranges from 2-16\%.
 
 Modifications to existent MRTEs to support lightweight instrumentation-based profilers have been proposed.
 In \cite{Dmitriev:2004:PJA:974043.974067}, an approach to instrument and (de)instrument methods on demand is proposed.
@@ -468,14 +504,18 @@ Performing the same task in other operating systems such as Linux and FreeBSD is
 Hardware performance counters is another option for CPU accounting.
 As shown in Overseer \cite{DBLP:conf/pppj/PeternierBBP11}, this can be used to obtain the number of instructions executed on behalf of a managed thread.
 Although the overhead produces by these approaches is low, they have important drawbacks such as lack of portability and a coarse granularity level.
+Similarly, Banga et al. \cite{Banga:1999:RCN:296806.296810} propose a new operating system abstraction for resource management.
+The authors argue that operating systems wrongly used a process (thread) as abstraction for both, protection domain and resource management.
+In contrast, they propose resource containers, an abstraction for controlling at a finer level how resources are consumed by different parts of an application.
+It is called resource containers, and allows fine-grained control over the definition of independent tasks and the resources they consume.
+This idea is evaluated in server systems showing low overhead, such as web servers.
+Although, it is not conceived for dealing with resource management in MRTEs, a middleware written atop a MRTE can benefit from such a proposal.
 
 Resource accounting for other abstractions such as OSGi bundles have also been proposed.
 In \cite{Maurel:2012:AME:2304736.2304763}, an adaptive approach for CPU accounting is presented.
 This solution aims at properly identifying the amount of CPU consumed by each bundle; the overhead is in range 20-60\%.
 Pursuing a similar goal, a modified JVM is presented in \cite{Attouchi:2014:MMM:2602458.2602467} to compute the amount of memory consumed.
 A slowdown of 46\% is produced by the proposed modifications to the GC.
-
-\todo{Resource container}
 
 \subsection{Resource reservation} \label{sec:resource-reservation-related}
 
@@ -496,8 +536,8 @@ In a related approach, the Multitasking Virtual Machine (MVM), the authors aim a
 a single OS process \cite{czajkowski_multitasking_2001}.
 This approach offers advantages such as a reduced memory footprint and faster initialization time for new applications.
 In the context of a middleware, there is an slowdown if communication between tasks running atop isolates is needed because in such a case an inter-process communication (IPC) mechanisms must be used.
-As was mentioned in the previous section, per isolate memory accounting is available.
-Using such a facility it is easy to implement memory reservation. \todo{unclear}. 
+As was mentioned in the previous section, per isolate memory accounting is available;
+this can be used to provide memory reservation with a low overhead. 
 
 Deterministic response time is required to build real-time (RT) applications.
 Often, this requires appropriate support for CPU time reservation. 
@@ -521,7 +561,7 @@ Subsystem have, however, constraints regarding they can be used.
 For instance, the memory subsystem measures the consumption at per page level (i.e., 4K pages) which is of course not useful if a memory page contains objects that belong to different managed threads in a JVM. 
 Similarly, FreeBSD offers Jails \cite{Kamp00jails:confining} and resource limits that can also be used to control resource usage and per thread resource reservation.
 
-The Java Accommodation of Mobile Untrusted Software (JAMUS) is a framework that supports the deployment of "untrusted" software components \cite{JAMUS2002}.
+The Java Accommodation of Mobile Untrusted Software (JAMUS) is a framework that supports the deployment of ``untrusted'' software components \cite{JAMUS2002}.
 In particular, JAMUS provides QoS guarantees related to resources consumption. 
 The approach follows a contractual-based paradigm for dealing with resource control.
 At deployment time, a component specifies what resources it requires at runtime.
@@ -532,21 +572,36 @@ Before deployment, a control-admission process checks if there are enough free r
 Resource reservation is done by updating the broker's perception about resources availability.
 Once a component is accepted on the platform, its execution is monitored to verify if its behavior is correct.
 
-\todo{rouven krebb}
+A related approach to resource control and isolation in multi-tenant applications is described in \cite{KrSpAhKo2014_CCGrid_ResourceIsolation}.
+It is limited to control the CPU utilization of tenants that requests services from a remote provider.
+The approach applies resource demand estimation techniques in combination with a request based admission control.
+Resource demand estimation is used to determine resource consumption data for individual requests.
+Such knowledge is used by the admission control mechanism to schedule the order in which requests are processed, which is simply done by delaying requests originating from tenants that have exceeded their CPU quota.
+The experiments presented show how the mechanism is able to properly isolate tenants, but little experiments related to the performance overhead is presented.
+Accordingly to the results presented, an overhead 5\% in response time is produced.
 
 \subsection{Remarks on existent mechanisms} \label{sec:discussion-related-work}
 
-Many approaches for resource accounting and reservation have been proposed; Table \ref{tab:approaches-accounting-reservation} summarizes the properties of those techniques presented in sections \ref{sec:resource-consumption-monitoring-related} and \ref{sec:resource-reservation-related}.
+Many approaches for resource accounting and reservation have been proposed; Table \ref{tab:approaches-accounting-reservation} summarizes the properties of those techniques presented in Sections \ref{sec:resource-consumption-monitoring-related} and \ref{sec:resource-reservation-related}.
 The table is split in three sections: first, a set of approaches that target solely resource accounting; second, approaches that aim at solving both resource accounting and resource reservation; and finally, techniques that only face the problem of reservation.
+The data provided in column \textit{Overhead} are taken from the research papers covered by the two previous sections.
 This table shows a clear picture of existent trade-offs in the design of solutions to support resource aware programming.
-It also gives on insight of some good practices that help to create better solutions.
 In the remainder of this section, these trade-offs and practices are discussed.
+Additionally, the weaknesses of different techniques (Some values in the table are marked with the symbols $ \downarrow $ and $\downarrow\downarrow$, denoting weak and very weak points respectively.) are detailed addressed.
+The rest of the section also gives an insight of some good practices that help to create better solutions.
+
+% weak points
+\newcommand{\weakp}{$\downarrow \downarrow$}
+\newcommand{\weak}{$\downarrow$}
 
 \begin{table}
-\caption{Summary of the discussed approaches; for each approach its properties are shown.
-First, solutions that only deal with resource accounting are presented.
-Then, approaches that cope with both resource accounting and resource reservation.
-In the end, techniques that only addresses resource reservation are described.} \label{tab:approaches-accounting-reservation}
+\caption{Summary of discussed approaches; for each approach its properties are shown.
+Some values are marked with $ \downarrow $ and \weakp, denoting a weak point and a very weak point respectively. 
+%First, solutions that only deal with resource accounting are presented.
+%Then, approaches that cope with both resource accounting and resource reservation.
+%In the end, techniques that only addresses resource reservation are described.
+} \label{tab:approaches-accounting-reservation}
+\small
 \vspace{0.1cm}
 \begin{tabular}{|l|l|l|l|l|}
 \hline % header
@@ -554,63 +609,68 @@ In the end, techniques that only addresses resource reservation are described.} 
 \hline
 \multicolumn{5}{|c|}{Approaches for resource accounting} \\
 \hline % Resource Containers
-\multirow{4}{*}{\parbox{3.5cm}{\textit{Resource Containers} \cite{Banga:1999:RCN:296806.296810}}} & CPU & \multirow{4}{*}{OS Specific} & \multirow{4}{*}{Thread} & \multirow{4}{*}{low} \\
-& Memory & & & \\
+\multirow{4}{*}{\parbox{3.3cm}{\textit{Resource Containers} \cite{Banga:1999:RCN:296806.296810}}} & CPU & \multirow{4}{*}{OS Specific\weakp} & \multirow{4}{*}{Thread\weak} & \multirow{4}{*}{low} \\
+& Memory\weakp & & & \\
 & Network & & & \\
 & IO Throughput & & & \\
 \hline % Hardware performance counter
-\parbox{3.5cm}{\textit{Overseer (HPC)} \cite{DBLP:conf/pppj/PeternierBBP11}} & CPU & OS Specific & Thread & low \\
+\parbox{3.3cm}{\textit{Overseer (HPC)} \cite{DBLP:conf/pppj/PeternierBBP11}} & CPU\weakp & OS Specific\weakp & Thread\weak & low \\
 \hline
-\multirow{2}{*}{\parbox{3.5cm}{\textit{Modified GC} \cite{Price:2003:GCM:829515.830545,dsn/09/geoffray/ijvm}}} & \multirow{2}{*}{Memory} & \multirow{2}{*}{MRTE Specific} & Thread & \multirow{2}{*}{medium (3-18\%)} \\
-& & & Classloader & \\
+\multirow{2}{*}{\parbox{3.3cm}{\textit{Modified GC} \cite{Price:2003:GCM:829515.830545,dsn/09/geoffray/ijvm}}} & \multirow{2}{*}{Memory} & \multirow{2}{*}{MRTE Specific\weakp} & Thread\weak & \multirow{2}{*}{medium (3-18\%)} \\
+& & & Classloader\weak & \\
 \hline
-\multirow{3}{*}{\parbox{3.5cm}{\textit{Dynamic Profiling} \cite{Dmitriev:2004:PJA:974043.974067, citeulike:481405}}} & CPU & \multirow{3}{*}{MRTE Specific} & \multirow{3}{*}{Arbitrary*} & \multirow{3}{*}{low (6-10\%)} \\
+\multirow{2}{*}{\parbox{3.3cm}{\textit{Tracing Objects} \cite{Lengauer:2015:AEO:2668930.2688037}}} & \multirow{2}{*}{Memory\weakp} & \multirow{2}{*}{MRTE Specific\weakp} & Thread & \multirow{2}{*}{medium (2-16\%)} \\
+& & & Method & \\
+\hline
+\multirow{3}{*}{\parbox{3.3cm}{\textit{Dynamic Profiling} \cite{Dmitriev:2004:PJA:974043.974067, citeulike:481405}}} & CPU & \multirow{3}{*}{MRTE Specific\weakp} & \multirow{3}{*}{Arbitrary*} & \multirow{3}{*}{low (6-10\%)} \\
 & Memory & & & \\
 & Others* & & & \\
 \hline % JRes
-\multirow{3}{*}{\parbox{3.5cm}{\textit{JRes} \cite{czajkowski_jres:_1998}}} & CPU & OS Specific & \multirow{3}{*}{Thread} & \multirow{3}{*}{medium* (18\%)} \\
+\multirow{3}{*}{\parbox{3.3cm}{\textit{JRes} \cite{czajkowski_jres:_1998}}} & CPU & OS Specific\weakp & \multirow{3}{*}{Thread\weak} & \multirow{3}{*}{medium* (18\%)} \\
 & Memory & Fully portable & & \\
 & Network & Fully portable & & \\
 \hline
-\textit{J-RAF2} \cite{Hulaas:2004:PTP:1014007.1014024,Hulaas:2008:PTL} & CPU & Fully Portable & Thread & medium (37\%) \\
+\textit{J-RAF2} \cite{Hulaas:2004:PTP:1014007.1014024,Hulaas:2008:PTL} & CPU & Fully Portable & Thread\weak & medium (37\%) \\
 \hline
-\parbox{3.5cm}{\textit{Portable CPU Accounting} \cite{binder_portable_2001, Binder200657,Hulaas:2008:PTL}} & CPU & Fully Portable & Thread & medium (25-30\%) \\
+\parbox{3.3cm}{\textit{Portable CPU Accounting} \cite{binder_portable_2001, Binder200657,Hulaas:2008:PTL}} & CPU & Fully Portable & Thread\weak & medium (25-30\%) \\
 \hline
-\multirow{2}{*}{\parbox{3.5cm}{\textit{Portable profilers} \cite{Binder200645, Binder:2009:PPV:1464245.1464249}}} & CPU & \multirow{2}{*}{Fully portable} & \multirow{2}{*}{Arbitrary*} & \multirow{2}{*}{high (300-500\%)} \\
+\multirow{2}{*}{\parbox{3.3cm}{\textit{Portable profilers} \cite{Binder200645, Binder:2009:PPV:1464245.1464249}}} & CPU & \multirow{2}{*}{Fully portable} & \multirow{2}{*}{Arbitrary*} & \multirow{2}{*}{high (300-500\%)\weakp} \\
 & Memory & & & \\
 \hline % OSGi CPU profiling
-\parbox{3.5cm}{\textit{OSGi CPU profiling} \cite{Maurel:2012:AME:2304736.2304763}} & CPU & Portable & OSGi Bundle & medium (20-60\%) \\
+\parbox{3.3cm}{\textit{OSGi CPU profiling} \cite{Maurel:2012:AME:2304736.2304763}} & CPU & Portable & OSGi Bundle\weak & medium (20-60\%) \\
 \hline % OSGi Memory profiling
-\parbox{3.5cm}{\textit{OSGi Memory profiling} \cite{Attouchi:2014:MMM:2602458.2602467}} & Memory & MRTE Specific & OSGi Bundle & medium (46\%) \\
+\parbox{3.3cm}{\textit{OSGi Memory profiling} \cite{Attouchi:2014:MMM:2602458.2602467}} & Memory & MRTE Specific\weakp & OSGi Bundle\weak & medium (46\%) \\
 \hline
 \multicolumn{5}{|c|}{Approaches for resource accounting and reservation} \\
 \hline % cgroups
-\multirow{4}{*}{\parbox{3.5cm}{\textit{CGroups (Linux)} \cite{Soltesz:2007:COS:1272998.1273025}}} & CPU & \multirow{4}{*}{OS Specific} & \multirow{4}{*}{Thread} & \multirow{4}{*}{low} \\
-& Memory* & & & \\
+\multirow{4}{*}{\parbox{3.3cm}{\textit{CGroups (Linux)} \cite{Soltesz:2007:COS:1272998.1273025}}} & CPU & \multirow{4}{*}{OS Specific\weakp} & \multirow{4}{*}{Thread\weak} & \multirow{4}{*}{low} \\
+& Memory\weakp & & & \\
 & Network & & & \\
 & IO Throughput & & & \\
 \hline % jails + resource limits in FreeBSD
-\multirow{4}{*}{\parbox{3.5cm}{\textit{Jails (FreeBSD)} \cite{Kamp00jails:confining}}} & CPU & \multirow{4}{*}{OS Specific} & \multirow{4}{*}{Process} & \multirow{4}{*}{low} \\
-& Memory* & & & \\
+\multirow{4}{*}{\parbox{3.3cm}{\textit{Jails (FreeBSD)} \cite{Kamp00jails:confining}}} & CPU & \multirow{4}{*}{OS Specific\weakp} & \multirow{4}{*}{Process\weakp} & \multirow{4}{*}{low} \\
+& Memory\weakp & & & \\
 & Network & & & \\
 & IO Throughput & & & \\
 \hline % KaffeOS
-\parbox{3.5cm}{\textit{KaffeOS} \cite{back_processes_2000}} & Memory & MRTE Specific & Process* & medium (11\%) \\
+\parbox{3.3cm}{\textit{KaffeOS} \cite{back_processes_2000}} & Memory & MRTE Specific\weakp & Process*\weakp & medium (11\%) \\
 \hline % MVM
-\textit{MVM} \cite{czajkowski_multitasking_2001} & Memory & MRTE Specific & Process* & low (0.5 \%) \\
+\textit{MVM} \cite{czajkowski_multitasking_2001} & Memory & MRTE Specific\weakp & Process*\weakp & low (0.5 \%) \\
 \hline
 \multicolumn{5}{|c|}{Approaches for resource reservation} \\
 \hline % JAMUS
-\multirow{4}{*}{\textit{JAMUS} \cite{JAMUS2002}} & CPU & \multirow{4}{*}{OS Specific} & \multirow{4}{*}{Thread} & \multirow{4}{*}{medium} \\
+\multirow{4}{*}{\textit{JAMUS} \cite{JAMUS2002}} & CPU & \multirow{4}{*}{OS Specific\weakp} & \multirow{4}{*}{Thread\weak} & \multirow{4}{*}{medium} \\
 & Memory & & & \\
 & Network & & & \\
 & IO Throughput & & & \\
+\hline % JAMUS
+\parbox{3.3cm}{\textit{Multi-tenant CPU isolation} \cite{KrSpAhKo2014_CCGrid_ResourceIsolation}} & CPU\weak &  Portable & Tenant\weakp & low (5\%) \\
 \hline
 \end{tabular}
 \end{table}
 
 \paragraph{On the issue of overhead.}
-\textit{This} is a property clearly affected by both \textit{granularity} and \textit{portability}.
+This is a property clearly affected by both \textit{granularity} and \textit{portability}.
 For instance, low overhead is usually associated to the usage of OS specific approaches \cite{Banga:1999:RCN:296806.296810, DBLP:conf/pppj/PeternierBBP11, Soltesz:2007:COS:1272998.1273025, Kamp00jails:confining}, which at the same time are restricted to coarse-grained abstractions such as threads and processes.
 It is also worth noting that MRTE specific approaches tend to show a relatively low overhead \cite{Price:2003:GCM:829515.830545,dsn/09/geoffray/ijvm, Dmitriev:2004:PJA:974043.974067, citeulike:481405, Attouchi:2014:MMM:2602458.2602467, back_processes_2000, czajkowski_multitasking_2001}, and how these techniques often have limitations on both the type of resource and granularity level they can handle.
 It is in particular interesting how solutions that show low overhead have carefully crafted  either their internal organization \cite{back_processes_2000, czajkowski_multitasking_2001} or operation mechanism \cite{Dmitriev:2004:PJA:974043.974067, citeulike:481405} to reduce the computational footprint.
@@ -651,8 +711,11 @@ Network and IO throughput accounting are far less addressed problems.
 Even if there are portable approaches, they are limited to perform per thread accounting.
 Although, this may seems enough it remains an open problem.
 
+As for the capacity of \textit{OS specific} approaches \cite{Banga:1999:RCN:296806.296810,Kamp00jails:confining, Soltesz:2007:COS:1272998.1273025}, it is noteworthy again how they have limited use for dealing with memory is MRTEs.
+Likewise, an \textit{MRTE specific} approach such as \cite{Lengauer:2015:AEO:2668930.2688037} is not able to fully monitor memory consumption because it lacks support to detect object deallocations in a fast way.
+
 \paragraph{Available solutions for resource reservation.}
-In reviewing the state of the art, we realized that resource consumption monitoring in MRTEs is a problem that has been addressed far more often that resource reservation in MRTEs.
+In reviewing the state of the art, we realized that resource consumption monitoring in MRTEs is a problem that has been addressed far more often than resource reservation in MRTEs.
 Likely, this is product of a single fact: resource accounting can easily be used to implement other non-functional requirements such as dependability, QoS, and deployment of untrusted code.
 On the contrary, resource reservation seems a less common need because most execution environments already offer good (although less restrictive) mechanisms to handle resource.
 In cases where there exist strong resource requirements (such as embedded devices), engineers tend to handcraft specific solutions.
@@ -660,14 +723,15 @@ In cases where there exist strong resource requirements (such as embedded device
 
 \section{Conclusions}
 Resource-aware programming is an useful paradigm that requires extensive runtime support.
-We stated that the scope of this thesis is limited to provide resource consumption monitoring and reservation in managed runtime environments.
+We state that the scope of this thesis is limited to provide resource consumption monitoring and reservation in managed runtime environments.
 In our vision, resource-aware programming support must be as reusable, generic, and lightweight as possible.
 
-In reviewing the state of the art of resource consumption monitoring and resource reservation, we realized that despite of the existence of several solutions, there are still aspects that can profit from further improvements:
+In reviewing the state of the art of resource consumption monitoring and resource reservation, we realized that despite of the existence of several solutions, none of them are able to properly support resource-aware programming in MRTEs.
+In particular:
 \begin{enumerate}
 \item There are no portable approaches for resource monitoring that can deliver competitive performance overhead.
 As a consequence, specific MRTEs must be used when resource awareness is required in production environments.
-Due to the additional dependency, the development and deployment of applications is harmed.
+Due to the additional dependency, the development and deployment of applications are harmed.
 
 \item Most resource monitoring approaches are limited to determine the resource usage at relatively coarse-grained levels  such as threads, processes, and classloaders.
 In those techniques that are applicable in fine-grained levels, the performance of the monitored system quickly degrades. 
@@ -713,6 +777,8 @@ Estas conclusiones deben mostrarse preferentemente en la forma de tabla donde se
 Al final la seccion concluira mostrando como ninguna de las tecnicas es completamente satisfactoria. Claro, para medir satisfactoriedad debemos constrastar sus caracteristicas contrar caracteristicas deseadas que probablemente se definiran en la seccion de resource aware o en el principio de esta seccion. Esta parte tiene que hacerse de forma tal que lleve a la conclusion logica de que algo mas es necesario. Pero tiene queser creible.
 
 \begin{itemize}
+
+
 
 
 \item Resource containers \cite{Banga:1999:RCN:296806.296810} 
