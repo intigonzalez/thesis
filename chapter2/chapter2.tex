@@ -7,38 +7,45 @@
 
 \coolphrase {Where is the `any' key?}{Homer Simpson, in response to the message, ``Press any key''}
 
-Defining and using abstractions is a main part of building software products.
-New abstractions are usually layered atop existent software systems in order to fulfill specific goals
-- ease development, improve security, provide extensibility.
-Some kind of abstractions have well-defined boundaries (e.g., process, thread), and it is possible to identify how they consume computational resources.
-Due to the fact that abstractions are the building block of applications, it is of utmost importance to control their behavior regarding resource usage.
-  
-This chapter describes two abstractions that are frequently used on top of MRTEs: components (Section \ref{sec:components-oriented-resource-awareness}), and domain-specific languages (DSLs) (Section \ref{sec:DSL-on-MRTEs}).
+Defining and using software abstractions (such as classes, components and languages) are common operations when building applications.
+Sometimes, it is useful to consider the problem of how instances of an abstraction consume computation resources.
+For instance, computing the CPU consumed by all \textit{threads} running on a system is quite helpful for system administration purposes.
+Another example is the necessity of knowing the number of instances of a given class when we are profiling applications.
+
+As shown in the previous chapter, supporting resource management is a complex task that highly depends on the technology a system is running atop of.
+In this chapter, we show that specific features of the software abstraction, which is being targeted, also influence the way resource management support is implemented.
+%In this chapter we show that this support also depends on features of the software abstraction we are dealing with.
+%In this chapter we show how the support that we can provide and its implementation are also driven by the specific features of the software abstraction.
+Due to all these specific concerns there is considerable variability to consider when writing resource management tools; dealing with this variability is complex.
+
+%This chapter mainly discusses how to ease the task of supporting resource-aware programming by taking into account the existence of many software abstractions.
+
+This chapter mainly discusses how the usage of software abstractions poses new challenges when we are implementing support for resource consumption monitoring and reservation.
+In particular, this chapter describes two abstractions frequently used on top of MRTEs: components (Section \ref{sec:components-oriented-resource-awareness}), and domain-specific languages (DSLs) (Section \ref{sec:DSL-on-MRTEs}).
 Comprehensive discussions on how these abstractions consume resources are presented.
-In particular, we are interested in two phenomenons.
-First, we tackle (Section \ref{sec:component-leverage}) the issue of how we can leverage component-based architectures - to reduce the overhead of dealing with resources - by specializing resource management techniques.
+Moreover, state of the art approaches, for handling features specific to each abstraction, are presented and their limitations discussed.
+%We tackle (Section \ref{sec:component-leverage}) the issue of how to leverage component-based architectures - to reduce the overhead of dealing with resources - by specializing resource management techniques.
+%Second, since new abstractions are constantly created nowadays, having generic and efficient mechanisms for controlling how they use resources may simplify the process of providing resource awareness support.
+We then present the state of the art on supporting resource consumption accounting for arbitrary abstractions (Section \ref{sec:resource-awareness-for-dsl}).
 
-Second, since new abstractions are constantly created nowadays, having generic and efficient mechanisms for controlling how they use resources may simplify the process of providing resource awareness support.
-We then present the state of the art on supporting some forms of resource accounting for arbitrary abstractions (Section \ref{sec:resource-awareness-for-dsl}).
-
-\section{Developer's View versus Runtime's View} \label{sec:chapter2-introduction}
+\section{Developer's View versus Tooling's View} \label{sec:chapter2-introduction}
 
 As mentioned, building abstractions is at the core of software development.
 They are meant to tackle a large number of problems in software engineering, ranging from providing better representation of the business logic to supporting application's extensibility.
 Interestingly, abstractions are not built from scratch; instead, they are implemented upon other abstractions provided by the runtime environment.
 This leads to the well-known layered architecture where complex features are created using more simple concepts.
-In th field of operating systems, processes are built relying on low-level concepts such as hardware interrupts, context-switch, and MMU hardware.
+In the field of operating systems, processes are built relying on low-level concepts such as hardware interrupts, context-switch, and MMU hardware.
 In the area of programming languages, recursive routines are implemented upon basic hardware stack manipulation.
 
 Once a new abstraction is implemented and its invariants defined, you can use it without a complete understanding of the implementation details.
-This has profound implications on the software development process, which now requires special tooling support, because developers start thinking in abstraction's terms.
-For instance, showing only plain assembler instructions while debugging applications is no longer good a choice once you start coding your applications in a language that includes high-level concepts such as routines, loops, and conditional-statements.
+This has profound implications in the software development process; it now requires special tooling support because developers immediately start thinking in terms of such an abstraction.
+For instance, showing plain assembler instructions while debugging applications is no longer good a choice once you start coding your applications in a language that includes high-level concepts such as routines, loops, and conditional-statements.
 In the same way, when a profiler is used to check the memory consumption of Java-based applications, the data produced is expected to reflect terms such as \textit{object} and \textit{class}.
-To summarize, tools such as editors, debuggers, and profilers must be updated to make them aware of each new abstraction introduced in the development cycle.
-In this thesis we say that a mismatch exists, between the developer's view and the tooling's view, when the concepts managed by the developers are not clearly reflected in the tools.
-
-In using MRTEs to develop and run applications, this kind of mismatch often occurs.
-A couple of illustrative examples are give below.
+Ideally, tools such as editors, debuggers, and profilers must be modified to make them aware of each new abstraction introduced in the development cycle.
+Likewise, mechanisms to monitor resource consumption at runtime should also be modified.
+Unfortunately, this is not always the case.
+For instance, often developers lack the proper tools when they implement applications that execute in MRTEs.
+A couple of illustrative examples are given below; the first is related to OSGi bundles, the second to Domain-Specific Languages (DSLs).
 
 Usually, many OSGi bundles are deployed on top of a single JVM instance.
 Due to the communication mechanism used in OSGi, where objects are routinely shared, it is complex to decide which bundle should be accounted for the consumption of a particular object.
@@ -50,6 +57,13 @@ Given the widespread usage of OSGi, memory profilers often support collecting da
 Unfortunately, similar abstractions (components models), equally implemented atop of Java, are often not properly supported by such tools because they are not as popular as OSGi.
 Hence, data must be manually aggregated when an application using a poorly supported abstraction is profiled; this is, of course, a considerable burden for developers.
 
+The example of OSGi is also useful to highlight how some abstractions have specific requirements regarding resource consumption monitoring and reservation.
+In the particular case of determining how many resources are being consumed by a bundle, it is noteworthy that there exist two ways of doing so when a bundle requests a service from another bundle.
+Both approaches have pros and cons \cite{lo citado por kouther, y kouther}.
+In a first option, all resources used to satisfy a request are charged to the bundle that originally issued the request, no matter whether part of the computation is performed in other bundles.
+In a second option, a bundle only consumes resources when it is executing its own code.
+The important point is that, above the concern we present in the previous chapter regarding the mechanisms to support resource-aware programming, engineers also have to focus on features specific to each abstraction.
+
 Many of the newly designed DSLs are built on top of existing object-oriented languages runtime such as the JVM. 
 Therefore, people in charge of optimizing, debugging and maintaining software applications can use the existing debugger and profilers of these platforms. 
 However, there is clear mismatch between classical profilers used in object-oriented systems and the newly designed languages. 
@@ -57,9 +71,9 @@ Indeed, the concepts introduced in these new DSLs may not exhibit a straightforw
 As a consequence, it may be time consuming and complex to use a classical profiler to check applications that are based on these new languages.
 
 For instance, active annotations allow developers to participate in the translation process of Xtend source code to Java code via library.
-Such mechanism is often used directly by developers to introduce their own abstraction or defining their own internal DSL. 
-For example, in the K3-AL\footnote{Available at https://github.com/diverse-project/k3/wiki} project, we use active annotations to create an open-class mechanism on top of Java \cite{Clifton:2000:MMO:353171.353181}. 
-As a result, the annotation processor change the program structure to implement this feature. 
+Such mechanism is often used directly by developers to introduce their own abstraction or defining their own internal DSL.
+In the K3-AL\footnote{Available at https://github.com/diverse-project/k3/wiki} project, active annotations are used to create an open-class mechanism on top of Java \cite{Clifton:2000:MMO:353171.353181}. 
+As a result, the annotation processor changes the program structure to implement this feature. 
 It adds some methods indirection (to $AASpect$), create new set of objects that represents the state of one conceptual object ($AASpectProperty$), use the Xtend extension method feature, etc.
 Figure~\ref{fig:k3-diagram} shows the result of this translation process. 
 The left part illustrates the code written by the developer, the middle part shows the developer view (the code that can be written to use the open-class mechanism), the right part describes the runtime view.
@@ -72,52 +86,97 @@ In this case, an instance of an open-class is not represented by a single JVM ob
 \label{fig:k3-diagram}
 \end{figure*}
 
-\section{Component-oriented Resource Awareness} \label{sec:components-oriented-resource-awareness}
+In this thesis we claim that a \textit{mismatch}, between the developer's view and the tooling's view, exists when the concepts managed by the developers are not clearly reflected in the tools.
+This mismatch may complicate the development of applications, as well as prevent the correctness of software systems.
+We identify in this thesis, two ways in which such a mismatch might affect software development when new software abstractions are heavily used while, at the same time, support for resource-aware programming is also required:
 
-Developing applications by reusing independent units of software is the field of study of the Component-Based Software Engineer's community (CBSE community) \cite{cbse-conference}.
-By providing a common understanding of component, connector and configuration, CBSE aims at reducing complexity in software development and maintenance \cite{xadl,Medvidovic:2000,VanOmmering-et-al-00}.
-%CBSE aims at reducing complexity through abstraction and separation of concerns by providing a common understanding of component, connector and configuration~\cite{xadl,Medvidovic:2000,VanOmmering-et-al-00}.
-In addition to economical benefits such as reducing time to market and development cost \cite{SZYPERSKI2002}, there are also technical advantages in using CBSE. 
-One of this benefits is that it facilitates the management of dynamic architectures, which becomes, for instance, a primary concern in the Future Internet and Cyber-Physical Systems~\cite{DBLP:journals/ase/NittoGMPP08, Johnson:2015:CSM:2735960.2735979}.
-Such systems demand techniques that let software react to changes by self-organizing its structure and self-adapting its behavior~\cite{PanzicaLaManna:2012:LDU:2304736.2304764, Johnson:2015:CSM:2735960.2735979, Zhang:2009:MVD:1509239.1509262}.
-Many works~\cite{cbse-conference} have shown the benefits of using component-based approaches in such open-world environments~\cite{baresi2006toward, Caporuscio:2010:AIA:1985522.1985547, Perez-Palacin:2010:PAO:1712605.1712614}.
+%\todo{This two points are really close, bad}
+\begin{itemize}
+\item Abstractions pose new challenges because they may have specific requirements that are not addressed by generic tools that deal with resource management.
+In this case, the problem is how to reuse generic mechanisms to handle specific requirements.
 
-In a general sense, the concept that embodies the idea behind software components can be defined as follow
-\cite{Crnkovic2011}:
+\item Since new software abstractions are constantly being defined, there is an increasing pressure to ease the creation of abstraction-specific tooling support.
+Simplifying the definition of tools in order to support new abstractions is the issue in this case. 
+\end{itemize}
+
+In the rest of this chapter, we extensively discuss both concerns.
+
+\section{How abstractions use resources}
+
+\todo{worst title ever}
+
+\paragraph{Usage in MRTEs}
+
+\paragraph{Resource consumption}
+
+\paragraph{Differences among concrete abstractions}
+
+\paragraph{Specific features to consider when resource awareness support is implemented}
+
+\paragraph{State of the art on providing resource awareness support for component-based systems}
+
+\subsection{Resource usage in component-based systems} \label{sec:components-oriented-resource-awareness}
+
+Component-Based Software Engineer (CBSE) aims at developing applications by reusing independent units of software \cite{cbse-conference, Crnkovic2011}.
+By providing a common understanding of component, connector and configuration, CBSE reduces the complexity in the development and maintenance of software systems \cite{xadl,Medvidovic:2000,VanOmmering-et-al-00}.
+%In addition to economical benefits such as reducing time to market and development cost \cite{SZYPERSKI2002}, there are also technical advantages in using CBSE. 
+One of its technical advantages is that it facilitates the management of dynamic architectures
+~\cite{DBLP:journals/ase/NittoGMPP08, Johnson:2015:CSM:2735960.2735979}
+because it simplify the implementation of features, such as, self-organizing the structure of a system, and self-adapting its behavior
+\cite{PanzicaLaManna:2012:LDU:2304736.2304764, Johnson:2015:CSM:2735960.2735979,Zhang:2009:MVD:1509239.1509262}.
+Likewise, many works~\cite{cbse-conference} have shown the benefits of using component-based approaches in open-world environments~\cite{baresi2006toward, Caporuscio:2010:AIA:1985522.1985547, Perez-Palacin:2010:PAO:1712605.1712614}.
+
+Plenty of diversity exists in current component models and frameworks \cite{Heineman2001, SZYPERSKI2002, Crnkovic2011}.
+They tend to target different technologies, aim at different use cases, provide support for different concerns, and use different design principles.
+Crnkovic et al. \cite{Crnkovic2011} propose properties that can be used to classify component models; we are interested in those that have the following properties:
 
 \begin{description}
-\item[Definition 1:] A \textit{Software Component} is a software building block that conforms to a component model. 
-\item[Definition 2:] A \textit{Component Model} defines standards for (i) properties that individual components must satisfy; and (ii) methods, and possibly mechanisms, for composing components.
+\item[Modeling capabilities:] it is common to provide a mechanism for modeling the system architecture during the development phase; this results useful to reason about the system.
+In addition, it is possible to support some form of reflection for querying the architecture of a system at runtime.
+Component models, which include both features, are the target of our research.
+
+\item[Deployment of components at runtime:] since, we are dealing with the problem of supporting resource awareness in open environments, we focus on component models that allow component deployment at runtime.
+Many component models are able to cope with the necessity of adaptation through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components~\cite{Porter:2014:RMC:2602458.2602471, Zheng:2014:RCC:2679601.2680405, Irmert:2008:RAS:1370018.1370036, Ghezzi:2010:QDD:2163764.2163774}.
 \end{description}
 
-Despite of the existence of many research and practitioner approaches to component-based programming have been developed \cite{Heineman2001, SZYPERSKI2002, Crnkovic2011}, this broad definition is able to successfully spot the commonalities of a plethora of different component models.
-However, plenty of diversity exists in current component models and frameworks.
-They tend to target different technologies, aim at different use cases, provide support for different concerns, and use different design principles.
+Other properties worth mentioning in this thesis are those that describe how components communicate.
+For instance:  whether the concept of \textit{port} is implemented; there exists distinction between \textit{required/provided interfaces}; how is the \textit{interface language}; what is the \textit{interface levels} (syntactic, semantic, behavior); and what is the \textit{communication type} (synchronous, unicast, and others).
+Our interest in these properties is limited to understand what mechanisms are used to support interaction between components, how are these mechanisms implemented, and how interaction between components affects the way in which we deal with resource consumption monitoring and reservation.
 
-In practice, a framework to compare and classify component models, as the one presented by Crnkovic et al.
-\cite{Crnkovic2011}, results useful.
-It allows us to focus on those properties that characterize component models.
-The aforementioned classification framework proposes three dimensions that are of interest to us: \textit{life-cycle}, \textit{constructs}, and \textit{support for extra-functional properties (EFP)}.
-A brief description of these dimensions is given below:
+\paragraph{Usage in MRTEs}
+An important property of component models is its implementation support.
+The discussion in this research is limited to those that have been implemented for MRTEs.
+Several proposals exist both in the industry and the academy, such as,  Enterprise Java Beans (EJB) \cite{OracleEJB3.0}, the Open Services Gateway Initiative (OSGi) \cite{OSGI:r5}, 
+Fractal \cite{Bruneton:2006:FCM:1152333.1152345}, 
+SOFA 2.0 (Software Appliances) \cite{Bures2006}, Palladio \cite{}, and Kevoree~\cite{morin09a,leger2010reliable}.
+It is interesting how these component models have different properties when it comes to \textit{modeling capabilities}, \textit{architecture of the system supported}, and \textit{constructs for interaction among components}.
+However, they also differ in how components are represented on top of MRTE concepts; in other words, they follow different approaches to implement the component framework itself.
 
-\paragraph{Life-cycle:}
+\paragraph{Resource consumption}
 
-This dimension embodies properties such as \textit{modeling capabilities}, which describe component model's support for the modeling and the design of component-based systems and components; 
-\textit{implementation support}, which basically describes the language that can be used to develop components; and \textit{deployment capabilities}, which describe whether components can be deployed at runtime.
+\paragraph{Differences among concrete abstractions}
 
-In this thesis, we are interested in component models that provide \textit{modeling capabilities} during the development phase.
-However, we also require minimal support for querying a system architecture at runtime. 
-In addition, we are only interested in component models that target MRTEs, such as Java and .Net.
-Finally, to satisfy the needs for adaptation, several component models provide solutions to dynamically reconfigure a software architecture through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components~\cite{Porter:2014:RMC:2602458.2602471, Zheng:2014:RCC:2679601.2680405, Irmert:2008:RAS:1370018.1370036, Ghezzi:2010:QDD:2163764.2163774}. 
-In practice, component-based (and/or service-based) platforms like Fractal~\cite{bruneton06}, OpenCOM~\cite{BlairCULJ04}, OSGi~\cite{OSGI:r5} or SCA~\cite{SEINTURIER:2011:INRIA-00567442:1} provide platform mechanisms to support dynamic architectures; this requires the capability of deploying components at runtime.
-Since, we are dealing with the problem of supporting resource awareness in open environments, we focus on those component models that allow component deployment at runtime.
+\paragraph{Specific features to consider when resource awareness support is implemented}
 
+\paragraph{State of the art on providing resource awareness support for component-based systems}
 
-\paragraph{Constructs:}
+%\paragraph{Life-cycle:}
 
-A set of properties that mainly describe how components communicate are included in this dimension;
-some of these properties are: the \textit{existence of ports}; if there exists distinction between \textit{required/provided interfaces}; \textit{interface language}, which the language used to describe interfaces; the \textit{interface levels}, which are limited in such a framework to syntactic, semantic, and behavior; and the \textit{communication type}, which may include synchronous, unicast, and others.
-Our interest on this dimension is limited to understand what mechanisms are used to support interaction between components, how are these mechanisms implemented, and how interaction between components affects the way in which we deal with resource consumption monitoring and reservation. 
+%This dimension embodies properties such as \textit{modeling capabilities}, which describe component model's support for the modeling and the design of component-based systems and components; 
+%\textit{implementation support}, which basically describes the language that can be used to develop components; and \textit{deployment capabilities}, which describe whether components can be deployed at runtime.
+
+%In this thesis, we are interested in component models that provide \textit{modeling capabilities} during the development phase.
+%However, we also require minimal support for querying a system architecture at runtime. 
+%In addition, we are only interested in component models that target MRTEs, such as Java and .Net.
+%Finally, to satisfy the needs for adaptation, several component models provide solutions to dynamically reconfigure a software architecture through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components~\cite{Porter:2014:RMC:2602458.2602471, Zheng:2014:RCC:2679601.2680405, Irmert:2008:RAS:1370018.1370036, Ghezzi:2010:QDD:2163764.2163774}. 
+%In practice, component-based (and/or service-based) platforms like Fractal~\cite{bruneton06}, OpenCOM~\cite{BlairCULJ04}, OSGi~\cite{OSGI:r5} or SCA~\cite{SEINTURIER:2011:INRIA-00567442:1} provide platform mechanisms to support dynamic architectures; this requires the capability of deploying components at runtime.
+%Since, we are dealing with the problem of supporting resource awareness in open environments, we focus on those component models that allow component deployment at runtime.
+
+%\paragraph{Constructs:}
+%
+%A set of properties that mainly describe how components communicate are included in this dimension;
+%some of these properties are: the \textit{existence of ports}; if there exists distinction between \textit{required/provided interfaces}; \textit{interface language}, which the language used to describe interfaces; the \textit{interface levels}, which are limited in such a framework to syntactic, semantic, and behavior; and the \textit{communication type}, which may include synchronous, unicast, and others.
+%Our interest on this dimension is limited to understand what mechanisms are used to support interaction between components, how are these mechanisms implemented, and how interaction between components affects the way in which we deal with resource consumption monitoring and reservation. 
 
 \paragraph{Support for EFPs:}
 
@@ -128,7 +187,27 @@ In this dimension, we find the following properties of component models: \textit
 and \textit{Composability of EFPs}, which embodies what properties can be composed and what type of composition is allowed.
 In the next section we further describes this dimension in the special case of extra-functional properties that refer to computational resource usage.
 
-\subsection{Extra-functional Properties} \label{sec:efp-resources}
+
+%In a general sense, the concept that embodies the idea behind software components can be defined as follow
+%\cite{Crnkovic2011}:
+
+%\begin{description}
+%\item[Definition 1:] A \textit{Software Component} is a software building block that conforms to a component model. 
+%\item[Definition 2:] A \textit{Component Model} defines standards for (i) properties that individual components must satisfy; and (ii) methods, and possibly mechanisms, for composing components.
+%\end{description}
+
+%Despite of the existence of many research and practitioner approaches to component-based programming have been developed \cite{Heineman2001, SZYPERSKI2002, Crnkovic2011}, this broad definition is able to successfully spot the commonalities of a plethora of different component models.
+%However, plenty of diversity exists in current component models and frameworks.
+%They tend to target different technologies, aim at different use cases, provide support for different %concerns, and use different design principles.
+
+%In practice, a framework to compare and classify component models, as the one presented by Crnkovic et al.
+%\cite{Crnkovic2011}, results useful.
+%It allows us to focus on those properties that characterize component models.
+%The aforementioned classification framework proposes three dimensions that are of interest to us: \textit{life-cycle}, \textit{constructs}, and \textit{support for extra-functional properties (EFP)}.
+%A brief description of these dimensions is given below:
+
+
+\subsubsection{Extra-functional Properties} \label{sec:efp-resources}
 
 According to \cite{Beugnard774917}, contracts can be classified in four levels which, if
 taken together, form a global contract; these are syntactic level, behavioral level, synchronization level, and Quality-Of-Service level.
@@ -140,7 +219,7 @@ If a provider is too slow in performing a function, any client component will al
 Without using contract on QoS to control performance, it can be hard to identify what components are underperforming. 
 Beside time, components have to respect other resource limitations such as excessive heap storage and network usage.
 
-\paragraph{Where are the mechanism for managing EFPs implemented?}
+\paragraph{Where are the mechanisms for managing EFPs implemented?}
 Two interesting aspects of EFPs management are i) selecting which actors implement the mechanism and policies to manage extra-functional aspects, and ii) deciding if the actors will collaborate to achieve EFPs management \cite{Crnkovic2011}.
 
 Many component models provide no facilities for managing EFPs.
@@ -204,6 +283,7 @@ Likewise, if the service is poorly implemented, in indirect accounting the user 
 %
 %otra cosa
 %\cite{SZYPERSKI2002,Lau:2014:SCM:2602458.2611456}
+\begin{comment}
 
 \subsection{Component Models}
 
@@ -306,7 +386,9 @@ Mauro Caporuscio, Antinisca Di Marco, Paola Inverardi: Model-based system reconf
 
 Marco Autili, Paolo Di Benedetto and Paola Inverardi, Hybrid Approach for Resource-based Comparison of Adaptable Java Applications (2012), in: Journal of Science of Computer Programming (SCP)
 
-\section{Domain-Specific Languages and MRTEs} \label{sec:DSL-on-MRTEs}
+\end{comment}
+
+\subsection{Domain-Specific Languages and MRTEs} \label{sec:DSL-on-MRTEs}
 
 In software engineer, models are abstractions of a software system and its environment.
 Model-Driven Software Development (MDSD) puts analysis and design models on par with
@@ -333,6 +415,8 @@ MDSD consists of two major aspects: processing models and creating models.
 The creation of models can be achieved with graphical~\cite{Kolovos:2009:RLA:1564600.1564699, Biermann:2006:GDI:2087202.2087244} or textual editors~\cite{Merkle:2010:TMT:1869542.1869564}.
 A well known framework for building DSLs is Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625}.
 It is an Eclipse-based framework which supports the definition of languages together with their syntaxes, semantic checkers, code generators and even code editors.
+
+\begin{comment}
 
 \section{Resource Awareness for Domain-specific Abstractions} \label{sec:resource-awareness-for-dsl}
 
@@ -491,6 +575,8 @@ Lots of data collected in these works is also available with our approach.
 \paragraph{another, \cite{Harkema:2002:PMJ:584369.584388}}
 
 \subsection{Debugging support for DSLs}
+
+\end{comment}
 
 \section{Conclusions}
 
