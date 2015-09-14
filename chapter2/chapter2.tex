@@ -47,7 +47,7 @@ Unfortunately, this is not always the case.
 For instance, often developers lack the proper tools when they implement applications that execute in MRTEs.
 A couple of illustrative examples are given below; the first is related to OSGi bundles, the second to Domain-Specific Languages (DSLs).
 
-Usually, many OSGi bundles are deployed on top of a single JVM instance.
+In OSGi, bundles are deployed on top of a single JVM instance.
 Due to the communication mechanism used in OSGi, where objects are routinely shared, it is complex to decide which bundle should be accounted for the consumption of a particular object.
 A possible approach is deciding that an object $O$ is being consumed by a bundle if $O$'s class was loaded using the classloader $C$ associated with such a bundle.
 Then, we can use this mechanism to monitor per-bundle memory consumption. 
@@ -55,7 +55,7 @@ However, a profiler must perform considerable amount of processing to collect su
 %Since we know how to represent a bundle using Java concepts, this solution is feasible.
 Given the widespread usage of OSGi, memory profilers often support collecting data regarding per-bundle memory usage.
 Unfortunately, similar abstractions (components models), equally implemented atop of Java, are often not properly supported by such tools because they are not as popular as OSGi.
-Hence, data must be manually aggregated when an application using a poorly supported abstraction is profiled; this is, of course, a considerable burden for developers.
+Hence, data must be manually aggregated when an application uses abstractions that are not supported by profilers; this is a considerable burden for developers.
 
 The example of OSGi is also useful to highlight how some abstractions have specific requirements regarding resource consumption monitoring and reservation.
 In the particular case of determining how many resources are being consumed by a bundle, it is noteworthy that there exist two ways of doing so when a bundle requests a service from another bundle.
@@ -77,7 +77,7 @@ As a result, the annotation processor changes the program structure to implement
 It adds some methods indirection (to $AASpect$), create new set of objects that represents the state of one conceptual object ($AASpectProperty$), use the Xtend extension method feature, etc.
 Figure~\ref{fig:k3-diagram} shows the result of this translation process. 
 The left part illustrates the code written by the developer, the middle part shows the developer view (the code that can be written to use the open-class mechanism), the right part describes the runtime view.
-In this case, an instance of an open-class is not represented by a single JVM object; instead, it is represented by several scatter objects.  
+In this case, an instance of an open-class is not represented by a single JVM object; instead, it is represented by scattered objects.  
 
 \begin{figure*}
 \centering
@@ -86,7 +86,7 @@ In this case, an instance of an open-class is not represented by a single JVM ob
 \label{fig:k3-diagram}
 \end{figure*}
 
-In this thesis we claim that a \textit{mismatch}, between the developer's view and the tooling's view, exists when the concepts managed by the developers are not clearly reflected in the tools.
+In this thesis we argue that a \textit{mismatch}, between the developer's view and the tooling's view, exists when the concepts managed by the developers are not clearly reflected in the tools.
 This mismatch may complicate the development of applications, as well as prevent the correctness of software systems.
 We identify in this thesis, two ways in which such a mismatch might affect software development when new software abstractions are heavily used while, at the same time, support for resource-aware programming is also required:
 
@@ -101,20 +101,40 @@ Simplifying the definition of tools in order to support new abstractions is the 
 
 In the rest of this chapter, we extensively discuss both concerns.
 
-\section{How abstractions use resources}
+\section{Specific requirements of software abstractions}
+As mentioned in the previous section, when a new abstraction is defined, there is a gap between the capabilities of existent tools and users' expectations.
+Therefore, it is necessary to reduce this gap by modifying generic tools to make them capable of dealing with specific features of new abstractions.
 
-\todo{worst title ever}
+In this section, we present two kind of abstractions: software components and domain-specific languages.
+The presentation aims at highlighting the type of modifications that might be required in order to make an existent approach capable of dealing with these abstractions.
+Likewise, the section discuss the characteristics of components and DSLs that difficult the development of resource-aware programming tools.
 
+To guide the discussion, the following elements are given for each type of abstraction:
 \begin{itemize}
-\item \textit{Brief introduction.}
-\item \textit{Usage in MRTEs.}
-\item \textit{Resource consumption.}
+\item \textit{Introduction to the abstraction.} A brief description of the main elements of the abstraction is presented. This is focused on those features that impact resource management. 
+
+\item \textit{Implementations of the abstraction in MRTEs.}
+Illustrative cases that show how the abstraction have been implemented on top of MRTEs are described.
+For instance, it briefly mentions components models that support Java.
+
+\item An analysis of how \textit{resources are consumed} in this type of abstraction is presented.
+Interestingly, there are elements that vary in the way components and DSLs consume resources.
+
+\item \textit{Specific features to consider.}
+This point makes reference to those special characteristics of the abstraction to take into account when support for resource-aware programming is implemented.     
+
 \item \textit{Example of differences among concrete abstractions.}
-\item \textit{Specific features to consider when resource awareness support is implemented.}
-\item \textit{State of the art on providing resource awareness support for component-based systems.}
+Since there are, for example, many DSLs, this point aims at analysis difference among them.
+In this way, we show the high degree of variability that might complicate the development of resource-aware solutions.
+Instead of providing an exhaustive list of differences, we only show an illustrative one.
+
+\item The \textit{state of the art} on providing support for resource consumption accounting and reservation for each abstraction is presented.
+This is done in the form summarized discussion of existent approaches. 
 \end{itemize}
 
-\subsection{Resource usage in component-based systems} \label{sec:components-oriented-resource-awareness}
+This section ends by analyzing the limitation in the state of the art of both resource management for software components and DSLs. 
+
+\subsection{Resource use in software components} \label{sec:components-oriented-resource-awareness}
 
 Component-Based Software Engineer (CBSE) aims at developing applications by reusing independent units of software \cite{cbse-conference, Crnkovic2011}.
 Through the utilization of components, connectors and configurations, CBSE reduces the complexity in the development and maintenance of systems \cite{xadl,Medvidovic:2000,VanOmmering-et-al-00}.
@@ -207,11 +227,10 @@ This eases the inclusion of components in multiple systems where different polic
 
 An interesting difference that impact the implementation of mechanisms for resource consumption monitoring is how Kevoree and OSGi support interaction between components.
 In Kevoree, components communicate with each other through ports.
-It is straightforward to identify in the code when a component is requesting a service because a port is used to do so. 
+It is straightforward to identify in the code when a component is requesting a service because a single interface (port) is used to do so, no matter if a component is using different ports. 
 As a consequence, an automated tool can easily instrument the code to detect when components are communicating.
-On the contrary, OSGi uses a plain Java Interfaces and objects to connect bundles.
-In this cases it is more complex to detect this communication because there is not a single interface used.
-Instead, a bundle can communicate with several services using different interfaces. 
+On the contrary, OSGi uses plain Java interfaces and objects to connect bundles.
+In that cases it is more complex to detect when components are communicating because a bundle can communicate with several services using different interfaces. 
 
 \paragraph{State of the art on providing resource awareness support for component-based systems}
 
@@ -336,33 +355,47 @@ Because our goal is to design and implement an adaptive monitoring system, the i
 %Marco Autili, Paolo Di Benedetto and Paola Inverardi, Hybrid Approach for Resource-based Comparison of Adaptable Java Applications (2012), in: Journal of Science of Computer Programming (SCP)
 
 
-\subsection{Domain-Specific Languages and MRTEs} \label{sec:DSL-on-MRTEs}
+\subsection{Resource use in domain-specific languages} \label{sec:DSL-on-MRTEs}
 
-In software engineer, models are abstractions of a software system and its environment.
-Model-Driven Software Development (MDSD) puts analysis and design models on par with
-code because their implementation is automated~\cite{Stahl:2006:MSD:1196766, Fowler:2010:DSL:1809745}.
-The usefulness of a model is limited to the domain it represents.
+In Model-Driven Software Development (MDSD), models are abstractions of a software system and its environments.
+They are on par with code because their implementation is automated~\cite{Stahl:2006:MSD:1196766, Fowler:2010:DSL:1809745}.
+Since a model represent a limited amount of information of a real system, its utility is limited to the domain it represents.
 In other words, a model may be useful for answering a class of questions, but it may fail in answering other questions.
-MDSD aims to describe domain-specific abstractions and makes them accessible through formal modeling.
-A set of abstractions and their relationships is called, in the context of MDSD, a Metamodel or Domain-Specific Language (DSL)~\cite{Fowler:2010:DSL:1809745}.
-Typically, models are translated to source code written in some general purposes language to enable their subsequent compilation and execution.
+
+The set of concepts and relationships that can be used in a concrete model are described in a Metamodel or Domain-Specific Language (DSL)~\cite{Fowler:2010:DSL:1809745}.
+In this way, a metamodel describes a specific concern or domain, such as, state machines, or an interface definition language; while a model then is a concrete state machine in a real application, or a description of how components in a system interact.
+ 
+In a typical scenario, models are translated to source code written in some general-purpose language to enable their subsequent compilation and execution.
 However, models are also useful in other tasks such as generating test cases \cite{Kiffe2009,Gutierrez2015}, simulating a system behavior \cite{Broenink2012,brosig2015a,Bocciarelli2015425}, and formally verifying software properties \cite{Holzmann2004,Henriksson2005101,Moffett2013,DiGuglielmo20132013}. 
 
-DSLs can be roughly classified as internal or external DSLs.
+DSLs (we are going to use this term) can be roughly classified as internal or external.
 An internal DSL is embedded into a general-purpose language.
 Often, meta-programming facilities, of either a dynamically typed host language or a statically typed language with type inference, are used to seamless integrate the DSL into the host language.
 On the contrary, a ``\textit{program}'' written using an external DSL requires a separated translation process (i.e., compilation) in order to produce an artifact that can be integrated as part of an application.
 Both approaches have advantages and disadvantages.
-Internal DSLs can leverage all the features of their host languages, and it is easy to use constructor of the DSL as extensions of the host language.
-However, the concrete syntax of an internal DSL most be carefully crafted to cope with the constrains in the host language's syntax.
+Internal DSLs can leverage all the features of their host languages, and it is easy to use constructors of the DSL as extensions of the host language.
+However, the concrete syntax of an internal DSL must be carefully crafted to cope with the constrains in the host language's syntax.
 On the contrary, there is complete freedom in deciding the concrete syntax of external DSLs; as a designer you can even choose not to use a textual syntax.
 Another interesting point is that Integrated Development Environment (IDE) support for internal DSLs is limited to the support provided to the host language.
-
 
 MDSD consists of two major aspects: processing models and creating models.
 The creation of models can be achieved with graphical~\cite{Kolovos:2009:RLA:1564600.1564699, Biermann:2006:GDI:2087202.2087244} or textual editors~\cite{Merkle:2010:TMT:1869542.1869564}.
 A well known framework for building DSLs is Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625}.
 It is an Eclipse-based framework which supports the definition of languages together with their syntaxes, semantic checkers, code generators and even code editors.
+
+\paragraph{Usage in MRTEs} As mentioned, concrete models (or programs written in a DSL) are typically transformed to some host general-purpose language. This means that the DSL concepts are layered on top of existent concepts, such as \textit{class}, \textit{objects}, and \textit{threads}.
+Plenty of approaches exist for written DSLs that execute on top of MRTEs; in particular, many solutions target Java.
+For instance, the already discussed Xtext, the Eclipse Modeling Framework, the meta-programming capabilities of languages such as Scala and Clojure where internal DSLs can be defined and executed, the combination of annotations and annotation processor, and  the Meta-Programming System (MPS).
+Likewise, F\# applications, which execute in CLR, can use meta-programming support to write DSLs; and the Boo language provides constructor that are easy to use for crafting DSLs. 
+
+\paragraph{Resource Usage}
+
+
+\paragraph{Specific features to consider when resource awareness support is implemented}
+
+\paragraph{Example of differences among concrete abstractions}
+
+\paragraph{State of the art on providing resource awareness support for DSLs}
 
 \begin{comment}
 
