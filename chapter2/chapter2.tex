@@ -39,7 +39,7 @@ In the area of programming languages, recursive routines are implemented upon ba
 
 Once a new abstraction is implemented and its invariants defined, you can use it without a complete understanding of the implementation details.
 This has profound implications in the software development process; it now requires special tooling support because developers immediately start thinking in terms of such an abstraction.
-For instance, showing plain assembler instructions while debugging applications is no longer good a choice once you start coding your applications in a language that includes high-level concepts such as routines, loops, and conditional-statements.
+For instance, showing plain assembler instructions while debugging applications is no longer good choice once you start coding your applications in a language that includes high-level concepts such as routines, loops, and conditional-statements.
 In the same way, when a profiler is used to check the memory consumption of Java-based applications, the data produced is expected to reflect terms such as \textit{object} and \textit{class}.
 Ideally, tools such as editors, debuggers, and profilers must be modified to make them aware of each new abstraction introduced in the development cycle.
 Likewise, mechanisms to monitor resource consumption at runtime should also be modified.
@@ -59,14 +59,14 @@ Hence, data must be manually aggregated when an application uses abstractions th
 
 The example of OSGi is also useful to highlight how some abstractions have specific requirements regarding resource consumption monitoring and reservation.
 In the particular case of determining how many resources are being consumed by a bundle, it is noteworthy that there exist two ways of doing so when a bundle requests a service from another bundle.
-Both approaches have pros and cons \cite{lo citado por kouther, y kouther}.
+Both approaches have pros and cons \cite{Miettinen2008,Maurel:2012:AME:2304736.2304763}.
 In a first option, all resources used to satisfy a request are charged to the bundle that originally issued the request, no matter whether part of the computation is performed in other bundles.
 In a second option, a bundle only consumes resources when it is executing its own code.
 The important point is that, above the concern we present in the previous chapter regarding the mechanisms to support resource-aware programming, engineers also have to focus on features specific to each abstraction.
 
 Many of the newly designed DSLs are built on top of existing object-oriented languages runtime such as the JVM. 
 Therefore, people in charge of optimizing, debugging and maintaining software applications can use the existing debugger and profilers of these platforms. 
-However, there is clear mismatch between classical profilers used in object-oriented systems and the newly designed languages. 
+However, there is a clear mismatch between classical profilers used in object-oriented systems and the newly designed languages. 
 Indeed, the concepts introduced in these new DSLs may not exhibit a straightforward mapping to the underlying object-oriented system.
 As a consequence, it may be time consuming and complex to use a classical profiler to check applications that are based on these new languages.
 
@@ -385,11 +385,54 @@ It is an Eclipse-based framework which supports the definition of languages toge
 
 \paragraph{Usage in MRTEs} As mentioned, concrete models (or programs written in a DSL) are typically transformed to some host general-purpose language. This means that the DSL concepts are layered on top of existent concepts, such as \textit{class}, \textit{objects}, and \textit{threads}.
 Plenty of approaches exist for written DSLs that execute on top of MRTEs; in particular, many solutions target Java.
-For instance, the already discussed Xtext, the Eclipse Modeling Framework, the meta-programming capabilities of languages such as Scala and Clojure where internal DSLs can be defined and executed, the combination of annotations and annotation processor, and  the Meta-Programming System (MPS).
-Likewise, F\# applications, which execute in CLR, can use meta-programming support to write DSLs; and the Boo language provides constructor that are easy to use for crafting DSLs. 
+For instance, the already discussed Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625}, the Eclipse Modeling Framework~\cite{EMFModeling}, the meta-programming capabilities of languages such as Scala~\cite{Hofer:2010:MDL:1868294.1868307} and Clojure~\cite{Kelker2013} where internal DSLs can be defined and executed, the combination of annotations and annotation processor~\cite{Huang2008}, and  the Meta-Programming System (MPS)~\cite{JetBrainsMetaProgrammingSystem(MPS),Voelter2014}.
+Likewise, F\# applications, which execute in CLR, can use meta-programming support to write DSLs~\cite{Cheney:2013:PTL:2500365.2500586}; and the Boo language provides constructor that are easy to use for crafting DSLs~\cite{Rahien2010}. 
 
 \paragraph{Resource Usage}
+Naturally, the resource consumption of a program written in a DSL depends on the DSL itself.
+If a language is only used to describe structures then a program would consume memory.
+On the contrary, if a language only describes behavior, a program written using such a language would use CPU to perform the computation.
 
+An example is useful to illustrate how a DSL consumes resources.
+Figure~\ref{lst:state-machine} shows a program written in a state machine language that resembles a DSL described in~\cite{Voelter2010}.
+In this DSL, states, events and transitions are concepts defined by the DSL, but the guard conditions and the actions have a behavior that, as can be seen in the example, is plain imperative code.
+To evaluate such sections of a state machine, CPU time is required.
+In this case, it is necessary to know how is done the translation process from the DSL to a general-purpose language in order to properly measure the CPU consumption.
+
+\lstdefinestyle{statemachinelang}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  frame=single,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize,
+  keywordstyle=\bfseries\footnotesize\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\footnotesize\color{black},
+  stringstyle=\color{orange},
+  otherkeywords={StateMachine, state, states, events, on, initial},
+  tabsize=2,
+}
+
+\begin{lstlisting}[caption={State machine to control the door of a bus.},label={lst:state-machine},style=statemachinelang,frame=single]
+StateMachine BusDoorManager
+	events open_door() stop_requested() bus_stops() time_elapsed() 
+	states (initial = DoorClosed) {
+		state DoorClosed:
+			on stop_requested() => ReachingStop
+		state BusStopped:
+			on open_door() => DoorOpen { light.on; door.open; timer.wait }
+		state ReachingStop:
+			on open_door() => OpeningDoor {}
+			on bus_stops() => BusStopped {}
+		state OpeningDoor:
+			on bus_stops() => DoorOpen { light.on; door.open; timer.wait }
+		state DoorOpen:
+			on open_door_requested() => DoorOpen {}
+			on time_elapsed() => DoorClosed { door.close; light.off }
+	}
+\end{lstlisting}
 
 \paragraph{Specific features to consider when resource awareness support is implemented}
 
