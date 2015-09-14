@@ -105,20 +105,19 @@ In the rest of this chapter, we extensively discuss both concerns.
 
 \todo{worst title ever}
 
-\paragraph{Usage in MRTEs}
-
-\paragraph{Resource consumption}
-
-\paragraph{Differences among concrete abstractions}
-
-\paragraph{Specific features to consider when resource awareness support is implemented}
-
-\paragraph{State of the art on providing resource awareness support for component-based systems}
+\begin{itemize}
+\item \textit{Brief introduction.}
+\item \textit{Usage in MRTEs.}
+\item \textit{Resource consumption.}
+\item \textit{Example of differences among concrete abstractions.}
+\item \textit{Specific features to consider when resource awareness support is implemented.}
+\item \textit{State of the art on providing resource awareness support for component-based systems.}
+\end{itemize}
 
 \subsection{Resource usage in component-based systems} \label{sec:components-oriented-resource-awareness}
 
 Component-Based Software Engineer (CBSE) aims at developing applications by reusing independent units of software \cite{cbse-conference, Crnkovic2011}.
-By providing a common understanding of component, connector and configuration, CBSE reduces the complexity in the development and maintenance of software systems \cite{xadl,Medvidovic:2000,VanOmmering-et-al-00}.
+Through the utilization of components, connectors and configurations, CBSE reduces the complexity in the development and maintenance of systems \cite{xadl,Medvidovic:2000,VanOmmering-et-al-00}.
 %In addition to economical benefits such as reducing time to market and development cost \cite{SZYPERSKI2002}, there are also technical advantages in using CBSE. 
 One of its technical advantages is that it facilitates the management of dynamic architectures
 ~\cite{DBLP:journals/ase/NittoGMPP08, Johnson:2015:CSM:2735960.2735979}
@@ -128,7 +127,7 @@ Likewise, many works~\cite{cbse-conference} have shown the benefits of using com
 
 Plenty of diversity exists in current component models and frameworks \cite{Heineman2001, SZYPERSKI2002, Crnkovic2011}.
 They tend to target different technologies, aim at different use cases, provide support for different concerns, and use different design principles.
-Crnkovic et al. \cite{Crnkovic2011} propose properties that can be used to classify component models; we are interested in those that have the following properties:
+Crnkovic et al. \cite{Crnkovic2011} propose properties that can be used to classify component models; we are interested in those models that have the following properties:
 
 \begin{description}
 \item[Modeling capabilities:] it is common to provide a mechanism for modeling the system architecture during the development phase; this results useful to reason about the system.
@@ -140,13 +139,14 @@ Many component models are able to cope with the necessity of adaptation through,
 \end{description}
 
 Other properties worth mentioning in this thesis are those that describe how components communicate.
-For instance:  whether the concept of \textit{port} is implemented; there exists distinction between \textit{required/provided interfaces}; how is the \textit{interface language}; what is the \textit{interface levels} (syntactic, semantic, behavior); and what is the \textit{communication type} (synchronous, unicast, and others).
-Our interest in these properties is limited to understand what mechanisms are used to support interaction between components, how are these mechanisms implemented, and how interaction between components affects the way in which we deal with resource consumption monitoring and reservation.
+For instance:  whether the concept of \textit{port} is implemented; if there exists distinction between \textit{required/provided interfaces}; how is the \textit{interface language}; what is the \textit{interface levels} (syntactic, semantic, behavior); and what is the \textit{communication type} (synchronous, unicast, and others).
+Our interest in these properties is limited to understand what mechanisms are used to support interaction between components, how are these mechanisms implemented, and how the interaction between components affects the way in which we deal with resource consumption monitoring and reservation.
 
 \paragraph{Usage in MRTEs}
 An important property of component models is its implementation support.
 The discussion in this research is limited to those that have been implemented for MRTEs.
-Several proposals exist both in the industry and the academy, such as,  Enterprise Java Beans (EJB) \cite{OracleEJB3.0}, the Open Services Gateway Initiative (OSGi) \cite{OSGI:r5}, 
+Several component models that provide support for MRTEs have been proposed by both the industry and the academy.
+Among others, we can mention Enterprise Java Beans (EJB) \cite{OracleEJB3.0}, the Open Services Gateway Initiative (OSGi) \cite{OSGI:r5}, 
 Fractal \cite{Bruneton:2006:FCM:1152333.1152345}, 
 SOFA 2.0 (Software Appliances) \cite{Bures2006}, Palladio \cite{}, and Kevoree~\cite{morin09a,leger2010reliable}.
 It is interesting how these component models have different properties when it comes to \textit{modeling capabilities}, \textit{architecture of the system supported}, and \textit{constructs for interaction among components}.
@@ -154,123 +154,69 @@ However, they also differ in how components are represented on top of MRTE conce
 
 \paragraph{Resource consumption}
 
-\paragraph{Differences among concrete abstractions}
+Since the lack of computational resources can break an application as easily as a violation of a business rule, dealing with resource utilization is considered an extra-function requirement~\cite{}.
+Interestingly, components provide boundaries between different software entities, which are forced to communicate through well defined interfaces; it is then possible to write QoS contracts associated to these interfaces \cite{Beugnard774917}.
+
+It is important to remember the difference between component type and component instance when we discuss the resource usage of these systems.
+Indeed, instances may have a state while component types are stateless.
+The distinction is important because all instances of a single component type share the same implementation.
+As a consequence, it is not simple to define how a component consumes resources.
+For example, the memory consumed by an instance includes those \textit{objects} used for the component framework to represent the instance itself, its ports, and bindings; it also includes the state of the component. 
+However, it cannot include the memory used to store the component's code since it is shared among many instances.
+Monitoring CPU and network consumption is even harder, because the code responsible for the consumption is shared.
+To solve this problem, a context is associated with each component in order to determine at runtime the instance responsible of the execution of a given operation that is using resources.
+Curiously, the nature of this context depends on the component model.     
 
 \paragraph{Specific features to consider when resource awareness support is implemented}
 
-\paragraph{State of the art on providing resource awareness support for component-based systems}
-
-%\paragraph{Life-cycle:}
-
-%This dimension embodies properties such as \textit{modeling capabilities}, which describe component model's support for the modeling and the design of component-based systems and components; 
-%\textit{implementation support}, which basically describes the language that can be used to develop components; and \textit{deployment capabilities}, which describe whether components can be deployed at runtime.
-
-%In this thesis, we are interested in component models that provide \textit{modeling capabilities} during the development phase.
-%However, we also require minimal support for querying a system architecture at runtime. 
-%In addition, we are only interested in component models that target MRTEs, such as Java and .Net.
-%Finally, to satisfy the needs for adaptation, several component models provide solutions to dynamically reconfigure a software architecture through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components~\cite{Porter:2014:RMC:2602458.2602471, Zheng:2014:RCC:2679601.2680405, Irmert:2008:RAS:1370018.1370036, Ghezzi:2010:QDD:2163764.2163774}. 
-%In practice, component-based (and/or service-based) platforms like Fractal~\cite{bruneton06}, OpenCOM~\cite{BlairCULJ04}, OSGi~\cite{OSGI:r5} or SCA~\cite{SEINTURIER:2011:INRIA-00567442:1} provide platform mechanisms to support dynamic architectures; this requires the capability of deploying components at runtime.
-%Since, we are dealing with the problem of supporting resource awareness in open environments, we focus on those component models that allow component deployment at runtime.
-
-%\paragraph{Constructs:}
-%
-%A set of properties that mainly describe how components communicate are included in this dimension;
-%some of these properties are: the \textit{existence of ports}; if there exists distinction between \textit{required/provided interfaces}; \textit{interface language}, which the language used to describe interfaces; the \textit{interface levels}, which are limited in such a framework to syntactic, semantic, and behavior; and the \textit{communication type}, which may include synchronous, unicast, and others.
-%Our interest on this dimension is limited to understand what mechanisms are used to support interaction between components, how are these mechanisms implemented, and how interaction between components affects the way in which we deal with resource consumption monitoring and reservation. 
-
-\paragraph{Support for EFPs:}
-
-Support for dealing with EFPs has not been standardized among component models.
-This is a consequence of facts such as the diversity of extra-functional requirements among applications, and the existence of a huge number of properties.
-In this dimension, we find the following properties of component models: \textit{EFPs support}, which states whether the component model provides general support for specification and reasoning about EFPs; 
-\textit{EFPs specification}, which describes which type of support and/or which properties;
-and \textit{Composability of EFPs}, which embodies what properties can be composed and what type of composition is allowed.
-In the next section we further describes this dimension in the special case of extra-functional properties that refer to computational resource usage.
-
-
-%In a general sense, the concept that embodies the idea behind software components can be defined as follow
-%\cite{Crnkovic2011}:
-
-%\begin{description}
-%\item[Definition 1:] A \textit{Software Component} is a software building block that conforms to a component model. 
-%\item[Definition 2:] A \textit{Component Model} defines standards for (i) properties that individual components must satisfy; and (ii) methods, and possibly mechanisms, for composing components.
-%\end{description}
-
-%Despite of the existence of many research and practitioner approaches to component-based programming have been developed \cite{Heineman2001, SZYPERSKI2002, Crnkovic2011}, this broad definition is able to successfully spot the commonalities of a plethora of different component models.
-%However, plenty of diversity exists in current component models and frameworks.
-%They tend to target different technologies, aim at different use cases, provide support for different %concerns, and use different design principles.
-
-%In practice, a framework to compare and classify component models, as the one presented by Crnkovic et al.
-%\cite{Crnkovic2011}, results useful.
-%It allows us to focus on those properties that characterize component models.
-%The aforementioned classification framework proposes three dimensions that are of interest to us: \textit{life-cycle}, \textit{constructs}, and \textit{support for extra-functional properties (EFP)}.
-%A brief description of these dimensions is given below:
-
-
-\subsubsection{Extra-functional Properties} \label{sec:efp-resources}
-
-According to \cite{Beugnard774917}, contracts can be classified in four levels which, if
-taken together, form a global contract; these are syntactic level, behavioral level, synchronization level, and Quality-Of-Service level.
-Contracts based on the first three levels describe what can be done under which provisions.
-They do not specify other properties such as how long it would take to service a request or what other resources, besides time, would be consumed by a component in order to perform some action.
-Nevertheless, in real scenarios, a violation of extra-functional
-requirements can break clients just as easily as a violation of, for instance, a business rule. 
-If a provider is too slow in performing a function, any client component will also be slow in achieving their goal.
-Without using contract on QoS to control performance, it can be hard to identify what components are underperforming. 
-Beside time, components have to respect other resource limitations such as excessive heap storage and network usage.
-
-\paragraph{Where are the mechanisms for managing EFPs implemented?}
-Two interesting aspects of EFPs management are i) selecting which actors implement the mechanism and policies to manage extra-functional aspects, and ii) deciding if the actors will collaborate to achieve EFPs management \cite{Crnkovic2011}.
-
-Many component models provide no facilities for managing EFPs.
-The mechanism used to handle a property is left to the designers of each application; as a result, a
-property may not be managed at all.
-This solution facilitates the creation of EFP management policies that are specifically tuned towards a system, and also supports the usage of multiple policies in a system.
-However, the fact that such policies are not
-standardized (and are fully implemented in components) may be a source of architectural mismatch between
-components.
-
-The compatibility of components is improved if the
-component model provides standardized facilities for managing EFPs.
-In this approach, the component execution platform contains
-policies for managing EFPs for individual components as well as for EFPs involving multiple components.
-The ability to negotiate the manner in which EFPs are handled requires that the
-components themselves have some knowledge about how the EFP affects their functioning.
-
-In yet another approach, components are designed to address only functional aspects and not EFPs.
-Thus, in the execution environment, these components
-are wrapped in a container that has the knowledge on how to manage EFPs.
-Containers can either be totally in charge of managing EFPs or
-they can interact with a mechanism in the component framework that manages EFPs.
-This approach is a way of realizing separation of
-concerns in which components focus on functional aspects
-and containers concentrate on extra-functional aspects.
-In this way, components are more easy to integrate into multiple systems that employ different policies for EFPs.
-Since these components do not tackle EFPs management, another advantage is that they are simpler to implement.
-
-\paragraph{How to account for resource consumption in the presence of interaction between components?}
-In the case of extra-functional properties that refer to resource consumption, there are special considerations.
-One of the most interesting is how to account for resource consumption when usually components are organized as clients and providers.
-This corresponds to the already mentioned concept of resource container \cite{Banga:1999:RCN:296806.296810}.
-Two ways to accounting are identified in \cite{Miettinen2008,Maurel:2012:AME:2304736.2304763}:
+A first issue to take into consideration is \textit{how to account for resource consumption in the presence of interaction between components}.
+Usually, components are organized as clients and providers, where a component (provider) performs operations on behalf of another component (client).
+It is then possible to account for resource consumption in two ways \cite{Miettinen2008,Maurel:2012:AME:2304736.2304763}:
 
 \begin{description}
 \item[direct accounting:] the resources consumed during
-components' interaction are accounted to the provider.
+interaction are accounted to the provider.
 For instance, the CPU used by a code that belongs
-to component A will be accounted to A, no matter if it the code is being executed on behalf of other components.
+to component A is accounted to A, no matter if the code is executed on behalf of a client.
 
-\item[indirect accounting:] all the resources consumed to service a request that was originated in a component A are accounted to A.
+\item[indirect accounting:] all the resources consumed to serve a request that was originated in a component A are accounted to A.
 In other words, there is no resource consumption accounted to service providers.
 \end{description}
 
 Both ways have advantages and disadvantages.
-For instance, in the case of direct accounting, if a provider is
+In the case of direct accounting, if a provider is
 called in an endless loop, the resource usage will be accounted
 to the provider instead of to the client that executes such a loop.
-Likewise, if the service is poorly implemented, in indirect accounting the user of the service is identified as the responsible.
+On the contrary, if a service is poorly implemented, in indirect accounting the user of the service is identified as the responsible.
 
-\paragraph{How to model contracts regarding resource requirements?}
+A second aspect is to decide \textit{where should be implemented} the mechanism for resource consumption monitoring and reservation.
+Essentially, this consists in, selecting which actors implement the mechanism and policies to manage resources, and deciding if the actors collaborate to achieve their goal \cite{Crnkovic2011}.
+
+Many component models provide no facilities for managing extra-functional properties (EFPs) such as resource usage.
+The mechanism used to handle a property is left to the designers of each application.
+This facilitates the creation of EFP management policies that are tuned towards a system, but can harm the portability of components because the policies are implemented by them.
+
+In another approach, components only address functional aspects.
+Thus, in the execution environment, components
+are wrapped in containers that know how to manage EFPs.
+Containers can either be totally in charge of non-functional aspects or
+they can interact with the component framework to manage EFPs.
+This eases the inclusion of components in multiple systems where different policies for EFPs are used.
+
+\paragraph{Example of differences among concrete abstractions}
+
+An interesting difference that impact the implementation of mechanisms for resource consumption monitoring is how Kevoree and OSGi support interaction between components.
+In Kevoree, components communicate with each other through ports.
+It is straightforward to identify in the code when a component is requesting a service because a port is used to do so. 
+As a consequence, an automated tool can easily instrument the code to detect when components are communicating.
+On the contrary, OSGi uses a plain Java Interfaces and objects to connect bundles.
+In this cases it is more complex to detect this communication because there is not a single interface used.
+Instead, a bundle can communicate with several services using different interfaces. 
+
+\paragraph{State of the art on providing resource awareness support for component-based systems}
+
+
+\textit{How to model contracts regarding resource requirements?}
 \todo{Write this}
 
 %\cite{Jung:2011:LAI:2000292.2000296}
@@ -283,67 +229,9 @@ Likewise, if the service is poorly implemented, in indirect accounting the user 
 %
 %otra cosa
 %\cite{SZYPERSKI2002,Lau:2014:SCM:2602458.2611456}
-\begin{comment}
 
-\subsection{Component Models}
 
-In the next section, we provide a very brief overview of some component models and their main characteristics.
-The discussion is limited to component models that have been either designed from scratch or implemented to target MRTEs.
-Since we are interested in software systems that evolve at runtime, the discussion is also limited to component models that allow component deployment at runtime.
-The list is not exhaustive; instead, it should be understood as a provision of some characteristic examples.
-Nevertheless, a component model - Kevoree -  is discussed in further details because the contributions in chapters \ref{chp:scapegoat} and \ref{chp:squirrel}
-are implemented and evaluated using such a component model.
-
-\paragraph{Enterprise Java Beans (EJB)} \cite{OracleEJB3.0} envisions the construction of object-oriented and
-distributed business applications in trying to hide to developers the underlying complexity of common operations such as transactions processing, persistence,
-concurrency, and interoperability.
-It also aims at the improvement of component reusability in providing the so called EJB-jars to package components.
-An EJB container holds two major types of components to match the needs of different applications: SessionBean, and MessageDrivenBeans.
-Each of these beans is deployed in an EJB Container which is in charge of their management at
-runtime (start, stop, activation or deactivation).
-Starting with EJB 3.0, annotations are heavily used for dependency injection to simplify configuration and integration of heterogeneous systems. 
-In order to achieve this, EJB technology use the Java programming language.
-
-\paragraph{The Open Services Gateway Initiative (OSGi)} \cite{OSGI:r5} is a consortium of industrial partners working together to
-define a service-oriented framework with ``open specifications
-for the delivery of multiple services over wide area networks to local networks and devices''.
-In the OSGi's component definitions, there is a clear distinction between a unit of
-composition and a unit of deployment; the former is known as service while the latter is called bundle.
-OSGi offers a flexible architecture of systems that can dynamically evolve during execution time.
-This implies that in the system, components can be added, removed or modified at run-time.
-Thus, there is no guaranty that a service provided at a certain time will be still provided later.
-Being built on Java, on which it heavily depends, OSGI is platform independent.
-
-%\paragraph{Fractal} \cite{Bruneton:2006:FCM:1152333.1152345} is a hierarchical and reflective component model with sharing.
-%Components in this model can be endowed with arbitrary reflective capabilities, from plain black-box objects to
-%components that allow a fine-grained manipulation of their internal structure.
-%The paper describes JULIA, a Java implementation of the model, a small but efficient runtime framework, which relies on
-%a combination of interceptors and mixins for the programming of reflective features of components.
-%The paper presents a qualitative and quantitative evaluation of this implementation, showing that
-%component-based programming in FRACTAL can be made very efficient. 
-
-\paragraph{Fractal} \cite{Bruneton:2006:FCM:1152333.1152345} intends to cover the whole development lifecycle (design, implementation, deployment and maintenance/management) of complex systems.
-It comes up with features such as nesting, sharing of components and reflexivity.
-In other words, a component may respectively be created from other components, be shared between components and describes its own behavior.
-Fractal aims at providing an general model that can be tuned to fit a large variety of applications and domains.
-Hence, nothing is fixed in Fractal.
-Actually, since the component model is language and platform independent, it is possible to leverage domain-specific 
-For instance, there exists a C-implementation called Think \cite{Fassino:2002:TSF:647057.713860}, 
-a Java-implementation called Julia \cite{Bruneton:2006:FCM:1152333.1152345}.
-Fractal can be seen as a generic component model which intends to encompass other component models.
-
-\paragraph{SOFA 2.0 (Software Appliances)} components are specified by their frame and architecture \cite{Bures2006}.
-A frame can be considered a black box that defines the provided and required interfaces, and its properties.
-However, a frame can also be a composite component where the structure of a component is described until the first level of nesting in the component hierarchy.
-In SOFA, components and systems are defined using a ADL language: Component Description Language (CDL).
-The resulting CDL is compiled to create a system implementation in a programming
-language such as C++ or Java.
-%SOFA components can be composed by method calls through connectors.
-The SOFA 2.0 component model add support for new services: dynamic reconfiguration, control interfaces and multiple communication styles between the components.
-
-\paragraph{Palladio}
-
-\paragraph{Kevoree}
+\subsubsection{Kevoree Component Model*}
 Built on top of dynamic component frameworks, Models@run.time denote model-driven approaches that aim at taming the complexity of dynamic adaptation.
 It basically pushes the idea of reflection~\cite{morin09a} one step further by considering the reflection-layer as a real model: ``something simpler, safer or cheaper than reality to avoid the complexity, danger and irreversibility of reality''.
 In practice, component-based and service-based platforms offer reflection APIs that allow instrospecting the application (e.g., which components and bindings are currently in place in the system) and dynamic adaptation (e.g., changing the current components and bindings).
@@ -363,30 +251,90 @@ Moreover, Kevoree comes with a set of tools for building dynamic applications (a
 As a result, Kevoree provides a promising environment by facilitating the implementation of dynamically reconfigurable applications in the context of an open-world environment.
 Because our goal is to design and implement an adaptive monitoring system, the introspection and the dynamic reconfiguration facilities offered by Kevoree suit the needs of the ScapeGoat framework.
 
-\todo{READ UNTIL THIS POINT}
+%\subsubsection{Extra-functional Properties} \label{sec:efp-resources}
+%
+%According to \cite{Beugnard774917}, contracts can be classified in four levels which, if
+%taken together, form a global contract; these are syntactic level, behavioral level, synchronization level, and Quality-Of-Service level.
+%Contracts based on the first three levels describe what can be done under which provisions.
+%They do not specify other properties such as how long it would take to service a request or what other resources, besides time, would be consumed by a component in order to perform some action.
+%Nevertheless, in real scenarios, a violation of extra-functional
+%requirements can break clients just as easily as a violation of, for instance, a business rule. 
+%If a provider is too slow in performing a function, any client component will also be slow in achieving their goal.
+%Without using contract on QoS to control performance, it can be hard to identify what components are underperforming. 
+%Beside time, components have to respect other resource limitations such as excessive heap storage and network usage.
 
-\section{State of the art of resource management for components} \label{sec:component-leverage}
-\begin{itemize}
-\item Describe las soluciones de kouther
-\item generacion de contenedores
-\item generacion de canales de comunicacion
-\item ver que mas se puede describir
-\end{itemize}
 
+%\subsection{Component Models}
+%
+%In the next section, we provide a very brief overview of some component models and their main characteristics.
+%The discussion is limited to component models that have been either designed from scratch or implemented to target MRTEs.
+%Since we are interested in software systems that evolve at runtime, the discussion is also limited to component models that allow component deployment at runtime.
+%The list is not exhaustive; instead, it should be understood as a provision of some characteristic examples.
+%Nevertheless, a component model - Kevoree -  is discussed in further details because the contributions in chapters \ref{chp:scapegoat} and \ref{chp:squirrel}
+%are implemented and evaluated using such a component model.
+%
+%\paragraph{Enterprise Java Beans (EJB)} \cite{OracleEJB3.0} envisions the construction of object-oriented and
+%distributed business applications in trying to hide to developers the underlying complexity of common operations such as transactions processing, persistence,
+%concurrency, and interoperability.
+%It also aims at the improvement of component reusability in providing the so called EJB-jars to package components.
+%An EJB container holds two major types of components to match the needs of different applications: SessionBean, and MessageDrivenBeans.
+%Each of these beans is deployed in an EJB Container which is in charge of their management at
+%runtime (start, stop, activation or deactivation).
+%Starting with EJB 3.0, annotations are heavily used for dependency injection to simplify configuration and integration of heterogeneous systems. 
+%In order to achieve this, EJB technology use the Java programming language.
+%
+%\paragraph{The Open Services Gateway Initiative (OSGi)} \cite{OSGI:r5} is a consortium of industrial partners working together to
+%define a service-oriented framework with ``open specifications
+%for the delivery of multiple services over wide area networks to local networks and devices''.
+%In the OSGi's component definitions, there is a clear distinction between a unit of
+%composition and a unit of deployment; the former is known as service while the latter is called bundle.
+%OSGi offers a flexible architecture of systems that can dynamically evolve during execution time.
+%This implies that in the system, components can be added, removed or modified at run-time.
+%Thus, there is no guaranty that a service provided at a certain time will be still provided later.
+%Being built on Java, on which it heavily depends, OSGI is platform independent.
+%
+%%\paragraph{Fractal} \cite{Bruneton:2006:FCM:1152333.1152345} is a hierarchical and reflective component model with sharing.
+%%Components in this model can be endowed with arbitrary reflective capabilities, from plain black-box objects to
+%%components that allow a fine-grained manipulation of their internal structure.
+%%The paper describes JULIA, a Java implementation of the model, a small but efficient runtime framework, which relies on
+%%a combination of interceptors and mixins for the programming of reflective features of components.
+%%The paper presents a qualitative and quantitative evaluation of this implementation, showing that
+%%component-based programming in FRACTAL can be made very efficient. 
+%
+%\paragraph{Fractal} \cite{Bruneton:2006:FCM:1152333.1152345} intends to cover the whole development lifecycle (design, implementation, deployment and maintenance/management) of complex systems.
+%It comes up with features such as nesting, sharing of components and reflexivity.
+%In other words, a component may respectively be created from other components, be shared between components and describes its own behavior.
+%Fractal aims at providing an general model that can be tuned to fit a large variety of applications and domains.
+%Hence, nothing is fixed in Fractal.
+%Actually, since the component model is language and platform independent, it is possible to leverage domain-specific 
+%For instance, there exists a C-implementation called Think \cite{Fassino:2002:TSF:647057.713860}, 
+%a Java-implementation called Julia \cite{Bruneton:2006:FCM:1152333.1152345}.
+%Fractal can be seen as a generic component model which intends to encompass other component models.
+%
+%
+%\todo{READ UNTIL THIS POINT}
+%
+%\section{State of the art of resource management for components} \label{sec:component-leverage}
+%\begin{itemize}
+%\item Describe las soluciones de kouther
+%\item generacion de contenedores
+%\item generacion de canales de comunicacion
+%\item ver que mas se puede describir
+%\end{itemize}
+%
+%
+%Franz Brosch, Heiko Koziolek, Barbora Buhnova, Ralf Reussner: Architecture-Based Reliability Prediction with the Palladio Component Model. IEEE Trans. Software Eng. 38(6): 1319-1339 (2012)
+%
+%Sam Malek, Marija Mikic-Rakic, Nenad Medvidovic: A Style-Aware Architectural Middleware for Resource-Constrained, Distributed Systems. IEEE Trans. Software Eng. 31(3): 256-272 (2005)
+%
+%Anne Koziolek, Ralf Reussner: Towards a generic quality optimisation framework for component-based system models. CBSE 2011: 103-108
+%
+%Marco Autili, Paolo Di Benedetto, Paola Inverardi: Context-Aware Adaptive Services: The PLASTIC Approach. FASE 2009: 124-139
+%
+%Mauro Caporuscio, Antinisca Di Marco, Paola Inverardi: Model-based system reconfiguration for dynamic performance management. Journal of Systems and Software 80(4): 455-473 (2007)
+%
+%Marco Autili, Paolo Di Benedetto and Paola Inverardi, Hybrid Approach for Resource-based Comparison of Adaptable Java Applications (2012), in: Journal of Science of Computer Programming (SCP)
 
-Franz Brosch, Heiko Koziolek, Barbora Buhnova, Ralf Reussner: Architecture-Based Reliability Prediction with the Palladio Component Model. IEEE Trans. Software Eng. 38(6): 1319-1339 (2012)
-
-Sam Malek, Marija Mikic-Rakic, Nenad Medvidovic: A Style-Aware Architectural Middleware for Resource-Constrained, Distributed Systems. IEEE Trans. Software Eng. 31(3): 256-272 (2005)
-
-Anne Koziolek, Ralf Reussner: Towards a generic quality optimisation framework for component-based system models. CBSE 2011: 103-108
-
-Marco Autili, Paolo Di Benedetto, Paola Inverardi: Context-Aware Adaptive Services: The PLASTIC Approach. FASE 2009: 124-139
-
-Mauro Caporuscio, Antinisca Di Marco, Paola Inverardi: Model-based system reconfiguration for dynamic performance management. Journal of Systems and Software 80(4): 455-473 (2007)
-
-Marco Autili, Paolo Di Benedetto and Paola Inverardi, Hybrid Approach for Resource-based Comparison of Adaptable Java Applications (2012), in: Journal of Science of Computer Programming (SCP)
-
-\end{comment}
 
 \subsection{Domain-Specific Languages and MRTEs} \label{sec:DSL-on-MRTEs}
 
