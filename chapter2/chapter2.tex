@@ -251,7 +251,7 @@ In that cases it is more complex to detect when components are communicating bec
 
 In~\cite{Xu:2013:PML:2491509.2491511} the authors propose a framework to detect memory leaks associated with Java containers.
 To do so, the framework explores the status of each container object with the goal of identifying leak patterns. The approach is based on finding objects which are keeping references to removed bundles. LeakBots~\cite{Mitchell03leakbot:an} is an automated tool to detect memory leaks. It makes heavy
-use of information recollected from the heap in order to identify the more likely structures leading to a leak.
+use of information collected from the heap in order to identify the more likely structures leading to a leak.
 These tools collect data from the heap in order to automatically pinpoint a particular memory issue.
 The methods to collect the data are handwritten for efficiency reasons.
 Lots of data collected in these works is also available with our approach.
@@ -591,7 +591,7 @@ Finally, Reiss proposes \cite{Reiss:2008:CDP:1383559.1383566} a framework, DYPER
 Each agent (so-called proflet) is able to obtain data, regarding some properties, using two approaches.
 Through sampling the data collected have poor quality, while data collected using instrumentation are very detailed.
 The framework schedules the execution of proflets to guarantee a bound on monitoring overhead.
-To perform the scheduling, each proflet provides an estimates of both the expected application overhead and the time needed to set up the detailed monitoring; this information is used to dispatch the execution of a detailed recollection of data.
+To perform the scheduling, each proflet provides an estimates of both the expected application overhead and the time needed to set up the detailed monitoring; this information is used to dispatch the execution of a detailed collection of data.
 In practice, this is a form of adaptive monitoring where mechanisms with high overhead are executed only when possible.
 Proflets are built using either Java or C, and they can be composed in order to collect more complex data.
 The main limitation of this approach, beside from the fact that no experimental validation is provided, lies on the difficulty of properly estimating the overhead of proflets.
@@ -606,7 +606,7 @@ By comparison, Javassist \cite{Javassist1999} simplifies Java bytecode manipulat
 It is a class library for editing bytecodes in Java; however, unlike ASM, it provides a source level API: to transform a classfile without knowledge of the specifications of the Java bytecode.
 For example, you can specify what bytecode to insert in an existent class by using plain Java source code to; Javassist compiles it on the fly and inserts it on th class being transformed.
 
-The recollection of data for a given dynamic analysis can be easily understood as a crosscutting concern.
+The collection of data for a given dynamic analysis can be easily understood as a crosscutting concern.
 Because of this, researchers have been attracted by aspect-oriented solutions.
 Indeed, aspect-oriented frameworks already provide the mechanisms to i) specify multiple points of interest in the binary code of an application, and ii) execute handlers when the program counter reaches these locations.
 In other words, by simply defining aspects (\textit{pointcuts} and \textit{advices}), developers can focus on the high-level ideas of dynamic analysis.
@@ -796,11 +796,26 @@ Generic approaches to collect data on memory usage show high performance overhea
 \section{Conclusions}
 
 
-Defining and using software abstractions is at the core of system developments.
-The capacity of defining new abstraction is, at the same time, a blessing and a challenge.
-The problem is that once a new abstraction is defined, the tools that support the development process should be modified to make them reflect the concepts 
+Defining and using software abstractions is at the core of system development.
+Once a new abstraction is defined, the tools used in the development process and to support resource awareness should be modified to make them reflect the new concepts.
+When these modification are not done, we argue that a mismatch exists between developer's view and the tooling's view.
+However, implementing this tooling support is tedious and error-pone.
+In this chapter, we have identified two challenges related to this complexity:
 
-\extracomment{TODO}{}
+\begin{itemize}
+\item A concrete abstraction may have specific features to consider when implementing tooling support.
+On the one hand, this features can derive into additional requirements for the tools, making even more complicated their implementation.
+On the other hand, some features can be useful to drive the behavior of systems that require support for resource awareness.
+
+\item Given the mainstream trend of defining new software abstractions (for example with DSLs), it is necessary to ease the task of building their support.
+For instance, building a resource consumption monitor for a new DSL should simple enough as to make it affordable for DSL developers.
+\end{itemize}   
+
+In reviewing the state of the art of resource management for software abstractions, we realized that there are severe shortcomings in existent approaches that prevent their usage in production environments. In particular:
+
+\begin{itemize}
+\item Approaches to perform arbitrary data 
+\end{itemize} 
 
 %
 %Discutir aqui que problemas nuevos surgen cuando se quiere hacer resource management en component-based systems. Por ejemplo, a quien se le asigna el consumo.
