@@ -234,7 +234,6 @@ In that cases it is more complex to detect when components are communicating bec
 
 \paragraph{State of the art on providing resource awareness support for component-based systems}
 
-
 \textit{How to model contracts regarding resource requirements?}
 \todo{Write this}
 
@@ -249,14 +248,31 @@ In that cases it is more complex to detect when components are communicating bec
 %otra cosa
 %\cite{SZYPERSKI2002,Lau:2014:SCM:2602458.2611456}
 
+EJBMemProf — A Memory Profiling Framework for Enterprise JavaBeans
+\cite{Meyerhoefer2005}
+Deriving resource properties of components such as memory consumption is a requirement for the specification of non-functional properties of software components, enabling developers to make a selection among components not solely based on their function. In this paper we present a profiler for Enterprise Java Beans components that has been specifically adapted to the characteristics of such components. It facilitates focusing on the component concept without getting caught up in the details of the objects that actually constitute a component and offers several views concerning what to attribute to the memory consumption of a component. Our implementation is based on JVMPI and uses filtering inside the agent to generate the component profiles.
+
+TestEJB: response time measurement and call dependency tracing for EJBs
+\cite{Meyerhoefer2007}
+In this paper we present how to conduct performance related analyses of component-based applications and how to derive call dependencies between software components in the TestEJB framework. This framework facilitates an interceptor-based approach to measure selected properties of components following the Enterprise JavaBeans specification. Amongst its advantages are the lightweightness and transparency to the application as the measuring sensors simply gather timestamps and additional metadata at selected positions inside a component-based application. Using basic database support, it is possible to generate invocation trees and calculate response- and run-times of a component and its methods while accounting for the overhead introduced by the framework itself. Therefore, the developer is offered a useful tool for benchmarking selected components as well as monitoring the interactions of components with the application server and amongst themselves.
+
+
+\extracomment{TODO}
+{
+	Write this section
+}
+
+
 In~\cite{Xu:2013:PML:2491509.2491511} the authors propose a framework to detect memory leaks associated with Java containers.
-To do so, the framework explores the status of each container object with the goal of identifying leak patterns. The approach is based on finding objects which are keeping references to removed bundles. LeakBots~\cite{Mitchell03leakbot:an} is an automated tool to detect memory leaks. It makes heavy
+To do so, the framework explores the status of each container object with the goal of identifying leak patterns.
+
+LeakBots~\cite{Mitchell03leakbot:an} is an automated tool to detect memory leaks. It makes heavy
 use of information collected from the heap in order to identify the more likely structures leading to a leak.
 These tools collect data from the heap in order to automatically pinpoint a particular memory issue.
 The methods to collect the data are handwritten for efficiency reasons.
 Lots of data collected in these works is also available with our approach.
 
-
+citar a kouther y todo eso
 
 \subsubsection{Kevoree Component Model*}
 Built on top of dynamic component frameworks, Models@run.time denote model-driven approaches that aim at taming the complexity of dynamic adaptation.
@@ -814,7 +830,9 @@ For instance, building a resource consumption monitor for a new DSL should simpl
 In reviewing the state of the art of resource management for software abstractions, we realized that there are severe shortcomings in existent approaches that prevent their usage in production environments. In particular:
 
 \begin{itemize}
-\item Approaches to perform arbitrary data 
+\item Approaches to extract \textit{arbitrary} information from memory (e.g., number of objects of a given class, class of each that object that references an array) are too expensive in terms of performance overhead.
+
+\item Several approaches for defining dynamic analysis tools rely on instrumentation to collect data. 
 \end{itemize} 
 
 %
