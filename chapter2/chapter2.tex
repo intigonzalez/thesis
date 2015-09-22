@@ -284,7 +284,9 @@ The idea is to use the Real-Time Specification for Java (RTSJ) to support CPU is
 The authors claim that just using RTSJ is no enough to ensure the real-time properties of OSGi-based application.
 Besides the arguments to justify such a claim, a solution to achieve CPU isolation is presented.
 
-
+Profilers such as Eclipse MAT and VisualVM also offer limited support to perform memory consumption monitoring for mainstream component models (OSGi and EJB).
+They do so by providing built-in (hardcoded) subsystems that are able to process Java memory dumps to calculate the per-component consumption.
+Due to the need of processing the complete memory dump, the performance overhead is considerable. 
 
 %\textbf{Resource isolation in Component-RTSJ}
 
@@ -578,52 +580,73 @@ As far as we know, there is little support for dealing with resource at per DSL 
 Nevertheless, some related works do exist that aim at reducing the gap between the developer's view and the tools' view.
 In particular, the problem of offering debugging support for DSL constructs have been largely discussed.
 In Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625}, languages that produce code in the base language (i.e., Java) may profit from mostly automatic debugger support.
-When the newly define DSL is transformed into the base language, the system keep traces between the two models (source and destination).
+When the newly define DSL is transformed into the base language, the system keeps traces between the two models (source and destination).
 Using these traces, a debugging infrastructure is able to identify what constructor is being executed in the original DSL.
 Meanwhile, Voelter \cite{Voelter2010} discusses how to add debugging capabilities to a DSL when the MPS language workbench is used.
 In this case, no trace model is required; instead, every concept of a language that requires debugging support must implement a set of interfaces to guide a generic debugging framework.
-Similar works have been conducted \cite{vandenBrand:2005:TGD:1705513.1705667} for the ASF+SDF Meta-Environment \cite{vandenBrand20013}; defining a generic debugging framework that can be customized for DSLs.
+Similar works have been conducted \cite{vandenBrand:2005:TGD:1705513.1705667} for the ASF+SDF Meta-Environment \cite{vandenBrand20013}, defining a generic debugging framework that can be customized for DSLs.
 Finally, mechanisms to build various tools for new languages are described in \cite{Henriques2005}.
-Based on attribute grammars, and implemented using the LISA system \cite{Mernik2002}; the tools proposedc cover a wide range, editors, inspectors, debuggers and visualizers.
+Based on attribute grammars, and implemented using the LISA system \cite{Mernik2002}; the tools proposed include editors, inspectors, debuggers and visualizers.
 
-Profilers: visualvm
+%\extracomment{TODO}{Add discussion on how to ad plugins for Eclipse MAT and VisualVM}
 
-low-Level profiling technologies: JVMTI, DTrace
-
-In~\cite{Xu:2013:PML:2491509.2491511} the authors propose a framework to detect memory leaks associated with Java containers.
-To do so, the framework explores the status of each container object with the goal of identifying leak patterns.
-
-LeakBots~\cite{Mitchell03leakbot:an} is an automated tool to detect memory leaks. It makes heavy
-use of information collected from the heap in order to identify the more likely structures leading to a leak.
-These tools collect data from the heap in order to automatically pinpoint a particular memory issue.
-The methods to collect the data are handwritten for efficiency reasons.
-Lots of data collected in these works is also available with our approach.
+%Profilers: visualvm
+%
+%low-Level profiling technologies: JVMTI, DTrace
+%
+%In~\cite{Xu:2013:PML:2491509.2491511} the authors propose a framework to detect memory leaks associated with Java containers.
+%To do so, the framework explores the status of each container object with the goal of identifying leak patterns.
+%
+%LeakBots~\cite{Mitchell03leakbot:an} is an automated tool to detect memory leaks. It makes heavy
+%use of information collected from the heap in order to identify the more likely structures leading to a leak.
+%These tools collect data from the heap in order to automatically pinpoint a particular memory issue.
+%The methods to collect the data are handwritten for efficiency reasons.
+%Lots of data collected in these works is also available with our approach.
 
 \subsection{Limitations of the state of the art on dealing with abstraction-specific features}
 
-\extracomment{FIXME :-)}{I must finish this}
+In reviewing the state of the art, we have found some limitations on how existent solutions deal with specific features of abstractions.
+In this section we discuss such limitations:
 
-In this section we discuss the limitations in the state of the art:
 
-\begin{itemize}
-%\item El apoyo para la cuestion de los lenguajes es limitado
-\item Support for resource monitoring and reservation when components are used do exist, but it is limited and inefficient.
+\begin{description}
 
-\item There is support for resource isolation, but existent solutions require a modified MRTE. 
+\item[Limited support for resource accounting in component-based systems] There are several approaches for monitoring how individual components use resources.
+However, they are limited and inefficient.
+First, most of them only target mainstream component models such as OSGi and EJB; this is a fact noteworthy because it is not clear whether the ideas behind existent approaches can be applied to other component models.
+The second and more important problem is the considerable overhead induced by these solutions.
+In the case of memory consumption accounting, the best results we found show a persistent overhead of 46\% (medium).
+By comparison, experiments of CPU consumption accounting show a lower overhead of 20\% when \textit{sampling} is used.
+In many scenarios, these overheads are unacceptable. 
 
-\item Only widely used component models such as OSGi, and EJB, have support for resource management.
+\item[Sub-utilization of information about the architecture of systems].
+Actually, all approaches use rudimentary information about the architecture of the system running on top a component framework.
+In other words, they are able to determine how each component consume resources (regardless of the accuracy).
+As shown in \cite{Maurel:2012:AME:2304736.2304763}, it is possible to use information on how components are connected (their dependencies) to improve the monitoring accuracy.
+Similarly, Attouchi et al. \cite{Attouchi:2014:MMM:2602458.2602467} show how to use the knowledge about the \textit{business logic} (in particular how components interact) to properly determine what component should be accounted for the consumption of an object.
+Nevertheless, we have not found results showing how to reduce performance overhead by using information about the architecture of component-based systems. 
 
-\item Solutions for resource monitoring and reservation are static.
-They have been devised with following assumption on how components consume resource.
-Nonetheless, this assumption are often incorrect; this result in solution with unnecessary performance overhead.
+
+\item[Non-portable solution for resource isolation] Existent approaches to provide per-component resource consumption isolation require a modified MRTE.
+In practice, this prevents the adoption of these approaches in production environments; due to the cost of maintaining a customized MRTE, and the complexity of keeping it up to date, manager  with a limited budget can decide that these solutions are not acceptable.
+
+%\item Only widely used component models such as OSGi, and EJB, have support for resource management.
+
+\item[Wrongly assume that resource consumption is homogeneous]
+Although components use computational resources in different ways, many approaches to resource consumption and reservation are built without taking this into consideration.
+A negative consequence of this limitation is that they induce a high overhead even if the components are behaving in the proper way.
+For instance, some monitoring frameworks to calculate CPU consumption induce a persistent overhead; it does not matter that components never misbehave.
+Instead, adaptive mechanisms are preferable because they have the potential of reducing the overhead by analyzing the requirements and observing the status of the system.
 %Las soluciones son handcrafted y staticas, no se adaptan a lo que los componentes necesitan realmente (contrario a Squirrel)\
 
-\item Debuggers, interpreters and simulator have been proposed as tools to support the maintenance of software written with DSLs; however, as far as we know, no profiler that target the gap between DSLs and base language have been presented.
+\item[Limited capabilities for building tooling support] Debuggers, interpreters and simulator have been proposed as tools to support the maintenance of software written using DSLs; however, as far as we know, no profiler that specifically aims at reducing the gap between DSLs and base language have been presented.
+It is worth mentioning that some general profiling frameworks can be used to ease the construction of profilers, even if they do not specifically address DSLs; these mechanisms as well as their limitations are discussed hereafter.
 
-\end{itemize}
+\end{description}
 
 
-\section{Easing the construction of resource management tools}
+
+\section{Easing the construction of resource management tools} \label{sec:easy-tools-contruction}
 
 Resource consumption monitoring is a form of dynamic analysis.
 There are many approaches that tackle the issue of simplifying the definition of dynamic analysis tools.
@@ -673,11 +696,11 @@ The usage of bytecode instrumentation techniques to build dynamic analysis tools
 For instance, ASM~\cite{Bruneton2002,Kuleshov2007} is a Java bytecode manipulation and analysis framework written itself in Java.
 It is useful to transform classes directly in binary form.
 To do so, it provides common transformations and analysis algorithms to assemble custom transformations.
-Still, it requires deep that the users have considerable knowledge regarding the JVM specification.
+Alas, it requires considerable knowledge regarding the JVM specification.
 In particular, it is mandatory to understand the Java instruction set, how are they executed, and the basic structure of a classfile in Java.
 By comparison, Javassist \cite{Javassist1999} simplifies Java bytecode manipulation.
 It is a class library for editing bytecodes in Java; however, unlike ASM, it provides a source level API: to transform a classfile without knowledge of the specifications of the Java bytecode.
-For example, you can specify what bytecode to insert in an existent class by using plain Java source code to; Javassist compiles it on the fly and inserts it on th class being transformed.
+For example, you can specify what bytecode to insert in an existent class by using plain Java source code - Javassist compiles it on the fly and inserts it on the class being transformed.
 
 The collection of data for a given dynamic analysis can be easily understood as a crosscutting concern.
 Because of this, researchers have been attracted by aspect-oriented solutions.
@@ -690,7 +713,7 @@ The issue of improving the performance is tackled by Binder et al. \cite{Binder:
 In their work, the MAJOR~\cite{Villazon20111015} framework, an aspect weaver that enhances AspectJ with support for comprehensive weaving, is extended to guarantee fast sharing of values between aspects.
 This simple addition is enough to reduce the performance overhead of some dynamic analysis.
 DISL~\cite{Marek:2012:DEL:2162037.2162046,Marek2012} is a domain-specific aspect language for bytecode instrumentation; it uses annotations and plain Java to describe what a dynamic analysis tool must do.
-The novelty of this approach is that new \textit{joinpoint} and \textit{guard conditions} can be defined using the Java language along some annotations.
+The novelty of this approach is that new \textit{joinpoints} and \textit{guard conditions} can be defined using the Java language along some annotations.
 It is then possible to collect data which is not accessible using a standard framework such as AspectJ.
 Unfortunately, to define new \textit{jointpoints}, some knowledge of JVM internals is required.
 Finally, in an effort to overcome the limitations of specific aspect weavers, which prevent using them to implement arbitrary dynamic analysis tools, Achenbach et al.~\cite{Achenbach:2010:MPD:1939399.1939415} propose an approach to customize aspect weavers.
@@ -699,11 +722,12 @@ In the same way, different strategies to weave \textit{advices} can be implement
 Implemented in Ruby, the approach is evaluated through the definition of a debugger and a testing tool.
 
 Other approaches focus on profiling the memory usage of applications.
-Memory profiler widely used in the industry provide language to perform mostly arbitrary queries on the set of objects loaded in the heap.
-For instance, in Eclipse MAT \cite{}, users can write queries in OQL (a dialect of SQL) to retrieve information.
-Despite of the fact that few constructors of OQL are really implemented in Eclipse MAT, this approach would allow, in theory, collect practically any information contained in the heap.
-Similarly, YourKit \cite{} provides a language based on set theory to filter objects with specific properties; this language is used when no built-in memory analysis can provide the desired data.
-Alas, both approaches require costly operations - a complete dump of the heap, and a phase to preprocess the dump; only after these two steps the framework are capable of executing queries.
+Memory profilers that are widely used in the industry provide languages to perform mostly arbitrary queries on the set of objects loaded in the heap.
+For instance, in Eclipse MAT \cite{Biermann:2006:GDI:2087202.2087244} and Visual VM \cite{OQL-visualvm}, users can write queries in OQL (a SQL-like language) to retrieve information.
+Despite of the fact that few constructors of OQL are really implemented in Eclipse MAT, this approach would allow, in theory, collecting practically any information contained in the heap.
+Similarly, YourKit \cite{yourkit} provides a language based on set theory to filter objects with specific properties; this language is used when no built-in memory analysis can provide the desired data.
+Besides providing query languages, mainstream profilers also support the development of extensions (e.i., plugins written in Java); these extensions essentially traverse the graph of objects in a heap dump to collect information.
+Alas, both queries and extensions require costly operations - a complete dump of the heap, and a phase to preprocess the dump; only after these operations, the frameworks are capable of executing queries.
 In DeAl~\cite{Reichenbach:2010:GCE:1869459.1869482}, the authors propose a language to compute heap assertions at garbage collection time.
 The design of this approach aims at guarantee a low performance overhead.
 To ensure such a property, the language is only able to compute boolean outputs; while resource consumption monitoring, for instance, needs to compute values of integer type.
@@ -711,7 +735,19 @@ DeAl is a purely declarative language; in exchange for the declarative style and
 
 \subsection{Discussing the limitations}
 
-Generic approaches to collect data on memory usage show high performance overhead.
+Although there exists many approaches that aim at reducing the complexity of writing tools to support resource-aware programming, in reviewing the literature we have found some limitations that prevent using such solutions in production environments.
+In particular, the identified limitations are related to three dimensions we can use to assess the overall quality of a mechanism: many techniques still require considerable knowledge about the target technology, tools built using existent approaches often induce high performance overhead, and many times existent approaches lack the power to express how to build efficient tools.
+Unsurprisingly, these three dimensions are often in contradictions.
+For instance, many approaches that offer good performance overhead require considerable knowledge about the target technology.
+The question is whether the trade-off followed by different approaches are good enough.
+In this section, we discuss in details the limitations we find in existent approaches.  
+
+\begin{description}
+\item[Often knowledge of low-level details is required] need knowledge about the target technology (hace que no sea tan facil como se supone crear tools)
+\item[Tools built have high overhead] performance (hace que no se puedan usar en ambientes de produccion)
+\item muchas herramientas tienen limites en su poder, es decir en lo que pueden expresar, esto es particularmente cierto en aspects.
+Tambien hay que considerar que algunas cosas se pueden expresar pero, producto del modelo de ejecucion de estos mecanismo, con un alto costo en rendimiento.
+\end{description}
 
 \extracomment{FIXME :-)}{I must finish this}
 
