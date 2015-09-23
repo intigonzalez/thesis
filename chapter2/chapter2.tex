@@ -736,17 +736,40 @@ DeAl is a purely declarative language; in exchange for the declarative style and
 \subsection{Discussing the limitations}
 
 Although there exists many approaches that aim at reducing the complexity of writing tools to support resource-aware programming, in reviewing the literature we have found some limitations that prevent using such solutions in production environments.
-In particular, the identified limitations are related to three dimensions we can use to assess the overall quality of a mechanism: many techniques still require considerable knowledge about the target technology, tools built using existent approaches often induce high performance overhead, and many times existent approaches lack the power to express how to build efficient tools.
+In particular, the identified limitations are related to three dimensions we can use to assess the overall quality of a mechanism: many techniques still require considerable knowledge about the target technology, tools built using existent approaches often induce high performance overhead, and most solutions lack the power to express how to build efficient tools.
 Unsurprisingly, these three dimensions are often in contradictions.
-For instance, many approaches that offer good performance overhead require considerable knowledge about the target technology.
-The question is whether the trade-off followed by different approaches are good enough.
-In this section, we discuss in details the limitations we find in existent approaches.  
+For instance, most approaches that offer good performance overhead require considerable knowledge about the target technology.
+The question is whether the trade-offs followed by different approaches are good enough.
+In this section, we discuss in details the limitations we find in the state of the art.
 
 \begin{description}
-\item[Often knowledge of low-level details is required] need knowledge about the target technology (hace que no sea tan facil como se supone crear tools)
-\item[Tools built have high overhead] performance (hace que no se puedan usar en ambientes de produccion)
-\item muchas herramientas tienen limites en su poder, es decir en lo que pueden expresar, esto es particularmente cierto en aspects.
-Tambien hay que considerar que algunas cosas se pueden expresar pero, producto del modelo de ejecucion de estos mecanismo, con un alto costo en rendimiento.
+\item[Tools built using the approaches have high overhead]
+Many times, the tools that we can build using the approaches presented in the previous section induce high overhead.
+This is particularly true for solutions based on bytecode rewriting, but also for other approaches, such as JVMPI, that are based on events.
+This is not surprising; as we discuss in the previous chapter, bytecode rewriting and other techniques tend to produce high overhead.
+The mechanisms that are able to keep a low overhead, do so by limiting the expressive power of the tools (as in DeAl~\cite{Reichenbach:2010:GCE:1869459.1869482}), and by reducing the accuracy of the tools in certain cases (as in DYPER \cite{Reiss:2008:CDP:1383559.1383566}). 
+
+
+\item[Often, knowledge of low-level details is required] 
+The usability of a mechanism is complex to evaluate; the approaches we have presented have not been assessed in this dimension.
+Instead, these approaches follow empirical evidence that show the benefits of specific techniques.
+One of this evidences suggests that using already known languages may ease the development of dynamic analysis tools.
+Hence, some solutions encourage the usage of Java to build profilers and others the utilization of a SQL-like language.
+Likewise, the empirical evidence suggests that paradigms, such as aspect-oriented programming, and functional programming, should be favored.
+The problem is that using known-languages and programming paradigms do not automatically reduce the complexity of writing tools.
+Actually, often the complexity is the result of having to deal with low-level details about the platform,
+and many techniques still require considerable knowledge of the target platform.
+In the same way, using aspect-oriented programming can also create additional problems.
+Indeed, since well-known frameworks, such as AspectJ, cannot be used to develop any profiler, new and unknown aspect frameworks must be used to implement such profilers.
+
+We think that approaches that use languages such as \textit{C/C++} may also complicate the developments of tools.
+Unfortunately, many techniques with low overhead can eb implemented using low-level technologies (such as JVMTI), or through a modification to a legacy MRTE.
+
+\item[Lack of expressive power to build efficient tools] 
+Powerful tools can be indeed produced using existent approaches.
+It does not mean that they are efficient.
+The problem is that, when a solution is expressive and produce efficient tools, it generally require extensive knowledge about low-level details.
+Similarly, there is another interesting trade-off we have found; efficient tools that do not require detailed knowledge about the platform, have limited power to create arbitrary tools. 
 \end{description}
 
 \extracomment{FIXME :-)}{I must finish this}
