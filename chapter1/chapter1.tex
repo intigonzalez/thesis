@@ -28,7 +28,7 @@ The principle of bypassing a generic implementation in favor of a specialized on
 Since resource usage is a key concern for any software system, specializing resource management is potentially beneficial for many applications.
 In this thesis, we use the term \textit{resource-aware} to refer to those applications/systems that observe, carefully manage, and are aware of computational resources in order to improve their performance. 
 At first, this definition might look too broad, but in reality most applications limit themselves to carefully use the resource allocations facilities offered by runtime environments.
-Take for example a web server that uses a pool of threads to attend requests.
+Take for example a web server that uses a pool of threads to process remote requests.
 By using this pool the server is in fact carefully managing resource, but with this feature alone it is not able to observe whether the pool's size should be decreased/increased.
 The key issue in the definition used in this thesis is that three elements must be present in an application/system in order to be classified as \textit{resource-aware}: observation, management, and behavior modification.
 
@@ -44,7 +44,8 @@ Some knowledge is needed to guide the process; in this case, information on the 
 \begin{figure}[!h]
 \centering
 \includegraphics[scale=0.3]{./chapter1/fig/mape-k.png}
-\caption{Resource-aware programming can be seen as a particular case of \textit{autonomic computing.}} \label{fig:resource-aware-vs-autonomic-computing}
+\caption{A MAPE-K loop to support system reconfiguration based on resource consumption} \label{fig:resource-aware-vs-autonomic-computing}
+%\caption{Resource-aware programming can be seen as a particular case of \textit{autonomic computing.}} \label{fig:resource-aware-vs-autonomic-computing}
 \end{figure}
 
 Applying resource-aware techniques to develop a software system can be motivated by the need to satisfy both functional and non-functional requirements.
@@ -359,10 +360,10 @@ A summary of approaches to reserve resource in MRTEs is presented in section \re
 Finally, section \ref{sec:discussion-related-work} summarizes the strengths and weaknesses of each approach.
 This last section also highlights what are the limitations of state-of-the-art approaches.
 
-\subsection{Resource consumption monitoring} \label{sec:resource-consumption-monitoring-related}
+\subsection{Resource Consumption Monitoring} \label{sec:resource-consumption-monitoring-related}
 
 The problem of resource consumption monitoring in MRTEs is similar to that of profiling applications.
-After all, they both pursuit the same goal - identifying parts of a system that are accountable for resource consumption.
+After all, they both pursue the same goal - identifying parts of a system that are accountable for resource consumption.
 It is then unsurprising that techniques traditionally used for profiling applications had found their way as solutions for monitoring resource consumption at runtime.
 Likewise, approaches to collect resource usage information in OS abstractions such as processes and threads have been applied in the context of MRTEs.
 This is possible because many MRTEs' implementations rely on OS concepts for implementing concurrent programming.
@@ -712,7 +713,7 @@ On the contrary, resource reservation seems a less common need because most exec
 In cases where there exist strong resource requirements (such as embedded devices), engineers tend to handcraft specific solutions.
 
 
-\section{Conclusions}
+\section{Summary}
 Resource-aware programming is an useful paradigm that requires extensive runtime support.
 We state that the scope of this thesis is limited to provide resource consumption monitoring and reservation in managed runtime environments.
 In our vision, resource-aware programming support must be as reusable, generic, and lightweight as possible.
@@ -721,7 +722,7 @@ In reviewing the state of the art of resource consumption monitoring and resourc
 In particular:
 \begin{enumerate}
 \item There are no portable approaches for resource monitoring that can deliver competitive performance overhead.
-As a consequence, specific MRTEs must be used when resource awareness is required in production environments.
+As a consequence, customized MRTEs that support resource awareness are used when these features are needed in production environments.
 Due to the additional dependency, the development and deployment of applications are harmed.
 
 \item Most resource monitoring approaches are limited to determine the resource usage at relatively coarse-grained levels  such as threads, processes, and classloaders.
@@ -729,7 +730,7 @@ In those techniques that are applicable in fine-grained levels, the performance 
 
 \item Resource reservation support in MRTEs is mostly limited to using applications' containers.
 Although this approach guarantees resource usage isolation and per container reservation, applications running inside containers suffer additional performance overhead due to communication when these applications are coupled.
-It is our believe that in cases where strong isolation is not required, software systems would profits from lightweight resource reservation mechanisms. 
+It is our belief that in cases where strong isolation is not required, software systems would profits from lightweight resource reservation mechanisms. 
 \end{enumerate}
 
 Additionally, we learned important lessons that are worth considering during the design and implementation of frameworks/tools to support resource awareness:
@@ -744,6 +745,13 @@ a positive impact on performance overhead.
 This principle can be understood by observing, for instance, that mapping the concept of OSGi bundle to a low-level entity such as a heap region can greatly simplify memory management. 
 %and relying on low-level features when no portable solution is available.
 \end{enumerate}
+
+Nowadays, MRTEs are used to execute complex systems.
+To implement them, several software engineering techniques are used - different programming paradigms, languages, and software deployment methods.
+This diversity hinder the development process, in particular its maintenance and evolution.
+To ease the development process, it is common to define and use software abstractions that address specific software concerns (e.g., components for deployment, aspects for cross-cutting concerns).
+However, heavily using new abstractions to develop applications, when support for resource awareness is needed, has its own disadvantages.
+In the next chapter, we discuss the challenges related to these disadvantages, and how they have been addressed in the literature.  
 
 
 %Esta seccion presenta una serie de metodos para gestionar recursos. En primer lugar explica que nos estamos limitando a accounting y reservation. Despues comienza discutiendo metodos general que no son solo para MRTE. A continuacion se hace un recorrido por metodos que estan orientados a MRTEs pero no a abstracciones en especifico. Esta ultima parte va a estar dificil de hacer peor veremos. 
