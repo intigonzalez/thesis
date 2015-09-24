@@ -43,7 +43,7 @@ Some knowledge is needed to guide the process; in this case, information on the 
 
 \begin{figure}[!h]
 \centering
-\includegraphics[scale=0.3]{./chapter1/fig/mape-k.png}
+\includegraphics[scale=0.65]{./chapter1/fig/mape-k.png}
 \caption{A MAPE-K loop to support system reconfiguration based on resource consumption} \label{fig:resource-aware-vs-autonomic-computing}
 %\caption{Resource-aware programming can be seen as a particular case of \textit{autonomic computing.}} \label{fig:resource-aware-vs-autonomic-computing}
 \end{figure}
@@ -369,7 +369,8 @@ Likewise, approaches to collect resource usage information in OS abstractions su
 This is possible because many MRTEs' implementations rely on OS concepts for implementing concurrent programming.
 Among the techniques partially reused are the following:
 
-\textit{Sampling} is a technique where a separate agent is periodically executed to collect data about what an application is doing.
+\begin{description}
+\item[Sampling] is a technique where a separate agent is periodically executed to collect data about what an application is doing.
 In a common scenario, the sampler captures the value of the program counter (PC) for each thread executing within the application.
 Afterwards, these data are used with symbol table to identify which routines were executing most of the time.
 Additional information such as the calling context can be collected in order to build a calling-context tree.
@@ -377,21 +378,22 @@ Sampling has an indisputable advantage: a low performance overhead which depends
 Moreover, the data collected can exhibit a good accuracy when the sampling rate is properly chosen.  
 Nevertheless, it is not able to collect data regarding the consumption of resources such as memory.
 
-\textit{Instrumentation} techniques are based on the idea of adding instructions to the application to collect data regarding its behavior.
+\item[Instrumentation] techniques are based on the idea of adding instructions to the application to collect data regarding its behavior.
 The instructions added, which are known as \textit{probes}, are able to collect information about many events, such as method entry, memory allocation, execution time, system calls, and others \cite{Ayers:2005:TFF:1064978.1065035,Sarimbekov201161,Ansaloni:2010:RDE:1712605.1712616}.
 In summary, a fundamental advantage of using instrumentation to collect resource consumption information is that the possibilities are almost countless because you have access to everything the application is doing.
 Alas, there is a trade-off between the number/complexity of the added probes and the resultant performance overhead: more probes implies higher overhead.
 As a consequence, reducing the number of probes and the complexity of each probe is of special interest for any instrumentation-based approach.
-In addition, it is worth mentioning that approaches exist to reduce the performance impact by temporally disabling at runtime those probes that are not necessary \cite{Dmitriev:2004:PJA:974043.974067,citeulike:481405,Gregg:2011:DDT:1971960}.   
+In addition, it is worth mentioning that approaches exist to reduce the performance impact by temporally disabling at runtime those probes that are not necessary \cite{Dmitriev:2004:PJA:974043.974067,citeulike:481405,Gregg:2011:DDT:1971960}.  
 
-\textit{Reusing thread and process monitoring approaches} is another common strategy.
+\item[Reusing thread and process monitoring approaches] is another common strategy.
 This is possible because MRTEs' implementations are usually built upon OS abstractions.
 For instance, JVM's managed threads are often implemented on top of native threads.
 Thus, reusing OS support for resource aware programming in the context of MRTEs is relatively simple. 
 Unfortunately, the abstractions used in modern operating systems are much more coarse than those abstractions that are present in MRTEs.
 As a summary, in some cases it is possible to reuse OS facilities for measuring the resource usage of a managed thread, but relaying on the OS is not feasible if we are trying to monitor the resource consumption at a different granularity level.
+\end{description}
 
-Of course, these techniques are modified to leverage and adapt to MRTEs' features when applied in the context of MRTEs.
+Usually, these techniques are modified to leverage and adapt to MRTEs' features.
 For instance, dynamic code loading in Java greatly reduces the effort needed for instrumenting applications because the bytecode can be modified at load time without using complex patching mechanisms that are necessary elsewhere \cite{Gregg:2011:DDT:1971960}.
 Another example is how \textit{sampling}-based approaches can leverage the built-in mechanism for stack unwinding which is present in the JVM.
 MRTE specific methods have also been proposed.
@@ -399,8 +401,10 @@ Since these methods require heavy modifications to existent execution environmen
 However, the performance overhead of these techniques tend to be low.
 Finally, there exist approaches where a mixing of different techniques is used.
 
-Several approaches are described in the rest of this section.
+In the rest of this section, several concrete approaches are described.
 
+
+\subsubsection*{Existing solutions}
 A solution for CPU, memory and network accounting capabilities built on top of the JVM is presented in \cite{czajkowski_jres:_1998}.
 The authors' proposal uses a mixing of \textit{sampling}, \textit{OS features} and \textit{instrumentation} based on bytecode rewriting.
 A sampling thread simply relies on OS system calls to get the amount of CPU time used by a thread.

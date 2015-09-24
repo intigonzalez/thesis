@@ -23,7 +23,7 @@ Due to all these specific concerns there is considerable variability to consider
 This chapter mainly discusses how the usage of software abstractions poses new challenges when we are implementing support for resource consumption monitoring and reservation.
 In particular, this chapter describes an abstraction - components (Section \ref{sec:components-oriented-resource-awareness}) - which is frequently used on top of MRTEs.
 A comprehensive discussion on how this abstraction consumes resources is presented.
-Moreover, state of the art approaches, for handling features specific of components and other abstractions, are presented and their limitations discussed (Section \ref{}).
+Moreover, state of the art approaches, for handling features specific of components and other abstractions, are presented and their limitations discussed (Section \ref{sec:abstraction-specific-requirements}).
 %We tackle (Section \ref{sec:component-leverage}) the issue of how to leverage component-based architectures - to reduce the overhead of dealing with resources - by specializing resource management techniques.
 %Second, since new abstractions are constantly created nowadays, having generic and efficient mechanisms for controlling how they use resources may simplify the process of providing resource awareness support.
 We then present the state of the art on supporting resource consumption accounting for arbitrary abstractions (Section \ref{sec:easy-tools-contruction}).
@@ -105,55 +105,66 @@ Simplifying the definition of tools in order to support new abstractions is the 
 
 In the rest of this chapter, we extensively discuss both concerns.
 
-\section{Specific requirements of software abstractions}
+\section{Dealing with abstraction-specific requirements} \label{sec:abstraction-specific-requirements}
 As mentioned in the previous section, when a new abstraction is defined, there is a gap between the capabilities of existing tools and users' expectations.
 Therefore, it is necessary to reduce this gap by modifying generic tools to make them capable of dealing with specific features of new abstractions.
 
-In this section, we present two kind of abstractions: software components and domain-specific languages.
-The presentation aims at highlighting the type of modifications that might be required in order to make an existing approach capable of dealing with these abstractions.
-Likewise, the section discuss the characteristics of components and DSLs that hinder the development of resource-aware programming tools.
+In this section, we present the challenges that emerge when tooling support for resource management is being built.
+To do so, we discuss the topic in two ways:
 
-To guide the discussion, the following elements are given for the two types of abstraction:
+\begin{enumerate}
+\item  We present how the mismatch between existing tools and users' expectation continuously emerge due to the increasing usage of DSLs to build applications.
+This serves both to further motivate the research, and to present in details the technical complexity an engineer may face when new abstractions are used.
+In general, most problems we find, when programs are written using DSLs and resource awareness is required, can also be found in other contexts where different kind of abstractions are used.
+
+\item We describe the specific features of a concrete kind of abstraction - software components.
+We do so because, despite of the fact that component-based software engineering is widely used in the industry, exiting approaches to support resource awareness still show limitations.
+\end{enumerate}
+
+The presentation aims at highlighting the type of modifications that might be required in order to make an existing resource management tool capable of dealing with concepts defined in a new abstraction.
+To guide the discussion, the following elements are given for both, programs written using DSLs and component-based systems:
 \begin{itemize}
-\item \textit{Introduction to the abstraction.} A brief description of the main elements of the abstraction is presented. This is focused on those features that impact resource management. 
+\item A \textbf{brief description} of the main elements of the abstraction, focusing on those features that impact resource management. 
 
-\item \textit{Implementations of the abstraction in MRTEs.}
-Illustrative cases that show how the abstraction have been implemented on top of MRTEs are described.
+\item Illustrative cases of \textbf{implementations} of these abstractions \textbf{on top of MRTEs}.
 For instance, it briefly mentions components models that support Java.
 
-\item An analysis of how \textit{resources are consumed} in this type of abstraction is presented.
-Interestingly, there are elements that vary in the way components and DSLs consume resources.
+\item An analysis of how \textbf{resources are consumed} by each type of abstraction.
 
-\item \textit{Specific features to consider.}
-This point makes reference to those special characteristics of the abstraction to take into account when support for resource-aware programming is implemented.     
+\item \textbf{Special characteristics of these abstractions} to take into account when support for resource-aware programming is implemented.     
 
-\item \textit{Example of differences among concrete abstractions.}
-Since there are, for example, many DSLs, this point aims at analyzing differences among them.
-In this way, we show the high degree of variability that might complicate the development of resource-aware solutions.
-Instead of providing an exhaustive list of differences, we only show an illustrative one.
+%\item \textit{Example of differences among concrete abstractions.}
+%Since there are, for example, many DSLs, this point aims at analyzing differences among them.
+%In this way, we show the high degree of variability that might complicate the development of resource-aware solutions.
+%Instead of providing an exhaustive list of differences, we only show an illustrative one.
 
-\item The \textit{state of the art} on providing support for resource consumption accounting and reservation for each abstraction is presented.
-This is done in the form of a summarized discussion of existing approaches. 
 \end{itemize}
 
-This section ends by analyzing the limitation in the state of the art of both resource management for software components and DSLs. 
+Afterwards, the \textit{state of the art} on providing support for resource awareness for new abstractions and, in particular, for component models is presented.
+This is done in the form of a summarized discussion of existing approaches. 
+The section ends by analyzing the limitation in the state of the art. 
 
 
-\subsection{Resource use in domain-specific languages} \label{sec:DSL-on-MRTEs}
+\subsection{DSLs: land of hungry abstractions} \label{sec:DSL-on-MRTEs}
 
-In Model-Driven Software Development (MDSD), models are abstractions of a software system and its environments~\cite{Stahl:2006:MSD:1196766, Fowler:2010:DSL:1809745}.
-Since a model represent a limited amount of information of a real system, its utility is limited to the domain it represents.
-In other words, a model may be useful for answering a class of questions, but it may fail in answering other questions.
+\extracomment{TODO}{
+One paragraph to say that this is an illustrative case because of the current trend of developing new DSLs.
+Somehow I have to connect all this using something said by Czarnecki.
+}
 
-The set of concepts and relationships that can be used in a concrete model are described in a Metamodel or Domain-Specific Language (DSL)~\cite{Fowler:2010:DSL:1809745}.
-In this way, a metamodel describes a specific concern or domain, such as, state machines, or an interface definition language; while a model then is a concrete state machine in a real application, or a description of how components in a system interact.
+
+In Model-Driven Software Development (MDSD), models are abstractions of a software system and its environment~\cite{Stahl:2006:MSD:1196766, Fowler:2010:DSL:1809745}.
+A model contains a limited amount of information of a real system; thus, its utility is restricted to the domain it represents.
+The set of concepts and relationships that can be used in a concrete model are described in a Metamodel, which is also called Domain-Specific Language (DSL)~\cite{Fowler:2010:DSL:1809745}.
+In this way, a DSL describes a specific domain (e.g., state machines, interface definition language); while a model is then a concrete state machine in a real application, or a description of how components in a system interact.
  
 In a typical scenario, models are translated to source code written in some general-purpose language to enable their subsequent compilation and execution.
 However, models are also useful in other tasks such as generating test cases \cite{Kiffe2009,Gutierrez2015}, simulating a system behavior \cite{Broenink2012,brosig2015a,Bocciarelli2015425}, and formally verifying software properties \cite{Holzmann2004,Henriksson2005101,Moffett2013,DiGuglielmo20132013}. 
 
-DSLs (we are going to use this term) can be roughly classified as internal or external.
+DSLs can be roughly classified as internal or external.
 An internal DSL is embedded into a general-purpose language.
 Often, meta-programming facilities, of either a dynamically typed host language or a statically typed language with type inference, are used to seamless integrate the DSL into the host language.
+Likewise, design patterns and reflection are used to implements some forms of internal DSLs, such as fluent APIs, and annotation-based languages.
 On the contrary, a ``\textit{program}'' written using an external DSL requires a separated translation process (i.e., compilation) in order to produce an artifact that can be integrated as part of an application.
 Both approaches have advantages and disadvantages.
 Internal DSLs can leverage all the features of their host languages, and it is easy to use constructors of the DSL as extensions of the host language.
@@ -163,16 +174,18 @@ Another interesting point is that Integrated Development Environment (IDE) suppo
 
 MDSD consists of two major aspects: processing models and creating models.
 The creation of models can be achieved with graphical~\cite{Kolovos:2009:RLA:1564600.1564699, Biermann:2006:GDI:2087202.2087244} or textual editors~\cite{Merkle:2010:TMT:1869542.1869564}.
-A well known framework for building DSLs is Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625}.
-It is an Eclipse-based framework which supports the definition of languages together with their syntaxes, semantic checkers, code generators and even code editors.
+Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625} is a well-known framework for defining new DSLs.
+It is an Eclipse-based framework which supports the definition of languages together with their syntaxes, semantic checkers, code generators and code editors.
 
-\paragraph{Usage in MRTEs} As mentioned, concrete models (or programs written in a DSL) are typically transformed to some host general-purpose language. This means that the DSL concepts are layered on top of existing concepts, such as \textit{class}, \textit{objects}, and \textit{threads}.
-Plenty of approaches exist for written DSLs that execute on top of MRTEs; in particular, many solutions target Java.
+\paragraph{Support in MRTEs} 
+As mentioned, concrete ``programs'' written in a DSL are typically translated to some host general-purpose language.
+This means that the DSL concepts are layered on top of concepts, such as \textit{classes}, \textit{objects}, and \textit{threads}.
+Plenty of approaches exist for writing DSL-based applications that are transformed to execute on top of MRTEs; in particular, many solutions target Java.
 For instance, the already discussed Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625}, the Eclipse Modeling Framework~\cite{EMFModeling}, the meta-programming capabilities of languages such as Scala~\cite{Hofer:2010:MDL:1868294.1868307} and Clojure~\cite{Kelker2013} where internal DSLs can be defined and executed, the combination of annotations and annotation processor~\cite{Huang2008}, and  the Meta-Programming System (MPS)~\cite{JetBrainsMetaProgrammingSystem(MPS),Voelter2014}.
 Likewise, F\# applications, which execute in CLR, can use meta-programming support to write DSLs~\cite{Cheney:2013:PTL:2500365.2500586}; and the Boo language provides constructor that are easy to use for crafting DSLs~\cite{Rahien2010}. 
 
-\paragraph{Resource Usage}
-Naturally, the resource consumption of a program written in a DSL depends on the DSL itself.
+\paragraph{How abstractions consume resources} 
+Naturally, the resource consumption of a ``program'' written in a DSL depends on the DSL itself.
 If a language is only used to describe structures then a program would consume memory.
 On the contrary, if a language only describes behavior, a program written using such a language would use CPU to perform the computation.
 
@@ -217,8 +230,9 @@ StateMachine BusDoorManager
 	}
 \end{lstlisting}
 
-In other cases, a DSL may only generate a structure, without behavior.
-For example, suppose we define a language to represent plants using the L-system~\cite{Prusinkiewicz1990} formalism.
+In other cases, the translation process of a DSL may only generate a structure for each ``program'', without any associated behavior.
+Hence, only memory is consumed by the execution environment to represent a concrete model at run time.
+For example, suppose we define a language to represent plants using the L-system formalism~\cite{Prusinkiewicz1990}.
 A plant created by Prusinkiewicz et al. ~\cite{Prusinkiewicz1990} using L-Systems, is depicted in Figure~\ref{lst:OL-system-example}.
 The structures generated by this language may be simple strings of symbols (see \ref{fig:l-system-generated}).
 As can be appreciated, the memory consumed by a L-system depends on the number of iterations, the rules defined, and the concrete data structure used to store the symbols
@@ -274,34 +288,24 @@ String P0 = "FF[+F[+X]F[-X]+X]FF[-F[+X]F[-X]+X]+F[+X]F[-X]+X";
 \caption{Simple OL-System to generate a plant in two dimensions. On the left} \label{lst:OL-system-example}
 \end{figure}
 
-Apart from the characteristics of each DSL, an important \textbf{feature to consider by engineers who implement support for resource awareness} for a DSL,
-is that languages do not always provide well-defined boundaries as software components do.
+An important \textbf{feature to consider} by engineers who implement support \textbf{for resource awareness},
+is that languages do not always provide well-defined boundaries.
 For instance, an internal DSL may be transformed into a list of statements of the host language without defining a new routine or thread.
 In a case like this, instrumentation is the only mechanism that can be used to achieve CPU consumption monitoring.
-
-Interestingly, interaction between programs written using DSLs can also impact the way resource accounting is done.
+Interestingly, interaction between parts of a application written using DSLs can also impact the way resource accounting is done.
 In the state machine example previously discussed, a state machine might trigger events in another state machine by simple executing some actions in one of its transitions.
-This is closely related to the problem of accounting resource consumption in components that are interacting.
+In a situation like that, a resource accounting framework should properly determine the change of execution context; unfortunately, implementing this can be computationally expensive. 
 
-The \textit{state machine} and \textit{L-system} languages clearly reflect \textbf{differences between DSLs}.
-These differences are not surprising.
-Languages consume resources in different ways; some languages only consume memory while others consume CPU or other resources.
-The capacity to monitor the consumption of a program written using a DSL is related to factors such as,
-the specific meaning of the involved concepts,
-and the translational semantic of the language.
+\extracomment{TODO}{
+One paragraph to highlight how the problem we find with programs implemented using DSLs also exist when other mechanisms are used to define abstractions.
+}
 
-\paragraph{State of the art on providing resource awareness support for DSLs}
-As far as we know, there is little support for dealing with resource at per DSL level.
-Nevertheless, some related works do exist that aim at reducing the gap between the developer's view and the tools' view.
-In particular, the problem of offering debugging support for DSL constructs have been largely discussed.
-In Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625}, languages that produce code in the base language (i.e., Java) may profit from mostly automatic debugger support.
-When the newly define DSL is transformed into the base language, the system keeps traces between the two models (source and destination).
-Using these traces, a debugging infrastructure is able to identify what constructor is being executed in the original DSL.
-Meanwhile, Voelter \cite{Voelter2010} discusses how to add debugging capabilities to a DSL when the MPS language workbench is used.
-In this case, no trace model is required; instead, every concept of a language that requires debugging support must implement a set of interfaces to guide a generic debugging framework.
-Similar works have been conducted \cite{vandenBrand:2005:TGD:1705513.1705667} for the ASF+SDF Meta-Environment \cite{vandenBrand20013}, defining a generic debugging framework that can be customized for DSLs.
-Finally, mechanisms to build various tools for new languages are described in \cite{Henriques2005}.
-Based on attribute grammars, and implemented using the LISA system \cite{Mernik2002}; the tools proposed include editors, inspectors, debuggers and visualizers.
+%The \textit{state machine} and \textit{L-system} languages clearly reflect differences between DSLs.
+%These differences are not surprising.
+%Languages consume resources in different ways; some languages only consume memory while others consume CPU or other resources.
+%The capacity to monitor the consumption of a program written using a DSL is related to factors such as,
+%the specific meaning of the involved concepts,
+%and the translational semantic of the language.
 
 %\extracomment{TODO}{Add discussion on how to ad plugins for Eclipse MAT and VisualVM}
 
@@ -319,7 +323,7 @@ Based on attribute grammars, and implemented using the LISA system \cite{Mernik2
 %Lots of data collected in these works is also available with our approach.
 
 
-\subsection{Resource use in software components} \label{sec:components-oriented-resource-awareness}
+\subsection{On how software components consume resources} \label{sec:components-oriented-resource-awareness}
 
 Component-Based Software Engineer (CBSE) aims at developing applications by reusing independent units of software \cite{cbse-conference, Crnkovic2011}.
 Through the utilization of components, connectors and configurations, CBSE reduces the complexity in the development and maintenance of systems \cite{xadl,Medvidovic:2000,VanOmmering-et-al-00}.
@@ -329,6 +333,14 @@ One of its technical advantages is that it facilitates the management of dynamic
 because it simplify the implementation of features, such as, self-organizing the structure of a system, and self-adapting its behavior
 \cite{PanzicaLaManna:2012:LDU:2304736.2304764, Johnson:2015:CSM:2735960.2735979,Zhang:2009:MVD:1509239.1509262}.
 Likewise, many works~\cite{cbse-conference} have shown the benefits of using component-based approaches in open-world environments~\cite{baresi2006toward, Caporuscio:2010:AIA:1985522.1985547, Perez-Palacin:2010:PAO:1712605.1712614}.
+
+In a general sense, the concept that embodies the idea behind software components can be defined as follow
+\cite{Crnkovic2011}:
+
+\begin{description}
+\item[Definition 1:] A \textit{Software Component} is a software building block that conforms to a component model. 
+\item[Definition 2:] A \textit{Component Model} defines standards for (i) properties that individual components must satisfy; and (ii) methods, and possibly mechanisms, for composing components.
+\end{description}
 
 Plenty of diversity exists in current component models and frameworks \cite{Heineman2001, SZYPERSKI2002, Crnkovic2011}.
 They tend to target different technologies, aim at different use cases, provide support for different concerns, and use different design principles.
@@ -343,23 +355,49 @@ Component models, which include both features, are the target of our research.
 Many component models are able to cope with the necessity of adaptation through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components~\cite{Porter:2014:RMC:2602458.2602471, Zheng:2014:RCC:2679601.2680405, Irmert:2008:RAS:1370018.1370036, Ghezzi:2010:QDD:2163764.2163774}.
 \end{description}
 
-Other properties worth mentioning in this thesis are those that describe how components communicate.
-For instance:  whether the concept of \textit{port} is implemented; if there exists distinction between \textit{required/provided interfaces}; how is the \textit{interface language}; what is the \textit{interface levels} (syntactic, semantic, behavior); and what is the \textit{communication type} (synchronous, unicast, and others).
-Our interest in these properties is limited to understand what mechanisms are used to support interaction between components, how are these mechanisms implemented, and how the interaction between components affects the way in which we deal with resource consumption monitoring and reservation.
+\extracomment{TODO}{
+A Figure to depict the problem of indirect vs direct accounting.
+}
 
-\paragraph{Usage in MRTEs}
+Other properties worth mentioning in this thesis are those that describe how components communicate.
+For instance,  whether the concept of \textit{port} is implemented; if there exists distinction between \textit{required/provided interfaces}; characteristics of the \textit{interface language}; and what is the \textit{communication type} (synchronous, unicast, and others).
+Our interest in these properties is limited to understand what mechanisms are used to support interaction between components, how are these mechanisms implemented, and how this interaction affects the way in which we deal with resource consumption monitoring and reservation.
+
+To guarantee properties regarding the behavior of components (and the system built using them), contracts are used. 
+According to \cite{Beugnard774917}, \textit{contracts} can be classified in four levels which, if
+taken together, form a global contract; these are syntactic, behavioral, synchronization, and Quality-Of-Service (QoS).
+Contracts based on the first three levels describe what can be done using a component and under which provisions.
+They do not specify other properties, such as what resources would be consumed by a component to perform some action.
+Nevertheless, a violation of QoS requirements breaks clients just as easily as a violation of a business rule.
+If a provider is too slow in serving a request, client components will also be slow in achieving their goal.
+These contracts, which express QoS and extra-functional properties, are used to control how many resources a component consumes.
+
+In writing a contracts to express requirements regarding resource utilization, developers may profit of platform-independent mechanisms to describe the resources needed by components and component-based systems.
+Indeed, writing contracts using platform-dependent metrics hinders its interpretation when components are deployed in a different execution environment.
+For instance, if a contract expresses the fact that a component needs $n$ number of CPU cycles to handle a request, the value of $n$ may, in fact, represent different values depending on the architecture.
+For this reason, using a metric, such as number of bytecode instructions executed, to describe a contract is useful in MRTEs.
+This metric in particular has the following advantages:
+\begin{itemize}
+\item It is easy to control the admission of components because each platform knows how many bytecode instructions it is able to execute in an interval of time.
+\item A portable framework for resource consumption monitoring is easier to implement.
+\item Different measurements are easy to compare, even across platforms, because they use the same metric.
+\end{itemize} 
+
+Besides the metrics used, the exact interpretation of a contract is also a fundamental concern.
+Contracts may express properties for just one component and a single type of resources, but they can also express how should be the usage of resources in more complex scenarios where different components and types of resources are involved.
+
+
+\paragraph{Support for component-based engineering in MRTEs}
 An important property of component models is its implementation support.
 The discussion in this research is limited to those that have been implemented for MRTEs.
 Several component models that provide support for MRTEs have been proposed by both the industry and the academy.
 Among others, we can mention Enterprise Java Beans (EJB) \cite{OracleEJB3.0}, the Open Services Gateway Initiative (OSGi) \cite{OSGI:r5}, 
 Fractal \cite{Bruneton:2006:FCM:1152333.1152345}, 
-SOFA 2.0 (Software Appliances) \cite{Bures2006}, Palladio \cite{}, and Kevoree~\cite{morin09a,leger2010reliable}.
+SOFA 2.0 (Software Appliances) \cite{Bures2006}, Palladio \cite{Becker:2010:PCM:1712605.1712651}, and Kevoree~\cite{morin09a,leger2010reliable}.
 It is interesting how these component models have different properties when it comes to \textit{modeling capabilities}, \textit{architecture of the system supported}, and \textit{constructs for interaction among components}.
 However, they also differ in how components are represented on top of MRTE concepts; in other words, they follow different approaches to implement the component framework itself.
 
-\paragraph{Resource consumption}
-
-Since the lack of computational resources can break an application as easily as a violation of a business rule, dealing with resource utilization is considered an extra-function requirement~\cite{}.
+\paragraph{How components consume resources}
 Interestingly, components provide boundaries between different software entities, which are forced to communicate through well defined interfaces; it is then possible to write QoS contracts associated to these interfaces \cite{Beugnard774917}.
 
 It is important to remember the difference between component type and component instance when we discuss the resource usage of these systems.
@@ -369,11 +407,13 @@ As a consequence, it is not simple to define how a component consumes resources.
 For example, the memory consumed by an instance includes those \textit{objects} used for the component framework to represent the instance itself, its ports, and bindings; it also includes the state of the component. 
 However, it cannot include the memory used to store the component's code since it is shared among many instances.
 Monitoring CPU and network consumption is even harder, because the code responsible for the consumption is shared.
-To solve this problem, a context is associated with each component in order to determine at runtime the instance responsible of the execution of a given operation that is using resources.
-Curiously, the nature of this context depends on the component model.     
+To solve this problem, a context is associated with each component in order to determine at runtime the instance responsible for the execution of a given operation that is using resources.
+Interestingly, the exact representation of this context depends on the component model, and it can impact the performance of component-based systems.
+A common way to define this context, is associated a set of threads to a component.
 
-\paragraph{Specific features to consider when resource awareness support is implemented}
+To summarize, the resources consumed by a component comprise (but are not limited to): its state, the time-shared resources it uses (CPU, network), the space required to store data and code shared among all instances of a component type, and the temporary space needed to execute the component.       
 
+\paragraph{Specific features to consider}
 A first issue to take into consideration is \textit{how to account for resource consumption in the presence of interaction between components}.
 Usually, components are organized as clients and providers, where a component (provider) performs operations on behalf of another component (client).
 It is then possible to account for resource consumption in two ways \cite{Miettinen2008,Maurel:2012:AME:2304736.2304763}:
@@ -394,114 +434,42 @@ called in an endless loop, the resource usage will be accounted
 to the provider instead of to the client that executes such a loop.
 On the contrary, if a service is poorly implemented, in indirect accounting the user of the service is identified as the responsible.
 
+\extracomment{TODO}{
+One paragraph to discuss that there are two ways of measuring memory consumption: either the allocator is always responsible or the component that keeps an object live is responsible
+}
+
 A second aspect is to decide \textit{where should be implemented} the mechanism for resource consumption monitoring and reservation.
 Essentially, this consists in, selecting which actors implement the mechanism and policies to manage resources, and deciding if the actors collaborate to achieve their goal \cite{Crnkovic2011}.
 
-Many component models provide no facilities for managing extra-functional properties (EFPs) such as resource usage.
+Many component models provide no facilities for managing EFPs.
 The mechanism used to handle a property is left to the designers of each application.
-This facilitates the creation of EFP management policies that are tuned towards a system, but can harm the portability of components because the policies are implemented by them.
+This facilitates the creation of EFP management policies that are specifically tuned towards a system, and also allow the usage of multiple policies in a system.
+However, the fact that such policies are not
+standardized (and are fully implemented in components) may be a source of architectural mismatch between
+components.
+The compatibility of components is improved if the
+execution platform provides standardized facilities for managing EFPs.
+However, components still need to know EFPs affect their functioning in order to guide the manner
+in which EFPs are handled.
 
-In another approach, components only address functional aspects.
-Thus, in the execution environment, components
-are wrapped in containers that know how to manage EFPs.
-Containers can either be totally in charge of non-functional aspects or
-they can interact with the component framework to manage EFPs.
-This eases the inclusion of components in multiple systems where different policies for EFPs are used.
+In another approach, components are designed to address only functional aspects and not EFPs.
+Thus, in the execution environment, these components
+are wrapped in a container that has the knowledge on how to manage EFPs.
+Containers can either be totally in charge of managing EFPs or
+they can interact with a mechanism in the component framework that manages EFPs.
+This approach is a way of realizing separation of
+concerns in which components focus on functional aspects
+and containers concentrate on extra-functional aspects.
 
-\paragraph{Example of differences among concrete abstractions}
+%\paragraph{Example of differences among concrete abstractions}
 
-An interesting difference that impact the implementation of mechanisms for resource consumption monitoring is how Kevoree and OSGi support interaction between components.
+Finally, some differences among component models impact the implementation of mechanisms for resource consumption monitoring.
+For instance. Kevoree and OSGi provide different methods for interaction between components.
 In Kevoree, components communicate with each other through ports.
 It is straightforward to identify in the code when a component is requesting a service because a single interface (port) is used to do so, no matter if a component is using different ports. 
 As a consequence, an automated tool can easily instrument the code to detect when components are communicating.
 On the contrary, OSGi uses plain Java interfaces and objects to connect bundles.
 In that cases it is more complex to detect when components are communicating because a bundle can communicate with several services using different interfaces. 
-
-\paragraph{State of the art on providing resource awareness support for component-based systems}
-
-Many works address the issue of supporting resource consumption monitoring in component-based systems.
-In addition, some existing approaches present solutions for the isolation of resource consumption among components running on top of a single MRTE instance.
-Unfortunately, most approaches are limited to a specific component model; in particular, a amount of work exist to solve the problem for both EJB and OSGi.
-
-\textit{EJBMemProf}, a memory profiling framework for EJB is presented in \cite{Meyerhoefer2005}.
-The main idea is executing an event handler each time a new object is created; such a handler is responsible of identifying the bundle that allocated the object.
-A set of rules that guide this identification process is discussed and their accuracy evaluated.
-Since the overhead is too high, using the framework in a production environment is not possible.
-Instead, it is considered a tool for component software development.
-Similarly, an approach to measure the execution time of EJB components is proposed in \cite{Meyerhofer05towardsplatform-independent}.
-In this solution, some parts of a component are selected as the one that better describe the component behavior.
-These parts are then profiled in a development environment; the resulting data is combined with a description of the deployment platform to estimate what would be the execution time in the deployment platform.
-Finally, a mechanism for measuring the response time of components, as well as the invocation tree, is discussed by Meyerhoefer et al. \cite{Meyerhoefer2007}.
-This approach uses interceptors to collect data about how components calls each other.
-It is intended to be use as a development tool.
-
-%\textbf{Resource monitoring in EJB}
-%
-%TestEJB: response time measurement and call dependency tracing for EJBs
-%
-%In this paper we present how to conduct performance related analyses of component-based applications and how to derive call dependencies between software components in the TestEJB framework. This framework facilitates an interceptor-based approach to measure selected properties of components following the Enterprise JavaBeans specification. Amongst its advantages are the lightweightness and transparency to the application as the measuring sensors simply gather timestamps and additional metadata at selected positions inside a component-based application. Using basic database support, it is possible to generate invocation trees and calculate response- and run-times of a component and its methods while accounting for the overhead introduced by the framework itself. Therefore, the developer is offered a useful tool for benchmarking selected components as well as monitoring the interactions of components with the application server and amongst themselves.
-%
-%TESTEJB – A Measurement Framework for EJBs\cite{TESTEJB2004}
-%Specification of Quality of Service (QoS) for components can only be done in relation to the QoS the components themselves are given by imported components. Developers as well as users need support in order to derive valid data for specification respectively for checking whether a selected component complies with its specification. In this paper we introduce the architecture of a measurement framework for EJBs giving such support and discuss in detail the measurement of the well understood property of response time.
-
-Monitoring the resource consumption of OSGi bundles have also been addressed.
-For instance, Miettinen et al. \cite{Miettinen2008} present a framework to measure CPU and memory usage of OSGi bundles.
-This framework relies on some modifications to an existing OSGi platform in order to identify which bundle is consuming a given resource.
-Such a modification creates a \textit{ThreadGroup} for a each bundle that can be used to associated an object allocation or method execution to specific \textit{threads} which belong the the aforementioned \textit{ThreadGroup} in the JVM.
-Since this approach uses JVMTI and bytecode rewriting to detect resource usage, it suffer of considerable performance overhead (See previous Chapter).
-In a \cite{Maurel:2012:AME:2304736.2304763}, the authors propose an approach to reduce the induced overhead of doing CPU monitoring; this is an adaptive monitoring system that is able to dynamically tune the accuracy of monitoring mechanisms depending on detected performance issues.
-This solution is built on the idea of creating proxies that are responsible for detecting invocations, and also on the usage of localized CPU sampling.
-The experiments show an overhead of 2\% when idle and 20\% when completely active.
-Memory consumption monitoring in OSGi execution environments has also been discussed \cite{Attouchi:2014:MMM:2602458.2602467}.
-The authors argue that some information regarding the \textit{business logic} is required to properly estimate the resource consumption of interacting bundles that belong to different stakeholders. 
-To encode that information, the propose a DSL that describes what component must be charged for a given consumption when its services are used; this effectively increases the accuracy of the monitoring framework.
-Unfortunately, the approach requires a modified JVM and a persistent overhead (up to 46\%) because the framework cannot be deactivated.
-
-Other approaches address the issue of providing resource isolation between OsGi bundles.
-In \cite{Kuroda2014}, the authors propose a memory isolation method for OSGi-based home gateways.
-The method isolates the memory consumption of bundles without the need to modify bundles or the OSGi framework and has minimal overhead costs.
-It does so by modifying the JVM (object layout, allocator, and the garbage collector) in order to evaluate, after each allocation, whether the bundle responsible for the allocation is violating some developers-defined limits on resource usage.
-Meanwhile, I-JVM \cite{dsn/09/geoffray/ijvm} is a JVM that provides isolation between OSGi bundles.
-In addition to avoiding unintended object sharing, the approach also tackle the issue of resource consumption monitoring for components; this is meant to be used by administrator to avoid denial-of-services attacks.
-The experimental results show an overhead of 16\% on inter-bundle calls.
-Likewise, the problem of isolating CPU consumption in OSGi execution environments in order to support real-time component software development is discussed by Richardson et al. \cite{Richardson2009}.
-The idea is to use the Real-Time Specification for Java (RTSJ) to support CPU isolation; this also requires modification to the OSGi framework.
-The authors claim that just using RTSJ is no enough to ensure the real-time properties of OSGi-based application.
-Besides the arguments to justify such a claim, a solution to achieve CPU isolation is presented.
-
-Profilers such as Eclipse MAT and VisualVM also offer limited support to perform memory consumption monitoring for mainstream component models (OSGi and EJB).
-They do so by providing built-in (hardcoded) subsystems that are able to process Java memory dumps to calculate the per-component consumption.
-Due to the need of processing the complete memory dump, the performance overhead is considerable. 
-
-%\textbf{Resource isolation in Component-RTSJ}
-
-%Providing temporal isolation in the OSGi framework .
-%The OSGi Framework is a run-time environment for deploying service-containing Java components. Dynamically reconfigurable Java applications can be developed through the Framework's powerful capabilities such as installing, uninstalling, updating components at run-time, and allowing the substitution of service implementations at run-time. Coupled with the capability to be remotely managed, the OSGi Framework is proving a success in a variety of application domains. One domain where it is yet to make an impact is real-time systems. Despite the fact that OSGi components and services can be developed using the Real-Time Specification for Java (RTSJ), there are still a variety of problems preventing the use of the Framework to develop real-time systems. One such problem is a lack of temporal isolation. This paper focuses on how temporal isolation can be provided in the OSGi Framework as a first step towards using the Framework to developing real-time systems with the RTSJ.
-%(Usa RTSJ y un OSGi framework modificado)
-
-%Towards memory management for service-oriented real-time systems\cite{Richardson2010}
-%Dynamically discoverable units of software (services) are the centerpiece of service-oriented architecture (SOA). Such dynamic software architectures closely match the dynamics of businesses, and for that reason, SOA is becoming an increasingly important approach to the development of software. However, one aspect of deploying such dynamic software, that is frequently neglected, is the impact that it has on the availability of hardware resources such as CPU utilization and memory consumption. All software systems require the system load to be controlled in order to provide the service user with some level of quality-of-service. Furthermore, one type of software, which is particularly difficult to develop and would certainly benefit from the use of service-orientation, is real-time systems. Such systems, however, require resource guarantees and therefore are currently prohibited from using service-orientation in their design.
-%In this paper we propose solutions to the problems relating to providing memory management in service-oriented real-time systems (RT-SOA).
-%( memory management approach for RT-SOA allowing
-%the memory requirements of threads to be calculated and used to
-%generate GC parameters, only allowing threads to be admitted into
-%the system when the addition of the thread will not cause memory
-%to be exhausted, and of course, only when there is sufficient CPU
-%for the threads to execute their own application code )
-
-\textit{How to model contracts regarding resource requirements?}
-\todo{Write this}
-
-%\cite{Jung:2011:LAI:2000292.2000296}
-%
-%Architecting Fault-tolerant Component-based Systems: from requirements to testing
-%
-%A New Component Concept for Fault Trees
-%
-%Fault-Tolerance for Component-Based Systems - An Automated Middleware Specialization Approach
-%
-%otra cosa
-%\cite{SZYPERSKI2002,Lau:2014:SCM:2602458.2611456}
 
 %\subsubsection{Extra-functional Properties} \label{sec:efp-resources}
 %
@@ -587,7 +555,110 @@ Due to the need of processing the complete memory dump, the performance overhead
 %
 %Marco Autili, Paolo Di Benedetto and Paola Inverardi, Hybrid Approach for Resource-based Comparison of Adaptable Java Applications (2012), in: Journal of Science of Computer Programming (SCP)
 
-\subsection{Limitations of the state of the art on dealing with abstraction-specific features}
+\subsection{State of the art on dealing with abstraction-specific features}
+
+\extracomment{TODO}{
+One paragraph to introduce the section
+}
+
+\paragraph{Providing resource awareness support for DSLs}
+As far as we know, there is little support for dealing with resource at per DSL level.
+Nevertheless, some related works do exist that aim at reducing the gap between the developer's view and the tools' view.
+In particular, the problem of offering debugging support for DSL constructs have been largely discussed.
+In Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625}, languages that produce code in the base language (i.e., Java) may profit from mostly automatic debugger support.
+When the newly define DSL is transformed into the base language, the system keeps traces between the two models (source and destination).
+Using these traces, a debugging infrastructure is able to identify what constructor is being executed in the original DSL.
+Meanwhile, Voelter \cite{Voelter2010} discusses how to add debugging capabilities to a DSL when the MPS language workbench is used.
+In this case, no trace model is required; instead, every concept of a language that requires debugging support must implement a set of interfaces to guide a generic debugging framework.
+Similar works have been conducted \cite{vandenBrand:2005:TGD:1705513.1705667} for the ASF+SDF Meta-Environment \cite{vandenBrand20013}, defining a generic debugging framework that can be customized for DSLs.
+Finally, mechanisms to build various tools for new languages are described in \cite{Henriques2005}.
+Based on attribute grammars, and implemented using the LISA system \cite{Mernik2002}; the tools proposed include editors, inspectors, debuggers and visualizers.
+
+\paragraph{Component-based systems}
+
+Many works address the issue of supporting resource consumption monitoring in component-based systems.
+In addition, some existing approaches present solutions for the isolation of resource consumption among components running on top of a single MRTE instance.
+Unfortunately, most approaches are limited to a specific component model; in particular, a amount of work exist to solve the problem for both EJB and OSGi.
+
+\textit{EJBMemProf}, a memory profiling framework for EJB is presented in \cite{Meyerhoefer2005}.
+The main idea is executing an event handler each time a new object is created; such a handler is responsible of identifying the bundle that allocated the object.
+A set of rules that guide this identification process is discussed and their accuracy evaluated.
+Since the overhead is too high, using the framework in a production environment is not possible.
+Instead, it is considered a tool for component software development.
+Similarly, an approach to measure the execution time of EJB components is proposed in \cite{Meyerhofer05towardsplatform-independent}.
+In this solution, some parts of a component are selected as the one that better describe the component behavior.
+These parts are then profiled in a development environment; the resulting data is combined with a description of the deployment platform to estimate what would be the execution time in the deployment platform.
+Finally, a mechanism for measuring the response time of components, as well as the invocation tree, is discussed by Meyerhoefer et al. \cite{Meyerhoefer2007}.
+This approach uses interceptors to collect data about how components calls each other.
+It is intended to be use as a development tool.
+
+%\textbf{Resource monitoring in EJB}
+%
+%TestEJB: response time measurement and call dependency tracing for EJBs
+%
+%In this paper we present how to conduct performance related analyses of component-based applications and how to derive call dependencies between software components in the TestEJB framework. This framework facilitates an interceptor-based approach to measure selected properties of components following the Enterprise JavaBeans specification. Amongst its advantages are the lightweightness and transparency to the application as the measuring sensors simply gather timestamps and additional metadata at selected positions inside a component-based application. Using basic database support, it is possible to generate invocation trees and calculate response- and run-times of a component and its methods while accounting for the overhead introduced by the framework itself. Therefore, the developer is offered a useful tool for benchmarking selected components as well as monitoring the interactions of components with the application server and amongst themselves.
+%
+%TESTEJB – A Measurement Framework for EJBs\cite{TESTEJB2004}
+%Specification of Quality of Service (QoS) for components can only be done in relation to the QoS the components themselves are given by imported components. Developers as well as users need support in order to derive valid data for specification respectively for checking whether a selected component complies with its specification. In this paper we introduce the architecture of a measurement framework for EJBs giving such support and discuss in detail the measurement of the well understood property of response time.
+
+Monitoring the resource consumption of OSGi bundles have also been addressed.
+For instance, Miettinen et al. \cite{Miettinen2008} present a framework to measure CPU and memory usage of OSGi bundles.
+This framework relies on some modifications to an existing OSGi platform in order to identify which bundle is consuming a given resource.
+Such a modification creates a \textit{ThreadGroup} for a each bundle that can be used to associated an object allocation or method execution to specific \textit{threads} which belong the the aforementioned \textit{ThreadGroup} in the JVM.
+Since this approach uses JVMTI and bytecode rewriting to detect resource usage, it suffer of considerable performance overhead (See previous Chapter).
+In a \cite{Maurel:2012:AME:2304736.2304763}, the authors propose an approach to reduce the induced overhead of doing CPU monitoring; this is an adaptive monitoring system that is able to dynamically tune the accuracy of monitoring mechanisms depending on detected performance issues.
+This solution is built on the idea of creating proxies that are responsible for detecting invocations, and also on the usage of localized CPU sampling.
+The experiments show an overhead of 2\% when idle and 20\% when completely active.
+Memory consumption monitoring in OSGi execution environments has also been discussed \cite{Attouchi:2014:MMM:2602458.2602467}.
+The authors argue that some information regarding the \textit{business logic} is required to properly estimate the resource consumption of interacting bundles that belong to different stakeholders. 
+To encode that information, the propose a DSL that describes what component must be charged for a given consumption when its services are used; this effectively increases the accuracy of the monitoring framework.
+Unfortunately, the approach requires a modified JVM and a persistent overhead (up to 46\%) because the framework cannot be deactivated.
+
+Other approaches address the issue of providing resource isolation between OSGi bundles.
+In \cite{Kuroda2014}, the authors propose a memory isolation method for OSGi-based home gateways.
+The method isolates the memory consumption of bundles without the need to modify bundles or the OSGi framework and has minimal overhead costs.
+It does so by modifying the JVM (object layout, allocator, and the garbage collector) in order to evaluate, after each allocation, whether the bundle responsible for the allocation is violating some developers-defined limits on resource usage.
+Meanwhile, I-JVM \cite{dsn/09/geoffray/ijvm} is a JVM that provides isolation between OSGi bundles.
+In addition to avoiding unintended object sharing, the approach also tackle the issue of resource consumption monitoring for components; this is meant to be used by administrator to avoid denial-of-services attacks.
+The experimental results show an overhead of 16\% on inter-bundle calls.
+Likewise, the problem of isolating CPU consumption in OSGi execution environments in order to support real-time component software development is discussed by Richardson et al. \cite{Richardson2009}.
+The idea is to use the Real-Time Specification for Java (RTSJ) to support CPU isolation; this also requires modification to the OSGi framework.
+The authors claim that just using RTSJ is no enough to ensure the real-time properties of OSGi-based application.
+Besides the arguments to justify such a claim, a solution to achieve CPU isolation is presented.
+
+Profilers such as Eclipse MAT and VisualVM also offer limited support to perform memory consumption monitoring for mainstream component models (OSGi and EJB).
+They do so by providing built-in (hardcoded) subsystems that are able to process Java memory dumps to calculate the per-component consumption.
+Due to the need of processing the complete memory dump, the performance overhead is considerable. 
+
+%\textbf{Resource isolation in Component-RTSJ}
+
+%Providing temporal isolation in the OSGi framework .
+%The OSGi Framework is a run-time environment for deploying service-containing Java components. Dynamically reconfigurable Java applications can be developed through the Framework's powerful capabilities such as installing, uninstalling, updating components at run-time, and allowing the substitution of service implementations at run-time. Coupled with the capability to be remotely managed, the OSGi Framework is proving a success in a variety of application domains. One domain where it is yet to make an impact is real-time systems. Despite the fact that OSGi components and services can be developed using the Real-Time Specification for Java (RTSJ), there are still a variety of problems preventing the use of the Framework to develop real-time systems. One such problem is a lack of temporal isolation. This paper focuses on how temporal isolation can be provided in the OSGi Framework as a first step towards using the Framework to developing real-time systems with the RTSJ.
+%(Usa RTSJ y un OSGi framework modificado)
+
+%Towards memory management for service-oriented real-time systems\cite{Richardson2010}
+%Dynamically discoverable units of software (services) are the centerpiece of service-oriented architecture (SOA). Such dynamic software architectures closely match the dynamics of businesses, and for that reason, SOA is becoming an increasingly important approach to the development of software. However, one aspect of deploying such dynamic software, that is frequently neglected, is the impact that it has on the availability of hardware resources such as CPU utilization and memory consumption. All software systems require the system load to be controlled in order to provide the service user with some level of quality-of-service. Furthermore, one type of software, which is particularly difficult to develop and would certainly benefit from the use of service-orientation, is real-time systems. Such systems, however, require resource guarantees and therefore are currently prohibited from using service-orientation in their design.
+%In this paper we propose solutions to the problems relating to providing memory management in service-oriented real-time systems (RT-SOA).
+%( memory management approach for RT-SOA allowing
+%the memory requirements of threads to be calculated and used to
+%generate GC parameters, only allowing threads to be admitted into
+%the system when the addition of the thread will not cause memory
+%to be exhausted, and of course, only when there is sufficient CPU
+%for the threads to execute their own application code )
+
+%\cite{Jung:2011:LAI:2000292.2000296}
+%
+%Architecting Fault-tolerant Component-based Systems: from requirements to testing
+%
+%A New Component Concept for Fault Trees
+%
+%Fault-Tolerance for Component-Based Systems - An Automated Middleware Specialization Approach
+%
+%otra cosa
+%\cite{SZYPERSKI2002,Lau:2014:SCM:2602458.2611456}
+
+
+\subsection{Discussing the state of the art}
 
 In reviewing the state of the art, we have found some limitations on how existing solutions deal with specific features of abstractions.
 In this section we discuss such limitations:
@@ -627,8 +698,6 @@ Instead, adaptive mechanisms are preferable because they have the potential of r
 It is worth mentioning that some general profiling frameworks can be used to ease the construction of profilers, even if they do not specifically address DSLs; these mechanisms as well as their limitations are discussed hereafter.
 
 \end{description}
-
-
 
 \section{Easing the construction of resource management tools} \label{sec:easy-tools-contruction}
 
@@ -909,7 +978,7 @@ Similarly, there is another interesting trade-off we have found; efficient tools
 
 \end{comment}
 
-\section{Conclusions}
+\section{Summary}
 
 
 Defining and using software abstractions is at the core of system development.
@@ -930,9 +999,18 @@ For instance, building a resource consumption monitor for a new DSL should simpl
 In reviewing the state of the art of resource management for software abstractions, we realized that there are severe shortcomings in existing approaches that prevent their usage in production environments. In particular:
 
 \begin{itemize}
-\item Approaches to extract \textit{arbitrary} information from memory (e.g., number of objects of a given class, class of each that object that references an array) are too expensive in terms of performance overhead.
+\item Limited support for resource accounting in component-based systems.
+They only target mainstream component models. In general they induce high performance overhead.
 
-\item Several approaches for defining dynamic analysis tools rely on instrumentation to collect data. 
+\item Sub-utilization of information about the architecture of systems.
+
+\item Wrongly assume that resource consumption is homogeneous.
+
+\item Limited capabilities for building tooling support.
+
+\item Often, knowledge of low-level details is required.
+
+\item Lack of expressive power to build efficient tools.
 \end{itemize} 
 
 %
