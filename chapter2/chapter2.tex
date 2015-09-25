@@ -115,7 +115,7 @@ To do so, we discuss the topic in two ways:
 \begin{enumerate}
 \item  We present how the mismatch between existing tools and users' expectation continuously emerge due to the increasing usage of DSLs to build applications.
 This serves both to further motivate the research, and to present in details the technical complexity an engineer may face when new abstractions are used.
-In general, most problems we find, when programs are written using DSLs and resource awareness is required, can also be found in other contexts where different kind of abstractions are used.
+%In general, most problems we find, when programs are written using DSLs and resource awareness is required, can also be found in other contexts where different kind of abstractions are used.
 
 \item We describe the specific features of a concrete kind of abstraction - software components.
 We do so because, despite of the fact that component-based software engineering is widely used in the industry, exiting approaches to support resource awareness still show limitations.
@@ -147,34 +147,30 @@ The section ends by analyzing the limitation in the state of the art.
 
 \subsection{DSLs: land of hungry abstractions} \label{sec:DSL-on-MRTEs}
 
-\extracomment{TODO}{
-One paragraph to say that this is an illustrative case because of the current trend of developing new DSLs.
-Somehow I have to connect all this using something said by Czarnecki.
-}
-
-
 In Model-Driven Software Development (MDSD), models are abstractions of a software system and its environment~\cite{Stahl:2006:MSD:1196766, Fowler:2010:DSL:1809745}.
 A model contains a limited amount of information of a real system; thus, its utility is restricted to the domain it represents.
 The set of concepts and relationships that can be used in a concrete model are described in a Metamodel, which is also called Domain-Specific Language (DSL)~\cite{Fowler:2010:DSL:1809745}.
 In this way, a DSL describes a specific domain (e.g., state machines, interface definition language); while a model is then a concrete state machine in a real application, or a description of how components in a system interact.
- 
-In a typical scenario, models are translated to source code written in some general-purpose language to enable their subsequent compilation and execution.
-However, models are also useful in other tasks such as generating test cases \cite{Kiffe2009,Gutierrez2015}, simulating a system behavior \cite{Broenink2012,brosig2015a,Bocciarelli2015425}, and formally verifying software properties \cite{Holzmann2004,Henriksson2005101,Moffett2013,DiGuglielmo20132013}. 
 
-DSLs can be roughly classified as internal or external.
-An internal DSL is embedded into a general-purpose language.
-Often, meta-programming facilities, of either a dynamically typed host language or a statically typed language with type inference, are used to seamless integrate the DSL into the host language.
-Likewise, design patterns and reflection are used to implements some forms of internal DSLs, such as fluent APIs, and annotation-based languages.
+In their seminal work~\cite{Czarnecki2000}, Czarnecki and Eisenecker embrace a broad notion of ``language'' that encompass what are now known as internal and external DSLs, but this also includes libraries of routines or classes that extend a programming language because they introduce new concepts and vocabulary.
+This widely used notion of ``language'' is what we have in mind when we discuss the problems associated to resource consumption in DSLs.
+
+An internal DSL is embedded into a general-purpose language (GPL).
+Often, preprocessors and meta-programming facilities, of either a dynamically typed host language or a statically typed language with type inference, are used to seamless integrate the DSL into the host language.
+Likewise, design patterns and reflection are used to implement some forms of internal DSLs, such as fluent APIs, and annotation-based languages.
 On the contrary, a ``\textit{program}'' written using an external DSL requires a separated translation process (i.e., compilation) in order to produce an artifact that can be integrated as part of an application.
-Both approaches have advantages and disadvantages.
-Internal DSLs can leverage all the features of their host languages, and it is easy to use constructors of the DSL as extensions of the host language.
-However, the concrete syntax of an internal DSL must be carefully crafted to cope with the constrains in the host language's syntax.
-On the contrary, there is complete freedom in deciding the concrete syntax of external DSLs; as a designer you can even choose not to use a textual syntax.
-Another interesting point is that Integrated Development Environment (IDE) support for internal DSLs is limited to the support provided to the host language.
+Both approaches have advantages and disadvantages that have been discussed elsewhere~\cite{Czarnecki2000, Stahl:2006:MSD:1196766}.
+%Internal DSLs can leverage all the features of their host languages, and it is easy to use constructors of the DSL as extensions of the host language.
+%However, the concrete syntax of an internal DSL must be carefully crafted to cope with the constrains in the host language's syntax.
+%On the contrary, there is complete freedom in deciding the concrete syntax of external DSLs; as a designer you can even choose not to use a textual syntax.
+%Another interesting point is that Integrated Development Environment (IDE) support for internal DSLs is limited to the support provided to the host language.
 
-MDSD consists of two major aspects: processing models and creating models.
-The creation of models can be achieved with graphical~\cite{Kolovos:2009:RLA:1564600.1564699, Biermann:2006:GDI:2087202.2087244} or textual editors~\cite{Merkle:2010:TMT:1869542.1869564}.
-Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625} is a well-known framework for defining new DSLs.
+In a typical scenario, models are translated to source code written in some GPL to enable their subsequent compilation and execution.
+However, models are also useful in other tasks such as generating test cases \cite{Kiffe2009,Gutierrez2015}, simulating a system behavior \cite{Broenink2012,brosig2015a,Bocciarelli2015425}, and formally verifying software properties \cite{Holzmann2004,Henriksson2005101,Moffett2013,DiGuglielmo20132013}. 
+To write programs using a DSL (create models conforming to a metamodel), it is often necessary to use graphical~\cite{Kolovos:2009:RLA:1564600.1564699, Biermann:2006:GDI:2087202.2087244} or textual editors~\cite{Merkle:2010:TMT:1869542.1869564}.
+In general, the definition of a new ``language'' is a complex task because, depending on the language features, it may involve the definition of a complete infrastrcture to deal with the DSL (i.e., editors, compilers, and simulators).
+Fortunately, approaches exist to ease the definition of DSLs.
+For instance, Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625} is a well-known tools that useful for defining new external DSLs (or for extending existing languages).
 It is an Eclipse-based framework which supports the definition of languages together with their syntaxes, semantic checkers, code generators and code editors.
 
 \paragraph{Support in MRTEs} 
@@ -285,7 +281,7 @@ String P0 = "FF[+F[+X]F[-X]+X]FF[-F[+X]F[-X]+X]+F[+X]F[-X]+X";
 \caption{Java code generated after translation (two iterations instead of seven)}\label{fig:l-system-generated}
 \end{subfigure}
 \end{mdframed}
-\caption{Simple OL-System to generate a plant in two dimensions. On the left} \label{lst:OL-system-example}
+\caption{Simple OL-System to generate a plant in two dimensions. On the left, the OL-System is represented using a DSL, on the right we show the tree that can be generated using such OL-System, below is the representation in Java.} \label{lst:OL-system-example}
 \end{figure}
 
 An important \textbf{feature to consider} by engineers who implement support \textbf{for resource awareness},
@@ -296,9 +292,9 @@ Interestingly, interaction between parts of a application written using DSLs can
 In the state machine example previously discussed, a state machine might trigger events in another state machine by simple executing some actions in one of its transitions.
 In a situation like that, a resource accounting framework should properly determine the change of execution context; unfortunately, implementing this can be computationally expensive. 
 
-\extracomment{TODO}{
-One paragraph to highlight how the problem we find with programs implemented using DSLs also exist when other mechanisms are used to define abstractions.
-}
+%\extracomment{TODO}{
+%One paragraph to highlight how the problem we find with programs implemented using DSLs also exist when other mechanisms are used to define abstractions.
+%}
 
 %The \textit{state machine} and \textit{L-system} languages clearly reflect differences between DSLs.
 %These differences are not surprising.
@@ -354,10 +350,6 @@ Component models, which include both features, are the target of our research.
 \item[Deployment of components at runtime:] since, we are dealing with the problem of supporting resource awareness in open environments, we focus on component models that allow component deployment at runtime.
 Many component models are able to cope with the necessity of adaptation through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components~\cite{Porter:2014:RMC:2602458.2602471, Zheng:2014:RCC:2679601.2680405, Irmert:2008:RAS:1370018.1370036, Ghezzi:2010:QDD:2163764.2163774}.
 \end{description}
-
-\extracomment{TODO}{
-A Figure to depict the problem of indirect vs direct accounting.
-}
 
 Other properties worth mentioning in this thesis are those that describe how components communicate.
 For instance,  whether the concept of \textit{port} is implemented; if there exists distinction between \textit{required/provided interfaces}; characteristics of the \textit{interface language}; and what is the \textit{communication type} (synchronous, unicast, and others).
@@ -419,13 +411,14 @@ Usually, components are organized as clients and providers, where a component (p
 It is then possible to account for resource consumption in two ways \cite{Miettinen2008,Maurel:2012:AME:2304736.2304763}:
 
 \begin{description}
+
+\item[indirect accounting:] all the resources consumed to serve a request that was originated in a component A are accounted to A (See Figure~\ref{fig:indirect-accounting}).
+In other words, there is no resource consumption accounted to service providers.
+
 \item[direct accounting:] the resources consumed during
-interaction are accounted to the provider.
+interaction are accounted to the provider (See Figure~\ref{fig:direct-accounting}).
 For instance, the CPU used by a code that belongs
 to component A is accounted to A, no matter if the code is executed on behalf of a client.
-
-\item[indirect accounting:] all the resources consumed to serve a request that was originated in a component A are accounted to A.
-In other words, there is no resource consumption accounted to service providers.
 \end{description}
 
 Both ways have advantages and disadvantages.
@@ -434,9 +427,30 @@ called in an endless loop, the resource usage will be accounted
 to the provider instead of to the client that executes such a loop.
 On the contrary, if a service is poorly implemented, in indirect accounting the user of the service is identified as the responsible.
 
-\extracomment{TODO}{
-One paragraph to discuss that there are two ways of measuring memory consumption: either the allocator is always responsible or the component that keeps an object live is responsible
-}
+\begin{figure}[ht]
+\begin{subfigure}{0.45\textwidth}
+\centering
+\includegraphics[scale=0.35]{./chapter2/fig/indirect-accounting.png}
+\caption{Indirect Accounting}\label{fig:indirect-accounting}
+\end{subfigure}
+\hspace{0.6cm}
+\begin{subfigure}{0.45\textwidth}
+\centering
+\includegraphics[scale=0.35]{./chapter2/fig/direct-accounting.png}
+\caption{Direct Accounting}\label{fig:direct-accounting}
+\end{subfigure}
+\caption{The two mechanisms to account for resource consumption when components interact.} \label{fig:accounting-methods}
+\end{figure}
+
+
+Similarly, two criteria exist to account for memory consumption in component-based systems.
+Usually, components interact, during this interaction they exchange objects that are typically created on one side of the interaction (e.g., a service component creates new objects in response to clients' requests).
+Indeed, a component may allocate space for an object. pass it to a client, and then forget about it.
+In that case, it is not clear what component should be accounted for the memory consumed by that particular object; it can be either the client or the original allocator.
+Both approaches have pros and cons.
+The intuition dictates that if a component is preventing an object of being collected it should be accounted for that particular block of memory.
+However, such an approach can be dangerous if a buggy (or malicious) component creates objects unnecessarily big. 
+Most existing solutions for memory consumption always follow on of the two criteria.
 
 A second aspect is to decide \textit{where should be implemented} the mechanism for resource consumption monitoring and reservation.
 Essentially, this consists in, selecting which actors implement the mechanism and policies to manage resources, and deciding if the actors collaborate to achieve their goal \cite{Crnkovic2011}.
@@ -825,7 +839,7 @@ The problem is that, when a solution is expressive and produce efficient tools, 
 Similarly, there is another interesting trade-off we have found; efficient tools that do not require detailed knowledge about the platform, have limited power to create arbitrary tools. 
 \end{description}
 
-\extracomment{FIXME :-)}{I must finish this}
+\extracomment{TODO :-)}{I must finish this}
 
 %\paragraph{DiSL: a domain-specific language for bytecode instrumentation, \cite{Marek:2012:DEL:2162037.2162046,Marek2012}}
 %Dynamic program analysis tools support numerous software engineering tasks, including profiling, debugging, and re-
@@ -969,48 +983,49 @@ Similarly, there is another interesting trade-off we have found; efficient tools
 
 
 
-\begin{comment}
-
-\section{Resource Awareness for Domain-specific Abstractions} \label{sec:resource-awareness-for-dsl}
-
-
-\subsection{Debugging support for DSLs}
-
-\end{comment}
-
 \section{Summary}
 
 
-Defining and using software abstractions is at the core of system development.
+Defining and using software abstractions is at the core of systems development.
 Once a new abstraction is defined, the tools used in the development process and to support resource awareness should be modified to make them reflect the new concepts.
 When these modification are not done, we argue that a mismatch exists between developer's view and the tooling's view.
-However, implementing this tooling support is tedious and error-pone.
+Alas, implementing this tooling support is tedious and error-pone.
 In this chapter, we have identified two challenges related to this complexity:
 
 \begin{itemize}
 \item A concrete abstraction may have specific features to consider when implementing tooling support.
-On the one hand, this features can derive into additional requirements for the tools, making even more complicated their implementation.
-On the other hand, some features can be useful to drive the behavior of systems that require support for resource awareness.
+By adding new requirements to the tools, these features hinder their implementation.
+At the same time, some features can be useful to drive the behavior of systems that require support for resource awareness.
 
-\item Given the mainstream trend of defining new software abstractions (for example with DSLs), it is necessary to ease the task of building their support.
-For instance, building a resource consumption monitor for a new DSL should simple enough as to make it affordable for DSL developers.
+\item Since new software abstractions are defined all the time (for example, using DSLs), it is necessary to ease the task of building their tooling support.
+For instance, building a resource consumption monitor for a new DSL should be simple enough as to make it affordable for DSL developers.
 \end{itemize}   
 
-In reviewing the state of the art of resource management for software abstractions, we realized that there are severe shortcomings in existing approaches that prevent their usage in production environments. In particular:
+In reviewing the state of the art of resource management for software abstractions, we realized that severe shortcomings in existing approaches prevent their usage in production environments.
+In regards to the matter of dealing with abstraction-specific features, the following issues exist:
 
 \begin{itemize}
-\item Limited support for resource accounting in component-based systems.
-They only target mainstream component models. In general they induce high performance overhead.
+\item Existing solutions offer limited support for resource accounting in component-based systems.
+Besides targeting only mainstream component models; they induce, in general, high performance overhead. 
 
-\item Sub-utilization of information about the architecture of systems.
+\item Most approaches that target component-based systems use little information about the architecture of the systems.
+In those cases where such knowledge is used, the goal is solely to improve the accuracy of resource consumption monitoring.
 
-\item Wrongly assume that resource consumption is homogeneous.
+\item Mechanisms exist to ease the construction of debuggers for new DSLs.
+As far as we know, no similar mechanism for profilers have been proposed.
 
-\item Limited capabilities for building tooling support.
+\end{itemize}
 
-\item Often, knowledge of low-level details is required.
+In addition, it is our opinion that current approaches, to build tooling support, lack the required simplicity and maturity. In particular:
 
-\item Lack of expressive power to build efficient tools.
+\begin{itemize}
+\item A deep understanding of low-level details of the target MRTE is often required to build tools for resource awareness.
+
+\item Memory profilers offer extension capabilities.
+Unfortunately, such extensions suffer from high overhead because they depend on methods to collect data that offer poor performance.
+
+\item Although several approaches are able to produce complex dynamic analysis tools, most of them are not capable of delivering such functionality with low overhead.
+Interestingly, the mechanisms that do offer a low overhead either require extensive knowledge of the platform or are limited in the kind of analysis they can perform.
 \end{itemize} 
 
 %
