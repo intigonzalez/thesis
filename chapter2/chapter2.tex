@@ -571,9 +571,9 @@ In that cases it is more complex to detect when components are communicating bec
 
 \subsection{State of the art on dealing with abstraction-specific features}
 
-\extracomment{TODO}{
-One paragraph to introduce the section
-}
+This section presents a number of approaches that tackle the problem of providing tooling support for developing applications using new software abstractions.
+In particular, it discusses some solutions for debugging domain-oriented abstractions.
+Furthermore, this section describes several mechanisms to monitor how components consume resources and to isolate such consumption.
 
 \paragraph{Providing resource awareness support for DSLs}
 As far as we know, there is little support for dealing with resource at per DSL level.
@@ -802,7 +802,7 @@ DeAl is a purely declarative language; in exchange for the declarative style and
 
 \subsection{Discussing the limitations}
 
-Although there exists many approaches that aim at reducing the complexity of writing tools to support resource-aware programming, in reviewing the literature we have found some limitations that prevent using such solutions in production environments.
+Although there exist many approaches that aim at reducing the complexity of writing tools to support resource-aware programming, in reviewing the literature we have found some limitations that prevent using such solutions in production environments.
 In particular, the identified limitations are related to three dimensions we can use to assess the overall quality of a mechanism: many techniques still require considerable knowledge about the target technology, tools built using existing approaches often induce high performance overhead, and most solutions lack the power to express how to build efficient tools.
 Unsurprisingly, these three dimensions are often in contradictions.
 For instance, most approaches that offer good performance overhead require considerable knowledge about the target technology.
@@ -820,26 +820,28 @@ The mechanisms that are able to keep a low overhead, do so by limiting the expre
 \item[Often, knowledge of low-level details is required] 
 The usability of a mechanism is complex to evaluate; the approaches we have presented have not been assessed in this dimension.
 Instead, these approaches follow empirical evidence that show the benefits of specific techniques.
-One of this evidences suggests that using already known languages may ease the development of dynamic analysis tools.
+One of these evidences suggests that using already known languages may ease the development of dynamic analysis tools.
 Hence, some solutions encourage the usage of Java to build profilers and others the utilization of a SQL-like language.
 Likewise, the empirical evidence suggests that paradigms, such as aspect-oriented programming, and functional programming, should be favored.
 The problem is that using known-languages and programming paradigms do not automatically reduce the complexity of writing tools.
 Actually, often the complexity is the result of having to deal with low-level details about the platform,
 and many techniques still require considerable knowledge of the target platform.
 In the same way, using aspect-oriented programming can also create additional problems.
-Indeed, since well-known frameworks, such as AspectJ, cannot be used to develop any profiler, new and unknown aspect frameworks must be used to implement such profilers.
+Indeed, since well-known frameworks, such as AspectJ, cannot be used to develop arbitrary profiler, new frameworks for aspect-oriented programming must be used to implement tools such profilers; the time required to learn these frameworks hinders the development of dynamic analysis tools.
 
-We think that approaches that use languages such as \textit{C/C++} may also complicate the developments of tools.
-Unfortunately, many techniques with low overhead can eb implemented using low-level technologies (such as JVMTI), or through a modification to a legacy MRTE.
+Although many techniques with low overhead can be implemented using low-level technologies (such as JVMTI), or through modifications to legacy MRTEs; 
+we think that approaches that use languages such as \textit{C/C++} and low-level APIs may also complicate the developments of tools.
 
 \item[Lack of expressive power to build efficient tools] 
-Powerful tools can be indeed produced using existing approaches.
-It does not mean that they are efficient.
-The problem is that, when a solution is expressive and produce efficient tools, it generally require extensive knowledge about low-level details.
-Similarly, there is another interesting trade-off we have found; efficient tools that do not require detailed knowledge about the platform, have limited power to create arbitrary tools. 
+Powerful tools can be indeed produced using existing approaches; it does not mean that they are efficient.
+We have found that, when a solution is expressive and produce efficient tools, it generally requires extensive knowledge of low-level details.
+It is not clear whether this trade-off is unavoidable.
+Some results suggest that writing efficient tools without sacrificing generality is possible at some extent \cite{Reiss:2008:CDP:1383559.1383566}.
+Unfortunately, most approaches that aim at simplifying the development of dynamic analysis tools, do not address he problem of efficiency with similar strength.
+ 
 \end{description}
 
-\extracomment{TODO :-)}{I must finish this}
+\extracomment{TODO :-)}{A short paragraph to close the section}
 
 %\paragraph{DiSL: a domain-specific language for bytecode instrumentation, \cite{Marek:2012:DEL:2162037.2162046,Marek2012}}
 %Dynamic program analysis tools support numerous software engineering tasks, including profiling, debugging, and re-
