@@ -26,6 +26,14 @@ Indeed, reconfiguration policies when a resource-consumption problem is found co
 In the context of distributed systems, the set of possible reconfigurations is larger and can include moving components across the distributed infrastructure.
 It is necessary to choose how to efficiently reconfigure the system to deal with the discovered fault.
 
+
+\paragraph{Custom memory profilers}
+In the future, we plan to address the limitations of the execution model we propose.
+In particular, we are aware that it is not as powerful as other query languages since it is based on a single traversal of the graph.
+The advantages of the chosen approach are that it guarantees a low impact on the performance and it is easy to weave with existent technique to explore the heap.
+An alternative we consider is to leverage the results from graph databases.
+It would provide two benefits: i) algebraic transformation of the queries with all the potential optimizations and, ii) an already known language for developers.
+
 \begin{comment}
 
 \subsection{Transfert du monde académique vers l'industrie }
