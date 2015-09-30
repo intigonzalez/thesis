@@ -24,7 +24,7 @@ Across this section we use Eclipse Memory Analyzer 1.4.0 (Eclipse MAT),  a produ
 We use  this tool in console user interface (CLI) mode that executes the desired analysis on a separate process.
 In short, when performing a memory analysis on a JVM instance \textit{A}, we dump its heap and invoke Eclipse MAT in a separate JVM instance to collect profiling data.
 
-We use DaCapo benchmarks version 2006-10-MR2~\cite{DaCapo:paper} with the large input size for the first experiment and with different input sizes in the second one.
+We use DaCapo benchmarks version 2006-10-MR2~\cite{Blackburn:2006:DBJ:1167473.1167488} with the large input size for the first experiment and with different input sizes in the second one.
 In the third experiment we use a set of actual applications based on OSGi, these applications are listed in the relevant section~\footnote{Links are available at https://en.wikipedia.org/wiki/OSGi}.
 Although the details are specific to each experiment, in general each measurement presented is the average of several runs under the same conditions.
 
@@ -53,7 +53,7 @@ The \textit{Heap Dump + Eclipse MAT} solution uses the approach described in sec
 every axis legend/.append style={nodes={right}},
 anchor=north,legend columns=1, font=\tiny},
 ylabel={Overhead (\%)},
-y label style={at={(0.06, 0.5)}},
+y label style={at={(0.02, 0.5)}},
 scaled y ticks = false,
       y tick label style={/pgf/number format/fixed,
       /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
@@ -61,8 +61,8 @@ scaled y ticks = false,
 xtick=data,ymin=0,
 width = \columnwidth,
 height = 4.2cm,
-bar width = 5,
-x tick label style={rotate=45,anchor=east, font=\small},
+bar width = 7,
+x tick label style={rotate=45,anchor=east},
  axis lines*=left, % Don't display the top and right lines
  symbolic x coords={antlr,fop,hsqldb,jython,chart,luindex,xalan,lusearch, pmd, eclipse}
 ]
@@ -108,10 +108,7 @@ The \textit{StructureType} definition guarantees that all objects are visited by
 %caption=Detecting if there exists an instance of a specific class, 
 %label=lst:SimpleAssertion,
 %float=!h,
-frame=none, 
-language=DSL2,numbers=left,
-numbersep=2pt,
-numberstyle=\color{black}\scriptsize,]
+language=DSL2]
 create structure foreach e:#["jvm"] using
    constructor
       initialObjects = #[]
@@ -132,7 +129,7 @@ legend style={at={(0.72,1)},
 every axis legend/.append style={nodes={right}},
 anchor=north,legend columns=1, font=\tiny},
 ylabel={Analysis Time (sec)},
-y label style={at={(0.06, 0.5)}},
+y label style={at={(0.1, 0.5)}},
 scaled y ticks = false,
       y tick label style={/pgf/number format/fixed,
       /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
@@ -140,7 +137,7 @@ scaled y ticks = false,
 xtick=data,ymin=0,
 width = \columnwidth,
 height = 4.2cm,
-bar width = 5,
+bar width = 4,
 x tick label style={rotate=45,anchor=east, font=\small},
  axis lines*=left, % Don't display the top and right lines
  symbolic x coords={antlr,fop,hsqldb,jython,chart,luindex,xalan,lusearch, pmd, eclipse}
@@ -159,14 +156,15 @@ x tick label style={rotate=45,anchor=east, font=\small},
 \end{tikzpicture}
 \caption{Analysis time with default input size\label{fig:analysisTimeDefaultSize}}
 \end{minipage}
- \begin{minipage}[t]{0.45\linewidth}
+\hspace{0.05\linewidth}
+\begin{minipage}[t]{0.45\linewidth}
  \centering
 \begin{tikzpicture}
-\begin{axis}[ybar=0pt, legend style={at={(0.23,1.13)},
+\begin{axis}[ybar=0pt, legend style={at={(0.28,1.13)},
 every axis legend/.append style={nodes={right}},
 anchor=north,legend columns=1, font=\tiny},
 ylabel={Analysis Time (sec)},
-y label style={at={(0.06, 0.5)}},
+y label style={at={(0.1, 0.5)}},
 scaled y ticks = false,
       y tick label style={/pgf/number format/fixed,
       /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
@@ -174,7 +172,7 @@ scaled y ticks = false,
 xtick=data,ymin=0,
 width = \columnwidth,
 height = 4.2cm,
-bar width = 5,
+bar width = 4,
 x tick label style={rotate=45,anchor=east, font=\small},
  axis lines*=left, % Don't display the top and right lines
  symbolic x coords={antlr,fop,hsqldb,jython,chart,luindex,xalan,lusearch, pmd, eclipse}
@@ -220,10 +218,6 @@ The complete profiler's definition is shown below:
 %caption=Calculating the consumption of top components,
 %label=topcomponents,
 %float=!h, 
-frame=none,
-numbers=left,
-numbersep=2pt,
-numberstyle=\color{black}\scriptsize,
 language=DSL2]
 create structure foreach e:classloaders using
   constructor
@@ -261,7 +255,7 @@ Since this function is costly to compute, Eclipse MAT spends a considerable amou
 every axis legend/.append style={nodes={right}},
 anchor=north,legend columns=1, font=\tiny},
 ylabel={Analysis Time (sec)},
-y label style={at={(0.06, 0.5)}},
+y label style={at={(0.02, 0.5)}},
 scaled y ticks = false,
       y tick label style={/pgf/number format/fixed,
       /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
@@ -269,7 +263,7 @@ scaled y ticks = false,
 xtick=data,ymin=0,
 width = \columnwidth,
 height = 4.2cm,
-bar width = 5,
+bar width = 7,
 x tick label style={rotate=45,anchor=east, font=\small},
  axis lines*=left, % Don't display the top and right lines
  symbolic x coords={Eclipse Luna, NetBean 8.0, dotCMS 3.1,Cytoscape 3.2.1,Glassfish 4.1, Liferay 6.2.2, WildFly 8.2}

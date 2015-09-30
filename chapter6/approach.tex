@@ -1,11 +1,11 @@
 \section{Approach}\label{sec:approach}
 
-In this paper, we propose a tool to create custom memory profilers for managed runtime environments (MREs) such as Java.
+In this chapter, we propose a tool to create custom memory profilers for MRTEs.
 We are interested on easing the task of defining new profilers without sacrificing their performance regarding CPU consumption.
 Keeping the profiler's overhead as low as possible is of utmost importance for us because lightweight profilers can be use both during the development phase and during the application execution in a production environment.
 To reach this goal, we propose a Domain Specific Language (DSL) and its code generator which aims at describing and generating efficient online memory profilers. 
 
-We next present the syntax, semantic and usage examples of our domain-specific language.
+We next present the syntax, semantics and usage examples of our domain-specific language.
 
 
 \subsection{Brief overview of the domain}
@@ -42,7 +42,7 @@ In particular, it provides (i) a function to evaluate whether an object is membe
 
 \subsection{Abstract Syntax}\label{sec:abstract-syntax}
 
-The metamodel shown in figure~\ref{fig:as} describes the abstract syntax of our DSL.
+The metamodel shown in Figure~\ref{fig:as} describes the abstract syntax of our DSL.
 The main concept of this metamodel is a \textit{CustomProfiler} which is composed of \textit{UserDefined} types and a \textit{StructureFactory}.
 The concepts related to \textit{UserDefined} types are shown on the left part of the metamodel, while the right part describes the \textit{StructureFactory} which represents both the set of  structures to identify and the value to compute on these structures.
 
@@ -53,7 +53,9 @@ Likewise, a \textit{list} refer to a \textit{base type}; hence all the members o
 In a custom profiler, \textit{UserDefined} types can be composed in arbitrary ways as long as no type contains a recursive declaration.
 We can formalize such a constrain using OCL (Object Constraint Language~\footnote{http://www.omg.org/spec/OCL/}):
 
-\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:membership, language=OCL, frame=none, aboveskip=2mm, belowskip=2mm]
+\begin{lstlisting}[escapeinside={(*}{*)},
+label=fig:membership,
+language=OCL, frame=tblr]
 context Record inv: 
    not fields->oclAsSet()->closure(t)->exists(t | t = self)
 
@@ -71,14 +73,14 @@ A \textit{StructureFactory} contains an \textit{Expression} through the \textit{
 Notice that a single instance of \textit{StructureFactory} creates many data structures in memory; thus the \textit{Expression} corresponds to a list indicating that a new structure must be instantiated for each element of the list.
 Forcing the \textit{Expression} to be a \textit{List} can be easily formalized using OCL:
 
-\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:instances, language=OCL, frame=none, aboveskip=2mm, belowskip=2mm]
+\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:instances, language=OCL, frame=tblr]
 context StructureFactory inv: instances.type.oclIsTypeOf(List)
 \end{lstlisting}
 
 Defining a new \textit{StructureFactory} implies defining its \textit{type} which is an instance of \textit{StructureType}.
 This concept describes the mechanism used to populate, out of objects, a structure and its information.
 In short, each structure in memory instanciated through a \textit{StructureFactory} has a type \textit{StructureType}.
-For example, we may be interested in finding all the \textit{SimplyLinkedList} in the memory snapshot depicted in figure~\ref{fig:simple_snapshot}.
+For example, we may be interested in finding all the \textit{SimplyLinkedList} in the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}.
 In such a case, there are two \textit{SimplyLinkedList}, but we only need one mechanism to identify them because they have the same pattern in memory. 
 
 \begin{figure*}
@@ -90,7 +92,7 @@ In such a case, there are two \textit{SimplyLinkedList}, but we only need one me
 
 \begin{figure}
 \centering
-\includegraphics[width=0.87\linewidth]{chapter6/fig/lists}
+\includegraphics[width=0.65\linewidth]{chapter6/fig/lists}
 \caption{Memory snapshot with three linked lists}
 \label{fig:simple_snapshot}
 \end{figure}
@@ -101,9 +103,9 @@ Observe that \textit{variables} do not refer to a \textit{Type}.
 Our DSL is strongly typed and the \textit{type} of each user-defined variable is inferred from its initial value.
 Nevertheless, there is a built-in variable in each \textit{StructureType} that is only accessible during initialization.
 Its type is predetermined as part of the language specification.
-We force the usage of the proper type using OCL:
+We force the use of the proper type using OCL:
 
-\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:instances, language=OCL, frame=none, aboveskip=2mm, belowskip=2mm]
+\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:instances, language=OCL, frame=tblr]
 context StructureType inv:  initialValues->exists(a: Assignment | 
      a.lvalue.name = 'initialObjects' and a.rvalue.type.oclIsTypeOf(List)
    ) 
@@ -115,7 +117,7 @@ This set of \textit{Assignments} is used to compute the actual value of the memo
 The major constraint regarding these \textit{updates} is that they must refer to already initialized \textit{variables} and the new assigned values must match the previous types.
 We formalize such a constrain using OCL:
 
-\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:lvalue, language=OCL, frame=none, aboveskip=2mm, belowskip=2mm]
+\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:lvalue, language=OCL, frame=tblr]
 context StructureType inv:  updates->forAll(a: Assignament | 
     self.initialValues->exists(aa : Assignament | 
        aa.lvalue = a.lvalue and aa.rvalue.type = a.rvalue.type
@@ -123,7 +125,7 @@ context StructureType inv:  updates->forAll(a: Assignament |
 \end{lstlisting}
 
 In our DSL, \textit{expressions} play a big role.
-For the sake of readability, figure~\ref{fig:as} only shows a couple of concepts related to them.
+For the sake of readability, Figure~\ref{fig:as} only shows a couple of concepts related to them.
 However, it is noteworthy that, in addition to \textit{arithmetic}, \textit{boolean} and \textit{literals} for basic types, the language includes lambda expressions, literal for records and lists.
 Moreover, the language defines \textit{built-in rvalues} which are nothing but expressions initialized by the runtime within a specific scope.
 Instead of being user-defined, the types of these expressions are also defined by the runtime.
@@ -132,7 +134,7 @@ Among the firsts, we have the list of  \textit{objects}, a reference to the \tex
 Target dependent \textit{rvalues} in Java include the list of \textit{loaded classes} and the list of \textit{threads}.
 The precise meaning of these \textit{rvalues} as well as their scopes are precisely discussed in sections~\ref{sec:concrete-syntax}, ~\ref{sec:semantic} and~\ref{sec:implementation} along the concrete syntax, the language semantic and the tooling support.
 
-Finally, if we use the memory snapshot depicted in figure~\ref{fig:simple_snapshot}, calculating the number of nodes belonging to a specific \textit{SimplyLinkedList} is an example that illustrates the language's concepts.
+Finally, if we use the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}, calculating the number of nodes belonging to a specific \textit{SimplyLinkedList} is an example that illustrates the language's concepts.
 To solve this problem we can instantiate the metamodel of our DSL as follow:
 \begin{itemize}
 \item Define a \textit{StructureFactory} in which the \textit{instances} property is a list which contains the objects \textit{list0} and \textit{list1}.
@@ -149,16 +151,12 @@ Further details about this example are discussed in the next section.
 \subsection{Concrete Syntax}\label{sec:concrete-syntax}
 
 A textual concrete syntax has been defined for our DSL allowing the domain expert to define a custom memory profiler.
-As an example, the next listing shows how to compute the length of each \textit{SimplyLinkedList} in the memory snapshot depicted in figure~\ref{fig:simple_snapshot}.
+As an example, the next listing shows how to compute the length of each \textit{SimplyLinkedList} in the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}.
 The mechanism is based on counting the number of \textit{NodeEntry} referenced by the \textit{SimplyLinkedList}.
 Each \textit{NodeEntry} is used to wrap one element of data and to point to the next element.
 
 \begin{lstlisting}[escapeinside={(*}{*)}, 
-label=lst:listLengt, language=DSL2,
-numbersep=2pt,
-numbers=left,
-numberstyle=\color{black}\scriptsize,
-frame=none
+label=lst:listLengt, language=DSL2
 ]
 create structure foreach e:objects.filter(l| l is SimplyLinkedList) using
   constructor
@@ -180,7 +178,7 @@ Line 3 in particular initializes the set of objects included in the structure.
 Notice the usage of a list literal to include the object referenced by \textit{e}.
 In the initialization scope, the rvalue \textit{e} is equal to one of the element within the list of structures - either \textit{list0} or \textit{list1}.
 
-In line 6 we define the membership function, which is used to determine if an object is part of the structure.
+In line 5 we define the membership function, which is used to determine if an object is part of the structure.
 There are four built-in rvalues during the evaluation of the function as well as during the update of the variables.
 First, the value named \textit{this} is the current visited object. 
 The \textit{membership} boolean \textit{expression} aims at determining if this object is part of the \textit{structure} or not. 
@@ -189,9 +187,9 @@ As our runtime profiler will traverse the graph of in memory objects following r
 The last value, which is target dependent, is the kind of reference.
 Operator \textbf{is} checks if \textit{this} is an instance of class \textit{NodeEntry}.
 Likewise, operator \textbf{in} checks whether the \textit{referrer} is already a member of the structure.
-Finally, line 8 updates the length of the list when an object is detected as member of the structure.
+Finally, line 7 updates the length of the list when an object is detected as member of the structure.
 
-\subsection{Semantics}\label{sec:semantic}
+\subsection{Translational Semantics}\label{sec:semantic}
 
 An instance of our metamodel is compiled into a custom memory profiler.
 This compilation produces a library written in \textit{C++} which is in charge of collecting the desired information from the runtime environment.
@@ -199,7 +197,7 @@ The generated source code has two parts.
 First, for each \textit{StructureType} in the model, the compiler generates a subclass of \textit{AbstractStructureType} which is shown below.
 Every subclass contains attributes to store the variables used in the associated \textit{StructureType}.
 In the listing below, the class \textit{Context} holds the built-in values we mention in the previous section.
-\begin{lstlisting}[language=C++, frame=none,
+\begin{lstlisting}[language=C++, frame=tblr,
 numbers=left,
 numberstyle=\color{black}\scriptsize,]
 class AbstractStructureType {
@@ -213,7 +211,7 @@ public:
 The second part of the generated code is formed by a set of initialization routines, one for each \textit{StructureFactory}.
 Each routine creates a list of structures with a specific \textit{AbstractStructureType} - the \textit{T} parameter in the listing.
 Formally, the signature and behavior of these routines are as follow:
-\begin{lstlisting}[language=C++, frame=none,
+\begin{lstlisting}[language=C++, frame=tblr,
 numbers=left,
 numberstyle=\color{black}\scriptsize,]
 template <typename T> void
@@ -256,7 +254,7 @@ The creation of the context in line 5 depends on the target platform.
 It basically creates values such as the list of objects in memory or the list of loaded classes.
 The latter loop traverses all the references among objects in memory.
 During each iteration, the algorithm finds the first structure for which the membership function is true.
-Notice that we only select the first because for some memory accounting problems, it is too hard to define a membership functions that build disjoints structures~\cite{dsn/09/geoffray/ijvm, cbse/14/attouchi/monitoring}.
+Notice that we only select the first because for some memory accounting problems, it is too hard to define a membership functions that build disjoints structures~\cite{dsn/09/geoffray/ijvm,Attouchi:2014:MMM:2602458.2602467}.
 Thereafter, the information for such a structure is updated.
 
 %The complete execution of a program in our language is as follow. Subgraph instances are initialized using listing~\ref{onInitialization}.
@@ -283,10 +281,7 @@ The assertion successes if the heap contains an object with an attribute named $
 
 \begin{lstlisting}[escapeinside={(*}{*)},
 %label=assertion, 
-numbersep=2pt,
-numbers=left,
-numberstyle=\color{black}\scriptsize,
-language=DSL2,frame=none]
+language=DSL2]
 create structure foreach e:#["whole-jvm"] using
   constructor
     initialObjects = #[]
@@ -304,11 +299,7 @@ This technique is used to detect if one object has been garbage collected or if 
 \begin{lstlisting}[escapeinside={(*}{*)},
 %caption=Detecting a knwon bug in pseudojbb., 
 %label=pseudojbb,
-%float=!h, 
-frame=none,
-numbersep=2pt,
-numbers=left,
-numberstyle=\color{black}\scriptsize,
+%float=!h,
 language=DSL2]
 create structure foreach e:#["whole-jvm"] using
   constructor
@@ -326,11 +317,7 @@ We can notice how the membership property discards those objects that are not re
 \begin{lstlisting}[escapeinside={(*}{*)},
 caption={Calculating objects reachables from threads},
 label=kevoreeaccounting,
-%float=!h, 
-numbersep=2pt,
-frame=t,
-numbers=left,
-numberstyle=\color{black}\scriptsize,
+%float=!h,
 language=DSL2]
 create structure foreach e:#["whole-jvm"] using
   constructor
@@ -344,7 +331,7 @@ create structure foreach e:#["whole-jvm"] using
 \end{lstlisting}
 
 We can also express complex structures in memory.
-For instance, to find the consumption of K3-Al object namely \textit{K3Object} as described in section~\ref{sec:motivation}, we must find all instances of \textit{HashMap.Entry} that have \textit{K3Object} as the \textit{key}. These entries should be added to the consumption of the object \textit{K3Object} as well as all the objects reachable from the \textit{HashMap.Entry.value}.
+For instance, to find the consumption of K3-Al object namely \textit{K3Object} as described in Section~\ref{sec:chapter2-introduction}, we must find all instances of \textit{HashMap.Entry} that have \textit{K3Object} as the \textit{key}. These entries should be added to the consumption of the object \textit{K3Object} as well as all the objects reachable from the \textit{HashMap.Entry.value}.
 To come out with this solution a good understanding of how K3-Al implements aspects is required.
 The rationale here is that K3-Al stores the state of aspects in a separate HashMap, using as key the object to be aspectized.
 
@@ -352,10 +339,6 @@ The rationale here is that K3-Al stores the state of aspects in a separate HashM
 %caption=Computing the consumption of each K3-Al Object along with its aspects., 
 %label=k3,
 %float=!h, 
-numbersep=2pt,
-frame=none,
-numbers=left,
-numberstyle=\color{black}\scriptsize,
 language=DSL2]
 create structure foreach e:objects(*{.filter}*)([it|it is K3Object]) using
   constructor
