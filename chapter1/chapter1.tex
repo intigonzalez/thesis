@@ -10,7 +10,7 @@
  
  \vspace{1 mm}
 
- \emph{The Wolf} - That's thirty minutes away. I'll be there in ten. \hspace*{36 mm} 
+ \emph{The Wolf} - That's thirty minutes away. I'll be there in ten. [\dots] \hspace*{27 mm} 
  
  \vspace{1 mm}
  
@@ -27,7 +27,7 @@
  
  \vspace{1 mm}
  
- \emph{The Wolf} - [\dots] what I need you two fellas \textbf{(meaning Jules and Vincent)} to \hspace*{2 mm} \\
+ \emph{The Wolf} - [\dots] what I need you two fellas \textbf{(meaning \textit{Jules} and \textit{Vincent})} to \hspace*{2 mm} \\
                    do is take those cleaning products and clean the inside of the car [\dots] \hspace*{62 mm} \\
                     \vspace{-5 mm}
 				   Jimmie, [\dots] I need blankets, need comforters, need quilts [\dots] need \hspace*{1 mm} \\
@@ -49,11 +49,10 @@ Finally, this chapter concludes by highlighting the lack of proper support to de
 \section{Resource-Aware Programming} \label{sec:resource-awareness}
 
 Efficient use of computational resources is an essential concern in software systems because it can reduce the costs of the infrastructure needed to execute applications.
-Resource management is nevertheless particularly challenging when many stakeholders share a platform.
-As a consequence, a traditional approach for resource management in applications is to rely on the runtime environment (e.g., managing resources is traditionally a main concern of operating systems); and using the environment's generic API to access resources.
+Resource management is always a complex task; nevertheless, it is particularly challenging when many stakeholders share a platform.
+As a consequence of this complexity, applications access resources by using generic APIs of the runtime environment, which is then in charge of coping with resource management concerns (e.g., managing resources is traditionally a main concern of operating systems).
 Although there are many advantages associated to this approach, it is known that applications built upon such generic interfaces often show relative poor performance \cite{engler1995exokernel}.
-The problem arises because the implementation of a general purpose abstraction must cover many use-cases.
-This results in complex execution paths where few assumptions regarding how the abstraction will be used can be made.
+The problem arises because the implementation of a general purpose mechanism for resource management must cover many use-cases; this results in complex execution paths where nothing can be assumed regarding how client applications will consume resources.
 It has been shown that the performance of many resource intensive systems can be improved by carefully specializing resource management at the application level \cite{engler1995exokernel,Belay:2014:IPD:2685048.2685053,Marinos:2014:NSS:2619239.2626311}.
 
 The principle of bypassing a generic implementation in favor of a specialized one has been widely applied in computer science and software engineering \cite{engler1995exokernel, Munro1996,Dragos:2009:CGT:1565824.1565830,Marinos:2014:NSS:2619239.2626311}.
@@ -435,6 +434,12 @@ Since these methods require heavy modifications to existent execution environmen
 However, the performance overhead of these techniques tend to be low.
 Finally, there exist approaches where a mixing of different techniques is used.
 
+An other class of approach related to measuring how applications consume resources is worth mentioning.
+Static analysis methods are useful to find properties of a system by just looking at its static description (i.e., source code) without dynamically monitoring its behavior.
+Some approaches are able to determine the worst case execution time of a Java application~\cite{Schoeberl:2010:WET:1780354.1780356}, and to calculate the worst case memory consumption of \textit{C} applications~\cite{Puffitsch:2010:WAH:1939345.1939394} (this is not applicable to MRTEs because of the garbage collector).
+The problem with these solutions is that developers must annotate the source code.
+Unfortunately, it is unlikely that such a practice will be widely adopted.
+
 In the rest of this section, several concrete approaches are described.
 
 
@@ -558,7 +563,7 @@ Supporting resource reservation in MRTEs has been mostly done using non-portable
 As a matter of fact, most approaches are based on heavy modifications to already existing MRTEs in order to add resource reservation capabilities on top of more common features.
 Moreover, as presented in the following paragraphs, MRTE specific solutions are only able to reserve a few types of resources.
 On the contrary, OS specific solutions, that are able to deal with many type of resources, are available in modern OSes.
-In the same way, some work has been done in devising \textit{fully portable} resource reservation upon existent MRTEs.
+In the same way, some work have been done in devising \textit{fully portable} resource reservation upon existent MRTEs.
 
 KaffeOS is a modified JVM which supports the concept of isolated process at the virtual machine level \cite{back_processes_2000, Back:2005:KJR:1075382.1075383}.
 It offers common operations such as process forking and inter-process communication.
@@ -593,7 +598,7 @@ To enforce limits on a thread, it must be attached to a cgroup.
 Since virtually all threads in the system can be attached to cgroups, it is possible to use the mechanism
 to provide resource reservation.
 The Linux kernel includes cgroups subsystems for resources such as CPU, memory, network bandwidth and IO throughput.
-Each subsystem have, however, constraints regarding how they can be used.
+Each subsystem has, however, constraints regarding how they can be used.
 For instance, the memory subsystem measures the consumption at per page level (i.e., 4K pages) which is of course not useful if a memory page contains objects that belong to different managed threads in a JVM. 
 Similarly, FreeBSD offers Jails \cite{Kamp00jails:confining} and resource limits that can also be used to control resource usage and per thread resource reservation.
 
@@ -623,7 +628,7 @@ The table is split in three sections: first, a set of approaches that target sol
 The data provided in column \textit{Overhead} are taken from the research papers covered by the two previous sections.
 This table shows a clear picture of existent trade-offs in the design of solutions to support resource aware programming.
 In the remainder of this section, these trade-offs and practices are discussed.
-Additionally, the weaknesses of different techniques (Some values in the table are marked with the symbols $ \downarrow $ and $\downarrow\downarrow$, denoting weak and very weak points respectively.) are detailed highlighted.
+Additionally, the weaknesses of different techniques (Some values in the table are marked with the symbols $ \downarrow $ and $\downarrow\downarrow$, denoting weak and very weak points respectively.) are highlighted.
 The rest of the section also gives an insight of some good practices that help to create better solutions.
 
 % weak points
@@ -718,15 +723,15 @@ Representative cases of this issue are the techniques for monitoring of CPU and 
 The frameworks for portable profiling presented by Binder et al. \cite{Binder200645, Binder:2009:PPV:1464245.1464249} are others scenarios where the overhead is high because of the data being collected (calling-context tree).
 Finally, using adaptive monitoring and profiling techniques is a design decision that greatly reduces the overhead.
 In particular, using a dynamic condition to change the profiling level may have a significant impact on the running system \cite{Dmitriev:2004:PJA:974043.974067, citeulike:481405}.
-Likewise, as shown in \cite{Maurel:2012:AME:2304736.2304763}, adjusting the monitoring level using simple heuristics to reduce overhead may be decisive in a production environment.
+Likewise, as shown in~\cite{Maurel:2012:AME:2304736.2304763}, adjusting the monitoring level using simple heuristics to reduce overhead may be decisive in a production environment.
 
-Some limitations on the data shown in table \ref{tab:approaches-accounting-reservation} are worth mentioning.
+Some limitations on the data shown in table~\ref{tab:approaches-accounting-reservation} are worth mentioning.
 First, the overhead for MVM and KaffeOS do not take into account additional slowdown that may occur if these platforms are used to isolate components that are tightly coupled. 
 In scenarios like this, the overall performance would suffer because a form of IPC would be necessary.
 A second limitation is the lack of good data about the performance overhead of OS specific approaches.
 In particular, as far as we known, there is no detailed experiments on such overhead.
 There are however partial experimental results.
-For instance, using per thread hardware performance counter can produce a 20\% overhead in context-switch~\cite{Weaver2013}; and they can also produce considerable overhead when used in time based sampling \cite{Weaver2015}.
+For instance, using per thread hardware performance counter can produce a 20\% overhead in context-switch~\cite{Weaver2013}; and they can also produce considerable overhead when used in time based sampling~\cite{Weaver2015}.
 
 \paragraph{On the issue of portability.}
 As expected, portable solutions produce higher overhead than OS and MRTE specific approaches.
