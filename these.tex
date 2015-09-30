@@ -69,7 +69,7 @@
 %\usepackage{todonotes}
 
 \usepackage{amssymb}% http://ctan.org/pkg/amssymb
-\usepackage{pifont}% http://ctan.org/pkg/pifont
+%\usepackage{pifont}% http://ctan.org/pkg/pifont
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
 \newcommand{\todo}[1]{{{\em TODO}: \bf #1}}
@@ -120,10 +120,11 @@
 \makeindex %%
 \def\underscore{\char`\_}
 
-\begin{document}%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
 
 
 \addtocounter{page}{-1}
+
 %\fontfamilly{phv}
 
 %%  1ere de Couverture:
@@ -146,7 +147,7 @@ Supporting \\ resource-awareness in \\ managed runtime environments.
 \ComposanteUniversitaire{} % sauf INSA
 
 %% La composition du jury : prénom, nom, titre
-%\President[M]{Thierry}{Jeron}{Directeur de recherche à l'INRIA}         %% le président du jury
+% % %\President[M]{Thierry}{Jeron}{Directeur de recherche à l'INRIA}         %% le président du jury
 \Advisor{Olivier}{Barais}{Chercheur, INRIA Rennes - Bretagne Atlantique}
 \Advisor{Johann}{Bourcier}{Maître de conférences, Université du Rennes 1}
 \Advisor{John}{Doe}{Maître de conférences, Université du Rennes 1}
@@ -199,6 +200,9 @@ Supporting \\ resource-awareness in \\ managed runtime environments.
 %%  Main Chapters             %%
 %%----------------------------%%
 
+%\fontfamily{times}
+
+
 \input{./introduction/introduction}
 \part{State of the art}
 \input{./chapter1/chapter1}
@@ -207,7 +211,7 @@ Supporting \\ resource-awareness in \\ managed runtime environments.
 \input{./chapter5/chapter5}
 %\input{./chapter4/chapter4}
 %\part{How we manage other kind of abstractions}
-%\input{./chapter6/chapter6}
+\input{./chapter6/chapter6}
 
 \part{Conclusions and Perspectives}
 %\input{./conclusion/conclusion}
