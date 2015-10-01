@@ -856,6 +856,10 @@ Many times, the tools that we can build, using the approaches presented in the p
 This is particularly true for solutions based on bytecode rewriting, but also for other approaches, such as JVMPI, that are based on events.
 This is not surprising; as we discuss in the previous chapter, bytecode rewriting and other techniques tend to produce high overhead.
 The mechanisms that are able to keep a low overhead, do so by limiting the expressive power of the tools (as in DeAl~\cite{Reichenbach:2010:GCE:1869459.1869482}), and by reducing the accuracy of the tools in certain cases (as in DYPER \cite{Reiss:2008:CDP:1383559.1383566}). 
+We have found that, when a solution is expressive and produce efficient tools, it generally requires extensive knowledge of low-level details.
+It is not clear whether this trade-off is unavoidable.
+Some results suggest that writing efficient tools without sacrificing generality is possible at some extent \cite{Reiss:2008:CDP:1383559.1383566}.
+Unfortunately, most approaches that aim at simplifying the development of dynamic analysis tools, do not address the problem of efficiency with similar strength.
 
 
 \item[Often, knowledge of low-level details is required] 
@@ -872,114 +876,125 @@ Indeed, since well-known frameworks, such as AspectJ, cannot be used to develop 
 
 Although many techniques with low overhead can be implemented using low-level technologies (such as JVMTI), or through modifications to legacy MRTEs; 
 we think that approaches that use languages such as \textit{C/C++} and low-level APIs may also complicate the developments of tools.
-
-\item[Lack of expressive power to build efficient tools] 
-Powerful tools can be indeed produced using existing approaches; it does not mean that they are efficient.
-We have found that, when a solution is expressive and produce efficient tools, it generally requires extensive knowledge of low-level details.
-It is not clear whether this trade-off is unavoidable.
-Some results suggest that writing efficient tools without sacrificing generality is possible at some extent \cite{Reiss:2008:CDP:1383559.1383566}.
-Unfortunately, most approaches that aim at simplifying the development of dynamic analysis tools, do not address the problem of efficiency with similar strength.
  
 \end{description}
 
-\extracomment{TODO :-)}{A short paragraph to close the section}
+Figure~\ref{fig:position-approaches-to-simplify} depicts the characteristics of each approach, and how close they are to an ``ideal'' solution.
+The area is split in four regions that represent in which conditions an approach.
+The \textit{usability} axes represents how ``easy'' to use is an approach while the \textit{overhead} axes shows whether the tools built with a solution are efficient. 
+Meanwhile, the size of a circumference shows how generic is an approach.
+The ``values'' to locate each approach are obtained by carefully analyzing the respective description in the previous section.
+Although these are fuzzy values based on our judgment, they are useful to express an actual fact: every single solution has some limitations that prevent its use as mechanism to create dynamic analysis tools. 
 
-%\paragraph{DiSL: a domain-specific language for bytecode instrumentation, \cite{Marek:2012:DEL:2162037.2162046,Marek2012}}
-%Dynamic program analysis tools support numerous software engineering tasks, including profiling, debugging, and re-
-%verse engineering.
-%Prevailing techniques for building dynamic analysis tools are based on low-level abstractions
-%that make tool development tedious, error-prone, and expensive. To simplify the development of dynamic analysis tools,
-%some researchers promoted the use of aspect-oriented programming (AOP). However, as mainstream AOP languages
-%have not been designed to meet the requirements of dynamic analysis, the success of using AOP in this context remains
-%limited. For example, in AspectJ, join points that are important for dynamic program analysis (e.g., the execution of
-%bytecodes or basic blocks of code) are missing, access to reflective dynamic join point information is expensive, data
-%passing between woven advice in local variables is not supported, and the mixing of low-level bytecode instrumentation
-%and high-level AOP code is not foreseen. In this talk, we present DiSL [1], a new domain-specific aspect language for
-%bytecode instrumentation.
-%DiSL uses Java annotation syntax such that standard Java compilers can be used for compiling
-%DiSL code. The language features an open join point model, novel constructs inspired by weave-time evaluation of
-%conditional join points and by staged execution, and access to custom static and dynamic context information.
-%Moreover, the DiSL weaver guarantees complete bytecode coverage.
-%We have implemented several dynamic analysis tools in DiSL,
-%including profilers for the inter- and intra-procedural control
-%flow, debuggers, dynamic metrics collectors integrated in the
-%Eclipse IDE to augment the static source views with dynamic information, and tools for workload characterization.
-%These tools are concise and perform equally well as implementations using low-level techniques. DiSL has also been
-%conceived as an intermediate language for future domain-specific analysis languages, as well as for AOP languages.
-%
-%\paragraph{Javana: A System for Building Customized Java Program Analysis Tools, \cite{Maebe06javana:a}}
-%Understanding the behavior of applications running on high-level
-%language virtual machines, as is the case in Java, is non-trivial because of the tight entanglement at the lowest execution level between the application and the virtual machine.
-%
-%This paper proposes Javana, a system for building Java program analysis tools.
-%Javana provides an easy-to-use instrumentation infrastructure that allows
-%for building customized profiling tools very quickly.
-%Javana runs a dynamic binary instrumentation tool underneath
-%the virtual machine. The virtual machine communicates with the
-%instrumentation layer through an event handling mechanism for
-%building a vertical map that links low-level native instruction pointers and memory addresses to high-level language concepts such as
-%objects, methods, threads, lines of code, etc.
-%The dynamic binary instrumentation tool then intercepts all memory accesses and instructions executed and provides the Javana end user with high-
-%level language information for all memory accesses and natively
-%executed instructions.
-%
-%We demonstrate the power of Javana through a number of applications: memory address tracing, vertical cache simulation and
-%object lifetime computation.
-%For each of these applications, the instrumentation specification requires only a small number of lines
-%of code.
-%Developing similarly powerful profiling tools within a virtual machine (as done in current practice) is both time-consuming
-%and error-prone; in addition, the accuracy of the obtained profiling
-%results might be questionable as we show in this paper.
-%\paragraph{Flexible and efficient profiling with aspect-oriented programming, \cite{Binder:2006:FEM:1173706.1173733}}
-%Many profilers for virtual execution environments, such as the Java virtual machine (JVM), are implemented with low-level bytecode instrumentation techniques, which is tedious, error-prone, and complicates maintenance and extension of the tools.
-%In order to reduce the development time and cost, we promote building profilers for the JVM using high-level aspect-oriented programming (AOP).
-%We show that the use of aspects yields concise profilers that are easy to develop, extend, and maintain, because low-level
-%instrumentation details are hidden from the tool developer.
-%In order to build efficient profilers, we introduce inter-advice communication, an extension to common AOP languages that enables efficient data passing
-%between advices that are woven into the same method using local variables.
-%We illustrate our approach with two case studies.
-%First, we show that an existing, instrumentation-based tool for listener latency
-%profiling can be easily recast as an aspect.
-%Second, we present an aspect for comprehensive calling context profiling.
-%In order to reduce profiling overhead, our aspect parallelizes application execution and profile
-%creation, resulting in a speedup of 110\% on a machine with more than two cores, compared with a primitive, non-parallel approach
-%\paragraph{A portable and customizable profiling framework for Java based on bytecode instruction counting, \cite{Binder2005}}
-%Prevailing profilers for Java, which rely on standard, native-code profiling interfaces, are not portable, give imprecise results due to serious measurement perturbation, and cause excessive overheads.
-%In contrast, program transformations allow to generate reproducible profiles in a fully portable way with significantly less overhead.
-%This paper presents a profiling framework that instruments Java programs at the bytecode level to build context-sensitive execution profiles at runtime.
-%The profiling framework includes an exact profiler as well as a sampling profiler.
-%User-defined profiling agents can be written in pure Java, too, in order to customize the runtime processing of profiling data.
-%\paragraph{Profiling with AspectJ, \cite{Pearce:2007:PA:1248445.1248448}}
-%This paper investigates whether AspectJ can be used for efficient profiling of Java programs.
-%Profiling differs from other applications of AOP (e.g. tracing), since it necessitates efficient and often complex
-%interactions with the target program.
-%As such, it was uncertain whether AspectJ could achieve this goal.
-%Therefore, we investigate four common profiling problems (heap usage, object lifetime, wasted time and
-%time-spent) and report on how well AspectJ handles them.
-%For each, we provide an efficient implementation,
-%discuss any trade-offs or limitations and present the results of an experimental evaluation into the costs
-%of using it.
-%Our conclusions are mixed. On the one hand, we find that AspectJ is sufficiently expressive
-%to describe the four profiling problems and reasonably efficient in most cases.
-%On the other hand, we find several limitations with the current AspectJ implementation that severely hamper its suitability for
-%profiling.
-%
-%\paragraph{Controlled dynamic performance analysis, \cite{Reiss:2008:CDP:1383559.1383566}}
-%We are interested in obtaining detailed performance information
-%on-the-fly from long-running systems without adversely affecting
-%the performance of the systems.
-%We have developed a methodology consisting of a framework, DYPER, and a number of
-%specialized agents called proflets each of which analyzes a
-%different performance aspect.
-%DYPER gathers performance information with a guaranteed maximum overhead that is
-%dynamically settable by the programmer using priorities set by the
-%proflets.
-%Moreover, the type of information that the system can
-%provide is generally only available for tools that generally have too
-%much overhead to be usable in production or long-running
-%systems.
-%DYPER includes the ability to control and display
-%performance data as the program is run.
+\newcommand{\asymcloud}[2][.1]{%
+\begin{scope}[#2]
+\pgftransformscale{#1}%    
+\pgfpathmoveto{\pgfpoint{261 pt}{115 pt}} 
+  \pgfpathcurveto{\pgfqpoint{70 pt}{107 pt}}
+                 {\pgfqpoint{137 pt}{291 pt}}
+                 {\pgfqpoint{260 pt}{273 pt}} 
+  \pgfpathcurveto{\pgfqpoint{78 pt}{382 pt}}
+                 {\pgfqpoint{381 pt}{445 pt}}
+                 {\pgfqpoint{412 pt}{410 pt}}
+  \pgfpathcurveto{\pgfqpoint{577 pt}{587 pt}}
+                 {\pgfqpoint{698 pt}{488 pt}}
+                 {\pgfqpoint{685 pt}{366 pt}}
+  \pgfpathcurveto{\pgfqpoint{840 pt}{192 pt}}
+                 {\pgfqpoint{610 pt}{157 pt}}
+                 {\pgfqpoint{610 pt}{157 pt}}
+  \pgfpathcurveto{\pgfqpoint{531 pt}{39 pt}}
+                 {\pgfqpoint{298 pt}{51 pt}}
+                 {\pgfqpoint{261 pt}{115 pt}}
+\pgfusepath{fill,stroke}         
+\end{scope}}  
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}
+  \draw[->,xshift=0cm] (0,0) -- coordinate (x axis mid) (9,0);
+  \draw[->,xshift=0cm] (0,0) -- coordinate (y axis mid) (0,6);
+  \foreach \x/\xtext in {1.5/low,3/,4.5/medium,6/,7.5/high}
+          \draw [xshift=0cm](\x cm,1pt) -- (\x cm,-3pt)
+              node[anchor=north] {$\xtext$};
+  \foreach \y/\ytext in {1/low,2/,3/medium,4/,5/high}
+          \draw (1pt,\y cm) -- (-3pt,\y cm) node[anchor=east] {$\ytext$}; 
+          
+  \node[below=1cm] at (x axis mid) {\textbf{Overhead}};
+  \node[rotate=90, above=1.7cm] at (y axis mid) {\textbf{Usability}};  
+  % good region
+  \node (cloudgood) at (2,4.9) {\tikz \asymcloud[0.17]{fill=green!30, draw=green!30,thick};};
+
+  %\filldraw[fill=green, draw=green, rounded corners] (0.5,5.5) rectangle (3.5,3);
+  
+  %bad region
+  \node (cloudbad) at (6.3,1.7) {\tikz \asymcloud[0.16]{fill=gray!50, draw=gray!50,thick};};
+  
+  %useful during development region
+  \node (clouddevelopment) at (6.5,4.8) {\tikz \asymcloud[0.17]{fill=pink, draw=pink,thick};};
+
+  %useful in production but not easy to use's region
+  \node (cloudproduction) at (2,1.6) {\tikz \asymcloud[0.17]{fill=blue!30, draw=blue!30,thick};};
+
+  % legend
+  \filldraw[fill=green!30, draw=green!30, rounded corners] (9.1,6.5) rectangle (9.8,5.8);
+  \node[right=0.7cm] at (9.1,6.1) {Holy Grail};
+  
+  \filldraw[fill=blue!30, draw=blue!30, rounded corners] (9.1,5.5) rectangle (9.8,4.8); 
+  \node[right=0.7cm] at (9.1,5.1) {In Production};
+  
+  \filldraw[fill=gray!50, draw=gray!50, rounded corners] (9.1,4.5) rectangle (9.8,3.8);
+  \node[right=0.7cm] at (9.1,4.1) {Impractical};
+  
+  \filldraw[fill=pink, draw=pink, rounded corners] (9.1,3.5) rectangle (9.8,2.8);
+  \node[right=0.7cm] at (9.1,3.1) {Development phase};
+  
+  \draw (9.45,2.15) circle [radius=0.35];
+  \node[right=0.7cm, text width = 5cm, align=left] at (9.1,2.1) {Diameter Indicates\\ Generality};
+  
+  % very general radius = 0.3
+  % general radius = 0.2
+  % limited radius = 0.1
+  
+  % JVMPI - medium usability - high overhead - average generality
+  \draw[draw=black] (5.5,2) circle [radius=0.2cm] [below=0.1]-- (6.7,1.5) node {JVMPI};
+  %\node at (0.5,5.5) {\cite{Liang1999}};
+  
+  % JAVANA - low usability - medium overhead - high generalidad
+  \draw[draw=black] (4,1.3) circle [radius=0.3cm] [below=0.1]-- (4.2,0.6) node {Javana};
+  
+  % Binder CPU Profiling - medium overhead - medium/low usabilityc - low/medium generalidad 
+  \draw[draw=black] (4.5,2.5) circle [radius=0.16cm]; % no
+  
+  % DYPER - medium/low overhead - low usability - high generalidad
+  \draw[draw=black] (2.5, 1.7) circle [radius=0.3cm] [below=0.1]-- (1.5,1) node {DYPER};
+  
+  % ASM - medium overhead - low/medium usability - high generalidad
+  \draw[draw=black] (4.3,2.1) circle [radius=0.25cm]; % [above=0.1]-- (2.3,2.7) node {ASM};
+  
+  % Javaassist - medium overhead - medium/high usability - high generality
+  \draw[draw=black] (4.2,3.5) circle [radius=0.25cm] [above=0.1]-- (3.1,5.7) node {Javassist};
+  
+  % Profiling with AspectJ - high usability - high overhead - averagage generality
+  \draw[draw=black] (6.8,4.5) circle [radius=0.2cm]; % [above=0.1]-- (6.3,5) node {\cite{Pearce:2007:PA:1248445.1248448}};
+  
+  % Binder Major/AspectJ - medium overhead - high usability - average generalidad
+  \draw[draw=black] (5.4,4.6) circle [radius=0.2cm] [above=0.1]-- (4.9,6.1) node {\cite{Binder:2006:FEM:1173706.1173733}};
+  
+  % DISL - medium overhead - medium usability - full generalidad
+  \draw[draw=black] (5,3.2) circle [radius=0.3cm] [right=0.1]-- (7.7,3.1) node {DISL};
+  
+  % Customized aspect weavers - medium overhead - low usability - full generalidad
+  \draw[draw=black] (5, 2.2) circle [radius=0.27cm];
+  
+  % Eclipse MAT/ Visual VM/ YourKit - high overhead - meidum/high usability - limited/medium
+  \draw[draw=black] (7.8,4.8) circle [radius=0.15cm] [above=0.1]-- (7.9,6.2) node {Eclipse MAT};
+  
+  % DeAl - low overhead - medium/high usability - limited generalidad
+  \draw[draw=black] (1.7,3.7) circle [radius=0.08cm] [above=0.1]-- (1,4.7) node {DeAl};
+\end{tikzpicture}
+\caption{Assessing the relevance of the aforementioned approaches. The location in terms of voerhead an usability is given for each approach. Furthermore, the area of each circumference indicates how general the approach is (the larger the better).} \label{fig:position-approaches-to-simplify}
+\end{figure}
+
 %
 %\paragraph{A meta-aspect protocol for developing dynamic analyses, \cite{Achenbach:2010:MPD:1939399.1939415} }
 %Dynamic aspect-oriented programming has been widely used
