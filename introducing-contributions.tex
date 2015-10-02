@@ -32,7 +32,7 @@
 \foreach [count=\c] \x/\cy/\text/\place in {
    0/0/{}/east,
    8.5/-4/\parbox{2.5cm}{Ease construction of tools}/west,
-   11/-5/\parbox{1.7cm}{\textbf{Resource awareness}}/\placelast
+   11/-5/\parbox{1.7cm}{Resource awareness}/\placelast
   } {
   
   \filldraw[fill=white, draw=black, line width=1pt] (\x,\cy) circle [radius=0.15];
@@ -102,6 +102,9 @@
 (4.2,-3.15) node[anchor=south east, inner sep=-0.01cm] {
 \includegraphics[width=20pt, height=20pt]{library}
 }
+(11,-5) node[anchor=south east, inner sep=-0.06cm] {
+\includegraphics[width=20pt, height=20pt]{goal}
+}
 ;
 % indicator of current location
 \draw[color=gray,draw=yellow, line width=7 pt] (0,0) circle (0.4cm);
@@ -124,11 +127,15 @@
 (0,0) circle (0.6cm);
 
 % legend
-\path (11, 2) node {
-	\includegraphics[width=20pt, height=20pt]{library}
-} (12.4,1.9) node {{\scriptsize Contributions}}
+\path (11, 1.9) node {
+	\includegraphics[width=20pt, height=20pt]{goal}
+} (12.2,1.8) node {{\scriptsize Objective}}
 ;
-\draw[line width=0.1cm, draw=red!70] (10.7, 1.2)--(11.3,1.2) (12.4,1.2) node {{\scriptsize Thesis's way}}
+\path (11, 1) node {
+	\includegraphics[width=20pt, height=20pt]{library}
+} (12.4,0.9) node {{\scriptsize Contributions}}
+;
+\draw[line width=0.1cm, draw=red!70] (10.7, 0.2)--(11.3,0.2) (12.4,0.2) node {{\scriptsize Thesis's way}}
 ;
 
 
