@@ -1,0 +1,139 @@
+%\chapter*{To the reader}
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{2pt}}
+
+\vspace{0.5cm}
+{\Huge \textbf{To the Reader}}
+\vspace{0.2cm}
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{2pt}}
+
+\newcommand{\placelast}{west}
+\newcommand{\placelastt}{south}
+\newcommand{\placelasttt}{north}
+
+{
+\fontfamily{phv}\selectfont
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}
+
+% main railway
+\draw[draw=red!70, line width=9pt, cap=round, join=round] (0,0)--(3,-3)--(7.5,-3)--(8.5,-4)--(9.5,-5)--(11,-5);
+% abstractions' railway
+\draw[draw=blue!40, line width=9pt, cap=round, join=round] (7.5,-4.5)--(5.5,-4.5)--(5.5,-2.65)--(7.5,-2.65)--(9,-1.65)--(10.7,-1.65);
+% monitoring railway
+\draw[draw=green!40, line width=9pt, cap=round, join=round] (3.95,0.45) -- (2.45,0.45)--(1.25,-0.75)--(2.25,-1.75) -- (3.25,-0.75)--(4.75,-0.75);
+% components railway
+\draw[draw=pink, line width=9pt, cap=round, join=round] (2,-4.35)--(1,-5.35)--(3,-3.35)--(4.2,-3.35)--(4.2,-4.35)--(4.2,-5.65);
+
+% main railway
+\foreach [count=\c] \x/\cy/\text/\place in {
+   0/0/{}/east,
+   8.5/-4/\parbox{2.5cm}{Ease construction of tools}/west,
+   11/-5/\parbox{1.7cm}{\textbf{Resource awareness}}/\placelast
+  } {
+  
+  \filldraw[fill=white, draw=black, line width=1pt] (\x,\cy) circle [radius=0.15];
+  \draw[draw=black,dotted, line width = 1pt] (\x,\cy) node[anchor=\place, font=\scriptsize, inner sep=0.3cm] {\text};
+}
+
+% abstractions' railway
+\foreach [count=\c] \x/\cy/\text/\place in {
+   7.5/-4.5/\parbox{1cm}{{Internal DSL}}/north west,
+   6.5/-4.5/\parbox{1cm}{{External DSL}}/north,
+   5.5/-4.5/\parbox{0.7cm}{{API}}/north,
+   7.5/-2.65/\parbox{0.5cm}{{Fluent API}}/south east,
+   9/-1.65/\parbox{1.7cm}{Metamodeling}/south,
+   10.7/-1.65/\parbox{1.9cm}{{Components}}/\placelast
+  } {
+  
+  \filldraw[fill=white, draw=black, line width=1pt] (\x,\cy) circle [radius=0.15];
+  \draw[draw=black,dotted, line width = 1pt] (\x,\cy) node[anchor=\place, font=\scriptsize, inner sep=0.3cm] {\text};
+}
+
+% monitoring railway
+\foreach [count=\c] \x/\cy/\text/\place in {
+   3.95/0.45/{MRTE Modification}/west,
+   2.45/0.45/{Instrumentation}/south,
+   3.25/-0.75/\parbox{1.6cm}{Adaptive Monitoring}/north west,
+   4.75/-0.75/{Sampling}/\placelast
+  } {
+  
+  \filldraw[fill=white, draw=black, line width=1pt] (\x,\cy) circle [radius=0.15];
+  \draw[draw=black,dotted, line width = 1pt] (\x,\cy) node[anchor=\place, font=\scriptsize, inner sep=0.3cm] {\text};
+}
+
+% component railway
+\foreach [count=\c] \x/\cy/\text/\place in {
+   2/-4.35/{Contracts}/east,
+   1/-5.35/{Kevoree}/east,
+   4.2/-4.35/{cgroups}/north east,
+   4.2/-5.65/\parbox{2cm}{System\\ Reconfiguration}/\placelasttt
+  } {
+  
+  \filldraw[fill=white, draw=black, line width=1pt] (\x,\cy) circle [radius=0.15];
+  \draw[draw=black,dotted, line width = 1pt] (\x,\cy) node[anchor=\place, font=\scriptsize, inner sep=0.3cm] {\text};
+}
+
+%joins
+\foreach [count=\c] \x/\cy/\text/\place in {
+   1.12/-0.88/\parbox{1.6cm}{Resource Accounting}/east,
+   2.12/-1.88/\parbox{1.8cm}{Lightweight accounting}/east,
+   3/-3.15/\parbox{2cm}{Accounting\\ for components}/east,
+   4.2/-3.15/\parbox{2cm}{Reservation for components}/north,
+   5.5/-2.85/\parbox{2cm}{Working with\\ Abstractions}/\placelastt
+  } {
+ 
+  \filldraw[fill=white, draw=black, line width=0.04cm] (\x,\cy) circle [radius=0.3];
+  \filldraw[fill=white, draw=black, line width=0.04cm] (\x,\cy) circle [radius=0.13];
+
+  \draw[draw=black,dotted, line width = 1pt] (\x,\cy) node[anchor=\place, font=\scriptsize, inner sep=0.3cm] {\text};
+}
+
+% contributions
+\path (8.5,-4) node[anchor=south east, inner sep=-0.04cm] {
+\includegraphics[width=20pt, height=20pt]{library}
+}
+(3,-3.15) node[anchor=south east, inner sep=-0.01cm] {
+\includegraphics[width=20pt, height=20pt]{library}
+}
+(4.2,-3.15) node[anchor=south east, inner sep=-0.01cm] {
+\includegraphics[width=20pt, height=20pt]{library}
+}
+;
+% indicator of current location
+\draw[color=gray,draw=yellow, line width=7 pt] (0,0) circle (0.4cm);
+\path
+    [
+		postaction={
+	        decorate,
+            decoration={
+                raise=-9pt,
+                text along path,
+                text align/fit to path stretching spaces=true,
+                reverse path=true,
+                text align/align=center,
+                text align/left indent={1cm}, % \pi * radius
+                text align/right indent={0.0cm},
+                text={|\scriptsize|YOU ARE HERE}
+            }
+        }
+    ]
+(0,0) circle (0.6cm);
+
+% legend
+\path (11, 2) node {
+	\includegraphics[width=20pt, height=20pt]{library}
+} (12.4,1.9) node {{\scriptsize Contributions}}
+;
+\draw[line width=0.1cm, draw=red!70] (10.7, 1.2)--(11.3,1.2) (12.4,1.2) node {{\scriptsize Thesis's way}}
+;
+
+
+\end{tikzpicture}
+\end{figure}
+
+}
+
