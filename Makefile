@@ -26,10 +26,10 @@ SRC_LOG=$(SRC:%.tex=%.log)
 
 DIFF_VERSION_BASE_PATH=/home/inti/Desktop/PhD_Diff
 
-all: $(DOC).pdf exec-summary
+all: $(DOC).pdf
 
 quick: $(DOC).tex $(TEX_FILES)
-	latex $(DOC)
+	pdflatex -shell-escape $(DOC).tex
 
 exec-summary: executive/executive.tex $(SRC) ./biblio/biblio_$(DOC).bib
 	pdflatex -shell-escape executive/executive.tex
@@ -37,13 +37,11 @@ exec-summary: executive/executive.tex $(SRC) ./biblio/biblio_$(DOC).bib
 	pdflatex -shell-escape executive/executive.tex
 	pdflatex -shell-escape executive/reviewers.tex
 
-$(DOC).pdf : $(DOC).tex $(DOC).bbl
+$(DOC).pdf : $(DOC).tex ./biblio/biblio_$(DOC).bib
 	pdflatex -shell-escape $(DOC).tex
-
-$(DOC).bbl : $(DOC).aux ./biblio/biblio_$(DOC).bib
 	bibtex $(DOC)
-
-$(DOC).aux: $(DOC).tex $(SRC)
+	makeglossaries $(DOC)
+	pdflatex -shell-escape $(DOC).tex
 	pdflatex -shell-escape $(DOC).tex
 
 create_diff_version:
@@ -62,6 +60,7 @@ clean :
 	rm -f $(DOC).dvi $(DOC).aux $(DOC).lof $(DOC).log $(DOC).toc 
 	rm -f $(DOC).ps $(DOC).pdf
 	rm -f $(DOC).bbl $(DOC).blg
+	rm -f $(DOC).acr $(DOC).glo
 	rm -f macro.log
 	rm -f $(DOC).idx $(DOC).ilg $(DOC).ind
 

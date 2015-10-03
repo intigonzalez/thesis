@@ -34,7 +34,7 @@ This is even more relevant because often such requirements emerge together
 (e.g., \textit{smartphones} are resource-constrained devices providing an open executing environment).
 When an application includes features to react and modify its behavior after resource-related events occur, it is said to be resource-aware~\cite{Boldrini:2008:CRA:1549824.1550106,Peddemors:2007:NRA:1256316.1256338,Alhaisoni:2010:RTO:1664767.1664770,Polo:2011:RAS:2414338.2414352,Bulej:2012:PAC:2408860.2410068,autili2012hybrid}.
 A software system requires the appropriate runtime support to provide such features.
-Nowadays, applications executing atop managed runtime environments (MRTE), such as Java, are among the systems that can benefit from this kind of support.
+Nowadays, applications executing atop \glspl{mrte}, such as Java, are among the systems that can benefit from this kind of support.
 Indeed, MRTEs are regularly used to implement middleware ~\cite{Bruneton:2006:FCM:1152333.1152345,Fouquet:2014:DED:2602576.2611461,OracleEJB3.0,Becker:2010:PCM:1712605.1712651,Carlson2006127}, for example with OSGi, because of their safety, flexibility, and mature development environment.
 These middleware often provide open world features such as the possibility of adding new functionalities after the initial system deployment.
 To support the adaptability and manageability demanded by an open world runtime, it is possible to use  Component-Based Software Engineer (CBSE)~\cite{gruntz2002component,Duclos:2002:DUN:508386.508394, Bruneton:2006:FCM:1152333.1152345}.
@@ -60,8 +60,8 @@ While this limitation does not affect the utilization of such mechanisms to, for
 As a result, solutions with \textit{high} performance overhead or few features are used in those applications where being aware of resources at runtime is a strict requirement.
 
 \item Despite of the widespread utilization of MRTEs to execute applications based on components and other abstractions, \textbf{creating resource management tools} for these abstractions is still \textbf{a complex task}.
-Indeed, creating abstractions such as domain-specific languages (DSLs) ~\cite{van2000domain,Fowler:2010:DSL:1809745} and components models is increasingly common ~\cite{van2000domain,hutchinson2011empirical,whittle2014state}.
-Plenty of tooling support exists for doing so, specially to define new DSLs~\cite{raey,Merkle:2010:TMT:1869542.1869564,Eysholdt:2010:XIY:1869542.1869625}.
+Indeed, creating abstractions, such as components models, is increasingly common~\cite{van2000domain,hutchinson2011empirical,whittle2014state}.
+Plenty of tooling support exists for doing so, specially to define new \glspl{dsl} ~\cite{van2000domain,Fowler:2010:DSL:1809745,raey,Merkle:2010:TMT:1869542.1869564,Eysholdt:2010:XIY:1869542.1869625}.
 In addition, quite often these abstractions target MRTEs as backend technologies due to their safety.
 However, new abstractions pose a challenge for developers when it comes to profiling, debugging and monitoring applications that are built using them because such new abstractions are not always shipped along custom profilers and debuggers~\cite{Kolomvatsos:2012:DAC:2148250.2148478,Wu:2008:GGD:1394966.1394970,Mannadiar:2010:DDM:1964571.1964595,Lindeman:2011:DDD:2047862.2047885,Wu:2005:TDL:1094855.1094920,Faith1998}.
 As a consequence, developers find themselves using mainstream tools which are only able to cope with \textit{``classical''} concepts such as \textit{objects}, \textit{methods} and \textit{memory locations}, instead of more specific concepts.
@@ -110,7 +110,7 @@ This contribution is a response to research questions \ref{rq:rq2} and \ref{rq:r
 Memory consumption monitoring and profiling are important concerns in applications that target MRTEs because even automatic memory management is not capable of guarantying error-free memory management and, more importantly, it introduces performance issues.
 %As mentioned, mainstream profilers are not able to deal with domain-specific concepts in an \textit{efficient} way.
 Along this thesis, a generative approach to create customized and efficient memory profilers for domain-specific abstractions such as DSLs and component models is proposed.
-The approach consists primarily in a DSL to define profilers and a profiler generator which targets heap memory exploration mechanisms such as the Java Virtual Machine Tool Interface (JVMTI).
+The approach consists primarily in a DSL to define profilers and a profiler generator which targets heap memory exploration mechanisms such as the \gls{JVMTI}.
 The DSL has been devised with constrains that, although reduce its expressive power, offer guaranties about the performance behavior of the generated profilers.
 To evaluate the approach, comparisons between profilers generated with this approach, handwritten profilers and mainstream tools are presented.
 The results show that the generated profilers have a behavior similar to that of handwritten solutions.

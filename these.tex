@@ -26,6 +26,9 @@
 \usepackage{shorttoc} %% pour plusieurs tables des matières par la commande \shorttableofcontents{Titre}{profondeur}.
 \usepackage{textcomp} %% pour le symbol pour mille par \textperthousand.
 \usepackage{hyperref} %% pour la transformation en PDF, ça permet d'obtenir des liens sur les sections ...
+
+\usepackage[acronym,toc]{glossaries} % glossary, will be added to the content table
+
 \usepackage[babel=true]{csquotes}
 \usepackage[right]{eurosym}
 \usepackage{mdframed}
@@ -119,8 +122,12 @@
 \setcounter{secnumdepth}{3}  %% Avec un numero.
 \setcounter{tocdepth}{2}     %% Visibles dans la table des matieres
 
-\makeindex %%
+\makeglossaries % glossary
+\makeindex % index
 \def\underscore{\char`\_}
+
+% create initial glossary
+\loadglsentries[main]{./glossary/glossary}
 
 \begin{document}
 
@@ -192,19 +199,22 @@ Supporting \\ resource-awareness in \\ managed runtime environments.
 %%----------------------------%%
 
 %\newpage\thispagestyle{empty}
+\setcounter{page}{1}
+\pagenumbering{roman}
 
 %~\newpage
 \addcontentsline{toc}{chapter}{Table of content}
 \markboth{Table of content}{Table of content}
 \tableofcontents%%{Table des matières}
 
+% print glossary
+\printglossaries
+
 %%----------------------------%%
 %%  Main Chapters             %%
 %%----------------------------%%
 
-%\fontfamily{times}
-
-
+% set the page numbers to be arabic, starting at page 1 %
 \input{./introduction/introduction}
 \part{State of the art}
 \input{./chapter1/chapter1}
