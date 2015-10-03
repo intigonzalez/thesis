@@ -1,5 +1,5 @@
-%\chapter*{To the reader}
-
+\thispagestyle{plain}
+\addcontentsline{toc}{chapter}{To the reader about contributions}
 \noindent\makebox[\linewidth]{\rule{\textwidth}{2pt}}
 
 \vspace{0.5cm}
@@ -11,6 +11,17 @@
 \newcommand{\placelast}{west}
 \newcommand{\placelastt}{south}
 \newcommand{\placelasttt}{north}
+
+In the first two chapters, we discuss the relevance of resource-aware programming in the development of software systems.
+It is also highlighted that resource awareness requires extensive support from the runtime environment.
+Severe limitations in existing approaches for resource accounting and reservation prevent the use of resource-aware programming.
+In particular, we show how the granularity level at which a resource accounting method can be applied is of utmost importance. % because if affects applications' behavior.
+This is further discussed in Chapter~\ref{chap:abstractions_and_resource_management}, where we highlight the fact that every time a new software abstraction is created, it can be seen as a new granularity level.
+Since creating abstraction is common in software development, mechanisms to easily develop support for resource-aware programming are needed. 
+
+In the rest of this thesis, we present three approaches that contribute to achieve our goal -- supporting resource-aware software development.
+Figure~\ref{fig:subway-map} depicts a subway map to establish how the new mechanisms we propose are connected to each other, how they contribute to the common goal, and their relationship with other approaches.
+Although this metaphor is by no means complete, it helps to quickly summarize what is required to achieve resource awareness. 
 
 {
 \fontfamily{phv}\selectfont
@@ -140,7 +151,29 @@
 
 
 \end{tikzpicture}
+\caption{This subway map shows how our research contributes to the state-of-the-art on supporting resource-awareness.} \label{fig:subway-map}
 \end{figure}
 
 }
+
+
+This thesis makes three \textit{stops}.
+%\thispagestyle{empty}
+\begin{description}
+\item[Resource accounting for components] The \textbf{first} \textit{stop} is to propose an approach for resource consumption monitoring in component-based systems that run on top of MRTEs.
+Before it, our journey takes us through a way where we collect the basic methods needed to perform resource accounting.
+Afterwards, at the first \textit{stop}, we reuse such methods to provide \textit{efficient} accounting for components.
+
+\item[Resource reservation for components] Resource accounting is the foundation for a safe \textbf{second} \textit{stop} -- providing resource reservation for components.
+It is then when we discuss a methodology to delay the selection of the binding method used to guarantee resource reservation, until the deployment phase at runtime.
+This serves both to guarantee low performance overhead and resource reservation per component.
+
+\item[Ease the constructions of tools] The journey continues, and we learn how the mechanisms to define software abstractions lack support for building resource accounting tools.
+We also realize that this issue makes us remember our first \textit{stop} because components are just a concrete abstraction; and it also brings memories of the second one because new methods to calculate resource consumption may influence the mechanism we choose to represent components at runtime. 
+Then we \textit{stop} for the \textbf{third} time; we propose an approach to ease the construction of efficient and customized memory profilers for MRTEs.
+\end{description}
+
+\newpage\thispagestyle{empty}\addtocounter{page}{-1}
+
+
 
