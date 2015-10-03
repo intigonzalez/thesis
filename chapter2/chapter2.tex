@@ -89,11 +89,14 @@ In this case, an instance of an open-class is not represented by a single JVM ob
 
 
 \paragraph{The case of monitoring components}
-In OSGi, a component framework, many bundles are deployed on top of a single JVM instance.
+
+\gls{CBSE} is an interesting example because it is widely used.
+Curiously, although developers are encouraged to think in terms of high-level abstractions when software is written using components, little tooling support exists for resource awareness.
+Indeed, in OSGi, a component framework, many bundles~\footnote{A bundle is a unit of deployment in OSGi.} are deployed on top of a single JVM instance.
 Due to the communication mechanism used in OSGi, where objects are routinely shared, it is complex to decide which bundle should be accounted for the consumption of a particular object.
 A possible approach is deciding that an object $O$ is being consumed by a bundle if $O$'s class was loaded using the classloader $C$ associated with such a bundle.
 Then, we can use this mechanism to monitor per-bundle memory consumption. 
-However, a profiler must perform considerable amount of processing to collect such kind of data because it is not straightforwardly available in the JVM. 
+However, a profiler must perform considerable -- and costly -- amount of processing to collect such kind of data because it is not straightforwardly available in the JVM. 
 %Since we know how to represent a bundle using Java concepts, this solution is feasible.
 Given the widespread usage of OSGi, memory profilers often support collecting data regarding per-bundle memory usage.
 Unfortunately, similar abstractions (components models), equally implemented atop of Java, are often not properly supported by such tools because they are not as popular as OSGi.
@@ -172,35 +175,47 @@ In this way, a DSL describes a specific domain (e.g., state machines, interface 
 
 In their seminal work~\cite{Czarnecki2000}, Czarnecki and Eisenecker embrace a broad notion of ``language'' that encompasses what are now known as internal and external DSLs, but it also includes libraries of routines or classes that extend a programming language because they introduce new concepts and vocabulary.
 This widely used notion of ``language'' is what we have in mind when we discuss the problems associated to resource consumption in DSLs.
+Figure~\ref{fig:dsl-hierarchy} shows a possible organization of these abstractions.
 
-An internal DSL is embedded into a general-purpose language (GPL).
-Often, preprocessors and meta-programming facilities, of either a dynamically typed host language or a statically typed language with type inference, are used to seamless integrate the DSL into the host language.
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{./chapter2/fig/dsl-hierarchy.png}
+\caption{Organizing abstractions as DSLs. This resembles the idea of ``language'' embraced by Czarnecki and Eisenecker~\cite{Czarnecki2000}.}\label{fig:dsl-hierarchy}
+\end{figure}
+
+The mechanisms used to represent concrete abstractions vary.
+For instance, an internal DSL is embedded into a \gls{GPL}.
+This is often done by relying on meta-programming facilities of a host language.
 Likewise, design patterns and reflection are used to implement some forms of internal DSLs, such as fluent APIs, and annotation-based languages.
 On the contrary, a ``\textit{program}'' written using an external DSL requires a separated translation process (i.e., compilation) in order to produce an artifact that can be integrated as part of an application.
-Both approaches have advantages and disadvantages that have been discussed elsewhere~\cite{Czarnecki2000, Stahl:2006:MSD:1196766}.
+It is then interesting that language, regardless their representation, are always translated to concepts in a lower layer of the software stack; at that point, developers find the gap between their view and the tooling's view. 
+The point is then to find out how software abstractions consume computational resources.
+%Both approaches have advantages and disadvantages that have been discussed elsewhere~\cite{Czarnecki2000, Stahl:2006:MSD:1196766}.
+%One of the most important differences lays on the fact that external DSLs support the definition of arbitrary concrete syntaxes while internal DSLs don't.
+
 %Internal DSLs can leverage all the features of their host languages, and it is easy to use constructors of the DSL as extensions of the host language.
 %However, the concrete syntax of an internal DSL must be carefully crafted to cope with the constrains in the host language's syntax.
 %On the contrary, there is complete freedom in deciding the concrete syntax of external DSLs; as a designer you can even choose not to use a textual syntax.
 %Another interesting point is that Integrated Development Environment (IDE) support for internal DSLs is limited to the support provided to the host language.
 
-In a typical scenario, models are translated to source code written in some GPL to enable their subsequent compilation and execution.
-However, models are also useful in other tasks such as generating test cases \cite{Kiffe2009,Gutierrez2015}, simulating a system behavior \cite{Broenink2012,brosig2015a,Bocciarelli2015425}, and formally verifying software properties \cite{Holzmann2004,Henriksson2005101,Moffett2013,DiGuglielmo20132013}. 
-To write programs using a DSL (create models conforming to a metamodel), it is often necessary to use graphical~\cite{Kolovos:2009:RLA:1564600.1564699, Biermann:2006:GDI:2087202.2087244} or textual editors~\cite{Merkle:2010:TMT:1869542.1869564}.
-In general, the definition of a new ``language'' is a complex task because, depending on the language features, it may involve the definition of a complete infrastructure to deal with the DSL (i.e., editors, compilers, and simulators).
-Fortunately, approaches exist to ease the definition of DSLs.
-For instance, Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625} is a well-known tool that is useful for defining new external DSLs (or for extending existing languages).
-It is an Eclipse-based framework which supports the definition of languages together with their syntaxes, semantic checkers, code generators and editors.
+%In a typical scenario, models are translated to source code written in some GPL to enable their subsequent compilation and execution.
+%However, models are also useful in other tasks such as generating test cases \cite{Kiffe2009,Gutierrez2015}, simulating a system behavior \cite{Broenink2012,brosig2015a,Bocciarelli2015425}, and formally verifying software properties \cite{Holzmann2004,Henriksson2005101,Moffett2013,DiGuglielmo20132013}. 
+%To write programs using a DSL (create models conforming to a metamodel), it is often necessary to use graphical~\cite{Kolovos:2009:RLA:1564600.1564699, Biermann:2006:GDI:2087202.2087244} or textual editors~\cite{Merkle:2010:TMT:1869542.1869564}.
+%In general, the definition of a new ``language'' is a complex task because, depending on the language features, it may involve the definition of a complete infrastructure to deal with the DSL (i.e., editors, compilers, and simulators).
+%Fortunately, approaches exist to ease the definition of DSLs.
+%For instance, Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625} is a well-known tool that is useful for defining new external DSLs (or for extending existing languages).
+%It is an Eclipse-based framework which supports the definition of languages together with their syntaxes, semantic checkers, code generators and editors.
 
 \paragraph{Support in MRTEs} 
 As mentioned, concrete ``programs'' written in a DSL are typically translated to some host GPL.
 This means that the DSL concepts are layered on top of concepts, such as \textit{classes}, \textit{objects}, and \textit{threads}.
-Plenty of approaches exist for writing DSL-based applications that are transformed to execute on top of MRTEs; in particular, many solutions target Java.
-For instance, the already discussed Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625}, the Eclipse Modeling Framework~\cite{EMFModeling}, the meta-programming capabilities of languages such as Scala~\cite{Hofer:2010:MDL:1868294.1868307} and Clojure~\cite{Kelker2013} where internal DSLs can be defined and executed, the combination of annotations and annotation processor~\cite{Huang2008}, and intentional programming frameworks such as Meta-Programming System (MPS)~\cite{JetBrainsMetaProgrammingSystem(MPS),Voelter2014}.
+Plenty of approaches exist for writing DSL-based applications that are transformed to be executed on top of MRTEs; in particular, many solutions target the Java language and the JVM.
+For instance, the Xtext language workbench~\cite{Eysholdt:2010:XIY:1869542.1869625}, the Eclipse Modeling Framework~\cite{EMFModeling}, the meta-programming capabilities of languages such as Scala~\cite{Hofer:2010:MDL:1868294.1868307} and Clojure~\cite{Kelker2013} where internal DSLs can be defined and executed, the combination of annotations and annotation processor~\cite{Huang2008}, and intentional programming frameworks such as Meta-Programming System (MPS)~\cite{JetBrainsMetaProgrammingSystem(MPS),Voelter2014}.
 Likewise, F\# applications, which execute in CLR, can use meta-programming support to write DSLs~\cite{Cheney:2013:PTL:2500365.2500586}; and the Boo language provides constructor that are easy to use for crafting DSLs~\cite{Rahien2010}. 
 
-\paragraph{How abstractions consume resources} 
+\paragraph{Abstractions and their resources consumption} 
 Naturally, the resource consumption of a ``program'' written in a DSL depends on the DSL itself.
-If a language is only used to describe structures then a program would consume memory.
+If a language is only used to describe data (without any executable semantics), then a program in such a language will consume memory.
 On the contrary, if a language only describes behavior, a program written using such a language would use CPU to perform the computation.
 
 An example is useful to illustrate how a DSL consumes resources.
@@ -249,9 +264,10 @@ Hence, only memory is consumed by the execution environment to represent a concr
 For example, suppose we define a language to represent plants using the L-System formalism~\cite{Prusinkiewicz1990}.
 A plant created by Prusinkiewicz et al.~\cite{Prusinkiewicz1990} using L-Systems, is depicted in Figure~\ref{lst:OL-system-example}.
 The structures generated by this language may be simple strings of symbols (see \ref{fig:l-system-generated}).
-As can be appreciated, the memory consumed by a L-System depends on the number of iterations, the rules defined, and the concrete data structure used to store the symbols
+The memory consumed by a L-System depends on the number of iterations, the rules defined, and the concrete data structure used to store the symbols
 (it can be a string of characters, a tree, a list, or an array).
 The important point is that users of this language should see this kind of structures as black-boxes.
+Hence, in this example, the \textit{object} used to store the plant must be seen as structure of type \textit{OL-System} instead of as a simple Java \textit{string}.  
 
 
 \lstdefinestyle{OL-systems}{
@@ -291,8 +307,10 @@ plant P0
 \includegraphics[scale=0.35]{./chapter2/fig/plant.png}
 \caption{Graphical representation}\label{fig:plant}
 \end{subfigure}
-\hspace{2.6cm}
-\begin{subfigure} {\linewidth}\centering
+%\hspace{2.6cm}
+\centering
+\begin{subfigure} {0.8\linewidth}
+\vspace{1cm}
 \begin{lstlisting}[language=java, basicstyle=\footnotesize, stringstyle=\footnotesize\color{green!70!black}]
 String P0 = "FF[+F[+X]F[-X]+X]FF[-F[+X]F[-X]+X]+F[+X]F[-X]+X";
 \end{lstlisting}
@@ -306,7 +324,7 @@ An important \textbf{feature to consider} by engineers who implement support \te
 is that languages do not always provide well-defined boundaries.
 For instance, an internal DSL may be transformed into a list of statements of the host language without defining a new routine or thread.
 In a case like this, instrumentation is the only mechanism that can be used to achieve CPU consumption monitoring.
-Interestingly, interaction between parts of a application written using DSLs can also impact the way resource accounting is done.
+Interestingly, interaction between parts of an application written using DSLs can also impact the way resource accounting is done.
 In the state machine example previously discussed, a state machine might trigger events in another state machine by simple executing some actions in one of its transitions.
 In a situation like that, a resource accounting framework should properly determine the change of execution context; unfortunately, implementing this can be computationally expensive. 
 
@@ -339,7 +357,10 @@ In a situation like that, a resource accounting framework should properly determ
 
 \subsection{On how software components consume resources} \label{sec:components-oriented-resource-awareness}
 
-Component-Based Software Engineering (CBSE) aims at developing applications by reusing independent units of software \cite{cbse-conference, Crnkovic2011}.
+\glslink{CBSE}{CBSE} is a particularly interesting -- and concrete -- example of how tools that provide support for resource accounting and reservation must take into consideration features specific of each kind of abstraction.
+In this section, we thoroughly discuss the concerns to address when dealing with component-based systems.  
+
+\glslink{CBSE}{CBSE} aims at developing applications by reusing independent units of software \cite{cbse-conference, Crnkovic2011}.
 Through the utilization of components, connectors and configurations, CBSE reduces the complexity in the development and maintenance of systems \cite{xadl,Medvidovic:2000,VanOmmering-et-al-00}.
 %In addition to economical benefits such as reducing time to market and development cost \cite{SZYPERSKI2002}, there are also technical advantages in using CBSE. 
 One of its technical advantages is that it facilitates the management of dynamic architectures
@@ -461,19 +482,21 @@ On the contrary, if a service is poorly implemented, in indirect accounting the 
 \end{figure}
 
 
-Similarly, two criteria exist to account for memory consumption in component-based systems.
-Usually, components interact, during this interaction they exchange objects that are typically created on one side of the interaction (e.g., a service component creates new objects in response to clients' requests).
-Indeed, a component may allocate space for an object. pass it to a client, and then forget about it.
+Similarly, there is another problem to determine the memory consumption of components.
+Often, objects are created by a component (allocator) and used in other components (clients).
+This happens during interaction among components, when they exchange data in the form of objects (e.g., a service component creates new objects in response to clients' requests).
+%Two criteria exist to account for memory consumption in component-based systems
+For instance, a component may allocate space for an object, then send it to a client, and finally forget about it.
 In that case, it is not clear what component should be accounted for the memory consumed by that particular object; it can be either the client or the original allocator.
 Both approaches have pros and cons.
 The intuition dictates that if a component is preventing an object of being collected it should be accounted for that particular block of memory.
 However, such an approach may be dangerous if a buggy (or malicious) provider creates objects unnecessarily big, sends them to clients, and forgets about them; in that case, it would be hard to identify the provider as the source of excessive consumption. 
-Most existing solutions for memory consumption always follow on of the two criteria.
+Most existing solutions for memory consumption follow a fixed criteria, either account always for the allocator or for the component preventing the object's collection.
 
 A second aspect is to decide \textit{where should be implemented} the mechanism for resource consumption monitoring and reservation.
 Essentially, this consists in, selecting which actors implement the mechanism and policies to manage resources, and deciding if the actors collaborate to achieve their goal \cite{Crnkovic2011}.
 
-Many component models provide no facilities for managing EFPs.
+Many component models provide no facilities for managing \glspl{EFP}.
 The mechanism used to handle a property is left to the designers of each application.
 This facilitates the creation of EFP management policies that are specifically tuned towards a system, and also allow the usage of multiple policies in a system.
 However, the fact that such policies are not
@@ -613,7 +636,7 @@ Based on attribute grammars, and implemented using the LISA system \cite{Mernik2
 
 Many works address the issue of supporting resource consumption monitoring in component-based systems.
 In addition, some existing approaches present solutions for the isolation of resource consumption among components running on top of a single MRTE instance.
-Unfortunately, most approaches are limited to a specific component model; in particular, a considerable amount of work exist to solve the problem for both EJB and OSGi.
+Unfortunately, most approaches are limited to a specific component model; in particular, works exist to solve the problem for both EJB and OSGi.
 
 \textit{EJBMemProf}, a framework for profiling the memory consumption in EJB is presented in \cite{Meyerhoefer2005}.
 The main idea of this framework is instrumenting applications' code to trigger an event each time an object is allocated; in response to such an event the framework identifies the component responsible for the allocation.
@@ -662,7 +685,7 @@ The idea is to use the Real-Time Specification for Java (RTSJ) to support CPU is
 The authors claim that just using RTSJ is not enough to ensure real-time properties of applications when the OSGi framework is used to build them.
 Besides the arguments to justify such a claim, a solution to achieve CPU isolation is presented.
 
-Profilers such as Eclipse MAT and VisualVM offer limited support to perform memory consumption monitoring for mainstream component models (OSGi and EJB).
+Profilers such as Eclipse MAT and VisualVM offer support, although limited, to perform memory consumption monitoring for mainstream component models (OSGi and EJB).
 They do so by providing built-in subsystems that are able to process Java memory dumps to calculate the per-component consumption.
 Due to the need of processing the complete memory dump, the performance overhead is considerable. 
 
@@ -737,6 +760,12 @@ It is worth mentioning that some general profiling frameworks can be used to eas
 
 \end{description}
 
+Reusing existing solutions for resource consumption monitoring and reservation, and adapting them to specific features of new abstractions is an important step.
+We have seen in this section several approaches that target specific abstractions such as, component models.
+However, since defining abstraction is so common, it is impractical to manually build tools with specific features for all of them.
+Hence, further reducing the engineering effort required to build resource management tools is highly desirable.
+The next section presents several approaches that address this issue.
+
 \section{Easing the construction of resource management tools} \label{sec:easy-tools-contruction}
 
 As we already mentioned, the definition of new abstractions is common in software development (for example, using DSLs).
@@ -766,7 +795,7 @@ In Section~\ref{sec:discussing-tools-to-ease-construction}, we briefly discuss t
 \subsection{Flexible implementation of dynamic analysis tools}
 
 One of the most tedious and error-prone tasks, when building tooling support for dynamic analysis, is dealing with low-level details such as, bytecode instrumentation.
-If dynamic analysis tools are built from the scratch, developers are forced to focus on mastering details of the execution platform, when in fact, they are interested in implementing high-level ideas.
+If dynamic analysis tools are built from scratch, developers are forced to focus on mastering details of the execution platform, when in fact, they are interested in implementing high-level ideas.
 To address this issue, various approaches have been proposed; they can be clustered into three categories: instrumentation frameworks, high-level APIs for bytecode manipulation, and aspect-oriented tools.
 
 \paragraph{Instrumentation frameworks}

@@ -9,7 +9,7 @@
 
 DOC=these
    
-SRC = these.tex
+SRC = these.tex introducing-contributions.tex
 
 include acknowledgments/make.mk
 include introduction/make.mk
@@ -37,7 +37,7 @@ exec-summary: executive/executive.tex $(SRC) ./biblio/biblio_$(DOC).bib
 	pdflatex -shell-escape executive/executive.tex
 	pdflatex -shell-escape executive/reviewers.tex
 
-$(DOC).pdf : $(DOC).tex ./biblio/biblio_$(DOC).bib
+$(DOC).pdf : $(SRC) ./biblio/biblio_$(DOC).bib
 	pdflatex -shell-escape $(DOC).tex
 	bibtex $(DOC)
 	makeglossaries $(DOC)
@@ -60,7 +60,7 @@ clean :
 	rm -f $(DOC).dvi $(DOC).aux $(DOC).lof $(DOC).log $(DOC).toc 
 	rm -f $(DOC).ps $(DOC).pdf
 	rm -f $(DOC).bbl $(DOC).blg
-	rm -f $(DOC).acr $(DOC).glo
+	rm -f $(DOC).acr $(DOC).glo these.acn these.ist these.out texput.log these.gls these.glsdefs these.glg
 	rm -f macro.log
 	rm -f $(DOC).idx $(DOC).ilg $(DOC).ind
 

@@ -186,7 +186,7 @@ However, developers that use mature languages such as \textit{C++} or \textit{Ob
 
 In 1995 the first mainstream managed runtime environment (MRTE), Java, was created.~\footnote{The expression ``\textit{first mainstream}'' should be interpreted here in a strictly commercial sense.}
 It became a success even if it was not the first language providing built-in features such as automatic memory management, dynamic loading of portable code, or support for the object-oriented paradigm.
-This was possible due to three main reasons: the level of maturity of many technical solutions on topics such as just-in-time (JIT) compilation, the growing speed-up of hardware, and the advantages offered by the concept of \textit{managed} languages.
+This was possible due to three main reasons: the level of maturity of many technical solutions on topics such as \gls{JIT} compilation, the growing speed-up of hardware, and the advantages offered by the concept of \textit{managed} languages.
 Since then, it has become clearer that modern languages demand features that require considerable runtime support.
 These features include the following \cite{Cierniak2005}:
 
@@ -198,12 +198,12 @@ To provide this feature, the application must be written in such a way that allo
 An application can then be executed on a platform if there exists an implementation of this abstract machine that is able to run on such a platform.
 Having a different instruction set offers additional advantage.
 For instance, final applications' code can be more compact than code written using native instructions because it can represent only the high level concepts that matter to the abstract machine.
-To support this feature, a runtime must provide either application's interpretation, ahead of time compilation \cite{Muller:1997:HFE:1268028.1268029,Proebsting:1997:TJA:1268028.1268031,Wang:2011:MAC:2038698.2038704,Oh:2015:BAC:2757012.2757057} or just in time compilation (JIT) \cite{Inoue:2012:AMC:2398857.2384630,Paleczny:2001:JHT:1267847.1267848,Grcevski:2004:JTJ:1267242.1267254}.
+To support this feature, a runtime must provide either application's interpretation, ahead of time compilation \cite{Muller:1997:HFE:1268028.1268029,Proebsting:1997:TJA:1268028.1268031,Wang:2011:MAC:2038698.2038704,Oh:2015:BAC:2757012.2757057} or \glslink{JIT}{JIT} compilation \cite{Inoue:2012:AMC:2398857.2384630,Paleczny:2001:JHT:1267847.1267848,Grcevski:2004:JTJ:1267242.1267254}.
 
 \item \textbf{\textit{Dynamic code loading}}:
 It is also desirable to support loading new code from different sources (e.g., a network stream, a local file, internally generated code) while the application is running.
 Together with the reflection mechanism, this feature is useful in many scenarios such as implementing on-the-fly generation of proxy classes, implementing component frameworks, and supporting the Aspect-Oriented paradigm.
-Providing this feature for a MRTE is only possible using an interpreter or a JIT compiler; hence in comparison with the \textit{portability} feature, it rules out using an ahead-of-time compiler.
+Providing this feature for a MRTE is only possible using an interpreter or a \glslink{JIT}{JIT} compiler; hence in comparison with the \textit{portability} feature, it rules out using an ahead-of-time compiler.
 In addition, a new requirement emerges: since code can be dynamically loaded from untrusted source, it is now mandatory to verify the correctness of such code in order to guarantee that it is safe to execute it.  
 
 \item \textbf{\textit{Automatic Memory Management}}: 
@@ -216,7 +216,7 @@ The memory manager is in charge, for instance, of allocating the space required 
 \item \textbf{\textit{Improved error handling}}:
 Modern programming languages tend to offer support to detect, early during the development phase and to avoid at runtime, common mistakes such as dereferencing a null pointer or accessing arrays using a wrong index.
 This kind of features requires extensive support for handling internal and unexpected errors as well as developer-specified faulty conditions.
-Only with some collaboration of the interpreter or JIT compiler is possible to implement such features.
+Only with some collaboration of the interpreter or \glslink{JIT}{JIT} compiler is possible to implement such features.
 \end{itemize}   
 
 The runtime environment support needed to execute applications written in many modern programming languages is referred as managed because the code used to execute the applications includes not only the business logic but also code to \textit{\textbf{manage}} the memory, the possible errors, and the process of loading, verifying and compiling the code on demand.
@@ -227,7 +227,7 @@ In the rest of this section we briefly describe the mentioned feature.
 \subsection{Memory Management using Garbage Collection}
 
 Automatic memory management is usually implemented using garbage collection.
-In this approach three entities are involved: i) the application, which is also known as the mutator in memory management jargon because it is the one modifying the memory content, ii) the allocator, which is in charge of reserving space in the heap, and iii) the garbage collector (GC), which reclaims memory that is no longer referenced by the mutator.
+In this approach three entities are involved: i) the application, which is also known as the mutator in memory management jargon because it is the one modifying the memory content, ii) the allocator, which is in charge of reserving space in the heap, and iii) the \gls{GC}, which reclaims memory that is no longer referenced by the mutator.
 Memory allocation follows a simple ``script'': a thread belonging to the mutator requests memory, in response the allocator searches for an unused block in the heap, if an unused block cannot be found then the garbage collector is invoked to reclaim blocks of memory, the allocator tries to find an unused block once again.
 
 To understand what the garbage collector does, it is worth looking at how the memory heap is organized.
@@ -259,7 +259,7 @@ Once the allocation space is full, the GC is invoked to reclaim some memory.
 The GC proceeds by traversing the directed graph from the roots and copying every visited object to the second space.
 When the traversal is done, the role of both spaces is exchanged and the objects that were not copied are thus automatically reclaimed.
 
-\item \textbf{Generational collectors}: This approach tries to reduce the part of the graph that must be traversed on every garbage collection cycle.
+\item \textbf{Generational collectors}: This approach tries to reduce the part of the graph that must be traversed on every \glslink{GC}{GC} cycle.
 The approach is based on the observation that most objects have a short life.
 As a consequence, it is often enough to traverse only a subgraph of objects that were recently allocated in order to find dead objects to dispose in a faster way.
 Following this idea, objects are allocated in a special space and copied to a different heap space once they ``get'' old enough. 
@@ -269,8 +269,8 @@ Generational collectors are usually combined with sophisticated variants of mark
 There are many areas to consider in a discussion regarding garbage collection.
 For instance, how different approaches deal with concurrent mutators or how is the response time improved by using parallel collectors.
 These topics are not mentioned here because such information is not relevant to the purposes of this work.
-In fact, the information to take away is that state-of-the-art GCs tend to split the heap in different spaces each of them implementing a different allocation and garbage collection mechanism.
-Also, GCs see the allocated objects as a directed graph where nodes that cannot be reached from the ``roots'' can be safely disposed.
+In fact, the information to take away is that state-of-the-art \glslink{GC}{GCs} tend to split the heap in different spaces each of them implementing a different allocation and garbage collection mechanism.
+Also, \glslink{GC}{GCs} see the allocated objects as a directed graph where nodes that cannot be reached from the ``roots'' can be safely disposed.
 
 \subsection{MRTEs hinder resource-aware programming}
 
@@ -281,7 +281,13 @@ This greatly reduces the complexity of developing applications.
 On the negative side, applications may suffer some performance penalties and also lack of control.
 As mentioned in section \ref{sec:resource-awareness}, the lost of control makes the language inappropriate in scenarios that require further assistance to deal with resources.
 
-Among the features present in MRTEs that impact the implementation of resource-aware applications we identify: automatic memory management; ii) dynamic code loading; iii) support for concurrent programming; and iv) the usage of high-level abstractions, such as managed threads and classloaders,  that do not always correspond to the concepts (process, thread) traditionally used to handle resources.
+Among the features present in MRTEs that impact the implementation of resource-aware applications we identify:
+\begin{enumerate}
+\item Automatic memory management.
+\item Dynamic code loading.
+\item Support for concurrent programming.
+\item The use of high-level abstractions, such as managed threads and classloaders,  that do not always correspond to the concepts (process, thread) traditionally used to handle resources.
+\end{enumerate}
 In addition, there are implementation-specific limitations that obstruct the development of resource-aware solutions.
 For instance, it has been largely discussed \cite{Doyle2002,Fong:2004:PVM:1028976.1029010,1420998} the lack of modularization in the Java HotSpot implementation of the JVM; this makes hard both the addition of new features that aim at dealing with specific concerns, and the adoption of these extensions.
 Likewise, there are many dependency relationships among different sections of code within the Java standard library that hinder resource management related tasks \cite{Blackburn2008,Kell:2012:JOE:2414740.2414747}.
@@ -317,9 +323,12 @@ The mechanisms for monitoring and managing them differ considerably due to two r
 In the first place, this happens because the hardware/platform support for resource management varies depending on the type of resource.
 However, this is also the result of intrinsic differences on the way resources are consumed.
 As a consequence, solutions to face resource related issues are often limited to a few types of resource.
-In this thesis, we are interested in the following resources: \textit{CPU}, \textit{Memory}, \textit{Network Bandwidth}, and \textit{IO Throughput}.
-It is noteworthy that some approaches are able to deal with many resources and others with just one resource.
-Adding this to the fact that there is no natural order of importance among the types of resource~\footnote{It may exist for specific scenarios.}, we can see that this property is \textit{nominal} and \textit{multivalued}.  
+In this thesis, we are interested in the following resources: \textit{CPU} time, main \textit{memory}, \textit{network bandwidth}, and \textit{IO throughput}.
+It is noteworthy that some approaches are able to deal with many resources and others with just one resource. 
+
+\extracomment{Manageable type of resource - summary}{
+Since there is no natural order of importance among the types of resource~\footnote{It may exist for specific scenarios.}, and an approach may be capable of handling many types of resource, this property is \textit{nominal} and \textit{multivalued}.
+}
 
 \item \textbf{Portability:}
 This property is desired on any software system.
@@ -347,8 +356,10 @@ In this thesis, we call \textit{fully portable} to those approaches that are OS 
 Additional advantages of using platform-independent metrics to analysis the dynamic behavior of applications are discussed thereafter in Section \ref{sec:components-oriented-resource-awareness}.
 However, it is worth mentioning that the problem of defining contracts related to resource consumption for specific platforms has been discussed elsewhere using other approaches \cite{Lambert200897, Pathak:2012:ESI:2168836.2168841}.
 
+\extracomment{Portability - summary}{
+The portability is an \textit{ordinal} property, which can take the following values: \textit{OS Specific}, \textit{MRTE Specific}, \textit{Portable} and  \textit{Fully portable}.
+}
 
-In summary, portability is an \textit{ordinal} property which can take the following values: \textit{OS Specific}, \textit{MRTE Specific}, \textit{Portable} and  \textit{Fully portable}.
 
 \item \textbf{Granularity:}
 Traditionally, operating systems have treated processes and threads as units accountable for resource consumption.
@@ -362,7 +373,10 @@ The granularities \textit{thread} and \textit{method} are self-explanatory.
 It is only necessary to highlight that if a solution is, for instance, able to handle a single managed thread then it is also capable of handling several managed threads by simply aggregating, probably with an additional performance overhead, the results of many threads.
 In this thesis, \textit{arbitrary} granularity level refers to the possibility of collecting data and managing resource for any specific part of the application running on top of a MRTE.
 For instance, monitoring the CPU consumption of several threads plus the consumption of a few methods executed by another thread.
+
+\extracomment{Granularity - summary}{
 This is also an \textit{ordinal} property where the values are sorted from coarser to finer granularity level.
+}
 
 \item \textbf{Performance Overhead:} 
 In dealing with resource awareness, a major concern is the performance overhead required to support the paradigm.
@@ -378,12 +392,17 @@ Finally, conducting further experiments to evaluate how each approach behaves un
 Fortunately, most results have been presented as the percent of overhead produced by the addition of resource management capabilities to an already existent system.
 Thus, we can use these values as measurements for the comparison.
 
-In this section, we use the \textit{ordinal} labels \textit{low}, \textit{medium} and \textit{high} to denote the performance overhead.
+In this section, we use the \textit{ordinal} labels \textit{low}, \textit{medium}, and \textit{high} to denote the performance overhead.
 This labels are used to associate a measure of quality to individual approaches. 
 The definition of these label is as follow: \textit{low} overhead indicates values under 10\%, \textit{medium} overhead denotes values under 100 \%, and any other value is considered \textit{high} overhead.
 A reader might disagree with these definitions because, for instance, it might be argued that these definitions should be relative to the context of use (5\% may be to much overhead in certain domains).
 However, we are only using these labels to compare methods to each other.
 In any case, we also present the numerical value of overhead when it is available; if no numerical value is published, we discuss the reasons that let us to label a method with a given value.
+
+\extracomment{Performance Overhead - summary}{
+The level of measurement of this property is \textit{scalar}. However, the scalar values should not be compared directly in this case because we are using values that were computed in different experiments. Instead, we prefer the \textit{ordinal} values \textit{low}, \textit{medium}, and \textit{high}.
+}
+
 \end{itemize}
 
 In the rest of this section, different approaches related to resource management are presented.
@@ -572,18 +591,18 @@ Since the memory is partitioned by design, reserving certain amount of memory fo
 In the same way, controlling the amount of memory used by some applications is straightforward.
 Applications with resource requirements can be easily developed if shared memory regions are avoided.
 Experiments executed to evaluate KaffeOS show that it has overhead of 11\%.
-In a related approach, the Multitasking Virtual Machine (MVM), the authors aim at isolating many JVMs on top of
+In a related approach, the \gls{MVML}, the authors aim at isolating many JVMs on top of
 a single OS process \cite{czajkowski_multitasking_2001}.
 This approach offers advantages such as reduced memory footprint and faster initialization time for new applications.
 As was mentioned in the previous section, per isolate memory accounting is available in MVM;
 this can be used to provide memory reservation with a low overhead. 
-Unfortunately, in the context of a middleware, there is an slowdown if communication between tasks running atop isolates is needed because in such a case an inter-process communication (IPC) mechanisms must be used.
+Unfortunately, in the context of a middleware, there is an slowdown if communication between tasks running atop isolates is needed because, in such a case, an \gls{IPC} mechanism must be used.
 
 
-Deterministic response time is required to build real-time (RT) applications.
+Deterministic response time is required to build \gls{RT} applications.
 Often, this requires appropriate support for CPU time reservation. 
 However, features such as automatic memory management produce non-deterministic CPU usage that affects the response time.
-The Real-time Specification for Java (RTSJ) addresses Java limitations that prevent its use as RT environment.
+The \gls{RTSJ} addresses Java limitations that prevent its use as RT environment.
 In particular, modifications to the memory management subsystem have been implemented because it is the biggest source of non-deterministic behavior in Java.
 To support systems with hard-RT constrains, RTSJ provides additional memory regions where deallocations are managed by developers.
 Unfortunately, the rules that define how objects in different regions interact, break the Java programming model.
