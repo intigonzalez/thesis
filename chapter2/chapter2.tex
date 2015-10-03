@@ -394,30 +394,6 @@ Other properties worth mentioning in this thesis are those that describe how com
 For instance,  whether the concept of \textit{port} is implemented; if there exists distinction between \textit{required} and \textit{provided interfaces}; characteristics of the \textit{interface language}; and what is the \textit{communication type} (synchronous, unicast, and others).
 Our interest in these properties is limited to understanding what mechanisms are used to support interaction between components, how are these mechanisms implemented, and how this interaction affects the way in which we deal with resource consumption monitoring and reservation.
 
-To guarantee properties regarding the behavior of components (and the systems built using them), contracts are used. 
-According to \cite{Beugnard774917}, \textit{contracts} can be classified in four levels which, if
-taken together, form a global contract; these are syntactic, behavioral, synchronization, and Quality-Of-Service (QoS).
-Contracts based on the first three levels describe what can be done using a component and under which provisions.
-They do not specify other properties, such as what resources would be consumed by a component to perform some action.
-Nevertheless, a violation of QoS requirements breaks clients just as easily as a violation of a business rule.
-If a provider is too slow in serving a request, client components will also be slow in achieving their goal.
-These contracts, which express QoS and extra-functional properties, are used to control how many resources a component consumes.
-
-In writing a contracts to express requirements regarding resource utilization, developers may profit of platform-independent mechanisms to describe the resources needed by components and component-based systems.
-Indeed, writing contracts using platform-dependent metrics hinders its interpretation when components are deployed in a different execution environment.
-For instance, if a contract expresses the fact that a component needs $n$ number of CPU cycles to handle a request, the value of $n$ may, in fact, represent different values depending on the architecture.
-For this reason, using a metric, such as number of bytecode instructions executed, to describe a contract is useful in MRTEs.
-This metric in particular has the following advantages:
-\begin{itemize}
-\item It is easy to control the admission of components because each platform knows how many bytecode instructions it is able to execute in an interval of time.
-\item A portable framework for resource consumption monitoring is easier to implement.
-\item Different measurements are easy to compare, even across platforms, because they use the same metric.
-\end{itemize} 
-
-Besides the metrics used, the exact interpretation of a contract is also a fundamental concern.
-Contracts may express properties for just one component and a single type of resources, but they can also express how should be the usage of resources in more complex scenarios where different components and types of resources are involved.
-
-
 \paragraph{Support for component-based engineering in MRTEs}
 An important property of component models is its implementation support.
 The discussion in this research is limited to those that have been implemented for MRTEs.
@@ -429,7 +405,7 @@ It is interesting how these component models have different properties when it c
 However, they also differ in how components are represented on top of MRTE concepts; in other words, they follow different approaches to implement the component framework itself.
 
 \paragraph{How components consume resources}
-Interestingly, components provide boundaries between different software entities, which are forced to communicate through well defined interfaces; it is then possible to write QoS contracts associated to these interfaces \cite{Beugnard774917}.
+Interestingly, components provide boundaries between different software entities, which are forced to communicate through well defined interfaces; it is then possible to write \gls{QoS} contracts associated to these interfaces \cite{Beugnard774917}.
 
 It is important to remember the difference between component type and component instance when we discuss the resource usage of these systems.
 Indeed, instances may have a state while component types are stateless.
@@ -443,6 +419,21 @@ Interestingly, the exact representation of this context depends on the component
 A common way to define this context, is associating a set of threads to a component.
 
 To summarize, the resources consumed by a component comprise (but are not limited to): its state, the time-shared resources it uses (CPU, network), the space required to store data and code shared among all instances of a component type, and the temporary space needed to execute the component.       
+
+\paragraph{Contracts on resource consumption}
+\glslink{QoS}{QoS} contracts serve, among others, to describe how components consume resources.
+They simply express what resources will be consumed by a component to perform some action. 
+In writing such contracts, it is better that developers use platform-independent metrics.
+Indeed, doing otherwise hinders the interpretation of a contract when components are deployed in different platforms.
+For instance, if $n$ CPU cycles are required to handle a request, this $n$ may, in fact, represent different amount of CPU time depending on the architecture.
+This is the reason why, the number of bytecode instructions to be executed, which is platform-independent, offers the following advantages:
+\begin{itemize}
+\item It is easy to control the admission of components because each platform knows how many bytecode instructions it is able to execute in an interval of time.
+\item A portable framework for resource consumption monitoring is easier to implement.
+\item Different measurements are easy to compare, even across platforms, because they use the same metric.
+\end{itemize}
+Besides the metrics used, the exact interpretation of a contract is also a fundamental concern.
+Contracts may express properties for just one component and a single type of resources, but they can also express how should be the usage of resources in more complex scenarios where different components and types of resources are involved.
 
 \paragraph{Specific features to consider}
 A first issue to take into consideration is \textit{how to account for resource consumption in the presence of interaction between components}.
@@ -495,26 +486,45 @@ Most existing solutions for memory consumption follow a fixed criteria, either a
 
 A second aspect is to decide \textit{where should be implemented} the mechanism for resource consumption monitoring and reservation.
 Essentially, this consists in, selecting which actors implement the mechanism and policies to manage resources, and deciding if the actors collaborate to achieve their goal \cite{Crnkovic2011}.
+Indeed, many component models provide no facilities for managing \glspl{EFP}.
+In these cases, the mechanism used to handle a property is left to the designers of each application.
+This facilitates the creation of EFP management policies that are specifically tuned towards a system, and also allows the use of multiple policies in a system.
+%However, the fact that such policies are not
+%standardized (and are fully implemented in components) may be a source of architectural mismatch between
+%components.
+%The compatibility of components is improved if the
+%execution platform provides standardized facilities for managing EFPs.
+%However, components still need to know EFPs affect their functioning in order to guide the manner
+%in which EFPs are handled.
+On the contrary, other approaches favor the separation of concerns between functional and non-functional aspects.
+Hence, components are only allowed to address functional aspects, while containers are in charge of wrapping components to guarantee EFPs.
+%Containers can either be totally in charge of managing EFPs or
+%they can interact with a mechanism in the component framework that manages EFPs.
+%This approach is a way of realizing separation of
+%concerns in which components focus on functional aspects
+%and containers concentrate on extra-functional aspects.
 
-Many component models provide no facilities for managing \glspl{EFP}.
-The mechanism used to handle a property is left to the designers of each application.
-This facilitates the creation of EFP management policies that are specifically tuned towards a system, and also allow the usage of multiple policies in a system.
-However, the fact that such policies are not
-standardized (and are fully implemented in components) may be a source of architectural mismatch between
-components.
-The compatibility of components is improved if the
-execution platform provides standardized facilities for managing EFPs.
-However, components still need to know EFPs affect their functioning in order to guide the manner
-in which EFPs are handled.
+%A third concern, which is related to the previous one, is how to express EFPs.
 
-In another approach, components are designed to address only functional aspects and not EFPs.
-Thus, in the execution environment, these components
-are wrapped in a container that has the knowledge on how to manage EFPs.
-Containers can either be totally in charge of managing EFPs or
-they can interact with a mechanism in the component framework that manages EFPs.
-This approach is a way of realizing separation of
-concerns in which components focus on functional aspects
-and containers concentrate on extra-functional aspects.
+%To guarantee properties regarding the behavior of components (and the systems built using them), contracts are used. 
+%According to \cite{Beugnard774917}, \textit{contracts} can be classified in four levels which, if
+%taken together, form a global contract; these are syntactic, behavioral, synchronization, and Quality-Of-Service (QoS).
+%Contracts based on the first three levels describe what can be done using a component and under which provisions.
+%They do not specify other properties, such as what resources would be consumed by a component to perform some action.
+%Nevertheless, a violation of QoS requirements breaks clients just as easily as a violation of a business rule.
+%If a provider is too slow in serving a request, client components will also be slow in achieving their goal.
+%These contracts, which express QoS and extra-functional properties, are used to control how many resources a component consumes.
+
+%In writing a contracts to express requirements regarding resource utilization, developers may profit of platform-independent mechanisms to describe the resources needed by components and component-based systems.
+%Indeed, writing a contract using platform-dependent metrics hinders its interpretation when components are deployed in a different execution environment.
+%For instance, if a contract expresses the fact that a component needs $n$ number of CPU cycles to handle a request, the value of $n$ may, in fact, represent different values depending on the architecture.
+%For this reason, using a metric, such as number of bytecode instructions executed, to describe a contract is useful in MRTEs.
+%This metric in particular has the following advantages:
+%\begin{itemize}
+%\item It is easy to control the admission of components because each platform knows how many bytecode instructions it is able to execute in an interval of time.
+%\item A portable framework for resource consumption monitoring is easier to implement.
+%\item Different measurements are easy to compare, even across platforms, because they use the same metric.
+%\end{itemize} 
 
 %\paragraph{Example of differences among concrete abstractions}
 
