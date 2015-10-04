@@ -7,30 +7,30 @@
 \usepackage[utf8]{inputenc}
 % \usepackage[T1]{fontenc}
 \usepackage[frenchb,english]{babel}
-\usepackage{amsmath,amssymb}
 \usepackage[T1]{fontenc}
 \usepackage[usenames,dvipsnames]{xcolor}
-\usepackage{amssymb}
+\usepackage{floatflt,amsmath,amssymb}
 \usepackage{these}
 \usepackage{helvet}
-\usepackage{array}
-\usepackage{floatflt,amssymb}
+\usepackage{array} % for working with complex tables
+\usepackage{multirow} %% pour regrouper un texte sur plusieurs lignes dans une table
+
 %\usepackage[draft=true]{graphicx}
 \usepackage{graphicx}
-\usepackage{moreverb} %% pour le verbatim en boite
+\usepackage{moreverb} %% pour le verbatim en boite, provides the 'comment' environment
 %\usepackage{slashbox} %% pour couper les colonnes des tableaux en diagonale
 %\usepackage{showkeys} %% pour voir les labels
-\usepackage{multirow} %% pour regrouper un texte sur plusieurs lignes dans une table
+
 \usepackage{url} %% pour citer les url par \url
-\usepackage[all]{xy} %% pour la barre au dessus des symboles
-\usepackage{shorttoc} %% pour plusieurs tables des matières par la commande \shorttableofcontents{Titre}{profondeur}.
-\usepackage{textcomp} %% pour le symbol pour mille par \textperthousand.
+%\usepackage[all]{xy} %% pour la barre au dessus des symboles
+%\usepackage{shorttoc} %% pour plusieurs tables des matières par la commande \shorttableofcontents{Titre}{profondeur}.
+%\usepackage{textcomp} %% pour le symbol pour mille par \textperthousand.
 \usepackage{hyperref} %% pour la transformation en PDF, ça permet d'obtenir des liens sur les sections ...
 
 \usepackage[acronym,toc]{glossaries} % glossary, will be added to the content table
 
-\usepackage[babel=true]{csquotes}
-\usepackage[right]{eurosym}
+%\usepackage[babel=true]{csquotes}
+%\usepackage[right]{eurosym} % just to paint the symbol of euro
 \usepackage{mdframed}
 %\usepackage{algorithm}
 %\usepackage{algorithmic}
@@ -47,12 +47,15 @@
 \definecolor{purple}{rgb}{0.58,0,0.82}
 \definecolor{dkgray}{rgb}{0.3,0.3,0.3}
 
-\usepackage{lscape}
+%\usepackage{lscape} % for putting individual pages in landscape mode
 %\usepackage{subfigure}
 \usepackage{listings}
-\usepackage{alltt}
+% \usepackage{alltt} % something about verbatim that I am capable of understand :-)
 
-\usepackage{tikz}
+\usepackage[nounderscore]{syntax} % for writing grammars in BNF format
+\usepackage[ligature, inference]{semantic} % for writing the semantic
+
+\usepackage{tikz} % for painting, heheheh
 \usepackage{pgfplots}
 \usepackage{pgfplotstable}
 \usetikzlibrary{arrows,shadows,patterns, external, decorations.text}
@@ -66,14 +69,12 @@
 
 \usepackage{dblfloatfix}
 
-\usepackage[tikz]{bclogo}
+\usepackage[tikz]{bclogo} % for extra comments
 
 %\usepackage{fancyhdr}
 %\pagestyle{fancy}
 
 %\usepackage{todonotes}
-
-\usepackage{amssymb}% http://ctan.org/pkg/amssymb
 %\usepackage{pifont}% http://ctan.org/pkg/pifont
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%

@@ -150,6 +150,208 @@ Further details about this example are discussed in the next section.
 
 \subsection{Concrete Syntax}\label{sec:concrete-syntax}
 
+%\setlength{\grammarparsep}{20pt plus 1pt minus 1pt}
+{
+\scriptsize
+\begin{figure}[!ht]
+\begin{mdframed}[outermargin=0.5cm, innermargin=0.5cm]
+
+\newcommand{\grule}[1]{\hfill{\scriptsize (#1)}}
+\setlength{\grammarindent}{5em}
+\begin{grammar}
+
+<program> ::= <types> <structures> \grule{1}
+
+<types> ::= <type> <types> | <empty> \grule{2, 3}
+
+<type> ::= <id> `:' `table-of' <id> | <id> `:' `struct' `{' <fields> `}' \grule{4, 5}
+
+<fields> ::= <id> `:' <id> <fields> | <id> `:' <id> \grule{6, 7}
+
+<structures> ::= <struct-factory> <structures> | <struct-factory> \grule{8, 9}
+
+<struct-factory> ::= `foreach' <id>`:'<expr> `create' <body> \grule{10}
+
+%<Header> ::= `create structure foreach' <id>`:'<expr>
+
+<body> ::= <constructor> `membership' <expr> <updates> \grule{11}
+
+<constructor> ::= `constructor' <statements> \grule{12}
+
+%<membership> ::= 
+
+<updates> ::= `updates' <statements> \grule{13}
+
+<statements> ::= <s> <statements> | <s> \grule{14}
+
+<s> ::= <id> `=' <e>  \grule{16} 
+
+<e> ::= <e> <binary-op> <e> | <unary-op> <e> \grule{17a, 17b}
+\alt <e> `in' <id> | <e> `is' <id> \grule{17c, 17d}
+\alt <e> `.' <id> `(' <expr-list> `)' \grule{18}
+\alt <e> `.' <id> `(' `[' <id> `|' <statements> `]' `)' \grule{19}
+\alt <e> `.' <id> \grule{20}
+\alt `#[' <expr-list> `]' | `struct' <id> `{' <expr-list> `}' \grule{21, 22}
+\alt <int-literal> | <string-literal> | <bool-literal> \grule{23, 24, 25}
+\alt <id> | `(' <e> `)' \grule{26, 27}
+
+<expr-list> ::= <e> `,' <expr-list> | <empty> 
+
+<binary-op> ::= `+' | `*' | `-' | `/' | `and' | `or'
+
+<unary-op> ::= `-' | `not'
+
+
+\end{grammar}
+\end{mdframed}
+\end{figure}
+}
+
+\mathlig{->}{\rightarrow}
+\mathlig{|-}{\vdash}
+\mathlig{=>}{\Rightarrow}
+\mathlig{"}{\rho}
+
+\mathligson
+
+% classics
+\[
+% true
+\inference[It(25):]{}{so, E, S|-true:Bool(true),S}
+\quad\quad
+% false
+\inference[It(25):]{}{so, E, S|-false:Bool(false),S}
+\]
+
+\[
+% integers
+\inference[It(23):]{\textit{i is an integer literal}}{so, E, S|-i:Int(i),S}
+\quad\quad
+% strings
+\inference[It(24):]{\textit{s is a string literal of length l}}{so, E, S|-s:String(s,l),S}
+\]
+
+\[
+% id
+\inference[It(26):]{
+l_{id}=E(id) \\
+v = S(l_{id})
+}{so, E, S|-id:v,S}
+\quad\quad
+% strings
+\inference[It(27):]{
+so, E, S|-e:v,S_1
+}
+{so, E, S|-(e):v,S_1}
+\]
+
+\[
+% unary operators
+\inference[It(17b):]{
+so, E, S|-e_0:v_0,S_1
+}{so, E, S|--e_0:-v_0,S_1}
+\quad\quad
+% binary operators
+\inference[It(17a):]{
+so, E, S|-e_0:v_0,S_1 \\
+so, E, S_1|-e_1:v_1,S_2
+}{so, E, S|-e_0+e_1:v_0+v_1,S_2}
+\]
+
+\[
+% in operator
+\inference[It(17c mal):]{
+so, E, S|-e_0:v_0,S_1 \\
+so, E, S_1|-e_1:v_1,S_2
+}{so, E, S|-e_0 \; in \; id:v,S_2}
+\quad\quad
+% is operators
+\inference[It(17d):]{
+so, E, S|-e_0:v_0,S_1 \\
+v_0 = X(a_1=l_1, \ldots, a_n=l_n) \\
+v = \textit{X is subtype of T?} \; Bool(true) \textit{:} Bool(false) \\
+}{so, E, S|-e_0\; is \; T:v,S_1}
+\]
+
+\[
+% assignment
+\inference[It(16):]
+{
+so,E,S|-e_0:v_0,S_1\\
+l_{id} = E(id) \\
+S_2 = S_1[v_0/l_{id}]
+}
+{so, E, S|-id = e_0:v_0, S_2}
+\quad\quad
+% statements
+\inference[It(14)]
+{
+so, E, S|-s_1:v_1,S_1 \\
+so, E, S_1|-s_2:v_2,S_2 \\
+\dots \\
+so, E, S_{n-1}|-s_n:v_n,Sn
+}
+{so, E, S|-s_1,\dots,s_n:v_n,S_n}
+\]
+
+\[
+% struct literal
+\inference[It(22):]
+{
+so,E,S|-e_1:v_1,S_1 \\
+\ldots \\
+so,E,S_{n-1}|-e_n:v_n,S_n \\
+class(T)=(a_1:T_1, \ldots, a_n:T_n) \\  % take the fields of the object
+l_i = newloc(S_n) \; for \; i = 1 \ldots n \\
+v=T(a_1=l_1, \ldots, a_n=l_n) \\ % assign locations to fields
+S_f = S_n[v_1/l_1, \ldots, v_n/l_n]
+}
+{so, E, S|-struct\;T\;\{ e_1, \ldots, e_n \}:v,S_f}
+\quad\quad
+% list literal
+\inference[It(21):]
+{
+so,E,S|-e_1:v_1,S_1 \\
+\ldots \\
+so,E,S_{n-1}|-e_n:v_n,S_n \\
+l_i = newloc(S_n) \; for \; i = 1 \ldots n \\
+v=Table(a_1=l_1, \ldots, a_n=l_n) \\
+S_f = S_n[v_1/l_1, \ldots, v_n/l_n]
+}
+{so, E, S|-\#[e_1, \ldots, e_n]:v,S_f}
+\]
+
+\[
+% accessing field
+\inference[It(20):]{
+so,E,S|-e:v0,S_f \\
+v0 = X(a_1=l_1, \dots, a_n=l_n) \\
+l_{id} = l_i \; where \; a_i = id \\
+v = S_1(l_{id}) \\
+}
+{so,E,S|-e.id:v,S_f}
+\quad\quad
+% calling method
+\inference[It(18):]{
+so,E,S|-e_1:v_1,S_1 \\
+\ldots \\
+so,E,S_{n-1}|-e_n:v_n,S_n \\
+so,E,S_n|-e_0:v_0,S_{n+1} \\
+v_0 = X(a_1=l_1, \dots, a_n=l_m) \\
+impl(X,f) = (x_1, \dots, x_n, f_{body}) \\
+l_{x_i} = newloc(S_{n+1}) \; for \; i = 1 \dots n \\
+E' = [a_1:l_1, \dots, a_m:l_n][l_{x_1}/x_1, \dots, l_{x_n}/x_n] \\
+S_{n+2} = S_{n+1}[v_1/l_{x_1}, \dots, v_n/l_{x_n}] \\
+v_0, E', S_{n+2}|-f_{body}:v,S_f
+}
+{so,E,S|-e_0.f(e_1, \ldots, e_n):v,S_f}
+\]
+
+% news
+
+% lambda expressions
+\inference[It(19) mal]{so,E,S|-statements:v,S_1}{so,E,S|-[id|statements]:v,S_1}
+
 A textual concrete syntax has been defined for our DSL allowing the domain expert to define a custom memory profiler.
 As an example, the next listing shows how to compute the length of each \textit{SimplyLinkedList} in the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}.
 The mechanism is based on counting the number of \textit{NodeEntry} referenced by the \textit{SimplyLinkedList}.
