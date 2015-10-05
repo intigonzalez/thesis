@@ -1,24 +1,24 @@
 \selectlanguage{english}
 \chapter{Squirrel: Architecture Driven Resource Management}
 \label{chp:squirrel}
-\markboth{Squirrel: Architecture Driven Resource Management}{Chapter4}
+\markboth{Squirrel: Architecture Driven Resource Management}{Chapter5}
 
 \coolphrase {
 	I still don't know
 }{Some name here}
 
 
-Resource management is critical to guarantee Quality of Service when various stakeholders share the execution environment, such as cloud or mobile environments.
-In this context, providing management techniques compatible with standard practices, such as component models, is essential.
-Resource management is often realized through monitoring techniques, while resource isolation uses virtual machines or containers (e.g., docker).
-These techniques (i) impose varying levels of overhead depending on the managed resource, and (ii) are applied at different abstraction levels, such as processes, threads or objects.
-Thus, mapping components to system-level abstractions in the presence of resource management requirements can lead to sub-optimal systems.
-
-We propose Squirrel, an approach to tune component deployment and resource management in order to reduce management overhead.
-At runtime, Squirrel uses an architectural model annotated with resource requirements to guide the mapping of components to system abstractions, providing different resource management capabilities and overhead.
-We present an implementation of Squirrel, using a Java component framework,
-and a set of experiments to validate its feasibility and overhead.
-We show that choosing the right \textit{component-to-system} mappings at deployment-time reduces performance overhead and/or memory use.
+%Resource management is critical to guarantee Quality of Service when various stakeholders share the execution environment, such as cloud or mobile environments.
+%In this context, providing management techniques compatible with standard practices, such as component models, is essential.
+%Resource management is often realized through monitoring techniques, while resource isolation uses virtual machines or containers (e.g., docker).
+%These techniques (i) impose varying levels of overhead depending on the managed resource, and (ii) are applied at different abstraction levels, such as processes, threads or objects.
+%Thus, mapping components to system-level abstractions in the presence of resource management requirements can lead to sub-optimal systems.
+%
+%We propose Squirrel, an approach to tune component deployment and resource management in order to reduce management overhead.
+%At runtime, Squirrel uses an architectural model annotated with resource requirements to guide the mapping of components to system abstractions, providing different resource management capabilities and overhead.
+%We present an implementation of Squirrel, using a Java component framework,
+%and a set of experiments to validate its feasibility and overhead.
+%We show that choosing the right \textit{component-to-system} mappings at deployment-time reduces performance overhead and/or memory use.
 
 \input{chapter4/introduction.tex}
 

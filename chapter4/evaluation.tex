@@ -72,7 +72,7 @@ In contrast, isolating components produces no appreciable CPU overhead for these
 
 %Memory consumption is affected by both \textit{ScapeGoat} and \textit{Squirrel}.
 Both \textit{ScapeGoat} and \textit{Isolating components} cause memory overhead.
-As shown in figure \ref{fig:memory-overhead}, \textit{ScapeGoat's} is higher than when using component isolation.
+As shown in Figure~\ref{fig:memory-overhead}, \textit{ScapeGoat's} is higher than when using component isolation.
 \textit{Isolating components}'s overhead is the result of JVM duplication and is, on average, 99\% over baseline.
 Meanwhile, \textit{ScapeGoat's} overhead is due to tagging objects with the identifier of the component that owns it.
 Tagging adds either a field and a finalization method to an object, or wraps the object with a \textit{weak reference} held by the framework, resulting in overhead in the \textit{Permanent Space}.
@@ -80,24 +80,22 @@ Tagging adds either a field and a finalization method to an object, or wraps the
 As seen in the experiments, memory overhead due to tagging is more important than CPU. 
 
 \begin{figure*}
-
-\subfloat[][]{
+\centering
+\begin{minipage}[t]{0.43\linewidth}
 	\centering
-	\begin{minipage}{0.48\textwidth}
 	\input{chapter4/figures/cpu-overhead.tex}
-	\end{minipage}
-	\label{fig:cpu-overhead}
-}%
-\subfloat[][]{
+	\caption{CPU overhead caused by resource management during the execution of Dacapo benchmarks.}\label{fig:cpu-overhead}
+\end{minipage}
+\hspace{0.05\linewidth}
+\begin{minipage}[t]{0.43\linewidth}
 	\centering
-	\begin{minipage}{0.48\textwidth}
 	\input{chapter4/figures/memory-overhead.tex}
-	\end{minipage}
-	\label{fig:memory-overhead}
-}%
-%\hspace{4cm}
-\caption{In \ref{fig:cpu-overhead}) and \ref{fig:memory-overhead}), we show CPU and memory overhead, respectively, caused by resource management during the execution of Dacapo benchmarks.}
-\vspace{-0.5cm}
+	\caption{Memory overhead caused by resource management during the execution of Dacapo benchmarks.}\label{fig:memory-overhead}
+\end{minipage}
+%\caption{
+%In \ref{fig:cpu-overhead}) and \ref{fig:memory-overhead}), we show
+%CPU and memory overhead, respectively, caused by resource management during the execution of Dacapo benchmarks.}
+%\vspace{-0.5cm}
 \end{figure*}
 
 
@@ -144,27 +142,25 @@ To measure latency and bandwidth, the metrics we use for comparison, we develope
 The clone is delivered with three protocols: 1) socket-based, 2) our channel, and 3) a protocol for \textit{named pipes}.
 The first uses simple TCP sockets with synchronous operation in its implementation. 
 The second requires two channels, configured to use a queue with 128 chunks of 512Kb, because our channel is unidirectional.
-Figure \ref{fig:latency-raw-communication} shows the latency for messages shorter than 128 bytes.
+Figure~\ref{fig:latency-raw-communication} shows the latency for messages shorter than 128 bytes.
 Memory-based communication outperforms NIO-sockets for all the values in the range.
-Likewise, figure \ref{fig:badnwidth-raw-communication} shows the throughput of both mechanisms.
+Likewise, Figure~\ref{fig:badnwidth-raw-communication} shows the throughput of both mechanisms.
 In general, memory-based communication behaves better than TCP sockets.
 Our approach outperforms sockets by an average of 652.36\% for messages shorter than 512 bytes.
 Meanwhile, it behaves on average 46.26\% better for messages between 1 Mb and 64 Mb, which is the range where the benefits of large copies surpass the disadvantages of having a synchronized queue.
 
 \begin{figure*}
 \centering
-\subfloat[][]{
-	\begin{minipage}{0.49\textwidth}
-	\input{chapter4/figures/latency-raw-communication.tex}
-	\end{minipage}
-	\label{fig:latency-raw-communication}
-}
-\subfloat[][]{
-	\begin{minipage}{0.49\textwidth}
-	\input{chapter4/figures/raw-communication.tex}
-	\end{minipage}
-	\label{fig:badnwidth-raw-communication}
-}
+\begin{minipage}[t]{0.43\textwidth}
+\input{chapter4/figures/latency-raw-communication.tex}
+\caption{Comparing latency of different IPC mechanisms}\label{fig:latency-raw-communication}
+\end{minipage}
+\hspace{0.05\linewidth}
+\begin{minipage}[t]{0.43\textwidth}
+\input{chapter4/figures/raw-communication.tex}
+\caption{Comparing bandwidth of different IPC mechanisms}\label{fig:badnwidth-raw-communication}
+\end{minipage}
+	
 %\hspace{4cm}
 %\subfloat[][]{
 %	\begin{minipage}{0.47\textwidth}
@@ -179,10 +175,11 @@ Meanwhile, it behaves on average 46.26\% better for messages between 1 Mb and 64
 %	\end{minipage}
 %	\label{fig:badnwidth-raw-communication-8-consumers}
 %}
-\caption{Comparing our queue against another IPC mechanism. Latency and bandwidth for a single receiver are shown in \ref{fig:latency-raw-communication}) and \ref{fig:badnwidth-raw-communication}).
+%\caption{Comparing our queue against other IPC mechanisms. Latency and bandwidth for a single receiver are shown
+%in \ref{fig:latency-raw-communication}) and \ref{fig:badnwidth-raw-communication}).
 %Figures \ref{fig:latency-raw-communication-8-consumers}) and \ref{fig:badnwidth-raw-communication-8-consumers}) show latency and bandwidth respectively for eight receivers.
-\vspace{-0.5cm}
-}
+%}
+\vspace{0.5cm}
 \end{figure*}
 
 %We also evaluate latency and bandwidth when the number of receivers grows because the design of the shared-memory channel was driven by the need to provide multicast semantics.
