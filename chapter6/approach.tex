@@ -1,14 +1,5 @@
-\section{Approach}\label{sec:approach}
 
-In this chapter, we propose a tool to create custom memory profilers for MRTEs.
-We are interested on easing the task of defining new profilers without sacrificing their performance regarding CPU consumption.
-Keeping the profiler's overhead as low as possible is of utmost importance for us because lightweight profilers can be use both during the development phase and during the application execution in a production environment.
-To reach this goal, we propose a Domain Specific Language (DSL) and its code generator which aims at describing and generating efficient online memory profilers. 
-
-We next present the syntax, semantics and usage examples of our domain-specific language.
-
-
-\subsection{Brief overview of the domain}
+\section{Brief overview of the domain} \label{sec:domain-overview}
 
 Memory profilers aim at capturing information regarding how an application use memory.
 In an object-oriented runtime environment such as Java, this information can be as simple as the number of objects of a specific class, but it can also be  as complex  as the list of possible memory leak sources.
@@ -39,6 +30,18 @@ These two steps: identifying \textit{structures} and computing their \textit{mem
 
 Finally, a \textbf{\textit{structure type}} provides a description of the behavior of a set of \textit{structures}. 
 In particular, it provides (i) a function to evaluate whether an object is member of the \textit{structure}, (ii) a way to define the values corresponding to the \textit{memory profile} of the \textit{structure}, and finally (iii) a factory to identify all  corresponding \textit{structures} in the \textit{memory heap}.
+
+\extracomment{TODO}{Add example of structures in a graph, all connected to the fact that roots are in threads}
+
+
+\section{Approach}\label{sec:approach}
+
+In this chapter, we propose a tool to create custom memory profilers for MRTEs.
+We are interested on easing the task of defining new profilers without sacrificing their performance regarding CPU consumption.
+Keeping the profiler's overhead as low as possible is of utmost importance for us because lightweight profilers can be use both during the development phase and during the application execution in a production environment.
+To reach this goal, we propose a Domain Specific Language (DSL) and its code generator which aims at describing and generating efficient online memory profilers. 
+
+We next present the syntax, semantics and usage examples of our domain-specific language.
 
 \subsection{Abstract Syntax}\label{sec:abstract-syntax}
 
@@ -150,11 +153,19 @@ Further details about this example are discussed in the next section.
 
 \subsection{Concrete Syntax}\label{sec:concrete-syntax}
 
+A textual concrete syntax has been defined for our DSL allowing the domain expert to define a custom memory profiler using a text editor.
+A high-level view of the grammar for this textual representation is depicted in Figure~\ref{fig:dsl-grammar}.
+As can be seen, the rules that represent expressions make such a grammar ambiguous, we decided to use this form for the sake of the presentation.
+However, a complete LL(*) grammar~\cite{Parr:2011:LFA:1993498.1993548} is presented hereafter in Annex~\ref{anx:grammar}.
+One interesting aspect of this concrete language is its relative verbosity.
+For instance, it uses very explicit keywords such as ``create structure foreach'', ``constructor'', and ``membership''.
+
+
 %\setlength{\grammarparsep}{20pt plus 1pt minus 1pt}
 {
 \scriptsize
 \begin{figure}[!ht]
-\begin{mdframed}[outermargin=0.5cm, innermargin=0.5cm]
+\begin{mdframed}[outermargin=0.2cm, innermargin=0.5cm]
 
 \newcommand{\grule}[1]{\hfill{\scriptsize (#1)}}
 \setlength{\grammarindent}{5em}
@@ -170,26 +181,26 @@ Further details about this example are discussed in the next section.
 
 <structures> ::= <struct-factory> <structures> | <struct-factory> \grule{8, 9}
 
-<struct-factory> ::= `foreach' <id>`:'<expr> `create' <body> \grule{10}
+<struct-factory> ::= `create structure foreach' <id>`:'<e> `using' <body> \grule{10}
 
 %<Header> ::= `create structure foreach' <id>`:'<expr>
 
-<body> ::= <constructor> `membership' <expr> <updates> \grule{11}
+<body> ::= `constructor' <s> `membership' <expr> `updates' <s> \grule{11}
 
-<constructor> ::= `constructor' <statements> \grule{12}
+%<constructor> ::=  \grule{12}
 
 %<membership> ::= 
 
-<updates> ::= `updates' <statements> \grule{13}
+%<updates> ::= \grule{13}
 
-<statements> ::= <s> <statements> | <s> \grule{14}
+<s> ::= <a> <s> | <empty> \grule{14}
 
-<s> ::= <id> `=' <e>  \grule{16} 
+<a> ::= <id> `=' <e>  \grule{16} 
 
 <e> ::= <e> <binary-op> <e> | <unary-op> <e> \grule{17a, 17b}
 \alt <e> `in' <id> | <e> `is' <id> \grule{17c, 17d}
 \alt <e> `.' <id> `(' <expr-list> `)' \grule{18}
-\alt <e> `.' <id> `(' `[' <id> `|' <statements> `]' `)' \grule{19}
+\alt <e> `.' <id> `(' `[' <id> `|' <s> `]' `)' \grule{19}
 \alt <e> `.' <id> \grule{20}
 \alt `#[' <expr-list> `]' | `struct' <id> `{' <expr-list> `}' \grule{21, 22}
 \alt <int-literal> | <string-literal> | <bool-literal> \grule{23, 24, 25}
@@ -201,10 +212,72 @@ Further details about this example are discussed in the next section.
 
 <unary-op> ::= `-' | `not'
 
-
 \end{grammar}
 \end{mdframed}
+\caption{Concrete grammar of the language. For the sake of clarity, we are using an ambiguous grammar to describe the expression language.} \label{fig:dsl-grammar}
 \end{figure}
+}
+
+As an example, the next listing shows how to compute the length of each \textit{SimplyLinkedList} in the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}.
+The mechanism is based on counting the number of \textit{NodeEntry} referenced by the \textit{SimplyLinkedList}.
+Each \textit{NodeEntry} is used to wrap one element of data and to point to the next element.
+
+\begin{lstlisting}[escapeinside={(*}{*)}, 
+label=lst:listLengt, language=DSL2
+]
+create structure foreach e:objects.filter(l| l is SimplyLinkedList) using
+  constructor
+    initialObjects = #[e] // a list literal with one element: e
+    n = 0
+  membership (this is NodeEntry) and (referrer in this_structure)
+  updates 
+    n = n + 1
+\end{lstlisting}
+
+In the example, only one \textit{StructureFactory} is necessary.
+In line 1, we define the list of structures we are interested in.
+We do so by selecting instances of class \textit{SimplyLinkedList} as elements of the \textit{StructureFactory}.
+Since there are two simply linked lists in the memory snapshot, we are going to build two structures.
+Observe the usage of a built-in \textit{rvalue} named \textit{objects} which contains all the objects in memory.
+The valid scope of this rvalue is in both the definition of the set of structures and the computation of the initial values.
+Thereafter, lines 2-4 specify the initial values.
+Line 3 in particular initializes the set of objects included in the structure.
+Notice the usage of a list literal to include the object referenced by \textit{e}.
+In the initialization scope, the rvalue \textit{e} is equal to one of the element within the list of structures - either \textit{list0} or \textit{list1}.
+
+In line 5 we define the membership function, which is used to determine if an object is part of the structure.
+There are four built-in rvalues during the evaluation of the function as well as during the update of the variables.
+First, the value named \textit{this} is the current visited object. 
+The \textit{membership} boolean \textit{expression} aims at determining if this object is part of the \textit{structure} or not. 
+The value \textit{this\_structure} identifies the structure.
+As our runtime profiler will traverse the graph of in memory objects following references between objects, the object through which we have reached the \textit{this} object is known as \textit{referrer}.
+The last value, which is target dependent, is the kind of reference.
+Operator \textbf{is} checks if \textit{this} is an instance of class \textit{NodeEntry}.
+Likewise, operator \textbf{in} checks whether the \textit{referrer} is already a member of the structure.
+Finally, line 7 updates the length of the list when an object is detected as member of the structure.
+
+\subsection{Operational Semantics}
+
+\extracomment{TODO}{
+\begin{enumerate}
+\item Add notation
+\item Fix the rule that calls a method with a lambda expression
+\item Add the rule for the interpretation of a program
+\item Discuss the inference rules
+\end{enumerate}
+}
+
+\renewcommand{\inference}[3][]{%
+  \begin{array}[b]{@{}c@{}l@{}}
+    \smash{\raisebox{-.5\normalbaselineskip}{\footnotesize #1}} & 
+      \begin{array}[b]{l}
+        #2
+      \end{array} \\
+      \cline{2-2}
+    & \begin{array}[t]{l}
+        #3
+      \end{array}
+  \end{array}
 }
 
 \mathlig{->}{\rightarrow}
@@ -217,10 +290,10 @@ Further details about this example are discussed in the next section.
 % classics
 \[
 % true
-\inference[It(25):]{}{so, E, S|-true:Bool(true),S}
+\inference[It(25):]{}{so, E, S|-true:Bool(1),S}
 \quad\quad
 % false
-\inference[It(25):]{}{so, E, S|-false:Bool(false),S}
+\inference[It(25):]{}{so, E, S|-false:Bool(0),S}
 \]
 
 \[
@@ -260,16 +333,16 @@ so, E, S_1|-e_1:v_1,S_2
 
 \[
 % in operator
-\inference[It(17c mal):]{
-so, E, S|-e_0:v_0,S_1 \\
-so, E, S_1|-e_1:v_1,S_2
-}{so, E, S|-e_0 \; in \; id:v,S_2}
+\inference[It(17c):]{
+so, C, E, S|-e_0:v_0,S_1 \\
+v = C(v_0) = id? Bool(1):Bool(0)
+}{so, C, E, S|-e_0 \; in \; id:v,S_1}
 \quad\quad
 % is operators
 \inference[It(17d):]{
 so, E, S|-e_0:v_0,S_1 \\
 v_0 = X(a_1=l_1, \ldots, a_n=l_n) \\
-v = \textit{X is subtype of T?} \; Bool(true) \textit{:} Bool(false) \\
+v = \textit{X subtype of T?} Bool(1):Bool(0)
 }{so, E, S|-e_0\; is \; T:v,S_1}
 \]
 
@@ -337,10 +410,10 @@ so,E,S|-e_1:v_1,S_1 \\
 \ldots \\
 so,E,S_{n-1}|-e_n:v_n,S_n \\
 so,E,S_n|-e_0:v_0,S_{n+1} \\
-v_0 = X(a_1=l_1, \dots, a_n=l_m) \\
+v_0 = X(a_1=l_1, \dots, a_m=l_m) \\
 impl(X,f) = (x_1, \dots, x_n, f_{body}) \\
 l_{x_i} = newloc(S_{n+1}) \; for \; i = 1 \dots n \\
-E' = [a_1:l_1, \dots, a_m:l_n][l_{x_1}/x_1, \dots, l_{x_n}/x_n] \\
+E' = [a_1:l_1, \dots, a_m:l_m][l_{x_1}/x_1, \dots, l_{x_n}/x_n] \\
 S_{n+2} = S_{n+1}[v_1/l_{x_1}, \dots, v_n/l_{x_n}] \\
 v_0, E', S_{n+2}|-f_{body}:v,S_f
 }
@@ -349,47 +422,27 @@ v_0, E', S_{n+2}|-f_{body}:v,S_f
 
 % news
 
+\[
 % lambda expressions
-\inference[It(19) mal]{so,E,S|-statements:v,S_1}{so,E,S|-[id|statements]:v,S_1}
-
-A textual concrete syntax has been defined for our DSL allowing the domain expert to define a custom memory profiler.
-As an example, the next listing shows how to compute the length of each \textit{SimplyLinkedList} in the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}.
-The mechanism is based on counting the number of \textit{NodeEntry} referenced by the \textit{SimplyLinkedList}.
-Each \textit{NodeEntry} is used to wrap one element of data and to point to the next element.
-
-\begin{lstlisting}[escapeinside={(*}{*)}, 
-label=lst:listLengt, language=DSL2
-]
-create structure foreach e:objects.filter(l| l is SimplyLinkedList) using
-  constructor
-    initialObjects = #[e] // a list literal with one element: e
-    n = 0
-  membership (this is NodeEntry) and (referrer in this_structure)
-  updates 
-    n = n + 1
-\end{lstlisting}
-
-In the example, only one \textit{StructureFactory} is necessary.
-In line 1, we define the list of structures we are interested in.
-We do so by selecting instances of class \textit{SimplyLinkedList} as elements of the \textit{StructureFactory}.
-Since there are two simply linked lists in the memory snapshot, we are going to build two structures.
-Observe the usage of a built-in \textit{rvalue} named \textit{objects} which contains all the objects in memory.
-The valid scope of this rvalue is in both the definition of the set of structures and the computation of the initial values.
-Thereafter, lines 2-4 specify the initial values.
-Line 3 in particular initializes the set of objects included in the structure.
-Notice the usage of a list literal to include the object referenced by \textit{e}.
-In the initialization scope, the rvalue \textit{e} is equal to one of the element within the list of structures - either \textit{list0} or \textit{list1}.
-
-In line 5 we define the membership function, which is used to determine if an object is part of the structure.
-There are four built-in rvalues during the evaluation of the function as well as during the update of the variables.
-First, the value named \textit{this} is the current visited object. 
-The \textit{membership} boolean \textit{expression} aims at determining if this object is part of the \textit{structure} or not. 
-The value \textit{this\_structure} identifies the structure.
-As our runtime profiler will traverse the graph of in memory objects following references between objects, the object through which we have reached the \textit{this} object is known as \textit{referrer}.
-The last value, which is target dependent, is the kind of reference.
-Operator \textbf{is} checks if \textit{this} is an instance of class \textit{NodeEntry}.
-Likewise, operator \textbf{in} checks whether the \textit{referrer} is already a member of the structure.
-Finally, line 7 updates the length of the list when an object is detected as member of the structure.
+\inference[It(19) mal]{
+so,E,S|-s:v,S_1
+}{
+so,E,S|-[id|s]:v,S_1
+}
+\quad\quad
+% calling function with lambda expression
+\inference[It(19) mal]{
+so,E,S|-e_0:v_0,S_1 \\
+v_0 = X(a_1=l_1, \dots, a_m=l_m) \\
+impl(X,f) = (x_1, f_{body}) \\
+l_{x_1} = newloc(S_1) \\
+E' = [a_1:l_1, \dots, a_m:l_m][l_{x_1}/x_1] \\
+v_1 = clousure(E, \left[ id | s \right]) \\
+v_0, E', S_1[v_1/l_{x_1}]|-f_{body}:v,S_f 
+}{
+so,E,S|-e_0.f\left( \left[ id | s \right] \right):v,S_f
+}
+\]
 
 \subsection{Translational Semantics}\label{sec:semantic}
 
@@ -472,6 +525,8 @@ Thereafter, the information for such a structure is updated.
 %The \textit{global context} is available in listing~\ref{onInitialization} while the \textit{local context} is available in both listings~\ref{lst:onNodeFound} and~\ref{lst:onNodeFoundData}.
 
 \subsection{Language Usage}
+
+\extracomment{FIX}{Improve explanations, add a caption to each listing, improve the style of each listing}
 
 There are several possibilities for using our DSL in the various stage of an application lifecycle.
 These include checking: local data structure invariants, reachability properties, memory consumption properties and combinations of those.

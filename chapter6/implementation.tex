@@ -7,7 +7,7 @@ The usage of our DSL involves two different roles.
 Both roles are described in the rest of the section.
 
 
-\subsection{Abstraction developer}
+\subsection{Developers of the domain-specific abstractions}
 
 The first role is played by people who use the DSL to define custom memory profilers.
 We envision that DSLs designers, component framework developers and engineers who design new software abstractions would be in charge of this role.
@@ -34,7 +34,7 @@ In our implementation, using the built-in rvalue \textit{objects} in nested lamb
 Even worse, since it is costly to create a list of objects, we use a JVMTI-based iterator to access each object.
 This solution reduces memory consumption but increases execution time.
 
-\subsection{Abstraction user}
+\subsection{Users of the domain-specific abstractions}
 
 We envision that a set of specific custom profilers can be shipped in addition to the \textit{classic} artifacts that users of a software abstraction receive. 
 These specific profilers would support the abstraction usage.
