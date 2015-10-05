@@ -1,4 +1,4 @@
-\section{Introduction}
+%\section{Introduction}
 
 Resource management is critical for domains where software components share an execution environment but belong to different stakeholders.
 For instance, in multi-tenant systems resource management is used to guarantee safety, reliability and per-stakeholder Quality of Service (QoS).
@@ -27,20 +27,20 @@ This contrasts with the \textit{traditional} approach of binding the representat
 %During deployment, the information is used to automatically create a new deployment model where components are automatically mapped into abstractions that we call \textit{containers}.
 %Each \textit{container} is then configured based on the components' resource contracts, ensuring resource consumption while minimizing the overhead.
 
-In this paper we discuss an approach to resource management applicable to any component model. To validate the feasibility of our proposal, we present a reference implementation for a Java-based component model.
+In this chapter we discuss an approach to resource management applicable to any component model. To validate the feasibility of our proposal, we present a reference implementation for a Java-based component model.
 A set of experiments validate its feasibility and show various aspects of its overhead.
 The results demonstrate that choosing the right \textit{component-to-system} mappings at deployment-time can reduce performance overhead and/or memory footprint.
 %\hl{INTI: Se que esta oracion es muy general, el problema es que no estoy seguro de si poner los numeros es lo correcto pues los ejemplos son tan solo para mostrar con un caso de uso los potenciales beneficios de postergar la decision acerca de como hacer el manejo de recursos.}
-The contributions of this paper are as follow:
+The contributions of this chapter are as follow:
 \begin{itemize}
 \item An approach for architecture driven resource management that leverages structural information to guide the mapping of component model concepts onto system-level abstractions.
 \item A reference implementation of the Squirrel framework for a Java-Based component platform.
 \item A performance comparison showing how different mappings can impact the overhead of the system and how the approach behaves in comparison to state-of-practice approaches for resource management.
 \end{itemize}
 
-The remainder of this paper is organized as follows.
-The next section presents some foundational work we use along this paper.
+The remainder of this chapter is organized as follows.
+%The next section presents some foundational work we use along this chapter.
 Section \ref{sec:apprach} describes the Squirrel approach and presents how we leverage metadata to drive resource management.
 In section~\ref{sec:kevoree} we propose a reference implementation of Squirrel for a Java-based component platform.
-A validation of the implementation through a set of experiments is presented in section~\ref{sec:evaluation}.
-Finally, section \ref{sec:related-works} discusses related work and section \ref{sec:conclusions} presents our conclusions and future work.
+A validation of the implementation through a set of experiments is presented in section~\ref{sec:squirrel-evaluation}.
+%Finally, section \ref{sec:related-works} discusses related work and section \ref{sec:conclusions} presents our conclusions and future work.
