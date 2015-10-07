@@ -160,17 +160,17 @@ Although this metaphor is by no means complete, it helps to quickly summarize wh
 This thesis makes three \textit{stops}.
 %\thispagestyle{empty}
 \begin{description}
-\item[Resource accounting for components] The \textbf{first} \textit{stop} is to propose an approach for resource consumption monitoring in component-based systems that run on top of MRTEs.
+\item[Resource accounting for components] The \textbf{first} \textit{stop} is to propose an approach for resource consumption monitoring in component-based systems that run on top of MRTEs (see  Chapter~\ref{chp:scapegoat}).
 Before it, our journey takes us through a way where we collect the basic methods needed to perform resource accounting.
 Afterwards, at the first \textit{stop}, we reuse such methods to provide \textit{efficient} accounting for components.
 
 \item[Resource reservation for components] Resource accounting is the foundation for a safe \textbf{second} \textit{stop} -- providing resource reservation for components.
 It is then when we discuss a methodology to delay the selection of the binding method used to guarantee resource reservation, until the deployment phase at runtime.
-This serves both to guarantee low performance overhead and resource reservation per component.
+This serves both to guarantee low performance overhead and resource reservation per component (see  Chapter~\ref{chp:squirrel}).
 
 \item[Ease the constructions of tools] The journey continues, and we learn how the mechanisms to define software abstractions lack support for building resource accounting tools.
 We also realize that this issue makes us remember our first \textit{stop} because components are just a concrete abstraction; and it also brings memories of the second one because new methods to calculate resource consumption may influence the mechanism we choose to represent components at runtime. 
-Then we \textit{stop} for the \textbf{third} time; we propose an approach to ease the construction of efficient and customized memory profilers for MRTEs.
+Then we \textit{stop} for the \textbf{third} time; we propose an approach to ease the construction of efficient and customized memory profilers for MRTEs (see  Chapter~\ref{chp:dsl-memory}).
 \end{description}
 
 \newpage\thispagestyle{empty}\addtocounter{page}{-1}
