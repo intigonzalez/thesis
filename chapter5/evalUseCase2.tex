@@ -8,11 +8,11 @@ The section \ref{MdMS} presents an introduction to the application use case, whi
 
 
 \subsection{Use case presentation}\label{MdMS}
-We are applying the Scapegoat approach to check resource consumption contracts on a web application called MdMS.\footnote{https://github.com/maxleiko/mdms-ringojs}
+We are applying the Scapegoat approach to check resource consumption contracts on a web application called MdMS.\footnote{\url{https://github.com/maxleiko/mdms-ringojs}}
 This application offers a web Content Management System based on the Markdown language for editing posts. 
 MdMS uses a typical architecture (as shown in Figure \ref{fig:webapp}) for scalable web applications: a load-balancer connected to a set of workers (called MdMS Sosie in the Figure \ref{fig:webapp}), which are themselves connected to a distributed database to retrieve the application specific content.
 The worker layer of this application can be duplicated across various machines to support a growing number of clients.
-The web application is currently online\footnote{http://cloud.diversify-project.eu/}. 
+The web application is currently online\footnote{\url{http://cloud.diversify-project.eu/}}. 
 
 \begin{figure*}[!bt]
 	\centering
@@ -43,7 +43,7 @@ Our goal in this experiment is to answer the following question:
 We devised this experiment as a scenario where many clients interact with the web application at the same time by adding and removing articles.
 The stress produced by these requests increases the resource consumption on the server side which is running on top of Kevoree components.
 Figure~\ref{fig:webapp} depicts the server side's configuration.
-Since MdMS is a web application developed on top of RingoJS~\footnote{https://github.com/ringo/ringojs}, a JavaScript runtime written in Java, our \textit{sosies} include the RingoJS framework and the application that has been wrapped into Kevoree components.
+Since MdMS is a web application developed on top of RingoJS~\footnote{\url{https://github.com/ringo/ringojs}}, a JavaScript runtime written in Java, our \textit{sosies} include the RingoJS framework and the application that has been wrapped into Kevoree components.
 
 In this experiment, we deploy many of these components as back-end servers of the web application and we use Scapegoat to monitor the consumption of each server.
 Their contracts regarding resource consumption were built using the mechanism described in section \ref{sec:measurement_metodology} but with the original MdMS worker as a reference component.
@@ -52,7 +52,7 @@ This load balancer implements a plain round robin policy.
 %There is an additional component running on the platform, it is in charge of adapting the system.
 %This component reacts to events produced by Scapegoat and modifies the deployed system following the Models@run.time paradigm.
 
-To produce a realistic load on the web server we have recorded a set of standard activities on the MdMS web site using Selenium~\footnote{http://www.seleniumhq.org/}.
+To produce a realistic load on the web server we have recorded a set of standard activities on the MdMS web site using Selenium~\footnote{\url{http://www.seleniumhq.org/}}.
 We then use the Selenium facilities to replay these activities many times in parallel to provide the required work load on the server.
 % of resource consumption, we generate many accesses to the system.
 %We use Selenium~\footnote{http://www.seleniumhq.org/} to accomplish this purpose since MdMS is a web application.
