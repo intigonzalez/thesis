@@ -1,40 +1,77 @@
 
 \section{Brief overview of the domain} \label{sec:domain-overview}
 
-Memory profilers aim at capturing information regarding how an application use memory.
-In an object-oriented runtime environment such as Java, this information can be as simple as the number of objects of a specific class, but it can also be  as complex  as the list of possible memory leak sources.
-Along this paper, the term memory profiler refers to any kind of process to retrieve data about the memory usage.
-Some examples include: computing the number of objects reachable from a specific class object; finding out if there is an instance of class $A$ which is referencing an instance of class $B$.
-A last example could be computing for each instance of the class \textit{String} its length and the number of references to it.
-It is worth mentioning that the data collected by a profiler may have an arbitrary type.
-For instance, in the previous examples the types are primitives integer, boolean and a non-primitive type.
+The purpose of memory profilers is capturing information regarding how applications use memory.
+However, to define memory profilers, a clear understanding about their nature is required.
+Informally, the term \textit{memory profiling} refers to any kind of \textbf{\textit{process to collect}} some \textbf{\textit{data about the memory usage}}.
+In an object-oriented runtime environment such as Java, such data may be as simple as the number of objects of a specific class, but it may also be as complex as the list of possible memory leak's sources.
+Some other examples include computing the number of objects reachable from a specific class object; finding out if there is an instance of class $A$ which is referencing an object of class $B$; and computing, for each \textit{String}, its length and the number of objects that make direct reference to the \textit{string}.
+The data collected by a profiler may have an arbitrary complexity; it may be a simple natural number, a boolean value, a list of values, or a composed value.
+For instance, an integer value is required to describe one of the aforementioned examples, the number of objects reachable from a specific class object.
+In the same way, a pair $\langle l,r \rangle$, where both $l$ and $r$ are integers, is required to store the result of determining for a \textit{string}, its length and the number of objects referencing it.
+%The data collected by a profiler may have an arbitrary complexity
 
 %The rest of this section introduces the vocabulary we use in the domain of memory profilers.
 
-In this paper, we are interested in \textbf{\textit{objects}} as in object-oriented programming.
-We also see an \textit{object} as an atomic entity that consumes memory to store the values of its attributes.
-We have  reduced the available operations on objects to: accessing attributes, obtaining the amount of memory used to represent the object, and accessing meta-data such as the class name.
+Formally, we use a set of concepts that is useful to properly define our understanding of the term profiler, and how we address their construction in this chapter.
+The following concepts are used int the rest of the chapter:
 
-The \textbf{\textit{memory heap}} is the region of memory used to store dynamically allocated \textit{objects}.
-Although this concept is pervasive in general purposes programming languages, we are only interested on MREs such as Java where every \textit{object} must be allocated in this region.
+\begin{description}
+\item[Object] is an atomic entity that consumes memory to store the value of its attributes.
+When we say \textit{object} we mean as in \gls{OOP}.
+The operations that we can perform on these objects are nevertheless restricted to accessing attributes, obtaining the amount of memory used to represent an object, and accessing meta-data such as the class name.
+Reusing the concept is ``natural'' since we are targeting MRTEs, which often support the object-oriented paradigm.
 
-A \textbf{\textit{structure}} is an important concept in our domain.
-It consists of a set of related \textit{objects} in the \textit{memory heap}.
-The smallest non-empty \textit{structure} we can consider, is a structure containing a single object.
-The \textit{memory heap} is the universe of objects and each \textit{structure} is a subset of this universe.
+\item[Memory Heap] As mentioned this is the region of memory used to store dynamically allocated \textit{objects} that are connected through references forming a directed-acyclic graph.
+It is also the universe $\mathbb{U}$ of objects.
 
-A \textbf{\textit{memory profile}} is a value associated to a \textit{structure} which can be derived out of the indivdual \textit{objects} included in the \textit{structure}. 
-An example of useful derived value for a \textit{structure} is its total size: $\textit{total\_size(S)} = \sum_{o \in S} {sizeof(o)}$.
-A common usage is to identify many \textit{structures} in the heap to obtain a \textit{memory profile} for each of them.
-These two steps: identifying \textit{structures} and computing their \textit{memory profile} correspond to what we call \textbf{\textit{memory profiling}}. 
+\item[Structure] is a subset of \textit{objects} in the \textit{memory heap}.
+The objects in an structure don't need to be directly related by references; instead, they can be arbitrarily composed.
+For instance, the smallest non-empty \textit{structure} we can consider, is a structure containing a single object.
+Only one property is required in properly formed structures;  $S_1 \bigcap S_2 = \emptyset$ for any pair of structures $S_1$ and $S_2$, which means that they are disjoint sets.
 
-Finally, a \textbf{\textit{structure type}} provides a description of the behavior of a set of \textit{structures}. 
-In particular, it provides (i) a function to evaluate whether an object is member of the \textit{structure}, (ii) a way to define the values corresponding to the \textit{memory profile} of the \textit{structure}, and finally (iii) a factory to identify all  corresponding \textit{structures} in the \textit{memory heap}.
+\item[Memory Profile] is a value that can be computed using information from the \textit{objects} (and their references) included in a \textit{structure}.
+An example of useful value is the total size of a structure, which can be easily calculated using the function $\textit{total\_size}\left(S\right) = \sum_{o \in S} {sizeof(o)}$.
+A common pattern of use is to identify many \textit{structures} in the heap, and then to compute a value -- not necessarily the same -- for each structure.
 
-\extracomment{TODO}{Add example of structures in a graph, all connected to the fact that roots are in threads}
+\item[Memory Profiling] consists in identifying \textit{structures}, and computing some values associated to these structures. 
+
+\item[Structure types] provide a mean to describe several structures using a single pattern.
+In other words, many time the heap can be partitioned in different structures, but it is hard to manually enumerate them.
+The point is that we need a procedural way to describe what structures exist, and what are their membership functions; \textit{structure types} provide such facilities.
+In particular, they provide (i) functions to evaluate whether an object is member of a \textit{structure}, (ii) ways to define the values corresponding to the \textit{memory profile} of a \textit{structure}, and (iii) factories to identify all \textit{structures} in the \textit{memory heap}.
+
+\end{description}
+
+%\extracomment{TODO}{Add example of structures in a graph, all connected to the fact that roots are in threads}
+
+\paragraph{Objects reachable from a specific class object}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.5]{./chapter6/fig/example1.png}
+\caption{Objects reachable from the Client class. Observe that only one object is not reachable.}\label{fig:reachable-from-class-object}
+\end{figure}
+
+Mostrar la necesidad de atravesar el grafo para calcular la informacion
+
+\paragraph{Is there an instance of A making reference to an object of type B?}
+
+\paragraph{Length of each string, and number of objects referencing each string}
+
+\paragraph{Length of each linked list}
+
+Mostrar como hay patrones similares que se pueden detectar muchos
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.65\linewidth]{chapter6/fig/lists}
+\caption{Memory snapshot with three linked lists}
+\label{fig:simple_snapshot}
+\end{figure}
 
 
-\section{Approach}\label{sec:approach}
+\section{Metalanguage to define custom memory profilers}\label{sec:approach}
 
 In this chapter, we propose a tool to create custom memory profilers for MRTEs.
 We are interested on easing the task of defining new profilers without sacrificing their performance regarding CPU consumption.
@@ -54,11 +91,12 @@ In addition to various \textit{BasicTypes} such as \textit{Integer}, \textit{Str
 As expected, a \textit{record} contains \textit{fields} to hold values of previously defined types.
 Likewise, a \textit{list} refer to a \textit{base type}; hence all the members of a list must be of the same type.
 In a custom profiler, \textit{UserDefined} types can be composed in arbitrary ways as long as no type contains a recursive declaration.
-We can formalize such a constrain using OCL (Object Constraint Language~\footnote{http://www.omg.org/spec/OCL/}):
+We can formalize such a constrain using OCL (Object Constraint Language~\footnote{\url{http://www.omg.org/spec/OCL/}}):
 
 \begin{lstlisting}[escapeinside={(*}{*)},
 label=fig:membership,
-language=OCL, frame=tblr]
+language=OCL1
+]
 context Record inv: 
    not fields->oclAsSet()->closure(t)->exists(t | t = self)
 
@@ -76,7 +114,7 @@ A \textit{StructureFactory} contains an \textit{Expression} through the \textit{
 Notice that a single instance of \textit{StructureFactory} creates many data structures in memory; thus the \textit{Expression} corresponds to a list indicating that a new structure must be instantiated for each element of the list.
 Forcing the \textit{Expression} to be a \textit{List} can be easily formalized using OCL:
 
-\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:instances, language=OCL, frame=tblr]
+\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:instances, language=OCL1]
 context StructureFactory inv: instances.type.oclIsTypeOf(List)
 \end{lstlisting}
 
@@ -93,12 +131,6 @@ In such a case, there are two \textit{SimplyLinkedList}, but we only need one me
 \label{fig:as}
 \end{figure*}
 
-\begin{figure}
-\centering
-\includegraphics[width=0.65\linewidth]{chapter6/fig/lists}
-\caption{Memory snapshot with three linked lists}
-\label{fig:simple_snapshot}
-\end{figure}
 
 A \textit{StructureType} is composed of \textit{Assignments} that are used as \textit{initialValues} for each \textit{Variable} holding information - similar to a constructor in object-oriented programming.
 Once a new structure is created, the \textit{Assignments} are executed to assign the initial value of each \textit{Variable}.
@@ -108,7 +140,7 @@ Nevertheless, there is a built-in variable in each \textit{StructureType} that i
 Its type is predetermined as part of the language specification.
 We force the use of the proper type using OCL:
 
-\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:instances, language=OCL, frame=tblr]
+\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:instances, language=OCL1]
 context StructureType inv:  initialValues->exists(a: Assignment | 
      a.lvalue.name = 'initialObjects' and a.rvalue.type.oclIsTypeOf(List)
    ) 
@@ -120,7 +152,7 @@ This set of \textit{Assignments} is used to compute the actual value of the memo
 The major constraint regarding these \textit{updates} is that they must refer to already initialized \textit{variables} and the new assigned values must match the previous types.
 We formalize such a constrain using OCL:
 
-\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:lvalue, language=OCL, frame=tblr]
+\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:lvalue, language=OCL1]
 context StructureType inv:  updates->forAll(a: Assignament | 
     self.initialValues->exists(aa : Assignament | 
        aa.lvalue = a.lvalue and aa.rvalue.type = a.rvalue.type
@@ -193,20 +225,20 @@ For instance, it uses very explicit keywords such as ``create structure foreach'
 
 %<updates> ::= \grule{13}
 
-<s> ::= <a> <s> | <empty> \grule{14}
+<s> ::= <a> <s> | <empty> \grule{12}
 
-<a> ::= <id> `=' <e>  \grule{16} 
+<a> ::= <id> `=' <e>  \grule{13} 
 
-<e> ::= <e> <binary-op> <e> | <unary-op> <e> \grule{17a, 17b}
-\alt <e> `in' <id> | <e> `is' <id> \grule{17c, 17d}
+<e> ::= <e> <binary-op> <e> | <unary-op> <e> \grule{14, 15}
+\alt <e> `in' <id> | <e> `is' <id> \grule{16, 17}
 \alt <e> `.' <id> `(' <expr-list> `)' \grule{18}
-\alt <e> `.' <id> `(' `[' <id> `|' <s> `]' `)' \grule{19}
-\alt <e> `.' <id> \grule{20}
+%\alt <e> `.' <id> `(' `[' <id> `|' <s> `]' `)' \grule{19}
+\alt <e> `.' <id>                              \grule{20}
 \alt `#[' <expr-list> `]' | `struct' <id> `{' <expr-list> `}' \grule{21, 22}
 \alt <int-literal> | <string-literal> | <bool-literal> \grule{23, 24, 25}
 \alt <id> | `(' <e> `)' \grule{26, 27}
 
-<expr-list> ::= <e> `,' <expr-list> | <empty> 
+<expr-list> ::= <e> `,' <expr-list> | `[' <id> `|' <s> `]' `,' <expr-list> | <empty>  \grule{28}
 
 <binary-op> ::= `+' | `*' | `-' | `/' | `and' | `or'
 
@@ -267,182 +299,227 @@ Finally, line 7 updates the length of the list when an object is detected as mem
 \end{enumerate}
 }
 
+\begin{figure}
+\begin{mdframed}[innermargin=0.3cm, outermargin=0.3cm]
+
+{
+\footnotesize
+
+\begin{tabular}{rcl}
+$Bool(1)$ and $Bool(0)$ & & \parbox{8cm}{Values  $true$ and $false$.}\\
+& & \\
+$ E $ & \parbox[t]{0.7cm}{} & \parbox{8cm}{Describes a mapping from \textit{identifiers} to \textit{locations}. We use $id \mapsto l$ to represent a member of the mapping} \\ 
+& & \\
+$ S $ & & \parbox[t]{8cm}{Describes a mapping from \textit{locations} to \textit{values}. Informally, it can be seen as the storage. We use $l \mapsto v$ to represent a member of the a mapping.} \\ 
+& &  \\
+$ C $ & & \parbox[t]{8cm}{Describes a mapping from \textit{values} to \textit{structures}. We use $v \mapsto s$ to represent a member of the mapping.} \\ 
+& & \\
+$\left[ k_1 \mapsto v_2, \dots, k_n \mapsto v_n \right]$ & & \parbox[t]{8cm}{Describes a mapping by enumerating its members.} \\ 
+& & \\
+$S\left[ v_i/k_i \right]$ & & \parbox[t]{8cm}{Describes a new mapping where $S\left[ v_i/k_i \right](k_j) = S(k_j)$ if $k_i \ne k_j $, $S\left[ v_i/k_i \right](k_j) = v_i$ otherwise. } \\
+& &  \\
+$M \overset{\operatorname{val\_of}}{\vdash} k \mapsto v$ & & \parbox[t]{8cm}{A set of auxiliary rules to compute the value $v$ that is associated to the key $k$ in the mapping $M$.} \\ 
+& &  \\
+$C \overset{\operatorname{contains}}{\vdash} v \mapsto s \Rightarrow r$ & & \parbox[t]{8cm}{A set of auxiliary rules to determine whether the value of $v$ is mapped to $s$ in $C$, which is always a mapping from  \textit{values} to \textit{structures}. $r$ is a boolean value. } \\
+& &  \\
+$\lVert E,S, id, e\rVert$ & & \parbox[t]{8cm}{Describe a closure, $E,S$ represents the state, $id$ is the identifier used as parameter of the closure, and $e$ is the expression to evaluate.} \\ 
+& & \\
+$T(a_1 \mapsto l_1, \dots, a_n \mapsto l_n)$ & & \parbox[t]{8cm}{A generic value in the language. $T$ is its type, and a mapping from attributes $a_i$ to their respective locations $l_i$. Sometime, we use $\mathbb{A}$ to represent the mapping. There are shorthands for special cases: $Bool(1)$, $Bool(0)$, $Int(n)$ which is the integer $n$, and $String(w)$ which is the string $w$. In addition, the value $table(l_1,\dots,l_n)$ denotes a table; in this case, $l_i$ is the location in storage of the \textit{i-th} element of the table. } \\ 
+& & \\
+$\langle T, P, a_1 \mapsto T_1, \dots, a_n \mapsto T_n \rangle$ & & \parbox[t]{8cm}{Describe a type with identifier $T$. The description contains the parent type $P$ (which has the same structure), and its attributes $a_i \mapsto T_i$. } \\
+& & \\ 
+$\overset{\operatorname{subtype}}{\vdash} S, P \Rightarrow r$ & & \parbox[t]{8cm}{A set of auxiliaries rules to determine whether type $S$ is a subtype of $P$. $r$ is a boolean value.} 
+\end{tabular} 
+
+}
+
+\end{mdframed}
+\caption{Notation used in the operational semantic}\label{fig:notation-for-operational-semantic}
+\end{figure}
+
 \renewcommand{\inference}[3][]{%
-  \begin{array}[b]{@{}c@{}l@{}}
-    \smash{\raisebox{-.5\normalbaselineskip}{\footnotesize #1}} & 
+  \begin{array}[b]{@{}c@{}c@{}}
+    \smash{\raisebox{-.5\normalbaselineskip}{{\scriptsize #1}}} & 
       \begin{array}[b]{l}
         #2
       \end{array} \\
       \cline{2-2}
-    & \begin{array}[t]{l}
+    & \begin{array}[t]{c}
         #3
       \end{array}
   \end{array}
 }
 
-\mathlig{->}{\rightarrow}
+\mathlig{->}{\mapsto}
 \mathlig{|-}{\vdash}
 \mathlig{=>}{\Rightarrow}
-\mathlig{"}{\rho}
+\mathlig{"}{\;\;\;}
 
 \mathligson
 
 % classics
+{
+\footnotesize
 \[
 % true
-\inference[It(25):]{}{so, E, S|-true:Bool(1),S}
+\textnormal{{\scriptsize It(25):}}\; E, S\vdash\operatorname{true}\Rightarrow Bool(1),S
 \quad\quad
 % false
-\inference[It(25):]{}{so, E, S|-false:Bool(0),S}
+\textnormal{{\scriptsize It(25):}}\; E, S\vdash\operatorname{false}\Rightarrow Bool(0),S
 \]
 
 \[
 % integers
-\inference[It(23):]{\textit{i is an integer literal}}{so, E, S|-i:Int(i),S}
+\textnormal{{\scriptsize It(23):}}\; E, S\vdash\operatorname{Integer}\; N\Rightarrow Int(N),S
 \quad\quad
 % strings
-\inference[It(24):]{\textit{s is a string literal of length l}}{so, E, S|-s:String(s,l),S}
+\textnormal{{\scriptsize It(24):}}\; E, S\vdash\operatorname{String}\; w\Rightarrow String(w),S
+\]
+
+% lambda expressions
+\[
+\textnormal{{\scriptsize It(19):}}\; E, S\vdash \left[id \vert e \right] \Rightarrow \lVert E,S, id, e\rVert,S
 \]
 
 \[
 % id
 \inference[It(26):]{
-l_{id}=E(id) \\
-v = S(l_{id})
-}{so, E, S|-id:v,S}
+E\overset{val\_of}{|-}id->l_{id} "" S\overset{val\_of}{|-}l_{id}->v
+%v = S \; E \; id
+}{E, S|-id=>v,S}
 \quad\quad
-% strings
+% (e) 
 \inference[It(27):]{
-so, E, S|-e:v,S_1
+E, S|-e=>v,S_1
 }
-{so, E, S|-(e):v,S_1}
+{E, S|-(e)=>v,S_1}
 \]
 
 \[
 % unary operators
 \inference[It(17b):]{
-so, E, S|-e_0:v_0,S_1
-}{so, E, S|--e_0:-v_0,S_1}
+E, S|-e_0=>v_0,S_1
+}{E, S|-\operatorname{op}e_0=>\operatorname{op}v_0,S_1}
 \quad\quad
 % binary operators
 \inference[It(17a):]{
-so, E, S|-e_0:v_0,S_1 \\
-so, E, S_1|-e_1:v_1,S_2
-}{so, E, S|-e_0+e_1:v_0+v_1,S_2}
+E, S|-e_0=>v_0,S_1 "" E, S_1|-e_1=>v_1,S_2
+}{E, S|-e_0\operatorname{op}e_1=>v_0\operatorname{op}v_1,S_2}
 \]
 
 \[
 % in operator
 \inference[It(17c):]{
-so, C, E, S|-e_0:v_0,S_1 \\
-v = C(v_0) = id? Bool(1):Bool(0)
-}{so, C, E, S|-e_0 \; in \; id:v,S_1}
+C, E, S|-e_0=>v_0,S_1 "" C \overset {in} {|-} v_0->id =>v
+%v = v_0->id \in C? Bool(1):Bool(0)
+}{C, E, S|-e_0 \; in \; id=>v,S_1}
 \quad\quad
+\]
+
+\[
 % is operators
 \inference[It(17d):]{
-so, E, S|-e_0:v_0,S_1 \\
-v_0 = X(a_1=l_1, \ldots, a_n=l_n) \\
-v = \textit{X subtype of T?} Bool(1):Bool(0)
-}{so, E, S|-e_0\; is \; T:v,S_1}
+E, S|-e_0=>X(\mathbb{A}),S_1 "" \overset{subtype}{|-} X, T \Rightarrow v
+}{E, S|-e_0\; \operatorname{is} \; T:v,S_1}
 \]
 
 \[
 % assignment
 \inference[It(16):]
 {
-so,E,S|-e_0:v_0,S_1\\
-l_{id} = E(id) \\
-S_2 = S_1[v_0/l_{id}]
+E,S|-e_0=>v_0,S_1 "" E\overset{val\_of}{|-}id->l_{id}
+%l_{id} = E(id) \\
+%S_2 = 
 }
-{so, E, S|-id = e_0:v_0, S_2}
+{E, S|-id = e_0=>v_0, S_1[v_0/l_{id}]}
 \quad\quad
 % statements
 \inference[It(14)]
 {
-so, E, S|-s_1:v_1,S_1 \\
-so, E, S_1|-s_2:v_2,S_2 \\
-\dots \\
-so, E, S_{n-1}|-s_n:v_n,Sn
+E, S|-a=>v_a,S_1 "" E, S_1|-s=>v,S_2
 }
-{so, E, S|-s_1,\dots,s_n:v_n,S_n}
+{E, S|-a\;s=>v,S_2}
 \]
 
 \[
 % struct literal
 \inference[It(22):]
 {
-so,E,S|-e_1:v_1,S_1 \\
-\ldots \\
-so,E,S_{n-1}|-e_n:v_n,S_n \\
-class(T)=(a_1:T_1, \ldots, a_n:T_n) \\  % take the fields of the object
-l_i = newloc(S_n) \; for \; i = 1 \ldots n \\
-v=T(a_1=l_1, \ldots, a_n=l_n) \\ % assign locations to fields
-S_f = S_n[v_1/l_1, \ldots, v_n/l_n]
+E,S|-e_1:v_1,S_1 \\
+\vdots \\
+E,S_{n-1}|-e_n:v_n,S_n \\
+\operatorname{class}(T)=(a_1->T_1, \dots, a_n->T_n) \\  % take the fields of the object
+l_i = \operatorname{newloc}(S_n) \; for \; i = 1 \dots n \\
+v=T(a_1->l_1, \dots, a_n->l_n) \\ % assign locations to fields
+S_f = S_n[v_1/l_1, \dots, v_n/l_n]
 }
-{so, E, S|-struct\;T\;\{ e_1, \ldots, e_n \}:v,S_f}
+{E, S|-struct\;T\;\{ e_1, \ldots, e_n \}:v,S_f}
 \quad\quad
 % list literal
 \inference[It(21):]
 {
-so,E,S|-e_1:v_1,S_1 \\
-\ldots \\
-so,E,S_{n-1}|-e_n:v_n,S_n \\
-l_i = newloc(S_n) \; for \; i = 1 \ldots n \\
-v=Table(a_1=l_1, \ldots, a_n=l_n) \\
-S_f = S_n[v_1/l_1, \ldots, v_n/l_n]
+E,S|-e_1:v_1,S_1 \\
+\quad \vdots \\
+E,S_{n-1}|-e_n:v_n,S_n \\
+l_i = \operatorname{newloc}(S_n) \; for \; i = 1 \dots n \\
+v=\operatorname{Table}(l_1, \dots, l_n) \\
+S_f = S_n[v_1/l_1, \dots, v_n/l_n]
 }
-{so, E, S|-\#[e_1, \ldots, e_n]:v,S_f}
+{E, S|-\#[e_1, \dots, e_n]:v,S_f}
 \]
 
 \[
 % accessing field
 \inference[It(20):]{
-so,E,S|-e:v0,S_f \\
-v0 = X(a_1=l_1, \dots, a_n=l_n) \\
-l_{id} = l_i \; where \; a_i = id \\
-v = S_1(l_{id}) \\
+E,S|-e=>X(\mathbb{A}),S_f "" \mathbb{A} \overset{val\_of}{|-} \textit{id} -> l_{\textit{id}} "" \mathbb{S} \overset{val\_of}{|-} l_{\textit{id}} -> v
+%v0 = X(a_1->l_1, \dots, a_n->l_n) \\
+%l_{id} = l_i \; where \; a_i = id \\
+%v = S_1(l_{\textit{id}}) \\
 }
-{so,E,S|-e.id:v,S_f}
-\quad\quad
+{E,S|-e.\textit{id}=>v,S_f}
+\]
+
+\[
 % calling method
 \inference[It(18):]{
-so,E,S|-e_1:v_1,S_1 \\
-\ldots \\
-so,E,S_{n-1}|-e_n:v_n,S_n \\
-so,E,S_n|-e_0:v_0,S_{n+1} \\
-v_0 = X(a_1=l_1, \dots, a_m=l_m) \\
-impl(X,f) = (x_1, \dots, x_n, f_{body}) \\
-l_{x_i} = newloc(S_{n+1}) \; for \; i = 1 \dots n \\
-E' = [a_1:l_1, \dots, a_m:l_m][l_{x_1}/x_1, \dots, l_{x_n}/x_n] \\
-S_{n+2} = S_{n+1}[v_1/l_{x_1}, \dots, v_n/l_{x_n}] \\
-v_0, E', S_{n+2}|-f_{body}:v,S_f
+E,S|-e_0=>X(\mathbb{A}),S_0 \\
+E,S_0|-e_1=>v_1,S_1 \\
+""" \vdots \\
+E,S_{n-1}|-e_n=>v_n,S_n \\
+\operatorname{impl}(X,f) = (x_1, \dots, x_n, f_{body}) \\
+l_{x_i} = \operatorname{newloc}(S_{n+1}) \; for \; i = 1 \dots n \\
+\mathbb{A}[l_{x_1}/x_1, \dots, l_{x_n}/x_n],S_n[v_1/l_{x_1}, \dots, v_n/l_{x_n}]|-f_{body}:v,S_f
 }
-{so,E,S|-e_0.f(e_1, \ldots, e_n):v,S_f}
+{E,S|-e_0.f(e_1, \dots, e_n):v,S_f}
 \]
 
 % news
 
-\[
-% lambda expressions
-\inference[It(19) mal]{
-so,E,S|-s:v,S_1
-}{
-so,E,S|-[id|s]:v,S_1
-}
-\quad\quad
-% calling function with lambda expression
-\inference[It(19) mal]{
-so,E,S|-e_0:v_0,S_1 \\
-v_0 = X(a_1=l_1, \dots, a_m=l_m) \\
-impl(X,f) = (x_1, f_{body}) \\
-l_{x_1} = newloc(S_1) \\
-E' = [a_1:l_1, \dots, a_m:l_m][l_{x_1}/x_1] \\
-v_1 = clousure(E, \left[ id | s \right]) \\
-v_0, E', S_1[v_1/l_{x_1}]|-f_{body}:v,S_f 
-}{
-so,E,S|-e_0.f\left( \left[ id | s \right] \right):v,S_f
-}
-\]
+%\[
+%% lambda expressions
+%\inference[It(19) mal]{
+%v = \lVert E, \left[ id | s \right] \rVert " a " v
+%}{
+%E,S|-[id|s]:v,S
+%}
+%\quad\quad
+%% calling function with lambda expression
+%\inference[It(19) mal]{
+%E,S|-e_0:v_0,S_1 \\
+%v_0 = X(a_1=l_1, \dots, a_m=l_m) \\
+%\operatorname{impl}(X,f) = (x_1, f_{body}) \\
+%l_{x_1} = \operatorname{newloc}(S_1) \\
+%E' = [a_1:l_1, \dots, a_m:l_m][l_{x_1}/x_1] \\
+%v_1 = \operatorname{Clousure}(E, \left[ id | s \right]) \\
+%v_0, E', S_1[v_1/l_{x_1}]|-f_{body}:v,S_f 
+%}{
+%E,S|-e_0.f\left( \left[ id | s \right] \right):v,S_f
+%}
+%\]
+%
+%}
+
+\mathligsoff
 
 \subsection{Translational Semantics}\label{sec:semantic}
 
@@ -452,9 +529,9 @@ The generated source code has two parts.
 First, for each \textit{StructureType} in the model, the compiler generates a subclass of \textit{AbstractStructureType} which is shown below.
 Every subclass contains attributes to store the variables used in the associated \textit{StructureType}.
 In the listing below, the class \textit{Context} holds the built-in values we mention in the previous section.
-\begin{lstlisting}[language=C++, frame=tblr,
+\begin{lstlisting}[language=C++, frame=L,
 numbers=left,
-numberstyle=\color{black}\scriptsize,]
+numberstyle=\color{black}\scriptsize,xleftmargin=2\parindent]
 class AbstractStructureType {
 public:
 	void initialize(Context& ctx) = 0;
@@ -466,9 +543,9 @@ public:
 The second part of the generated code is formed by a set of initialization routines, one for each \textit{StructureFactory}.
 Each routine creates a list of structures with a specific \textit{AbstractStructureType} - the \textit{T} parameter in the listing.
 Formally, the signature and behavior of these routines are as follow:
-\begin{lstlisting}[language=C++, frame=tblr,
+\begin{lstlisting}[language=C++, frame=L,
 numbers=left,
-numberstyle=\color{black}\scriptsize,]
+numberstyle=\color{black}\scriptsize,xleftmargin=2\parindent]
 template <typename T> void
 [name](Context& ctx, std::vector<AbstractStructureType*>& s){
   for (Object obj : ctx.instances) {
@@ -486,9 +563,9 @@ The final profiler is built using both the generated code and a template algorit
 The template is target dependent, but in general we use the underline target facilities to collect meta-data, access fields in certain steps, traverse the objects in memory and also to populate the built-in rvalues.
 A simplified version of the used algorithm is shown below:
 \begin{lstlisting}[escapeinside={(*}{*)},
-frame=tb, label=lst:template, language=AlgLang,
+label=lst:template, language=AlgLang, frame=L,
 numbers=left,
-numberstyle=\color{black}\scriptsize]
+numberstyle=\color{black}\scriptsize, xleftmargin=2\parindent]
 values:
    structures: vector<AbstractStructureType*>
 routine:

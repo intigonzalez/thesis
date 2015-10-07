@@ -46,7 +46,7 @@ In addition to our approach, we implemented a \textit{handwritten JVMTI} agent a
 In the \textit{handwritten JVMTI}, we traverse all the references in the graph of live objects starting on the threads, during this process the JVM is fully halted impacting the total application's execution time.
 The \textit{Heap Dump + Eclipse MAT} solution uses the approach described in section~\ref{sec:MethodologyAndSetup}; when an analysis is required, the JVM dumps the heap and executes Eclipse MAT on a separate process in CLI mode.
 
-\begin{figure}[b]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}
 \begin{axis}[ybar=0pt, legend style={at={(0.72,1)},
@@ -248,7 +248,7 @@ First the Eclipse MAT solution invests some time parsing the dump file and creat
 Second, the \textit{top components} report in Eclipse MAT can only be implemented using its query language in terms of the function \textit{retainedHeapSize} which calculates the amount of memory retained for a given object.
 Since this function is costly to compute, Eclipse MAT spends a considerable amount of the time on it while building the \textit{top components} report. The evaluation code is available online~\footnote{https://github.com/intigonzalez/heapexplorer\_language}.
 
-\begin{figure}[!b]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}
 \begin{axis}[ybar=0pt, legend style={at={(0.72,1)},

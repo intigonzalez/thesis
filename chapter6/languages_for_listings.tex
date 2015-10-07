@@ -1,6 +1,6 @@
-\lstset{frame=t,
-  aboveskip=1mm,
-  belowskip=1mm,
+\lstset{
+  aboveskip=5mm,
+  belowskip=5mm,
   showstringspaces=false,
   columns=flexible,
   basicstyle=\color{black}\scriptsize,
@@ -22,7 +22,7 @@ literate={aaa}{bbb}3,
 morekeywords={input, foreach, action, if, return, routine, values},
 morekeywords={instances_for, have_id},
 sensitive=true,
-frame=tblr,
+%frame=tblr,
 morecomment=[l]{//},
 morecomment=[s]{/*}{*/},
 morestring=[b]",
@@ -39,21 +39,22 @@ morecomment=[s]{/*}{*/},
 morestring=[b]",
 }
 
-\lstdefinelanguage{OCL}
+\lstdefinelanguage{OCL1}
 {
 literate={aaa}{bbb}3,
 morekeywords={context,inv,and,or,self},
 sensitive=true,
-frame=tblr,
+frame=L,
 morecomment=[l]{//},
 morecomment=[s]{/*}{*/},
 morestring=[b]",
+xleftmargin=1\parindent,
 }
 
 \lstdefinelanguage{DSL2}
 {
 literate={aaa}{bbb}3,
-frame=tblr,
+frame=L, % tblr
 %numbersep=2pt,
 numbers=left,
 numberstyle=\color{black}\scriptsize,
@@ -64,7 +65,8 @@ morecomment=[l]{//},
 morecomment=[s]{/*}{*/},
 morestring=[b]",
 ndkeywords={false, true, this, referrer, threads, this_structure},
-ndkeywordstyle=\color{blue}\bfseries
+ndkeywordstyle=\color{blue}\bfseries,
+xleftmargin=2\parindent
 }
 
 \lstdefinelanguage{OQL}
