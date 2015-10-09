@@ -2,9 +2,9 @@
 \section{Brief overview of the domain} \label{sec:domain-overview}
 
 The purpose of memory profilers is capturing information regarding how applications use memory.
-However, to define memory profilers, a clear understanding about their nature is required.
-Informally, the term \textit{memory profiling} refers to any kind of \textbf{\textit{process to collect}} some \textbf{\textit{data about the memory usage}}.
-In an object-oriented runtime environment such as Java, such data may be as simple as the number of objects of a specific class, but it may also be as complex as the list of possible memory leak's sources.
+To write profilers, a clear understanding about their nature is required.
+Informally, the term \textit{memory profiling} refers to any kind of \textbf{\textit{process to collect}} some \textbf{\textit{data about memory usage}}.
+In an object-oriented runtime environment, such data may be as simple as the number of objects of a specific class, but it may also be as complex as the list of possible memory leak's sources.
 Some other examples include computing the number of objects reachable from a specific class object; finding out if there is an instance of class $A$ which is referencing an object of class $B$; and computing, for each \textit{String}, its length and the number of objects that make direct reference to the \textit{string}.
 The data collected by a profiler may have an arbitrary complexity; it may be a simple natural number, a boolean value, a list of values, or a composed value.
 For instance, an integer value is required to describe one of the aforementioned examples, the number of objects reachable from a specific class object.
@@ -13,7 +13,7 @@ In the same way, a pair $\langle l,r \rangle$, where both $l$ and $r$ are intege
 
 %The rest of this section introduces the vocabulary we use in the domain of memory profilers.
 
-Formally, we use a set of concepts that is useful to properly define our understanding of the term profiler, and how we address their construction in this chapter.
+Formally, we use a set of concepts to properly define our understanding of the term profiler, and how we address their construction in this chapter.
 The following concepts are used int the rest of the chapter:
 
 \begin{description}
@@ -22,11 +22,11 @@ When we say \textit{object} we mean as in \gls{OOP}.
 The operations that we can perform on these objects are nevertheless restricted to accessing attributes, obtaining the amount of memory used to represent an object, and accessing meta-data such as the class name.
 Reusing the concept is ``natural'' since we are targeting MRTEs, which often support the object-oriented paradigm.
 
-\item[Memory Heap] As mentioned this is the region of memory used to store dynamically allocated \textit{objects} that are connected through references forming a directed-acyclic graph.
+\item[Memory Heap] As mentioned, this is the region of memory used to store dynamically allocated \textit{objects} that are connected through references -- forming a directed-acyclic graph.
 It is also the universe $\mathbb{U}$ of objects.
 
 \item[Structure] is a subset of \textit{objects} in the \textit{memory heap}.
-The objects in an structure don't need to be directly related by references; instead, they can be arbitrarily composed.
+The objects in a structure don't need to be directly related by references; instead, they can be arbitrarily composed.
 For instance, the smallest non-empty \textit{structure} we can consider, is a structure containing a single object.
 Only one property is required in properly formed structures;  $S_1 \bigcap S_2 = \emptyset$ for any pair of structures $S_1$ and $S_2$, which means that they are disjoint sets.
 
@@ -36,16 +36,29 @@ A common pattern of use is to identify many \textit{structures} in the heap, and
 
 \item[Memory Profiling] consists in identifying \textit{structures}, and computing some values associated to these structures. 
 
-\item[Structure types] provide a mean to describe several structures using a single pattern.
-In other words, many time the heap can be partitioned in different structures, but it is hard to manually enumerate them.
-The point is that we need a procedural way to describe what structures exist, and what are their membership functions; \textit{structure types} provide such facilities.
-In particular, they provide (i) functions to evaluate whether an object is member of a \textit{structure}, (ii) ways to define the values corresponding to the \textit{memory profile} of a \textit{structure}, and (iii) factories to identify all \textit{structures} in the \textit{memory heap}.
+\item[Structure types] provide a mean to identify several structures using a single description.
+In other words, since the heap can be partitioned in many structures, it is hard to manually enumerate them.
+We need a procedural way to describe what are the structures we are considering (i.e., their membership functions), and what data we want to compute on each one of them; \textit{structure types} provide such facilities.
+
+%Structure types parametrizado 
+In particular, they provide (i) functions to evaluate whether an object is member of a \textit{structure}, (ii) ways to define the values corresponding to the \textit{memory profile} of a \textit{structure}, and (iii) factories to identify all \textit{structures} in the \textit{heap}.
 
 \end{description}
 
 %\extracomment{TODO}{Add example of structures in a graph, all connected to the fact that roots are in threads}
 
+As mentioned, the objects in the heap form a directed-acyclic graph; a profiler must iterate over such objects to identify whether they belong to a structure.
+The following examples show what kind of operations must be executed during the exploration of the graph.
+
 \paragraph{Objects reachable from a specific class object}
+
+Figure~\ref{fig:reachable-from-class-object} depicts a diagram of objects.
+Suppose we want a profiler to compute the number of objects that can be reached from the object of class \textit{java.lang.Class} whose \textit{classname} is ``Client'' (see Figure~\ref{fig:reachable-from-class-object}).
+Informally, this profiler must execute three steps to calculate the desired data.
+First, it iterates over the objects to find all the instances of class \textit{java.lang.Class}.
+These objects are then explored to get the value of attribute \textit{classname}, and see if it is equal to ``Client''; in this way we can locate the instance of interest.
+Finally, the profiler traverses the graph (as in Depth First Search) using the node found in the previous step as root, and counting the number of traversed nodes.
+In Figure~\ref{fig:reachable-from-class-object} the objects to count are highlighted.
 
 \begin{figure}[!ht]
 \centering
@@ -53,15 +66,30 @@ In particular, they provide (i) functions to evaluate whether an object is membe
 \caption{Objects reachable from the Client class. Observe that only one object is not reachable.}\label{fig:reachable-from-class-object}
 \end{figure}
 
-Mostrar la necesidad de atravesar el grafo para calcular la informacion
+The aforementioned informal steps show what a profiler should be capable of doing:
 
-\paragraph{Is there an instance of A making reference to an object of type B?}
+\begin{itemize}
+\item \textbf{Accessing meta-data of objects} such as the class of an object (\textit{java.lang.Class}), and the size of an object. 
 
-\paragraph{Length of each string, and number of objects referencing each string}
+\item \textbf{Accessing the value of attributes} is also helpful to filter out elements of the heap.
 
-\paragraph{Length of each linked list}
+\item \textbf{Traversing references} is necessary because often some objects belong to a structure only because they are referenced by an object that is already a member.
+\end{itemize}
 
-Mostrar como hay patrones similares que se pueden detectar muchos
+To summarize, a function to determine whether an object is member of an structure may use: properties of the object itself, and properties about its relationships.
+
+%\paragraph{Is there an instance of A making reference to an object of type B?}
+
+%\paragraph{Length of each string, and number of objects referencing each string}
+
+\paragraph{Nodes in each simply linked list}
+
+In a second example, we want to calculate how many nodes has each simply linked list in the heap.
+Figure~\ref{fig:simple_snapshot} shows a heap with two simply linked list and one double linked list.
+The first list has three nodes while the second one has four; these are the values we want to obtain.
+
+%Mostrar como hay patrones similares que se pueden detectar muchas estructuras
+%Que entonces lo que se hace es describir el tipo de estructura con un paramtero adicional.
 
 \begin{figure}[!ht]
 \centering
@@ -70,6 +98,42 @@ Mostrar como hay patrones similares que se pueden detectar muchos
 \label{fig:simple_snapshot}
 \end{figure}
 
+
+Informally, to compute such data a profiler must traverse the heap, checks whether an object's class is \textit{NodeEntry} (membership function), and increases a counter every time an instance is found (function to compute memory profile).
+Unfortunately, these two steps are insufficient to correctly compute the fact that there exist two lists.
+Indeed,  instead of the two values 3 and 4, a single value -- seven -- is obtained when this procedure is used.
+The problem is that we have two structures instead of one, but using the aforementioned membership function it is impossible to know of which structure an instance of \textit{NodeEntry} is member of.
+In other words, we need additional information to distinguish the two structures.
+
+A method to solve this particular problem is to use the following recursive membership function: an object is member of a structure $S$ if it is an instance of \textit{NodeEntry} and it is being referenced by a member of $S$.
+For the non-recursive case, we can see how each simply linked list starts with an instance of \textit{SimplyLinkedList}.
+This is easily represented with a parametrized and recursive membership function:
+
+\[
+	f_{head}\left(O\right) = 
+	\begin{cases}
+		head = O & \quad O \; is \; \operatorname{SimplyLinkedList} \\
+		\exists {x \in \operatorname{Objects}}, \quad x \operatorname{references} o \wedge f_{head}\left(x\right) & \quad O \; is \; \operatorname{NodeEntry} \\
+		\operatorname{false} & \quad \operatorname{otherwise} \\
+	\end{cases}
+\]
+
+The parameter $\textit{head}$ represents the structure of interest, and it is an instance of \textit{SimplyLinkedList}.
+In this example, we have two functions, in which only the parameter varies, because there are two instances of class \textit{SimplyLinkedList}.
+Similarly, we need two counters to store the number of nodes while we are traversing the graph of objects; once again, they (and the function to compute their values) are parametrized by the $head$ of the list.
+Figure~\ref{fig:simple_snapshot} depicts a snapshot in time of the heap while it is being explored;
+the shaded nodes are those that were already explored.
+
+This example shows that in defining memory profilers, we often need the capacity for:
+
+\begin{itemize}
+\item Using the same functions for many structures, varying only some parameters. This is necessary for both membership functions and to compute the memory profile.
+
+\item Identifying structures in the heap by using a parameter. For instance, in this example we know that there are two structures because there are two instance of class \textit{SimplyLinkedList}.
+\end{itemize}
+
+To summarize, we are frequently interested in calculating values for many structures that have the same ``characteristics''; this is what we call \textit{structure type}.
+To identify such structures we use a \textit{parameter}; the process of associating a particular parameter value to a structure type is done by a \textit{factory of structures}. 
 
 \section{Metalanguage to define custom memory profilers}\label{sec:approach}
 
@@ -445,9 +509,9 @@ E, S|-a=>v_a,S_1 "" E, S_1|-s=>v,S_2
 % struct literal
 \inference[It(22):]
 {
-E,S|-e_1:v_1,S_1 \\
+E,S|-e_1=>v_1,S_1 \\
 \vdots \\
-E,S_{n-1}|-e_n:v_n,S_n \\
+E,S_{n-1}|-e_n=>v_n,S_n \\
 \operatorname{class}(T)=(a_1->T_1, \dots, a_n->T_n) \\  % take the fields of the object
 l_i = \operatorname{newloc}(S_n) \; for \; i = 1 \dots n \\
 v=T(a_1->l_1, \dots, a_n->l_n) \\ % assign locations to fields
@@ -458,11 +522,11 @@ S_f = S_n[v_1/l_1, \dots, v_n/l_n]
 % list literal
 \inference[It(21):]
 {
-E,S|-e_1:v_1,S_1 \\
+E,S|-e_1=>v_1,S_1 \\
 \quad \vdots \\
-E,S_{n-1}|-e_n:v_n,S_n \\
+E,S_{n-1}|-e_n=>v_n,S_n \\
 l_i = \operatorname{newloc}(S_n) \; for \; i = 1 \dots n \\
-v=\operatorname{Table}(l_1, \dots, l_n) \\
+v=\operatorname{table}(l_1, \dots, l_n) \\
 S_f = S_n[v_1/l_1, \dots, v_n/l_n]
 }
 {E, S|-\#[e_1, \dots, e_n]:v,S_f}
@@ -517,7 +581,9 @@ l_{x_i} = \operatorname{newloc}(S_{n+1}) \; for \; i = 1 \dots n \\
 %}
 %\]
 %
-%}
+}
+
+
 
 \mathligsoff
 
