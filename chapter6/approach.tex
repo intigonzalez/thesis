@@ -109,14 +109,14 @@ A method to solve this particular problem is to use the following recursive memb
 For the non-recursive case, we can see how each simply linked list starts with an instance of \textit{SimplyLinkedList}.
 This is easily represented with a parametrized and recursive membership function:
 
-\[
+\begin{equation} \label{eq:simply-list}
 	f_{head}\left(O\right) = 
 	\begin{cases}
 		head = O & \quad O \; is \; \operatorname{SimplyLinkedList} \\
 		\exists {x \in \operatorname{Objects}}, \quad x \operatorname{references} o \wedge f_{head}\left(x\right) & \quad O \; is \; \operatorname{NodeEntry} \\
 		\operatorname{false} & \quad \operatorname{otherwise} \\
 	\end{cases}
-\]
+\end{equation}
 
 The parameter $\textit{head}$ represents the structure of interest, and it is an instance of \textit{SimplyLinkedList}.
 In this example, we have two functions, in which only the parameter varies, because there are two instances of class \textit{SimplyLinkedList}.
@@ -137,13 +137,10 @@ To identify such structures we use a \textit{parameter}; the process of associat
 
 \section{Metalanguage to define custom memory profilers}\label{sec:approach}
 
-In this chapter, we propose a tool to create custom memory profilers for MRTEs.
-We are interested on easing the task of defining new profilers without sacrificing their performance regarding CPU consumption.
-This section presents our approach, a metalanguage to define custom memory profilers in MRTEs.
-First, we present a global view of how our approach is used to support resource-aware programming, and how it integrates in a production environments (see Section~\ref{sec:dsl-global-architecture}).
-Afterwards, the abstract syntax of this metalanguage is discussed; we present it using a metamodel of its main concepts as well as some snips of code in a concrete syntax to ease the presentation (see Subsection~\ref{sec:abstract-syntax}).
-This concrete syntax is then presented in Subsection~\ref{sec:concrete-syntax}, followed by both the operational (evaluation) and translational semantic of the language (see Subsections~\ref{sec:operational-semantic} and~\ref{sec:translational-semantic}).
-The section ends in Subsection~\ref{sec:dsl-usage-examples} by presenting some examples of how to use the language.
+%In this chapter, we propose a tool to create custom memory profilers for MRTEs.
+%We are interested on easing the task of defining new profilers without sacrificing their performance regarding CPU consumption.
+%This section presents our approach, a metalanguage to define custom memory profilers in MRTEs.
+%First, we present a global view of how our approach is used to support resource-aware programming, and how it integrates in a production environments (see Section~\ref{sec:dsl-global-architecture}).
 
 %Keeping the profiler's overhead as low as possible is of utmost importance for us because lightweight profilers can be use both during the development phase and during the application execution in a production environment.
 %To reach this goal, we propose a Domain Specific Language (DSL) and its code generator which aims at describing and generating efficient online memory profilers. 
@@ -151,20 +148,22 @@ The section ends in Subsection~\ref{sec:dsl-usage-examples} by presenting some e
 %We next present the syntax, semantics and usage examples of our domain-specific language.
 
 
-\subsection{Global Architecture}\label{sec:dsl-global-architecture}
+%\subsection{Global Architecture}\label{sec:dsl-global-architecture}
 
-The global architecture of our approach is shown in Figure~\ref{fig:dsl-global-view}.
+A global view of our approach is shown in Figure~\ref{fig:dsl-global-view}.
+% the figure depicts how to and how it is integrated in production environments, are shown in .
 Since our goal is to support resource-aware programming, in this architecture, an application is able to collect data on its own memory consumption.
 To provide this feature, we add a layer (data collection layer) to MRTEs to take care of: 
 
 \begin{itemize}
-\item Providing a set of interfaces to the memory profilers for collecting meta-data of objects in the heap, mechanisms to iterate over such objects, and to read the value of their fields.
+\item Providing a set of interfaces for collecting meta-data of objects in the heap, iterating over such objects, and reading the value of their fields.
+These interfaces are used by memory profilers.
 
 \item Providing a set of interface for accessing memory profilers from the applications.
-In other words, an application may trigger the execution of a memory profiler, and it can analyze the values compute by the profiler.
+In other words, an application may trigger the execution of a memory profiler, and it should be able to analyze the values computed by the profiler.
 
 \item Supporting dynamic loading of memory profilers.
-This is helpful in production environment for loading new dynamic analysis tools without having to stop the MRTE.
+This is helpful in production environments for loading new dynamic analysis tools without having to stop the MRTE.
 \end{itemize}
 
 \begin{figure}[!ht]
@@ -176,22 +175,40 @@ This is helpful in production environment for loading new dynamic analysis tools
 In Figure~\ref{fig:dsl-global-view}, three memory profilers are plugged to the data collection layer.
 The exact mechanism to collect raw data from the MRTE, as well as the mechanisms to dynamically load profilers, are platform specific.
 
-A memory profilers can be handcrafted and plugged in this architecture; this is, nevertheless, error-prone.
+A memory profiler can be handcrafted and plugged in this architecture; this is, nevertheless, error-prone.
 Instead, we favor a generative approach where profilers are written using a metalanguage that hides low-level details.
 A compiler is then used to transform such definitions into a binary form that can be executed in the runtime environment.
-It is also in charge of providing interoperability between the data format provided by low-level facilities of the MRTE, and the high-level data format expected by applications running on top of such execution environments. 
+This compiler is also in charge of providing interoperability between the data format provided by low-level facilities of the MRTE, and the high-level data format expected by applications running on top of such execution environments. 
+
+In the rest of this section we describe the elements of this architecture.
+First, the abstract syntax of this metalanguage is discussed; we present it using a meta-model with its main concepts as well as some snips of code, written in a concrete syntax, to ease the presentation (see Subsection~\ref{sec:abstract-syntax}).
+This concrete syntax is then introduced in Subsection~\ref{sec:concrete-syntax}, followed by both the operational and translational semantic of the language (see Subsections~\ref{sec:operational-semantic} and~\ref{sec:translational-semantic}).
+Finally, in~\ref{sec:dsl-usage-examples} we present some examples of how to use the language.
+
 
 \subsection{Abstract Syntax}\label{sec:abstract-syntax}
 
-The metamodel shown in Figure~\ref{fig:as} describes the abstract syntax of our DSL.
-The main concept of this metamodel is a \textit{CustomProfiler} which is composed of \textit{UserDefined} types and a \textit{StructureFactory}.
-The concepts related to \textit{UserDefined} types are shown on the left part of the metamodel, while the right part describes the \textit{StructureFactory} which represents both the set of  structures to identify and the value to compute on these structures.
+The meta-model shown in Figure~\ref{fig:as} describes the abstract syntax of our language.
+The main concept of this meta-model is a \textit{CustomProfiler} which is composed of \textit{UserDefined} types and a \textit{StructureFactory}.
+This means that a developer must focus on declaring the types to store information about memory usage, and defining the what are the \textit{structures} of interest by mean of \textit{factories}.
 
-\subsubsection{User-defined types}
-In addition to various \textit{BasicTypes} such as \textit{Integer}, \textit{String} and \textit{Boolean}, the language supports the definition of both \textit{Records} and \textit{Lists}.
-As expected, a \textit{record} contains \textit{fields} to hold values of previously defined types.
-Likewise, a \textit{list} refer to a \textit{base type}; hence all the members of a list must be of the same type.
-In a custom profiler, \textit{UserDefined} types can be composed in arbitrary ways as long as no type contains a recursive declaration.
+The concepts related to \textit{UserDefined} types are depicted on the left part of the metamodel, while the right part describes the \textit{StructureFactory} which represents both the set of  structures to identify and the value to compute on these structures.
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.93\linewidth]{chapter6/fig/AS}
+\caption{Custom profiler Meta-model}
+\label{fig:as}
+\end{figure*}
+
+\subsubsection*{User-defined types}
+The language support three basic types -- \textit{Integer}, \textit{String} and \textit{Boolean}.
+They are not shown in the meta-model for the sake of clarity, and because these types behave mostly as in any other language.
+
+In addition, the language supports the declaration of both \textit{Records} and \textit{Lists}.
+A \textit{record} is a compound type that contains \textit{fields} to hold values of previously defined types.
+On the contrary,  all the members of a list must be of the same type; hence, a \textit{list} refers to a \textit{base type}.
+In a profiler, \textit{UserDefined} types can be composed in any desired way as long as a single property is respected -- no recursive types are allowed.
 We can formalize such a constrain using OCL (Object Constraint Language~\footnote{\url{http://www.omg.org/spec/OCL/}}):
 
 \begin{lstlisting}[escapeinside={(*}{*)},
@@ -205,38 +222,120 @@ context List inv:
    not baseType->oclAsSet()->closure(t)->exists(t | t = self)
 \end{lstlisting} 
 
-A \textit{List} has operations to manipulate any value which represent a list.
-Figure~\ref{fig:as} shows a subset of these operations.
-In general, these operations correspond to the set of \textit{standard} operations of any implementation of the list data type.
+We enforce this constrain for two reasons. First, it simplify the type system, and second because it is a way to know that no data structure other than the built-in will be used to store a \textit{list}.
+In this way, we can guarantee the performance of operations on lists.  
+The \textit{List} type provides operations to manipulate list values.
+In general, these operations correspond to the set of \textit{standard} operations of any implementation of the list data type in functional languages.
+Table~\ref{tab:operations-on-lists} shows the name of these operations as well as their signature.
 
-\subsubsection{Defining structures to profile}
-Defining the \textit{StructureFactory} is the core of writing a custom profiler.
-A \textit{StructureFactory} contains an \textit{Expression} through the \textit{instances} relationship which indicates a pattern to identify structures in the memory heap.
-Notice that a single instance of \textit{StructureFactory} creates many data structures in memory; thus the \textit{Expression} corresponds to a list indicating that a new structure must be instantiated for each element of the list.
-Forcing the \textit{Expression} to be a \textit{List} can be easily formalized using OCL:
+\begin{table}[!ht]
+\centering
+\begin{tabular}{r p{0.5cm} l}
+\hline
+\hline filter & & ('a $\to$ boolean) $\to$ 'a list $\to$ 'a list \\ 
+forall & & ('a $\to$ boolean) $\to$ 'a list $\to$ boolean \\ 
+exists & & ('a $\to$ boolean) $\to$ 'a list $\to$ boolean \\ 
+%\hline foreach & & ('a $\to$ void) $\to$ 'a list $\to$ void\\ 
+map & & ('a $\to$ 'b) $\to$ 'a list $\to$ 'b list \\ 
+add & & 'a $\to$ 'a list $\to$ 'a list \\ 
+first & & 'a list $\to$ 'a \\
+\hline 
+\end{tabular} 
+\caption{Operations on lists.} \label{tab:operations-on-lists}
+\end{table} 
 
-\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:instances, language=OCL1]
-context StructureFactory inv: instances.type.oclIsTypeOf(List)
+In Listing~\ref{lst:defining-data}, a data structure to store information about a heap structure is declared.
+First, a list (tableOf) of string is declared, it may be used to store the class name of objects.
+Afterwards, a \textit{record} with two integer fields and a list field is declared in line 2.
+This record may be used to hold values during profiling.
+
+\begin{lstlisting}[escapeinside={(*}{*)}, 
+label={lst:defining-data}, caption={Declaring types to store the number of object in a structure, its total size, and the class name of each object.}, language=DSL2
+]
+names: tableOf string
+data: struct {
+	total_size: int
+	nr_objects: int
+	classnames : names
+}
 \end{lstlisting}
 
-Defining a new \textit{StructureFactory} implies defining its \textit{type} which is an instance of \textit{StructureType}.
-This concept describes the mechanism used to populate, out of objects, a structure and its information.
-In short, each structure in memory instanciated through a \textit{StructureFactory} has a type \textit{StructureType}.
-For example, we may be interested in finding all the \textit{SimplyLinkedList} in the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}.
-In such a case, there are two \textit{SimplyLinkedList}, but we only need one mechanism to identify them because they have the same pattern in memory. 
+\subsubsection*{Defining structures to profile}
+Defining \textit{StructureFactories} is at the core of writing a custom profiler.
+A \textit{StructureFactory} contains an \textit{Expression} through the \textit{instances} relationship, which indicates a pattern to identify structures in the memory heap.
+Notice that a single instance of \textit{StructureFactory} identifies many structures in memory; thus, the \textit{Expression} is a list -- a new structure must be instantiated for each element of the list.
+%Forcing the \textit{Expression} to be a \textit{List} can be easily formalized using OCL:
 
-\begin{figure*}
-\centering
-\includegraphics[width=0.87\linewidth]{chapter6/fig/AS}
-\caption{Custom profiler Metamodel}
-\label{fig:as}
-\end{figure*}
+%\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:instances, language=OCL1]
+%context StructureFactory inv: instances.type.oclIsTypeOf(List)
+%\end{lstlisting}
+
+Listing~\ref{lst:defining-header} shows a snip of code that defines a structure for each \textit{SimplyLinkedList} in the heap.
+This is useful to solve one of the example we mentioned in Section~\ref{sec:domain-overview}.
+Note that `$e$' is the \textit{value} used to parametrize the structures.
+In this case, `$e$' will take the values in the list defined after `$:$'; such a list is composed by instances of class \textit{SimplyLinkedList}.
+In this example, we use the operation \textit{filter} on a built-in list -- \textit{objects}.
+The actual parameter for \textit{filter} is a lambda expression that only return true if its parameter is an instance of the expected class. 
+
+\begin{lstlisting}[escapeinside={(*}{*)}, 
+label={lst:defining-header}, caption={Defining a factory that instantiates a structure for each instance of the class SimplyLinkedList that it can find in the heap.}, language=DSL2
+]
+create structure foreach e: objects.filter([
+		o | 
+		  ret o is SimplyLinkedList
+		]) using
+\end{lstlisting}
+
+Defining a new \textit{StructureFactory} implies defining a \textit{StructureType}.
+This concept describes the mechanism used to identify a structure and compute some values.
+A \textit{StructureType} is composed of \textit{Assignments} that are used as \textit{initialValues} for each \textit{Variable} holding a value of the structure -- similar to a constructor in \glslink{OOP}{OOP}.
+In addition, a \textit{StructureType} contains a boolean \textit{expression} which is the \textit{membership function} used to decide whether an object is member of the structure.
+Finally, it also contains \textit{assignments} to update the value of each \textit{variable} every time an object is added to the structure.
+%These \textit{assignments} are used to compute the actual value of the memory profile.
+The major constraint regarding these \textit{updates} is that they must refer to already initialized \textit{variables}, and the new assigned values must match the previous types.
+We formalize such a constrain using OCL:
+
+\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:lvalue, language=OCL1]
+context StructureType inv:  updates->forAll(a: Assignament | 
+    self.initialValues->exists(aa : Assignament | 
+       aa.lvalue = a.lvalue and aa.rvalue.type = a.rvalue.type
+     ))
+\end{lstlisting}
 
 
-A \textit{StructureType} is composed of \textit{Assignments} that are used as \textit{initialValues} for each \textit{Variable} holding information - similar to a constructor in object-oriented programming.
-Once a new structure is created, the \textit{Assignments} are executed to assign the initial value of each \textit{Variable}.
-Observe that \textit{variables} do not refer to a \textit{Type}.
-Our DSL is strongly typed and the \textit{type} of each user-defined variable is inferred from its initial value.
+In Figure~\ref{lst:listLengt}, we show how to compute the length of each \textit{SimplyLinkedList} in the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}.
+We use the fact that each \textit{NodeEntry} points to the next element in the list.
+Since we only want to count the number of nodes in each list, we simply define an \textit{integer} variable in the structure type -- `$n$'; in line 7, this variable is updated every time an object is added to the structure.
+The variable `$e$' is used to parametrize the structure; observe how, in line 3, a list of members of the structure is initialized (`$e$' is its only member).
+This line corresponds to defining the non-recursive case of the membership function.
+Line 1 was already discussed, it is just worth highlighting that only two structures will be built because there are two simply linked lists in the memory snapshot.
+The first member of these structures are in one case \textit{list0}, and \textit{list1} in the other case.
+ 
+
+\begin{lstlisting}[escapeinside={(*}{*)}, 
+label=lst:listLengt, language=DSL2
+]
+create structure foreach e:objects.filter([o| ret o is SimplyLinkedList]) using
+  constructor
+    initialObjects = #[e] // a list literal with one element: e
+    n = 0
+  membership (this is NodeEntry) and (referrer in this_structure)
+  updates 
+    n = n + 1
+\end{lstlisting}
+
+The recursive case of the membership function is in line 5.
+It resembles the definition in function \ref{eq:simply-list}; there are however differences that are due to the evaluation semantic of our language.
+Although the semantic is discussed hereafter, we can understand the definition by simply knowing that it is evaluated for every edge of the directed-acyclic graph.
+Before the evaluation, three variable are created: \textbf{this}, \textbf{referrer}, and \textbf{this\_structure}; they are, respectively, the target of the edge, the source, and a structure.
+When we evaluated the membership function we are simply checking whether \textbf{this} is a member of \textbf{this\_structure}, and we are passing additional information to support the definition of recursive functions.
+
+
+%Once a new structure is created, the \textit{Assignments} are executed to assign the initial value of each \textit{Variable}.
+
+\subsubsection*{Expressions and Types}
+
+
 Nevertheless, there is a built-in variable in each \textit{StructureType} that is only accessible during initialization.
 Its type is predetermined as part of the language specification.
 We force the use of the proper type using OCL:
@@ -247,49 +346,39 @@ context StructureType inv:  initialValues->exists(a: Assignment |
    ) 
 \end{lstlisting}
 
-In addition, a \textit{StructureType} contains a boolean \textit{expression} which is the \textit{membership function} used to decide whether an object should be included in the structure instance.
-Finally, it also contains a set of \textit{Assignments} to update the value of each \textit{variable} every time a new object is included in the structure.
-This set of \textit{Assignments} is used to compute the actual value of the memory profile.
-The major constraint regarding these \textit{updates} is that they must refer to already initialized \textit{variables} and the new assigned values must match the previous types.
-We formalize such a constrain using OCL:
 
-\begin{lstlisting}[escapeinside={(*}{*)}, label=fig:lvalue, language=OCL1]
-context StructureType inv:  updates->forAll(a: Assignament | 
-    self.initialValues->exists(aa : Assignament | 
-       aa.lvalue = a.lvalue and aa.rvalue.type = a.rvalue.type
-     ))
-\end{lstlisting}
+For the sake of readability, Figure~\ref{fig:as} only shows a few concepts related to expressions.
+In addition to \textit{arithmetic}, \textit{boolean} and \textit{literals} for basic types, the language includes lambda expressions, literal for records and lists.
 
-In our DSL, \textit{expressions} play a big role.
-For the sake of readability, Figure~\ref{fig:as} only shows a couple of concepts related to them.
-However, it is noteworthy that, in addition to \textit{arithmetic}, \textit{boolean} and \textit{literals} for basic types, the language includes lambda expressions, literal for records and lists.
-Moreover, the language defines \textit{built-in rvalues} which are nothing but expressions initialized by the runtime within a specific scope.
-Instead of being user-defined, the types of these expressions are also defined by the runtime.
-There are two types of \textit{built-in rvalues}, target independent and dependent.
-Among the firsts, we have the list of  \textit{objects}, a reference to the \textit{current data structure} and a reference to the \textit{current object}.
-Target dependent \textit{rvalues} in Java include the list of \textit{loaded classes} and the list of \textit{threads}.
-The precise meaning of these \textit{rvalues} as well as their scopes are precisely discussed in sections~\ref{sec:concrete-syntax}, ~\ref{sec:semantic} and~\ref{sec:implementation} along the concrete syntax, the language semantic and the tooling support.
+Observe that \textit{variables} do not refer to a \textit{Type}; indeed, the language is  strongly typed, and the \textit{type} of each user-defined variable is inferred from its initial value.
+To support type-inference, the type of each expression is clearly defined.
 
-Finally, if we use the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}, calculating the number of nodes belonging to a specific \textit{SimplyLinkedList} is an example that illustrates the language's concepts.
-To solve this problem we can instantiate the metamodel of our DSL as follow:
-\begin{itemize}
-\item Define a \textit{StructureFactory} in which the \textit{instances} property is a list which contains the objects \textit{list0} and \textit{list1}.
-\item Instantiate a \textit{StructureType} where the built-in variable \textit{initialObjects} receives as value a list with one member - list0 or list1.
-      The other properties of this \textit{StructureType} instance are detailed in the next steps: 
-      \begin{enumerate}
-      \item Define a variable \textit{n} with initial value zero.
-      \item Define a membership function which return true if an object is instance of \textit{NodeEntry} and it is referenced by an object for which the membership function also return true. Observe how this recursive function returns true for each element in \textit{list0} because the initial object's list contains object \textit{list0}. 
-      \item Update the variable \textit{n} by increasing its value by one.
-      \end{enumerate}  
-\end{itemize}
-Further details about this example are discussed in the next section.
+Built-in rvalues, which are nothing but expressions initialized by the runtime within a specific scope, and their types are also defined.
+There are two types of built-in rvalues -- platform independent and dependent.
+Among the firsts, we have the list of  \textit{\textbf{objects}}, the list of \textit{loaded classes} (\textbf{classes}), a reference to the \textit{current data structure} (\textbf{this\_structure}), and a reference to the \textit{current object} (\textbf{this}).
+Target dependent \textit{rvalues} include the list of \textit{threads} (\textbf{threads}) and the type of reference (\textbf{reference\_kind}).
+
+Built-in rvalues are only valid in specific contexts.
+For instance, \textbf{this}, \textbf{referrer}, \textbf{this\_structure}, and \textbf{reference\_kind}, exist either during the evaluation of the membership function or when the variables are being updated.
+On the contrary, the values \textbf{objects}, \textbf{classes}, and \textbf{threads}, are valid only during the creation of structures and their initialization.
+Since building rvalues of type list is costly in terms of performance overhead, we decide avoiding their use in membership functions and updates. 
+ 
+%The precise meaning of these \textit{rvalues} are discussed in Subsections~\ref{sec:translational-semantic}, and~\ref{sec:implementation}.
+
+%The valid scope of this rvalue is in both the definition of the set of structures and the computation of the initial values.
+
+%There are four built-in rvalues during the evaluation of the function as well as during the update of the variables.
+%First, the value named \textit{this} is the current visited object. 
+%The value \textit{this\_structure} identifies the structure.
+%As our runtime profiler will traverse the graph of in memory objects following references between objects, the object through which we have reached the \textit{this} object is known as \textit{referrer}.
+%The last value, which is target dependent, is the kind of reference.
 
 \subsection{Concrete Syntax}\label{sec:concrete-syntax}
 
-A textual concrete syntax has been defined for our DSL allowing the domain expert to define a custom memory profiler using a text editor.
+A textual concrete syntax has been defined for our language; it allows that a domain expert defines a custom memory profiler using a text editor.
 A high-level view of the grammar for this textual representation is depicted in Figure~\ref{fig:dsl-grammar}.
-As can be seen, the rules that represent expressions make such a grammar ambiguous, we decided to use this form for the sake of the presentation.
-However, a complete LL(*) grammar~\cite{Parr:2011:LFA:1993498.1993548} is presented hereafter in Annex~\ref{anx:grammar}.
+As can be seen, the rules that represent expressions make such a grammar ambiguous, we decide to use this form for the sake of the presentation.
+However, a complete LL(*) grammar~\cite{Parr:2011:LFA:1993498.1993548} can be found hereafter in Annex~\ref{anx:grammar}.
 One interesting aspect of this concrete language is its relative verbosity.
 For instance, it uses very explicit keywords such as ``create structure foreach'', ``constructor'', and ``membership''.
 
@@ -308,7 +397,7 @@ For instance, it uses very explicit keywords such as ``create structure foreach'
 
 <types> ::= <type> <types> | <empty> \grule{2, 3}
 
-<type> ::= <id> `:' `table-of' <id> | <id> `:' `struct' `{' <fields> `}' \grule{4, 5}
+<type> ::= <id> `:' `tableOf' <id> | <id> `:' `struct' `{' <fields> `}' \grule{4, 5}
 
 <fields> ::= <id> `:' <id> <fields> | <id> `:' <id> \grule{6, 7}
 
@@ -337,9 +426,9 @@ For instance, it uses very explicit keywords such as ``create structure foreach'
 \alt <e> `.' <id>                              \grule{20}
 \alt `#[' <expr-list> `]' | `struct' <id> `{' <expr-list> `}' \grule{21, 22}
 \alt <int-literal> | <string-literal> | <bool-literal> \grule{23, 24, 25}
-\alt <id> | `(' <e> `)' \grule{26, 27}
+\alt <id> | `(' <e> `)' | `[' <id> `|' <s> `]' \grule{26, 27}
 
-<expr-list> ::= <e> `,' <expr-list> | `[' <id> `|' <s> `]' `,' <expr-list> | <empty>  \grule{28}
+<expr-list> ::= <e> `,' <expr-list> | <empty>  \grule{28}
 
 <binary-op> ::= `+' | `*' | `-' | `/' | `and' | `or'
 
@@ -351,43 +440,26 @@ For instance, it uses very explicit keywords such as ``create structure foreach'
 \end{figure}
 }
 
-As an example, the next listing shows how to compute the length of each \textit{SimplyLinkedList} in the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}.
-The mechanism is based on counting the number of \textit{NodeEntry} referenced by the \textit{SimplyLinkedList}.
-Each \textit{NodeEntry} is used to wrap one element of data and to point to the next element.
+discutir list literals, discutir struct literals
 
-\begin{lstlisting}[escapeinside={(*}{*)}, 
-label=lst:listLengt, language=DSL2
-]
-create structure foreach e:objects.filter(l| l is SimplyLinkedList) using
-  constructor
-    initialObjects = #[e] // a list literal with one element: e
-    n = 0
-  membership (this is NodeEntry) and (referrer in this_structure)
-  updates 
-    n = n + 1
-\end{lstlisting}
 
-In the example, only one \textit{StructureFactory} is necessary.
-In line 1, we define the list of structures we are interested in.
-We do so by selecting instances of class \textit{SimplyLinkedList} as elements of the \textit{StructureFactory}.
-Since there are two simply linked lists in the memory snapshot, we are going to build two structures.
-Observe the usage of a built-in \textit{rvalue} named \textit{objects} which contains all the objects in memory.
-The valid scope of this rvalue is in both the definition of the set of structures and the computation of the initial values.
-Thereafter, lines 2-4 specify the initial values.
-Line 3 in particular initializes the set of objects included in the structure.
-Notice the usage of a list literal to include the object referenced by \textit{e}.
-In the initialization scope, the rvalue \textit{e} is equal to one of the element within the list of structures - either \textit{list0} or \textit{list1}.
+%Observe the usage of a built-in \textit{rvalue} named \textit{objects} which contains all the objects in memory.
+%The valid scope of this rvalue is in both the definition of the set of structures and the computation of the initial values.
+%Thereafter, lines 2-4 specify the initial values.
+%Line 3 in particular initializes the set of objects included in the structure.
+%Notice the usage of a list literal to include the object referenced by \textit{e}.
+%In the initialization scope, the rvalue \textit{e} is equal to one of the element within the list of structures - either \textit{list0} or \textit{list1}.
 
-In line 5 we define the membership function, which is used to determine if an object is part of the structure.
-There are four built-in rvalues during the evaluation of the function as well as during the update of the variables.
-First, the value named \textit{this} is the current visited object. 
-The \textit{membership} boolean \textit{expression} aims at determining if this object is part of the \textit{structure} or not. 
-The value \textit{this\_structure} identifies the structure.
-As our runtime profiler will traverse the graph of in memory objects following references between objects, the object through which we have reached the \textit{this} object is known as \textit{referrer}.
-The last value, which is target dependent, is the kind of reference.
-Operator \textbf{is} checks if \textit{this} is an instance of class \textit{NodeEntry}.
-Likewise, operator \textbf{in} checks whether the \textit{referrer} is already a member of the structure.
-Finally, line 7 updates the length of the list when an object is detected as member of the structure.
+%In line 5 we define the membership function, which is used to determine if an object is part of the structure.
+%There are four built-in rvalues during the evaluation of the function as well as during the update of the variables.
+%First, the value named \textit{this} is the current visited object. 
+%%The \textit{membership} boolean \textit{expression} aims at determining if this object is part of the \textit{structure} or not. 
+%The value \textit{this\_structure} identifies the structure.
+%As our runtime profiler will traverse the graph of in memory objects following references between objects, the object through which we have reached the \textit{this} object is known as \textit{referrer}.
+%The last value, which is target dependent, is the kind of reference.
+%Operator \textbf{is} checks if \textit{this} is an instance of class \textit{NodeEntry}.
+%Likewise, operator \textbf{in} checks whether the \textit{referrer} is already a member of the structure.
+%Finally, line 7 updates the length of the list when an object is detected as member of the structure.
 
 \subsection{Operational Semantics} \label{sec:operational-semantic}
 
