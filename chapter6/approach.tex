@@ -1,9 +1,9 @@
 
-\section{Brief overview of the domain} \label{sec:domain-overview}
+\section{Understanding the domain} \label{sec:domain-overview}
 
 The purpose of memory profilers is capturing information regarding how applications use memory.
 To write profilers, a clear understanding about their nature is required.
-Informally, the term \textit{memory profiling} refers to any kind of \textbf{\textit{process to collect}} some \textbf{\textit{data about memory usage}}.
+Informally, the term \textit{memory profiling} refers to any kind of \textbf{process to collect} some \textbf{data about memory usage}.
 In an object-oriented runtime environment, such data may be as simple as the number of objects of a specific class, but it may also be as complex as the list of possible memory leak's sources.
 Some other examples include computing the number of objects reachable from a specific class object; finding out if there is an instance of class $A$ which is referencing an object of class $B$; and computing, for each \textit{String}, its length and the number of objects that make direct reference to the \textit{string}.
 The data collected by a profiler may have an arbitrary complexity; it may be a simple natural number, a boolean value, a list of values, or a composed value.
@@ -48,7 +48,7 @@ In particular, they provide (i) functions to evaluate whether an object is membe
 %\extracomment{TODO}{Add example of structures in a graph, all connected to the fact that roots are in threads}
 
 As mentioned, the objects in the heap form a directed-acyclic graph; a profiler must iterate over such objects to identify whether they belong to a structure.
-The following examples show what kind of operations must be executed during the exploration of the graph.
+The following examples show what kind of operations must be executed during graph exploration.
 
 \paragraph{Objects reachable from a specific class object}
 
@@ -129,7 +129,7 @@ This example shows that in defining memory profilers, we often need the capacity
 \begin{itemize}
 \item Using the same functions for many structures, varying only some parameters. This is necessary for both membership functions and to compute the memory profile.
 
-\item Identifying structures in the heap by using a parameter. For instance, in this example we know that there are two structures because there are two instance of class \textit{SimplyLinkedList}.
+\item Identifying structures in the heap by using a parameter. For instance, in this example, we know that there are two structures because there are two instances of class \textit{SimplyLinkedList}.
 \end{itemize}
 
 To summarize, we are frequently interested in calculating values for many structures that have the same ``characteristics''; this is what we call \textit{structure type}.
@@ -139,10 +139,47 @@ To identify such structures we use a \textit{parameter}; the process of associat
 
 In this chapter, we propose a tool to create custom memory profilers for MRTEs.
 We are interested on easing the task of defining new profilers without sacrificing their performance regarding CPU consumption.
-Keeping the profiler's overhead as low as possible is of utmost importance for us because lightweight profilers can be use both during the development phase and during the application execution in a production environment.
-To reach this goal, we propose a Domain Specific Language (DSL) and its code generator which aims at describing and generating efficient online memory profilers. 
+This section presents our approach, a metalanguage to define custom memory profilers in MRTEs.
+First, we present a global view of how our approach is used to support resource-aware programming, and how it integrates in a production environments (see Section~\ref{sec:dsl-global-architecture}).
+Afterwards, the abstract syntax of this metalanguage is discussed; we present it using a metamodel of its main concepts as well as some snips of code in a concrete syntax to ease the presentation (see Subsection~\ref{sec:abstract-syntax}).
+This concrete syntax is then presented in Subsection~\ref{sec:concrete-syntax}, followed by both the operational (evaluation) and translational semantic of the language (see Subsections~\ref{sec:operational-semantic} and~\ref{sec:translational-semantic}).
+The section ends in Subsection~\ref{sec:dsl-usage-examples} by presenting some examples of how to use the language.
 
-We next present the syntax, semantics and usage examples of our domain-specific language.
+%Keeping the profiler's overhead as low as possible is of utmost importance for us because lightweight profilers can be use both during the development phase and during the application execution in a production environment.
+%To reach this goal, we propose a Domain Specific Language (DSL) and its code generator which aims at describing and generating efficient online memory profilers. 
+
+%We next present the syntax, semantics and usage examples of our domain-specific language.
+
+
+\subsection{Global Architecture}\label{sec:dsl-global-architecture}
+
+The global architecture of our approach is shown in Figure~\ref{fig:dsl-global-view}.
+Since our goal is to support resource-aware programming, in this architecture, an application is able to collect data on its own memory consumption.
+To provide this feature, we add a layer (data collection layer) to MRTEs to take care of: 
+
+\begin{itemize}
+\item Providing a set of interfaces to the memory profilers for collecting meta-data of objects in the heap, mechanisms to iterate over such objects, and to read the value of their fields.
+
+\item Providing a set of interface for accessing memory profilers from the applications.
+In other words, an application may trigger the execution of a memory profiler, and it can analyze the values compute by the profiler.
+
+\item Supporting dynamic loading of memory profilers.
+This is helpful in production environment for loading new dynamic analysis tools without having to stop the MRTE.
+\end{itemize}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.4]{./chapter6/fig/global-view.png}
+\caption{Global view of the system. In this case, three memory profilers are defined.}\label{fig:dsl-global-view}
+\end{figure}
+
+In Figure~\ref{fig:dsl-global-view}, three memory profilers are plugged to the data collection layer.
+The exact mechanism to collect raw data from the MRTE, as well as the mechanisms to dynamically load profilers, are platform specific.
+
+A memory profilers can be handcrafted and plugged in this architecture; this is, nevertheless, error-prone.
+Instead, we favor a generative approach where profilers are written using a metalanguage that hides low-level details.
+A compiler is then used to transform such definitions into a binary form that can be executed in the runtime environment.
+It is also in charge of providing interoperability between the data format provided by low-level facilities of the MRTE, and the high-level data format expected by applications running on top of such execution environments. 
 
 \subsection{Abstract Syntax}\label{sec:abstract-syntax}
 
@@ -352,7 +389,7 @@ Operator \textbf{is} checks if \textit{this} is an instance of class \textit{Nod
 Likewise, operator \textbf{in} checks whether the \textit{referrer} is already a member of the structure.
 Finally, line 7 updates the length of the list when an object is detected as member of the structure.
 
-\subsection{Operational Semantics}
+\subsection{Operational Semantics} \label{sec:operational-semantic}
 
 \extracomment{TODO}{
 \begin{enumerate}
@@ -587,7 +624,7 @@ l_{x_i} = \operatorname{newloc}(S_{n+1}) \; for \; i = 1 \dots n \\
 
 \mathligsoff
 
-\subsection{Translational Semantics}\label{sec:semantic}
+\subsection{Translational Semantics}\label{sec:translational-semantic}
 
 An instance of our metamodel is compiled into a custom memory profiler.
 This compilation produces a library written in \textit{C++} which is in charge of collecting the desired information from the runtime environment.
@@ -667,7 +704,7 @@ Thereafter, the information for such a structure is updated.
 %The latter only contains the object \textit{THIS} which is being visited, a label of the reference representing its type, \textit{REFERRER} which is the object referencing the visited and again the \textit{Entity} value.
 %The \textit{global context} is available in listing~\ref{onInitialization} while the \textit{local context} is available in both listings~\ref{lst:onNodeFound} and~\ref{lst:onNodeFoundData}.
 
-\subsection{Language Usage}
+\subsection{Language Usage} \label{sec:dsl-usage-examples}
 
 \extracomment{FIX}{Improve explanations, add a caption to each listing, improve the style of each listing}
 
