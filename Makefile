@@ -19,6 +19,7 @@ include chapter4/make.mk
 include chapter5/make.mk
 include chapter6/make.mk
 include glossary/make.mk
+include annex/make.mk
 include resume/make.mk
 
 SRC_LOG=$(SRC:%.tex=%.log)
