@@ -1,23 +1,22 @@
 \section{Discussion On Language Expressiveness}\label{sec:expressiveness}
 
-In our DSL, the mechanism used to collect data is explicit to the user.
+In our language, the mechanism used to collect data is explicit to the user -- traversing a graph of objects.
 Hence, it is possible to estimate the overhead of a specific profiler.
-In short, our DSL follows the imperative paradigm to obtain derived values.
-On the contrary, most query languages provide a declarative style because it \textit{simplifies} writing new queries.
+In other words, this language follows an imperative paradigm to obtain derived values.
+On the contrary, most query languages provide a declarative style because it \textit{simplifies} the process of writing new queries.
 
 %Designing a domain specific language for memory analysis is a deliberate attempt to make explicit to the user what is the complexity of the analysis he tries to perform.
 We acknowledge that our approach limits the kind of memory analysis that users can express.
 First, it is not possible to recover all the information contained in the graph of live objects in linear time on the number of objects.
-Second, an imperative style forces the users to understand the underlying execution model which is not required with declarative query languages.
+Second, an imperative style forces the users to understand the underlying execution model, which is not required with declarative query languages.
 Nonetheless, we claim that getting rid of some expressiveness is a trade-off worth considering in order to guarantee efficient memory analysis.
-The empirical and theoretical evidence suggest that, in our DSL, \textit{reducing the capabilities to collect data} has a bigger impact on performance gain than \textit{generating efficient native code} to collect data.
+The empirical and theoretical evidence suggest that, in our language, \textit{reducing the capabilities to collect data} has a bigger impact on performance gain than \textit{generating efficient native code} to collect data.
 
 At this point, it is worth noting why declarative approaches fail to deliver the adequate performance in production.
 Listings~\ref{k3OQL} and~\ref{k3Cypher} show possible solutions, in OQL and Cypher/Neo4j, to the K3-Al example presented in Section~\ref{sec:chapter2-introduction}.
-There are two aspects affecting the performance of this kind of queries.
-We next discuss them.
+A naive comparison to the solution written in our language (see Listing~\ref{k3}) shows that the number of \gls{SLOC} is similar in the three cases.
 
-\begin{lstlisting}[escapeinside={(*}{*)},caption={Using OQL to compute the consumption of each K3-Al object. Actually, this query cannot be executed in Eclipse Mat nor in VisualVM since they do not provide a full OQL implementation. }, label=k3OQL,float=!h, language=OQL]
+\begin{lstlisting}[escapeinside={(*}{*)},caption={Using OQL to compute the consumption of each K3-Al object. Actually, this query cannot be executed in Eclipse Mat nor in VisualVM since they do not provide a full OQL implementation. }, label=k3OQL, language=OQL, frame=L, xleftmargin=1\parindent]
 SELECT id, sum(size) as s
 FROM (
 	SELECT
@@ -33,13 +32,16 @@ FROM (
 GROUP BY id
 \end{lstlisting}
 
+There are two aspects that affects the performance of this kind of queries: the ``natural'' complexity of many queries, and the impossibility of applying optimizations due to the type of data. 
 In the first place, many queries are intrinsically complex to answer.
 For instance, it is known that answering SPARQL queries - which was used as inspiration for Cypher/Neo4j, is PSPACE-complete~\cite{Schmidt:2010:FSQ:1804669.1804675, Perez:2009:SCS:1567274.1567278}.
-The performance of declarative queries for in production memory analysis is also affected by the nature of data we are exploring. 
-Indeed, even if they can be executed efficiently, the optimization steps required are in most cases impossible to execute for the type of data we are considering - a graph of objects that constantly changes.
-Often, these query optimizations require access to indexes, additional storage and multiples passes on the data~\cite{Elhemali:2007:ESS:1247480.1247598, Dageville:2002:SMM:1287369.1287454} that are not accessible on the graph of objects.
+Second, the performance of declarative queries for dynamic memory analysis is also affected by the nature of data to process. 
+In particular, even if some queries can be executed efficiently, the optimization steps required are in most cases impossible to execute for the type of data we are considering -- a graph of objects that constantly changes.
+Indeed, these optimizations often require access to indexes, additional storage and multiples passes on the data~\cite{Elhemali:2007:ESS:1247480.1247598, Dageville:2002:SMM:1287369.1287454} that are not accessible on the graph of objects, and computing them may be costly by itself.
+On the contrary, our language makes explicit both the time and space complexities of analysis.
+
 \begin{lstlisting}[escapeinside={(*}{*)},
-caption={Using Cypher to compute the consumption of each K3-A1 object.}, label=k3Cypher,float=!h, language=CYPHER]
+caption={Using Cypher to compute the consumption of each K3-A1 object.}, label=k3Cypher, language=CYPHER, frame=L, xleftmargin=1\parindent]
 MATCH 
 	(key:K3Object)<-[:key]-(entry:HashMap$Entry)-[:value]->value
 WITH entry, key, value
@@ -51,11 +53,14 @@ MATCH
 RETURN key, entry.size + key.size + fieldK.size + sum(value.size) + sum(fieldV.size);
 \end{lstlisting}
 
-On the contrary, our language makes explicit both the time and space complexities of the analysis.
-We also believe that the mental model required to code profilers with our DSL is simple enough since
-we mimic the popular ``think as a vertex'' paradigm of Pregel which has proven to be successful~\cite{Malewicz:2010:PSL:1807167.1807184}.
+A threat to validity of our approach is that we do not evaluate the usability of the language.
+Approaches based on existing languages, such as OQL, and CYPHER, suffer this problem far less because they are widely used in other areas.
+Nonetheless, our language (and its concrete syntax) is not entirely new.
+It resembles the ``think as a vertex'' paradigm of Pregel, which has proven to be successful~\cite{Malewicz:2010:PSL:1807167.1807184}.
 In this paradigm, an algorithm on graph is described from the point of view of each vertex.
-In our case the \textit{membership function} and the \textit{update section} are also executed using a limited context which only includes a few built-in rvalues.
+In our case the \textit{membership function} and the \textit{update section} are also executed using a limited context, which only includes a few built-in rvalues.
+Likewise, the language is largely inspired by the API of graph libraries; in particular, the idea of providing hooks, which are executed while a graph is traversed, has been borrowed from the Boost Graph Library and its API for visitors~\footnote{\url{http://www.boost.org/doc/libs/1_59_0/libs/graph/doc/}}.
+
 
 %Finally, we have shown along this paper how to collect meaningful data with ou DSL.
 %Nonetheless, it is worth mentioning that the class of common  

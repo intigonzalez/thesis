@@ -22,7 +22,7 @@ When we say \textit{object} we mean as in \gls{OOP}.
 The operations that we can perform on these objects are nevertheless restricted to accessing attributes, obtaining the amount of memory used to represent an object, and accessing meta-data such as the class name.
 Reusing the concept is ``natural'' since we are targeting MRTEs, which often support the object-oriented paradigm.
 
-\item[Memory Heap] As mentioned, this is the region of memory used to store dynamically allocated \textit{objects} that are connected through references -- forming a directed-acyclic graph.
+\item[Memory Heap] As mentioned, this is the region of memory used to store dynamically allocated \textit{objects} that are connected through references -- forming a directed graph.
 It is also the universe $\mathbb{U}$ of objects.
 
 \item[Structure] is a subset of \textit{objects} in the \textit{memory heap}.
@@ -47,7 +47,7 @@ In particular, they provide (i) functions to evaluate whether an object is membe
 
 %\extracomment{TODO}{Add example of structures in a graph, all connected to the fact that roots are in threads}
 
-As mentioned, the objects in the heap form a directed-acyclic graph; a profiler must iterate over such objects to identify whether they belong to a structure.
+As mentioned, the objects in the heap form a directed graph; a profiler must iterate over such objects to identify whether they belong to a structure.
 The following examples show what kind of operations must be executed during graph exploration.
 
 \paragraph{Objects reachable from a specific class object}
@@ -303,7 +303,7 @@ context StructureType inv:  updates->forAll(a: Assignament |
 \end{lstlisting}
 
 
-In Figure~\ref{lst:listLengt}, we show how to compute the length of each \textit{SimplyLinkedList} in the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}.
+In Listing~\ref{lst:listLengt}, we show how to compute the length of each \textit{SimplyLinkedList} in the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}.
 We use the fact that each \textit{NodeEntry} points to the next element in the list.
 Since we only want to count the number of nodes in each list, we simply define an \textit{integer} variable in the structure type -- `$n$'; in line 7, this variable is updated every time an object is added to the structure.
 The variable `$e$' is used to parametrize the structure; observe how, in line 3, a list of members of the structure is initialized (`$e$' is its only member).
@@ -313,7 +313,7 @@ The first member of these structures are in one case \textit{list0}, and \textit
  
 
 \begin{lstlisting}[escapeinside={(*}{*)}, 
-label=lst:listLengt, language=DSL2
+label={lst:listLengt}, caption={Calculating the length of each simply linked list.}, language=DSL2
 ]
 create structure foreach e:objects.filter([o| ret o is SimplyLinkedList]) using
   constructor
@@ -326,7 +326,7 @@ create structure foreach e:objects.filter([o| ret o is SimplyLinkedList]) using
 
 The recursive case of the membership function is in line 5.
 It resembles the definition in function \ref{eq:simply-list}; there are however differences that are due to the evaluation semantic of our language.
-Although the semantic is discussed hereafter, we can understand the definition by simply knowing that it is evaluated for every edge of the directed-acyclic graph.
+Although the semantic is discussed hereafter, we can understand the definition by simply knowing that it is evaluated for every edge of the directed graph.
 Before the evaluation, three variable are created: \textbf{this}, \textbf{referrer}, and \textbf{this\_structure}; they are, respectively, the target of the edge, the source, and a structure.
 When we evaluated the membership function we are simply checking whether \textbf{this} is a member of \textbf{this\_structure}, and we are passing additional information to support the definition of recursive functions.
 
@@ -375,10 +375,10 @@ Since building rvalues of type list is costly in terms of performance overhead, 
 
 \subsection{Concrete Syntax}\label{sec:concrete-syntax}
 
-A textual concrete syntax has been defined for our language; it allows that a domain expert defines a custom memory profiler using a text editor.
-A high-level view of the grammar for this textual representation is depicted in Figure~\ref{fig:dsl-grammar}.
-As can be seen, the rules that represent expressions make such a grammar ambiguous, we decide to use this form for the sake of the presentation.
-However, a complete LL(*) grammar~\cite{Parr:2011:LFA:1993498.1993548} can be found hereafter in Annex~\ref{anx:grammar}.
+A textual concrete syntax has been defined for our language; using it, a domain expert can define a custom memory profiler using a text editor.
+A grammar for this textual representation is depicted in Figure~\ref{fig:dsl-grammar}.
+Notice how the rules for expressions make such a grammar ambiguous; we decide to use this form to ease the presentation.
+However, a complete LL(*) grammar~\cite{Parr:2011:LFA:1993498.1993548} can be found in Appendix~\ref{anx:grammar}.
 One interesting aspect of this concrete language is its relative verbosity.
 For instance, it uses very explicit keywords such as ``create structure foreach'', ``constructor'', and ``membership''.
 
@@ -390,7 +390,7 @@ For instance, it uses very explicit keywords such as ``create structure foreach'
 \begin{mdframed}[outermargin=0.2cm, innermargin=0.5cm]
 
 \newcommand{\grule}[1]{\hfill{\scriptsize (#1)}}
-\setlength{\grammarindent}{5em}
+\setlength{\grammarindent}{4em}
 \begin{grammar}
 
 <program> ::= <types> <structures> \grule{1}
@@ -401,38 +401,30 @@ For instance, it uses very explicit keywords such as ``create structure foreach'
 
 <fields> ::= <id> `:' <id> <fields> | <id> `:' <id> \grule{6, 7}
 
-<structures> ::= <struct-factory> <structures> | <struct-factory> \grule{8, 9}
+<structures> ::= <factory> <structures> | <factory> \grule{8, 9}
 
-<struct-factory> ::= `create structure foreach' <id>`:'<e> `using' <body> \grule{10}
-
-%<Header> ::= `create structure foreach' <id>`:'<expr>
+<factory> ::= `create structure foreach' <id>`:'<e> `using' <body> \grule{10}
 
 <body> ::= `constructor' <s> `membership' <expr> `updates' <s> \grule{11}
-
-%<constructor> ::=  \grule{12}
-
-%<membership> ::= 
-
-%<updates> ::= \grule{13}
 
 <s> ::= <a> <s> | <empty> \grule{12}
 
 <a> ::= <id> `=' <e>  \grule{13} 
 
-<e> ::= <e> <binary-op> <e> | <unary-op> <e> \grule{14, 15}
-\alt <e> `in' <id> | <e> `is' <id> \grule{16, 17}
-\alt <e> `.' <id> `(' <expr-list> `)' \grule{18}
-%\alt <e> `.' <id> `(' `[' <id> `|' <s> `]' `)' \grule{19}
-\alt <e> `.' <id>                              \grule{20}
-\alt `#[' <expr-list> `]' | `struct' <id> `{' <expr-list> `}' \grule{21, 22}
+<e> ::= <e> <op> <e> | <u-op> <e> | <e> `in' <id> | <e> `is' <id> \grule{14, 15, 16, 17}
+\alt <e> `.' <id> `(' <expr-list> `)' | <e> `.' <id> \grule{18, 20}
+\alt `#' <l-type> `[' <expr-list> `]' | `struct' <id> `{' <expr-list> `}' \grule{21, 22}
 \alt <int-literal> | <string-literal> | <bool-literal> \grule{23, 24, 25}
-\alt <id> | `(' <e> `)' | `[' <id> `|' <s> `]' \grule{26, 27}
+\alt <id> | `(' <e> `)' | `[' <id> `|' <s> `ret' <e> `]' \grule{26, 27}
+\alt <e> `?' <e> `:' <e>
 
 <expr-list> ::= <e> `,' <expr-list> | <empty>  \grule{28}
 
-<binary-op> ::= `+' | `*' | `-' | `/' | `and' | `or'
+<l-type> ::= <id> | <empty>
 
-<unary-op> ::= `-' | `not'
+<op> ::= `+' | `*' | `-' | `/' | `and' | `or' | `>' | `<' | `>=' | `<=' | `==' | `!='
+
+<u-op> ::= `-' | `not'
 
 \end{grammar}
 \end{mdframed}
@@ -440,7 +432,19 @@ For instance, it uses very explicit keywords such as ``create structure foreach'
 \end{figure}
 }
 
-discutir list literals, discutir struct literals
+
+An interesting aspect of this grammar is how \textbf{list} and \textbf{struct} values are defined.
+In particular, they can be created from non-constant values in the right hand of the evaluation.
+For instance, in Listing~\ref{fig:declaring-structures}, three values are created; line 1 instantiates a list of integers with two elements, line 2 defines a value of type \textit{Point}, and line 3 creates an empty list of \textit{strings} that is immediately populated with one element.
+Notice that line three requires writing the type of the list because it is not possible, in general, to infer the list type. 
+
+\begin{lstlisting}[escapeinside={(*}{*)}, 
+label={fig:declaring-structures}, caption={Creating list and struct values.}, language=DSL2
+]
+l = #[ 4, n + 12]
+s = struct Point { x , 14 }
+m = #String[].add("first element")
+\end{lstlisting}
 
 
 %Observe the usage of a built-in \textit{rvalue} named \textit{objects} which contains all the objects in memory.
@@ -583,7 +587,7 @@ E, S|-e_0=>v_0,S_1 "" E, S_1|-e_1=>v_1,S_2
 \[
 % in operator
 \inference[It(17c):]{
-C, E, S|-e_0=>v_0,S_1 "" C \overset {in} {|-} v_0->id =>v
+C, E, S|-e_0=>v_0,S_1 "" C \overset {contains} {|-} v_0->id =>v
 %v = v_0->id \in C? Bool(1):Bool(0)
 }{C, E, S|-e_0 \; in \; id=>v,S_1}
 \quad\quad
@@ -644,7 +648,7 @@ S_f = S_n[v_1/l_1, \dots, v_n/l_n]
 \[
 % accessing field
 \inference[It(20):]{
-E,S|-e=>X(\mathbb{A}),S_f "" \mathbb{A} \overset{val\_of}{|-} \textit{id} -> l_{\textit{id}} "" \mathbb{S} \overset{val\_of}{|-} l_{\textit{id}} -> v
+E,S|-e=>X(\mathbb{A}),S_f "" \mathbb{A} \overset{val\_of}{|-} \textit{id} -> l_{\textit{id}} "" S \overset{val\_of}{|-} l_{\textit{id}} -> v
 %v0 = X(a_1->l_1, \dots, a_n->l_n) \\
 %l_{id} = l_i \; where \; a_i = id \\
 %v = S_1(l_{\textit{id}}) \\
@@ -666,30 +670,18 @@ l_{x_i} = \operatorname{newloc}(S_{n+1}) \; for \; i = 1 \dots n \\
 {E,S|-e_0.f(e_1, \dots, e_n):v,S_f}
 \]
 
-% news
-
-%\[
-%% lambda expressions
-%\inference[It(19) mal]{
-%v = \lVert E, \left[ id | s \right] \rVert " a " v
-%}{
-%E,S|-[id|s]:v,S
-%}
-%\quad\quad
-%% calling function with lambda expression
-%\inference[It(19) mal]{
-%E,S|-e_0:v_0,S_1 \\
-%v_0 = X(a_1=l_1, \dots, a_m=l_m) \\
-%\operatorname{impl}(X,f) = (x_1, f_{body}) \\
-%l_{x_1} = \operatorname{newloc}(S_1) \\
-%E' = [a_1:l_1, \dots, a_m:l_m][l_{x_1}/x_1] \\
-%v_1 = \operatorname{Clousure}(E, \left[ id | s \right]) \\
-%v_0, E', S_1[v_1/l_{x_1}]|-f_{body}:v,S_f 
-%}{
-%E,S|-e_0.f\left( \left[ id | s \right] \right):v,S_f
-%}
-%\]
+% graph
 %
+% 1 - recorrer
+
+\[
+\inference[It():]{
+\mathbb{(V,E)} \overset{struct}{|-} \textit{sf}_1, \dots, \textit{sf}_k => \left[ \textit{st}_1, \dots, \textit{st}_m \right],C,E,S "" \mathbb{(V,E)},C,E,S\overset{fill}{|-} \left[ \textit{st}_1, \dots, \textit{st}_m \right] => \left[ \textit{st}_1, \dots, \textit{st}_m \right], S_1
+}{
+\mathbb{(V,E)}|- \textit{sf}_1, \dots, \textit{sf}_k => \left[ \textit{st}_1, \dots, \textit{st}_m \right], E, S
+}
+\]
+
 }
 
 
@@ -698,55 +690,98 @@ l_{x_i} = \operatorname{newloc}(S_{n+1}) \; for \; i = 1 \dots n \\
 
 \subsection{Translational Semantics}\label{sec:translational-semantic}
 
-An instance of our metamodel is compiled into a custom memory profiler.
-This compilation produces a library written in \textit{C++} which is in charge of collecting the desired information from the runtime environment.
-The generated source code has two parts.
-First, for each \textit{StructureType} in the model, the compiler generates a subclass of \textit{AbstractStructureType} which is shown below.
+A profiler written in this language is compiled to produce a custom memory profiler for a specific target platform.
+%An instance of our metamodel is compiled into a custom memory profiler.
+For instance, in our reference implementation, the compiler produces a library written in \textit{C++}, which is in charge of collecting the desired information from the runtime environment.
+The generated source code is a set of classes.
+In particular, for each \textit{StructureType} in the model, the compiler generates a subclass of \textit{AbstractStructure},  which is shown below.
 Every subclass contains attributes to store the variables used in the associated \textit{StructureType}.
-In the listing below, the class \textit{Context} holds the built-in values we mention in the previous section.
+In the listing below, the class \textit{Context} holds built-in rvalues such as \textbf{objects}, \textbf{this}, and \textbf{referrer}.
 \begin{lstlisting}[language=C++, frame=L,
 numbers=left,
 numberstyle=\color{black}\scriptsize,xleftmargin=2\parindent]
-class AbstractStructureType {
+class AbstractStructure {
 public:
-	void initialize(Context& ctx) = 0;
-	bool membership(Context& ctx) = 0;
-	void update(Context& ctx) = 0;
+	virtual void initialize(const Context& ctx) = 0; // correspond to constructor
+	virtual bool membership(const Context& ctx) = 0; // membership function
+	virtual void update(const Context& ctx) = 0; // update variables
 }
 \end{lstlisting}
 
-The second part of the generated code is formed by a set of initialization routines, one for each \textit{StructureFactory}.
-Each routine creates a list of structures with a specific \textit{AbstractStructureType} - the \textit{T} parameter in the listing.
-Formally, the signature and behavior of these routines are as follow:
+Listing~\ref{dsl-generated-c-linked-list} shows the code generated by the compiler for the simply linked lists example (see Listing~\ref{lst:listLengt}).
+Notice the use of three functions provided by the runtime, \textit{markAsMembers}, \textit{isInstance}, and \textit{isMember}. 
+
 \begin{lstlisting}[language=C++, frame=L,
 numbers=left,
-numberstyle=\color{black}\scriptsize,xleftmargin=2\parindent]
+numberstyle=\color{black}\scriptsize,xleftmargin=2\parindent, label=dsl-generated-c-linked-list,
+caption={To represent a structure type, we declare a subclass of AbstractStructure.}]
+class SimplyLinkedListStructure1 : public AbstractStructure {
+private:
+	int n;
+public:
+	void initialize(const Context& ctx) {
+		vector<DSL_Object> l;
+		l.push_back(ctx.e);
+		markAsMembers(l, ctx.this_structure); // part of the language runtime support
+		n = 0;
+	}
+	bool membership(const Context& ctx) {
+		bool b0 = isInstance(ctx.this, "NodeEntry"); // part of the language runtime support
+		bool b1 &= isMember(ctx.referrer, ctx.this_structure); // part of the runtime support
+		return b1;
+	}
+	void update(const Context& ctx) {
+		n = n + 1;
+	}
+	static void createStructures(const Context& ctx, vector<DSL_Object>& instances) {
+		vector<DSL_Object> r;
+		auto f = [](DSL_Object o) { return isInstance(o, "SimplyLinkedList")};
+		ctx.objects.filter(f, r); // add valid elements to r
+		instances.insert(instances.end(),r.begin(),r.end()); 
+	}
+}
+\end{lstlisting}
+
+The last function, \textit{createStructures}, is used to identify structures of this type.
+They are invoked by a template initialization routine that expects as generic parameter a subclass of 
+\textit{AbstractStructure} -- \textit{T} in Listing~\ref{lst:init-routines}.
+Formally, the signature and behavior of this routine are as follow:
+\begin{lstlisting}[language=C++, frame=L,
+numbers=left,
+numberstyle=\color{black}\scriptsize,xleftmargin=2\parindent,
+label=lst:init-routines, caption={Routine to initialize structures in the heap.}]
 template <typename T> void
-[name](Context& ctx, std::vector<AbstractStructureType*>& s){
-  for (Object obj : ctx.instances) {
-    AbstractStructureType* ns = new T();
+initializationRoutine(Context& ctx, std::vector<AbstractStructure*>& s){
+  vector<DSL_Object> instances;
+  T::createStructures(ctx, instances);
+  for (DSL_Object obj : instances) {
+    AbstractStructure* ns = new T();
     ctx.e = obj;
+    ctx.this_structure = defineStructure(ns); // part of the runtime support
     ns->initialize(ctx);
-    s.add(ns); // not valid in the STL, but simpler to read
+    s.push_back(ns);
   }
 }
 \end{lstlisting}
-An important concern during the transformation lies on efficiently mapping our concepts to \textit{C++} concepts.
+An important concern during the transformation lays on efficiently mapping our concepts to \textit{C++} concepts.
 Moreover, since each target platform provides facilities to get metadata regarding the objects in memory, using such facilities efficiently is specially important in order to reduce the performance overhead due to profiling.
 
 The final profiler is built using both the generated code and a template algorithm.
 The template is target dependent, but in general we use the underline target facilities to collect meta-data, access fields in certain steps, traverse the objects in memory and also to populate the built-in rvalues.
-A simplified version of the used algorithm is shown below:
+A simplified version of this algorithm is shown in Listing~\ref{lst:dsl-algorithm}.
+
 \begin{lstlisting}[escapeinside={(*}{*)},
 label=lst:template, language=AlgLang, frame=L,
 numbers=left,
-numberstyle=\color{black}\scriptsize, xleftmargin=2\parindent]
+numberstyle=\color{black}\scriptsize, xleftmargin=2\parindent,
+label=lst:dsl-algorithm, caption{Template algorithm to collect data with in a memory profiler.}]
 values:
    structures: vector<AbstractStructureType*>
 routine:
-   foreach (initialization rountine (*$R_i$*) associated to a StructureFactory)
-      create context
-	  call (*$R_i$*)(context, structures)
+   foreach (StructureType ST)
+	  create context
+	  call initializationRoutine<ST>(context, structures)
+   
    foreach (r: references among objects)
       if (r.target has no membership)
          create context // context.this = r.target
@@ -755,11 +790,12 @@ routine:
          S.update(context)
    return structures 
 \end{lstlisting}
+
 There are two loops in the algorithm. 
-The former loop is in charge of creating the set of structures the program is intended to collect information about.
-The creation of the context in line 5 depends on the target platform.
+The first loop is in charge of creating the set of structures the program is intended to collect information about.
+The creation of a context in line 5 depends on the target platform.
 It basically creates values such as the list of objects in memory or the list of loaded classes.
-The latter loop traverses all the references among objects in memory.
+The second loop traverses all the references among objects in memory.
 During each iteration, the algorithm finds the first structure for which the membership function is true.
 Notice that we only select the first because for some memory accounting problems, it is too hard to define a membership functions that build disjoints structures~\cite{dsn/09/geoffray/ijvm,Attouchi:2014:MMM:2602458.2602467}.
 Thereafter, the information for such a structure is updated.
@@ -778,84 +814,197 @@ Thereafter, the information for such a structure is updated.
 
 \subsection{Language Usage} \label{sec:dsl-usage-examples}
 
-\extracomment{FIX}{Improve explanations, add a caption to each listing, improve the style of each listing}
-
 There are several possibilities for using our DSL in the various stage of an application lifecycle.
-These include checking: local data structure invariants, reachability properties, memory consumption properties and combinations of those.
-Below, we show some examples to highlight possible usage of our language. 
+For instance, checking invariants of data structures, computing memory consumption of different software abstractions, and checking reachability properties.
+Some of these uses may help to support resource-aware programming, others may be useful to support additional tasks in software development.
+In this section, we discuss some examples to highlight possible uses of our language.
+%These include checking: local data structure invariants, reachability properties, memory consumption properties and combinations of those.
+%Below, we show some examples to highlight possible usage of our language. 
  
-The first example shows how to assert the existence of a value satisfying some properties, independently of which object contains it. 
-The result is obtained through the use of a filter on the list of objects.
-The assertion successes if the heap contains an object with an attribute named $data$ with a value comprised between $3.141$ and $3.142$.
+\paragraph{Example 1: Evaluating an assertion}
+The first example shows how to assess the existence of a value satisfying a property, independently of which object contains it.
+Specifically, we want to check whether exists an object with an attribute named ``data'' whose value is between \textit{3} and \textit{5}.
+Since the answer we expect is a simple boolean value, this example can be seen as a form of assertion regarding the memory content.
+
+We can write a memory profiler to compute this value.
+A complete code to implement it is depicted in Listing~\ref{lst:dsl-example1}.
+Since we want to compute a single boolean value that depends on all the objects in the heap, this profiler only needs to create one structure.
+In the code, this is shown in line 1, where the list of instances has one element.
+Notice that we use the string value ``whole-jvm'', this has been arbitrarily chosen, any value is acceptable in this case as long as the list's length is one.
+The initialization section simply states that, before the graph of object is traversed, we assume that no object meets the property.
+The non-recursive membership function accept every object is member of the structure.
+Finally, to update the variable, we assess the property for the current object (\textbf{this}), and aggregate the result to the previous value.
 
 \begin{lstlisting}[escapeinside={(*}{*)},
 %label=assertion, 
-language=DSL2]
+language=DSL2,
+label=lst:dsl-example1,
+caption={Assessing the existence of an object with a given property.}
+]
 create structure foreach e:#["whole-jvm"] using
   constructor
-    initialObjects = #[]
+    initialObjects = #Object[]
     existValue = false
   membership true
   updates 
-    existValue = existValue or (this.data > 3.141 and this.data < 3.142)
+    existValue = existValue or (this.data >= 3 and this.data <= 5)
 \end{lstlisting}
 
-The goal of next listing is to detect a bug identified in~\cite{Aftandilian:2009:GAU:1543135.1542503}.
-This listing aims at finding if there exists an instance of the class $Order$
-with the value of its field $field$ being equal to $specialValue$.
-This technique is used to detect if one object has been garbage collected or if someone still holds a reference on it preventing its garbage collection.
-
+\paragraph{Example 2: Counting instances of specific classes}
+A common requirement in memory profilers is calculating the number of instances of a class.
+We can easily express this in our language; Listing~\ref{lst-common-profiling} illustrates this usage scenario.
+In particular, it counts how many \textit{Strings} and \textit{Integers} exist. 
+Since we are interested in two different classes, we declare two factories with their respective membership function.
 \begin{lstlisting}[escapeinside={(*}{*)},
-%caption=Detecting a knwon bug in pseudojbb., 
-%label=pseudojbb,
-%float=!h,
+caption=Calculating number of instances of two classes., 
+label=lst-common-profiling,
 language=DSL2]
-create structure foreach e:#["whole-jvm"] using
+create structure foreach e:#["instances of Integer"] using
   constructor
-	initialObjects = #[]
-	fault = false
-  membership  true
+    initialObjects = #Object[]
+    n = 0
+  membership (this is java.lang.Integer)
   updates
-    fault = fault or (this is Order and this.field = specialValue)
+    n = n + 1
+
+create structure foreach e:#["instances of String"] using
+  constructor
+    initialObjects = #Object[]
+    n = 0
+  membership (this is java.lang.String)
+  updates
+    n = n + 1
 \end{lstlisting}
 
-The next example computes a combination of reachability and memory consumption properties.
-It calculates the number of objects, and their total memory consumption, that are reachable from the threads.
-We can notice how the membership property discards those objects that are not referenced by an already included object.  
+\paragraph{Example 3: Data about large objects} 
+Memory profilers also provide mechanisms to collect data on many objects at the same.
+In this example (see Listing~\ref{lst-big-objects}), we show how to collect the class name and the size of very large objects.
+Only a structure is needed to define this profiler; both the membership function and the initialization fo the structure are simple.
+To store the information, an empty list is declared in line 9.
+Every time a new object is identified as large, its class and size are added to the list as a new entry. 
 
 \begin{lstlisting}[escapeinside={(*}{*)},
-caption={Calculating objects reachables from threads},
-label=kevoreeaccounting,
-%float=!h,
+caption=Collecting class and size of large objects (size > 1024 bytes)., 
+label=lst-big-objects,
 language=DSL2]
+SingleObject: struct {
+	classname : string
+	size: int
+}
+listObjects : tableOf SingleObject
+create structure foreach e:#["big objects"] using
+  constructor
+    initialObjects = #Object[]
+    data = #SingleObject[] // empty list of SingleObjects
+  membership (this.size > 1024)
+  updates
+    data = data.add( struct SingleObject { this.classname, this.size } )
+\end{lstlisting}
+%
+%The goal of next listing is to detect a bug identified in~\cite{Aftandilian:2009:GAU:1543135.1542503}.
+%This listing aims at finding if there exists an instance of the class $Order$
+%with the value of its field $field$ being equal to $specialValue$.
+%This technique is used to detect if one object has been garbage collected or if someone still holds a reference on it preventing its garbage collection.
+%
+%\begin{lstlisting}[escapeinside={(*}{*)},
+%%caption=Detecting a knwon bug in pseudojbb., 
+%%label=pseudojbb,
+%%float=!h,
+%language=DSL2]
+%create structure foreach e:#["whole-jvm"] using
+%  constructor
+%	initialObjects = #[]
+%	fault = false
+%  membership  true
+%  updates
+%    fault = fault or (this is Order and this.field = specialValue)
+%\end{lstlisting}
+
+\paragraph{Example 4: Consumption of threads}
+The example in Listing~\ref{lst:kevoreeaccounting} calculates the number of objects that are reachable from the threads.
+It also computes how much memory these objects consume.
+
+The membership function used in this structure type is as follow:
+
+\[
+	f\left( o \right) = \begin{cases}
+	true & \quad o \; is \; Thread \\
+	\exists {r \in \operatorname{Objects}}, (r \operatorname{reference} o) \wedge f(r)  & \quad otherwise
+	\end{cases}
+\] 
+
+In this case, a recursive membership function is used to discard those objects that are not referenced by an existing member of the structure.
+A variable, defined as a records, holds the  calculated values; it is, however, possible to achieve the same goal using two separated integer values.
+
+\begin{lstlisting}[escapeinside={(*}{*)},
+caption={Calculating objects reachables from threads.},
+label={lst:kevoreeaccounting},
+language=DSL2]
+Info : struct {
+	nbObjects : int
+	size : int	
+}
 create structure foreach e:#["whole-jvm"] using
   constructor
     initialObjects = threads
-    nbObjects = 0 
-    nbSize = 0 
-  membership ( this in None and referrer in this_structure )
+    data = struct Info { 0, 0 }
+  membership ( referrer in this_structure )
   updates 
-    nbObjects = nbObjects + 1  
-    nbSize = nbSize + this.size
+	data = struct Info { data.nbObjects + 1 , data.size + this.size }
 \end{lstlisting}
 
-We can also express complex structures in memory.
-For instance, to find the consumption of K3-Al object namely \textit{K3Object} as described in Section~\ref{sec:chapter2-introduction}, we must find all instances of \textit{HashMap.Entry} that have \textit{K3Object} as the \textit{key}. These entries should be added to the consumption of the object \textit{K3Object} as well as all the objects reachable from the \textit{HashMap.Entry.value}.
-To come out with this solution a good understanding of how K3-Al implements aspects is required.
-The rationale here is that K3-Al stores the state of aspects in a separate HashMap, using as key the object to be aspectized.
+A different result is obtained if we slightly modified this listing.
+Figure~\ref{lst:consumption-per-thread} shows a snip of code of a profiler that calculates the number of objects reachable for each thread instead of for the whole MRTE.
+\begin{lstlisting}[escapeinside={(*}{*)},
+label={lst:consumption-per-thread},
+language=DSL2,
+caption={Counting the memory consumed for each thread.}]
+...
+create structure foreach t:threads using
+  constructor
+    initialObjects = #[t]
+    data = struct Info { 0, 0 }
+  membership ( referrer in this_structure )
+  updates 
+	data = struct Info { data.nbObjects + 1 , data.size + this.size }
+\end{lstlisting}
+
+In comparison to the previous listing, only two lines are modified.
+However, these lines modify the non-recursive case of the membership function, as well as the number of structures identified in the heap.
+As a consequence, the result computed has type \textit{tableOf Info}, where each element of the list corresponds to a thread.
+
+\paragraph{Example 5: Memory consumption of K3Objects}
+We can also identify other complex structures.
+For instance, to find the consumption of each K3-Al object namely \textit{K3Object} as described in Section~\ref{sec:chapter2-introduction}, we must find instances of \textit{HashMap.Entry} that have a \textit{K3Object} as \textit{key}.
+These entries should be added to the consumption of the object \textit{K3Object} as well as all the objects reachable from the \textit{HashMap.Entry.value}.
+Figure~\ref{fig:dsl-k3-example} depicts a memory snapshot with a K3Object and two HashMap.Entries pointing to it.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.4]{./chapter6/fig/k3objects.png}
+\caption{Snapshot of memory with one K3 Object. The idea is to compute the memory used by the shaded objects.} \label{fig:dsl-k3-example}
+\end{figure}
+
+To define this profiler, a good understanding of the implementation of K3-Objects, and their aspects, is needed.
+We define a factory where a list of \textit{K3Objects} is used to identify the structures (see line 1 in Listing~\ref{k3}).
+Hence, there will be as many structures as instances of class \textit{K3Objects}.
+In line 3, the initial members of each structure are defined; notice that the membership function is parametrized by a K3Object instance, namely `$e$'.
+The recursive case is then similar to previous examples, the difference is that we don't count instances of Class; this is shown in Figure~\ref{fig:dsl-k3-example}).
+
 
 \begin{lstlisting}[escapeinside={(*}{*)},
-%caption=Computing the consumption of each K3-Al Object along with its aspects., 
-%label=k3,
+caption=Computing the consumption of each K3-Al Object along with its aspects., 
+label=k3,
 %float=!h, 
 language=DSL2]
 create structure foreach e:objects(*{.filter}*)([it|it is K3Object]) using
   constructor
-    initialObjects = #[e]
-    nbSize = 0
-  membership (referrer in this_structure and this in None ) or
-    (this is HashMap.Entry and this.key in this_structure and 
-      this.key is K3Object)
+    initialObjects = objects.filter([
+				    o| ret (o is HashMap.Entry) and (o.key == e)
+				   ]).add(e)
+    size = 0
+  // the second part can be more precisely written as reference_kind != class_ref
+  membership (referrer in this_structure) and not (this is java.lang.Class);
   updates
-    nbSize = nbSize + 1
+    size = size + this.size
 \end{lstlisting}
