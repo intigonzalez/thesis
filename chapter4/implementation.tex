@@ -173,7 +173,7 @@ a channel must marshal and unmarshal the POJO using a representation suitable fo
 In practice, a channel must copy data at least twice, no matter what IPC mechanism is used.
 %This fact has an impact on the class of IPC mechanism we can leverage.
 
-In this paper we propose a new channel for intra-node communication.
+In this chapter we propose a new channel for intra-node communication.
 Communication is performed through a message queue built on top of shared memory using an alternative high-performance framework to serialize objects.
 Each channel is mapped to a shared-memory region that hosts a synchronized queue of messages.
 This region contains three sections: an array of blocks to store message chunks, 

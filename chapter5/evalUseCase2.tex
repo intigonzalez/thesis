@@ -10,7 +10,7 @@ The section \ref{MdMS} presents an introduction to the application use case, whi
 \subsection{Use case presentation}\label{MdMS}
 We are applying the Scapegoat approach to check resource consumption contracts on a web application called MdMS.\footnote{\url{https://github.com/maxleiko/mdms-ringojs}}
 This application offers a web Content Management System based on the Markdown language for editing posts. 
-MdMS uses a typical architecture (as shown in Figure \ref{fig:webapp}) for scalable web applications: a load-balancer connected to a set of workers (called MdMS Sosie in the Figure \ref{fig:webapp}), which are themselves connected to a distributed database to retrieve the application specific content.
+MdMS uses a typical architecture (as shown in Figure \ref{fig:webapp}) for scalable web applications: a load-balancer connected to a set of workers (called MdMS Sosie in Figure \ref{fig:webapp}), which are themselves connected to a distributed database to retrieve the application specific content.
 The worker layer of this application can be duplicated across various machines to support a growing number of clients.
 The web application is currently online\footnote{\url{http://cloud.diversify-project.eu/}}. 
 
@@ -20,9 +20,9 @@ The web application is currently online\footnote{\url{http://cloud.diversify-pro
 	\caption{\label{fig:webapp}Architecture of MdMS along with Scapegoat and additional components to adapt the system.}
 \end{figure*}
 
-The main characteristic of MdMS is that all workers are not pure clones but diverse implementations of the MdMS server stack~\cite{alliermulti}.
+The main characteristic of MdMS is that workers are not pure clones but diverse implementations of the MdMS server stack~\cite{alliermulti}.
 This proactive diversification of MdMS targets safety~\cite{avizienis85} and security~\cite{Forrest97} purposes.
-In particular, we have used our recent technique for the automatic synthesis of \textit{sosie} programs~\cite{baudry2014tailored} in order to automatically diversify the workers. 
+In particular, we have used a recent technique for the automatic synthesis of \textit{sosie} programs~\cite{baudry2014tailored} in order to automatically diversify the workers. 
 A \textit{sosie} is a variant of a program that exhibits the same functionality (passes the same test suite) and a diverse computation (different control or data flow). 
 \textit{Sosie} synthesis is based on the transformation of the original program through statement deletion, addition or replacement.
 %The MdMS application is leveraging this diversified set of workers in order to reach the scalability property while icluding diversity in the software layer to prevent the so-called BOBE (Blow Once, Blow Everywhere) attacks~\cite{alliermulti}.

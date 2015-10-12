@@ -1,4 +1,4 @@
-\section{Tooling}\label{sec:implementation}
+\section{Tooling}\label{sec:dsl-implementation}
 
 Our initial implementation of the language supports the definition of custom memory profilers for Java-based systems.~\footnote{Available at: \url{https://github.com/intigonzalez/heapexplorer\_language}}
 In short, any component framework, language or abstraction that is meant to run atop the JVM can take advantage of custom memory profilers.
@@ -11,7 +11,7 @@ Both roles are described in the rest of the section.
 
 The first role is played by people who use the DSL to define custom memory profilers.
 We envision that DSLs designers, component framework developers and engineers who design new software abstractions would be in charge of this role.
-For instance, now a DSL designer can ship a set of specific memory profilers along tools such as editors, simulators and compilers. 
+For instance, nowadays a DSL designer can ship a set of specific memory profilers along tools such as editors, simulators and compilers. 
 
 Our DSL is built using the Xtext framework.
 Since Xtext aims at easing the development of textual DSLs, we created a textual editor based on our proposed concrete syntax.
@@ -22,7 +22,7 @@ Around Java's native agent mechanism we built a \textit{plugins} system which al
 The JVMTI API is used to assign values to several built-in variables: \textit{classes}, \textit{classloaders}, \textit{threads} and \textit{objects}.
 In addition, we use the JNI API to build a Java representation of the profiler output that can be consumed from Java code.
 
-The developer of the profiler must be aware of: the details of the abstraction for which the custom profiler is being built, our DSL's semantics, and its implementation's details.
+The developer of the profiler must be aware of: the details of the abstraction for which the custom profiler is being built, the semantic of our language, and the details of its implementation.
 Indeed, the process of code generation is driven by the need of reducing the performance impact.
 In our implementation, we apply a set of platform dependent optimizations taking into account the profiler description.
 First, since a profiler does not always need built-in rvalues (e.g., \textit{threads}, \textit{threadgroups} and \textit{classes}, etc.), we selectively skip the construction of them.

@@ -60,7 +60,7 @@ little support exists to ease their creation.
 In this chapter, we focus on the problem of easing the creation of memory profilers for domain-specific software abstractions that are designed to be executed on top of MRTEs. 
 We first propose a metalanguage to specific what data about the memory use is of interest in a domain (see Section~\ref{sec:approach}).
 A profiler is then generated to collect the data and present it in terms of concepts of that language. 
-In addition, we present a tooled DSL based on such a metalanguage, which generates profilers for the JVM (see Section~\ref{sec:implementation}).
+In addition, we present a tooled DSL based on such a metalanguage, which generates profilers for the JVM (see Section~\ref{sec:dsl-implementation}).
 %to match the language concepts and provide useful information to the end user.
 An important point of our approach is the low overhead induced by these profilers; this makes them usable in production environments (see Sections~\ref{sec:expressiveness} and~\ref{sec:dsl-evaluation}).
 %Indeed, generating a specific profiler from an abstract definition of the role of this profiler enable us to produce very specific profiler which only monitor the relevant information.
