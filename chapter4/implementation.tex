@@ -154,7 +154,7 @@ To reduce deployment time, instead of starting processes from scratch,
 %we create clones of a base runtime for new instances.
 new instances are cloned from a base runtime.
 The base runtime is created offline. %, is used to deploy components through fast cloning and configuration.
-Both steps, base runtime creation and cloning, are based on CRIU.\footnote{criu.org}
+Both steps, base runtime creation and cloning, are based on CRIU.\footnote{\url{criu.org}}
 This tool allows snapshoting a process and starting any number of clones from the snapshot.
 In essence this \textit{forks} the process.
 %creating in practice a sort of \textit{forking} that is hard to perform otherwise.
@@ -180,7 +180,7 @@ This region contains three sections: an array of blocks to store message chunks,
 a set of free blocks, and a circular queue in which an element points to a list of chunks.
 We use the procedure described in \cite{Unrau:708530} to synchronize senders and receivers, but we also support broadcast semantics without unnecessary additional copies.
 Our approach copies the POJO from the sender's heap to shared-memory during data marshaling, then every receiver makes a copy from shared-memory.
-The implementation uses a high-performance serialization framework\footnote{https://github.com/RuedigerMoeller/fast-serialization}
+The implementation uses a high-performance serialization framework\footnote{\url{https://github.com/RuedigerMoeller/fast-serialization}}
 % ~\cite{Moeller:2014:Online} 
 instead of Java's built-in serialization mechanism
 and is able to serialize arbitrary objects with better performance.

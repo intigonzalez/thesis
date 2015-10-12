@@ -138,7 +138,7 @@ First, we use a micro-benchmark to compare the performance of a shared-memory ba
 Then we benchmark the performance gain of using a specialized serialization framework that uses POJO structures, which is a common way to encode the business logic in real-life applications.
    
 We evaluate our channel by comparing its performance against built-in TCP communication, which is a widely used IPC mechanism in Java.
-To measure latency and bandwidth, the metrics we use for comparison, we developed a Netpipe clone~\cite{Snell96netpipe:a} for Java\footnote{Source code at: http://goo.gl/h7OVm5}.
+To measure latency and bandwidth, the metrics we use for comparison, we developed a Netpipe clone~\cite{Snell96netpipe:a} for Java\footnote{Source code at: \url{http://goo.gl/h7OVm5}}.
 The clone is delivered with three protocols: 1) socket-based, 2) our channel, and 3) a protocol for \textit{named pipes}.
 The first uses simple TCP sockets with synchronous operation in its implementation. 
 The second requires two channels, configured to use a queue with 128 chunks of 512Kb, because our channel is unidirectional.
@@ -194,7 +194,7 @@ Meanwhile, it behaves on average 46.26\% better for messages between 1 Mb and 64
 %The point where our approach surpasses NIO sockets is close to 8Kb and for long messages from 2Mb to 64Mb it behaves on average 21.64\% better.
  
 Latency between Java isolates is also affected by the time spent marshaling and unmarshaling messages.
-To evaluate the benefits of \textit{fast Serialization}, we designed a micro-benchmark that sends a POJO structure, 16 bytes long, back and forth a million times. \footnote{Source code at: http://goo.gl/FXuUxc}
+To evaluate the benefits of \textit{fast Serialization}, we designed a micro-benchmark that sends a POJO structure, 16 bytes long, back and forth a million times. \footnote{Source code at: \url{http://goo.gl/FXuUxc}}
 We then measure the effect of marshaling for different numbers of consumers.
 Figure \ref{fig:multicast-communication} shows the results of using built-in serialization against \textit{fast Serialization} for up to 8 components.
 We chose this value because in component-based systems it is unlikely to find more interconnections within a single node.

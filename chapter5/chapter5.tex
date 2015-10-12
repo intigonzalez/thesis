@@ -111,7 +111,8 @@ We also present a use case to highlight the possibility of using Scapegoat on a 
 
 The remainder of this chapter is organized as follows.
 Section~\ref{sec:scapegoat-motivaing-example} motivates our work through a case study which is used to validate the approach.
-Section~\ref{sec:approach} provides an overview of the Scapegoat framework.
+A brief description of Kevoree, a platform for distributed component-based software development, is presented in Section~\ref{sec:kevoree-intro}.
+Section~\ref{sec:scapegoat-approach} provides an overview of the Scapegoat framework.
 It highlights how the component contracts are specified, how monitoring probes are injected and activated on-demand, how the Scapegoat framework enables the definition of heuristics to detect faulty components without activating all the probes, and how we benefit from Models@run.time to build efficient heuristics.
 Section~\ref{sec:evaluation} evaluates the approach through a comparison of detection precision and detection speed with other approaches.
 Section~\ref{sec:WebStudy} presents a use case based on an online web application\footnote{\url{http://cloud.diversify-project.eu/}} that leverages software diversity for safety and security purposes.
@@ -132,7 +133,7 @@ Furthermore, we proposed a heuristic that leverages information produced by the 
 Scapegoat has been implemented on top of the Kevoree component framework which uses the Models@run.time approach to tame the complexity of distributed dynamic adaptations.
 The evaluation of Scapegoat shows that the monitoring system's overhead is reduced by up to 92.98\% in comparison with state-of-the-art full monitoring systems. 
 The evaluation also presents the benefits of using a heuristic to predict the faulty component.
-In our second part of the evaluation, we highlighted the benefit of scapegoat on a classical web server architecture to dynamically determine faulty components.
+In the second part of the evaluation, we highlighted the benefit of Scapegoat on a classical web server architecture to dynamically determine faulty components.
 This second example also exposes the capacity of Scapegoat to be applied to different application domains and confirms its relatively low overhead on the running system.
 Scapegoat contributes to the state of the art by providing a monitoring framework which adapts its overhead depending on current execution conditions and leverages the architectural information provided by Models@run.time to drive the search for the faulty component.
 

@@ -1,18 +1,18 @@
-\section{Motivating example}\label{sec:scapegoat-motivaing-example}
+\section{Motivating example: open-world scenario}\label{sec:scapegoat-motivaing-example}
 
 \input{./chapter5/usecase.tex}
 
-\section{Kevoree Component Model}
+\section{Kevoree Component Model} \label{sec:kevoree-intro}
 
-Kevoree~\footnote{\url{http://kevoree.org/}} is an execution platform for distributed software systems.
-It is built around a component model, and it leverages the model@runtime approach to ease the construction of reconfigurable systems.
+Kevoree~\footnote{\url{http://kevoree.org/}} is an example of framework for building distributed and reconfigurable applications.
+It is built around a component model, and it leverages the Models@run.time approach to ease the construction of reconfigurable systems.
 
 Built on top of dynamic component frameworks, Models@run.time denote model-driven approaches that aim at taming the complexity of dynamic adaptation.
 It basically pushes the idea of reflection~\cite{morin09a} one step further by considering the reflection-layer as a real model: ``something simpler, safer or cheaper than reality to avoid the complexity, danger and irreversibility of reality''.
 In practice, component-based and service-based platforms offer reflection APIs that allow instrospecting the application (e.g., which components and bindings are currently in place in the system) and dynamic adaptation (e.g., changing the current components and bindings).
 While some of these platforms offer rollback mechanisms to recover after an erroneous adaptation~\cite{leger2010reliable}, the purpose of Models@run.time is to prevent the system from actually enacting an erroneous adaptation. 
 In other words, the ``model at runtime'' is a reflection model that can be decoupled from the application (for reasoning, validation, and simulation purposes) and then automatically resynchronized.
-This model can not only manage the application's structural information (i.e., the architecture), but can also be populated with behavioural information from the specification or the runtime monitoring data.
+This model can not only manage the application's structural information (i.e., the architecture), but can also be populated with behavioral information from the specification or the runtime monitoring data.
 
 Kevoree provides multiple concepts that are used to create a distributed application that allows dynamic adaptation. The \emph{Node} concept is used to model the infrastructure topology and the \emph{Group} concept is used to model the semantics of inter-node communication, particularly when synchronizing the reflection model among nodes. 
 Kevoree includes a \emph{Channel} concept to allow for different communication semantics between remote \emph{Components} deployed on heterogeneous nodes. 

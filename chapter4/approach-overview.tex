@@ -50,7 +50,7 @@ Squirrel attempts to preserve resource reservation properties while processing t
 
 
 \subsection{Describing resource management requirements}
-Beugnard et al. discuss the extending Meyer's \textit{Design-By-Contract} idea to software components~\cite{Beugnard:1999:MCC:619042.621275}.
+Beugnard et al. discuss the extending Meyer's \textit{Design-By-Contract} idea to software components~\cite{Beugnard774917}.
 They classify component contracts into four categories: syntactic (level 1), semantic (level 2), synchronization (level 3), and Quality of Service (level 4).
 %They explain that component contracts have to deal with concerns that they classified into 
 %Fifteen years later, many component-based frameworks provide contracts that are used to: 
@@ -59,7 +59,7 @@ They classify component contracts into four categories: syntactic (level 1), sem
 %iii) Evaluate contracts and react accordingly.
 %iv) Decide when to stop evaluating contracts. 
 There is no de-facto standard to describe component contracts, but many domain specific interface description languages contain such metadata.
-This paper assumes that components have contracts to deal with resource reservation (level 4).
+This chapter assumes that components have contracts to deal with resource reservation (level 4).
 A contract in Squirrel defines component resource requirements written in terms of resource types, quotas and expected component usage.
 \begin{itemize}
 \item{\textbf{Definition 1}} A resource type indicates any class of computational resource that is useful to a component.

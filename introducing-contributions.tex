@@ -2,8 +2,8 @@
 \addcontentsline{toc}{chapter}{To the reader about contributions}
 \noindent\makebox[\linewidth]{\rule{\textwidth}{2pt}}
 
-\vspace{0.5cm}
-{\Huge \textbf{To the Reader}}
+\vspace{0.4cm}
+{\huge \textbf{To the Reader}}
 \vspace{0.2cm}
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{2pt}}
@@ -138,20 +138,29 @@ Although this metaphor is by no means complete, it helps to quickly summarize wh
 (0,0) circle (0.6cm);
 
 % legend
-\path (11, 1.9) node {
+\path (11, 1.7) node {
 	\includegraphics[width=20pt, height=20pt]{goal}
-} (12.2,1.8) node {{\scriptsize Objective}}
+} (12.2,1.6) node {{\scriptsize Objective}}
 ;
-\path (11, 1) node {
+\path (11, 0.9) node {
 	\includegraphics[width=20pt, height=20pt]{library}
-} (12.4,0.9) node {{\scriptsize Contributions}}
+} (12.4,0.8) node {{\scriptsize Contributions}}
 ;
 \draw[line width=0.1cm, draw=red!70] (10.7, 0.2)--(11.3,0.2) (12.4,0.2) node {{\scriptsize Thesis's way}}
 ;
 
+\draw[line width=0.1cm, draw=pink] (10.7, -0.2)--(11.3,-0.2) (12.7,-0.2) node {{\scriptsize Components' way}};
+
+\draw[line width=0.1cm, draw=green!40] (10.7, -0.6)--(11.3,-0.6) (12.6,-0.6) node {{\scriptsize Accounting way}};
+
+\draw[line width=0.1cm, draw=blue!40] (10.7, -1)--(11.3,-1) (12.7,-1) node {{\scriptsize Abstractions' way}};
+
+\filldraw[fill=white, draw=black, line width=0.04cm] (11,2.4) circle [radius=0.2];
+\filldraw[fill=white, draw=black, line width=0.04cm] (11,2.4) circle [radius=0.08];
+\draw (12.6,2.4) node[font=\scriptsize] {Topics Converge};
 
 \end{tikzpicture}
-\caption{This subway map shows how our research contributes to the state-of-the-art on supporting resource-awareness.} \label{fig:subway-map}
+\caption{This subway map shows how this research contributes to the state-of-the-art on supporting resource-awareness.} \label{fig:subway-map}
 \end{figure}
 
 }
@@ -164,9 +173,10 @@ This thesis makes three \textit{stops}.
 Before it, our journey takes us through a way where we collect the basic methods needed to perform resource accounting.
 Afterwards, at the first \textit{stop}, we reuse such methods to provide \textit{efficient} accounting for components.
 
-\item[Resource reservation for components] Resource accounting is the foundation for a safe \textbf{second} \textit{stop} -- providing resource reservation for components.
-It is then when we discuss a methodology to delay the selection of the binding method used to guarantee resource reservation, until the deployment phase at runtime.
-This serves both to guarantee low performance overhead and resource reservation per component (see  Chapter~\ref{chp:squirrel}).
+\item[Resource reservation for components] Resource accounting is the foundation for a \textbf{second} \textit{stop} -- providing resource reservation for components.
+It is then when we discuss a methodology to choose at runtime a ``\textit{good}'' representation of components in the execution platform.
+This is done by delaying, until the deployment phase, the selection of the low-level method used to guarantee resource reservation; the idea is that only at that point in time we have information that can be useful to reduce the overhead.
+This serves to guarantee both low performance overhead and per component resource reservation (see  Chapter~\ref{chp:squirrel}).
 
 \item[Ease the constructions of tools] The journey continues, and we learn how the mechanisms to define software abstractions lack support for building resource accounting tools.
 We also realize that this issue makes us remember our first \textit{stop} because components are just a concrete abstraction; and it also brings memories of the second one because new methods to calculate resource consumption may influence the mechanism we choose to represent components at runtime. 

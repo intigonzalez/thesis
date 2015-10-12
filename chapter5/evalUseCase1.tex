@@ -301,19 +301,7 @@ This can be explained by the multiple switches that the Random heuristic may oft
 
 \subsubsection{Impact of the component size}
 %and \ref{fig:execution-time-many-115}, \ref{fig:execution-time-many-4}
-In Figures \ref{fig:delay-time-115} and \ref{fig:delay-time-4} we can observe that the component size greatly impact the performance and the delay for ScapeGoat to find the faulty comopnent. 
-Similar to the explanation for the application's size, component size impacts the switch from \emph{Global monitoring} to \emph{Localized monitoring}, beacause of the class reloading and instrumentation.
-A good heuristic rastically reduces the number of transitions; thus, it has a huge impact on the delay. 
+In Figures \ref{fig:delay-time-115} and \ref{fig:delay-time-4} we can observe that the component size greatly impact the performance and the delay for ScapeGoat to find the faulty component. 
+Similar to the explanation for the application's size, component size impacts the switch from \emph{Global monitoring} to \emph{Localized monitoring}, because of the class reloading and instrumentation.
+A good heuristic drastically reduces the number of transitions; thus, it has a huge impact on the delay. 
 When the components size increase, the choice of a good heuristics becomes even more important, because the cost of dynamic monitoring probes injection increase with the size of the components.
-
-\subsection{Threats to validity}
-Our experiments show the benefits of using adaptive monitoring instead of state-of-the-art monitoring approaches.
-As in every experimental protocol, our evaluation has some bias which we have tried to mitigate.
-All our experiments are based around the same case study. 
-We have tried to mitigate this issue by using an available real case study.
-We have also used different settings across our experiments, even if all of the experiments are based on the same case study.
-Thus, our experiments limit the validity of the approach to applications with the same characteristics of the presented case study.
-New experiments with other use cases are needed to broaden the validation scope of our approach.
-
-The evaluation of the heuristic mainly shows the potential impact of using an ideal heuristic. 
-More case study and experiments are needed to fully validate the value of our Models@run.time based heuristic.

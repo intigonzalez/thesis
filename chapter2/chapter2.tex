@@ -56,20 +56,20 @@ Indeed, the concepts introduced in these new DSLs may not exhibit a straightforw
 As a consequence, it may be time consuming and complex to use a classical profiler to check applications that are based on these new languages.
 
 For instance, active annotations allow developers to participate in the translation process of Xtend source code to Java code via library.
-Such mechanism is often used directly by developers to introduce their own abstraction or defining their own internal DSL.
-In the K3-AL\footnote{Available at https://github.com/diverse-project/k3/wiki} project, active annotations are used to create an open-class mechanism on top of Java \cite{Clifton:2000:MMO:353171.353181}. 
+Such mechanism is often used directly by developers to introduce abstractions, and to define internal DSLs.
+In the K3-AL\footnote{Available at \url{https://github.com/diverse-project/k3/wiki}} project, active annotations are used to create an open-class mechanism on top of Java \cite{Clifton:2000:MMO:353171.353181}. 
 As a result, the annotation processor changes the program structure to implement this feature. 
-It adds some methods indirection (to $AASpect$), creates new set of objects that represents the state of one conceptual object ($AASpectProperty$), uses the Xtend extension method feature, etc.
+It adds an indirection layer to invoke some methods (to $AASpect$), creates a new set of objects to represent part of the state of one conceptual object ($AASpectProperty$), and uses the Xtend extension method feature.
 Figure~\ref{fig:k3-diagram} shows the result of this translation process. 
-The left part illustrates the code written by the developer, the middle part shows the developer view (the code that can be written to use the open-class mechanism), the right part describes the runtime view.
-In this case, an instance of an open-class is not represented by a single JVM object; instead, it is represented by scattered objects.  
+The code written by the developer is shown in Figure~\ref{fig:library-view}; to its right, Figure~\ref{fig:user-view} shows the user view (the code that can be written to use the open-class mechanism); and the runtime view is depicted in Figure~\ref{fig:tooling-view}.
+In this example, an instance of an open-class is not represented by a single JVM object; instead, it is represented by many objects.  
 
 
 \begin{figure}[ht]
 \begin{subfigure}[b]{0.45\textwidth}
 \centering
 \includegraphics[width=0.75\linewidth]{chapter2/fig/library-developer-view.png}
-\caption{Viewpoint of library implementor}\label{fig:library-view}
+\caption{Viewpoint of library developer}\label{fig:library-view}
 \end{subfigure}
 \hspace{0.3cm}
 \begin{subfigure}[b]{0.45\textwidth}
@@ -83,7 +83,7 @@ In this case, an instance of an open-class is not represented by a single JVM ob
 \includegraphics[width=0.9\linewidth]{chapter2/fig/tooling-view.png}
 \caption{Tooling's view}\label{fig:tooling-view}
 \end{subfigure}
-\caption{Open-class mechanism in K3-AL, three views are shown: how the developer o the library see it (Fig \ref{fig:library-view}), how the user of the library see it (Fig~\ref{fig:user-view}), and how it is perceived by the tools (Fig~\ref{fig:tooling-view}).}
+\caption{Open-class mechanism in K3-AL, three views are shown: how the developer of the library see it (Fig \ref{fig:library-view}), how the user of the library see it (Fig~\ref{fig:user-view}), and how it is perceived by the tools (Fig~\ref{fig:tooling-view}).}
 \label{fig:k3-diagram}
 \end{figure}
 
@@ -168,12 +168,13 @@ The section ends by analyzing the limitations in these approaches.
 
 \subsection{DSLs: land of hungry abstractions} \label{sec:DSL-on-MRTEs}
 
-In Model-Driven Software Development (MDSD), models are abstractions of a software system and its environment~\cite{Stahl:2006:MSD:1196766, Fowler:2010:DSL:1809745}.
-A model contains a limited amount of information of a real system; thus, its utility is restricted to the domain it represents.
-The set of concepts and relationships that can be used in a concrete model are described in a Metamodel, which is also called Domain-Specific Language (DSL)~\cite{Fowler:2010:DSL:1809745}.
-In this way, a DSL describes a specific domain (e.g., state machines, interface definition language); while a model is then a concrete state machine in a real application, or a description of how components in a system interact.
+%In Model-Driven Software Development (MDSD), models are abstractions of a software system and its environment~\cite{Stahl:2006:MSD:1196766, Fowler:2010:DSL:1809745}.
+%A model contains a limited amount of information of a real system; thus, its utility is restricted to the domain it represents.
+%The set of concepts and relationships that can be used in a concrete model are described in a Metamodel, which is also called Domain-Specific Language (DSL)~\cite{Fowler:2010:DSL:1809745}.
+%In this way, a DSL describes a specific domain (e.g., state machines, interface definition language); while a model is then a concrete state machine in a real application, or a description of how components in a system interact.
 
-In their seminal work~\cite{Czarnecki2000}, Czarnecki and Eisenecker embrace a broad notion of ``language'' that encompasses what are now known as internal and external DSLs, but it also includes libraries of routines or classes that extend a programming language because they introduce new concepts and vocabulary.
+In their seminal work~\cite{Czarnecki2000}, Czarnecki and Eisenecker embrace a broad notion of ``language'' that encompasses what are now known as internal and external \glspl{dsl} ~\cite{Fowler:2010:DSL:1809745}, but it also includes libraries of routines or classes that extend a programming language because they introduce new concepts and vocabulary.
+A DSL describes a specific domain (e.g., state machines, interface definition language); thus, its utility is restricted to the domain it represents.
 This widely used notion of ``language'' is what we have in mind when we discuss the problems associated to resource consumption in DSLs.
 Figure~\ref{fig:dsl-hierarchy} shows a possible organization of these abstractions.
 
@@ -744,9 +745,9 @@ By comparison, experiments of CPU consumption accounting show a lower overhead o
 In many scenarios, these overheads are unacceptable. 
 
 \item[Sub-utilization of information about the architecture of systems].
-Actually, all approaches use rudimentary information about the architecture of the system that is running on top of the component framework.
+Existing approaches only use rudimentary information about the architecture of the system that is running on top of the component framework.
 In other words, they are able to determine how each component consumes resources (regardless of the accuracy).
-As shown in \cite{Maurel:2012:AME:2304736.2304763}, it is possible to use information on how components are connected (their dependencies) to improve the monitoring accuracy.
+However, as shown in \cite{Maurel:2012:AME:2304736.2304763}, it is possible to use additional information on how components are connected (their dependencies) to improve the monitoring accuracy.
 Similarly, Attouchi et al. \cite{Attouchi:2014:MMM:2602458.2602467} show how to use the knowledge about the \textit{business logic} (in particular how components interact) to properly determine what component should be accounted for the consumption of an object.
 Nevertheless, we have not found results showing how to reduce performance overhead by using information about the architecture of component-based systems. 
 
@@ -762,7 +763,7 @@ However, many approaches to resource consumption and reservation are built witho
 This may have negative consequences in some cases.
 For instance, some monitoring frameworks to calculate CPU consumption induce a persistent overhead in all components, even if only one of them is consuming too much CPU.
 In the same way, solutions tend to use fixed mechanisms for monitoring and reserving resources, but we show in the previous chapter that some mechanisms are better for handling some kind of resources even if they are not able to manage all resources. 
-It is our belief that adaptive mechanisms are preferable because, by analyzing the requirements and observing the status of a system, they are likely capable of reducing the overhead.
+It is our belief that adaptive mechanisms are preferable because, by analyzing the requirements and observing the status of a system, they are theoretically capable of reducing the overhead.
 %Las soluciones son handcrafted y staticas, no se adaptan a lo que los componentes necesitan realmente (contrario a Squirrel y Scapegoat)\
 
 \item[Limited capabilities for building tooling support] Debuggers, simulators and interpreters have been proposed as tools to support the maintenance of software written using DSLs; however, as far as we know, no profiler that specifically aims at reducing the gap between DSLs and base language have been presented.
@@ -770,7 +771,7 @@ It is worth mentioning that some general profiling frameworks can be used to eas
 
 \end{description}
 
-Reusing existing solutions for resource consumption monitoring and reservation, and adapting them to specific features of new abstractions is an important step.
+As shown in this section, reusing existing solutions for resource consumption monitoring and reservation, and adapting them to specific features of new abstractions is important to ease their adoption.
 We have seen in this section several approaches that target specific abstractions such as, component models.
 However, since defining abstraction is so common, it is impractical to manually build tools with specific features for all of them.
 Hence, further reducing the engineering effort required to build resource management tools is highly desirable.
@@ -1058,7 +1059,7 @@ Although these are fuzzy values based on our judgment, they are useful to expres
   \draw[draw=black, dotted, line width = 1pt] (DeAl) -- (DeAlT);
   
 \end{tikzpicture}
-\caption{Assessing the relevance of the aforementioned approaches. The location in terms of voerhead an usability is given for each approach. Furthermore, the area of each circumference indicates how general the approach is (the larger the better).} \label{fig:position-approaches-to-simplify}
+\caption{Assessing the relevance of the aforementioned approaches. The location in terms of overhead an usability is given for each approach. Furthermore, the area of each circumference indicates how general the approach is (the larger the better).} \label{fig:position-approaches-to-simplify}
 \end{figure}
 
 %

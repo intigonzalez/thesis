@@ -1,6 +1,7 @@
 \begin{figure*}
  \centering
- \begin{minipage}[t]{0.45\linewidth}
+ \begin{minipage}[t]{0.43\linewidth}
+ \centering
  \begin{tikzpicture}
   \begin{axis}[
   	ylabel={Execution time (seconds)},
@@ -22,9 +23,11 @@
   	
   \end{axis}
   \end{tikzpicture}
-  \caption{Time to obtain the reply to\newline all requests.\label{fig:execution-time-web-app}}
+  \caption{Time to obtain the reply to all requests.\label{fig:execution-time-web-app}}
   \end{minipage}
- \begin{minipage}[t]{0.45\linewidth}
+  \hspace{0.1\linewidth}
+ \begin{minipage}[t]{0.43\linewidth}
+ \centering
  \begin{tikzpicture}
  \begin{axis}[
  	ylabel={Delay time (seconds)},
@@ -38,7 +41,7 @@
  	
  \end{axis}
  \end{tikzpicture}
- \caption{Average delay time to detect\newline a faulty \textit{sosie}.\label{fig:delay-time-web-app}}
+ \caption{Average delay time to detect a faulty \textit{sosie}.\label{fig:delay-time-web-app}}
 \end{minipage}
 
 \hspace{1cm}

@@ -1,6 +1,6 @@
 \section{Tooling}\label{sec:implementation}
 
-Our initial implementation of the language supports the definition of custom memory profilers for Java-based systems.~\footnote{Available at: https://github.com/intigonzalez/heapexplorer\_language}
+Our initial implementation of the language supports the definition of custom memory profilers for Java-based systems.~\footnote{Available at: \url{https://github.com/intigonzalez/heapexplorer\_language}}
 In short, any component framework, language or abstraction that is meant to run atop the JVM can take advantage of custom memory profilers.
 
 The usage of our DSL involves two different roles.
@@ -17,7 +17,7 @@ Our DSL is built using the Xtext framework.
 Since Xtext aims at easing the development of textual DSLs, we created a textual editor based on our proposed concrete syntax.
 This editor provides syntax highlighting, error detection during editing, auto-completion, and compilation to native Java agents written in \textit{C++}.
 
-To perform low-level tasks related to memory profiling, we use JVMTI~\footnote{http://docs.oracle.com/javase/8/docs/platform/jvmti/jvmti.html}.
+To perform low-level tasks related to memory profiling, we use JVMTI~\footnote{\url{http://docs.oracle.com/javase/8/docs/platform/jvmti/jvmti.html}}.
 Around Java's native agent mechanism we built a \textit{plugins} system which allows us to load/unload custom memory profiles without shutting down the JVM.
 The JVMTI API is used to assign values to several built-in variables: \textit{classes}, \textit{classloaders}, \textit{threads} and \textit{objects}.
 In addition, we use the JNI API to build a Java representation of the profiler output that can be consumed from Java code.
