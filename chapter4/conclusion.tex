@@ -20,7 +20,7 @@ The implementation we present is able to manage CPU, I/O and memory, and provide
 The experiments show that choosing the right component-to-system mappings at deployment-time reduces CPU overhead and/or memory use.
 They also highlight that optimizing mappings is essential to reducing isolation and communication overhead to acceptable levels.
 
-The approach proposed in this chapter contributes to answer the research question \textit{RQ2} (\textit{How can we choose what mechanisms must be used to guarantee resource reservation with low overhead for each component?}).
-Instead of selecting a fixed resource reservation mechanism for all components, we delays this selection until deployment time when we know exactly what resources a component require.
+The approach proposed in this chapter contributes to answer two research questions \textit{\ref{rq:rq2}} (\textit{How can we choose what mechanisms must be used to guarantee resource reservation with low overhead for each component?}) and \textit{\ref{rq:rq3}} (\textit{How can we leverage the knowledge about the architecture of applications to drive a mechanism for resource management?}).
+Instead of selecting a fixed resource reservation mechanism for all components, we delays this selection until deployment time when we know exactly what resources a component require, and how components interact.
 At this point, we can specialize the approach used to reserve resources in such a way that performance overhead is kept at a low level.
 

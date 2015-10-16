@@ -225,7 +225,7 @@ Providing this feature for a MRTE is only possible using an interpreter or a \gl
 In addition, a new requirement emerges: since code can be dynamically loaded from untrusted source, it is now mandatory to verify the correctness of such code in order to guarantee that it is safe to execute it.  
 
 \item \textbf{\textit{Automatic Memory Management}}: 
-Memory management has proven a major source of applications' crashes.
+Memory management has proven a major source of applications' crashes~\cite{Novark:2008:EAC:1409360.1409382, Allevato:2009:DEP:1508865.1508928}.
 As a consequence, automatic memory management is often a feature of modern programming languages.
 It is usually implemented using a \textit{garbage collector}, a general technique that can be implemented following different approaches and often requires some compiler's assistance (e.g., mark-swept, copying, reference-counting).
 \textit{Memory allocation} and \textit{garbage collection}, which is the memory reclamation mechanism, are commonly implemented as part of the runtime environment.

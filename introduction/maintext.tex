@@ -2,11 +2,13 @@
 
 Software systems are more pervasive than ever nowadays.
 They are found in environments ranging from home appliances' controllers to complex tools for dealing with industrial processes.
-As a side effect, end-user's expectations have also grown along the development of the software/hardware industry.
+As a side effect, end-user's expectations have grown along the development of the software/hardware industry.
 %For instance, installing applications provided by non-fully trusted sources in a mobile phone or closing a window in your office through a website are considered nowadays common tasks which only require engineering effort.
 However, the industry faces several challenges while coping with these expectations.
 Among them, we find problems related to the general issue of efficiently handling computational resources to satisfy non-functional requirements.
 Indeed, sometimes applications must run atop resource-constrained devices or unsafe open runtime environments~\cite{baresi2006toward} where efficient resource management is of paramount importance to guarantee applications' proper execution.
+For instance, mobile devices and smart home gateways are resource constrained devices where users can install applications from different sources.
+In the case of smart home gateways is important avoiding crashes because these devices often control a physical environment occupied by people.
 
 %
 %
@@ -57,9 +59,10 @@ Tackling these drawbacks, which are described below, is the objective of the pre
 
 \begin{itemize}
 \item Solutions for resource consumption monitoring and reservation impose \textbf{performance overhead} on the execution of applications~\cite{Binder:2006:FEM:1173706.1173733,Marek:2012:DEL:2162037.2162046,Reiss:2008:CDP:1383559.1383566,Maurel:2012:AME:2304736.2304763}.
-In particular, instrumentation-based mechanisms significantly reduce applications' performance~\cite{Dmitriev:2004:PJA:974043.974067,czajkowski_jres:_1998,Binder:2009:PPV:1464245.1464249}.
+In particular, instrumentation-based mechanisms, which offer good precision, significantly reduce applications' performance~\cite{Dmitriev:2004:PJA:974043.974067,czajkowski_jres:_1998,Binder:2009:PPV:1464245.1464249}.
 While this limitation does not affect the utilization of such mechanisms to, for instance, profile an application during the development phase~\cite{czajkowski_jres:_1998,binder_extending_2005,binder_portable_2001,Maebe06javana:a,Moret:2011:PBI:1960275.1960292, Hulaas:2008:PTL}, it does prevent their use in a production environment~\cite{Dmitriev:2004:PJA:974043.974067}.
-As a result, solutions with \textit{high} performance overhead or few features are used in those applications where being aware of resources at runtime is a strict requirement.
+As a consequence, engineers are forced to choose between two poor solutions -- either high overhead with good precision or low overhead with low precision -- when applications require being aware of resource consumption and reservation. 
+%As a result, solutions with  are used in those applications where being aware of resources at runtime is a strict requirement.
 
 \item Despite of the widespread utilization of MRTEs to execute applications based on components and other abstractions, \textbf{creating resource management tools} for these abstractions is still \textbf{a complex task}.
 Indeed, creating abstractions, such as components models, is increasingly common~\cite{van2000domain,hutchinson2011empirical,whittle2014state}.
