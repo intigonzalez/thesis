@@ -5,21 +5,22 @@
 %In fact, we can only state that the reserved memory must equal the component reservation plus the middleware requirement plus any amount that allows an efficient behavior %of the garbage collector.
 %Chances are that any prediction will overestimate the real consumption, leading to the problem of wasting resources due to internal fragmentation.
 
-\section{Conclusion} \label{sec:conclusions}
+\section{Conclusion} \label{sec:squirrel-conclusions}
 
 %\enlargethispage{0.3cm}
 
-This chapter presents Squirrel, a framework that provides resource management capabilities to dynamic component-based frameworks.
-Squirrel proposes choosing component-to-system mappings at deployment time for better resource management.
+In this chapter, we advocate for a methodology to provide resource management capabilities to dynamic component-based frameworks.
+This methodology and its implementation, Squirrel, propose choosing component-to-system mappings at deployment time for better resource management.
 This strategy is performed automatically by checking the resource availability and transforming the application's structure to run the application on resource-aware containers.
 Containers describe how to map components to system abstractions
 %in ways that reduce the cost of resource management.
 allowing for different trade-offs in resource management.
 
-We present an implementation of Squirrel that manages CPU, I/O and memory, and provide performance analyses and a comparison of different design decisions.
-The experiments
-%to assess our implementation's behavior 
-show that choosing the right component-to-system mappings at deployment-time reduces CPU overhead and/or memory use.
+The implementation we present is able to manage CPU, I/O and memory, and provide performance analyses and a comparison of different design decisions.
+The experiments show that choosing the right component-to-system mappings at deployment-time reduces CPU overhead and/or memory use.
 They also highlight that optimizing mappings is essential to reducing isolation and communication overhead to acceptable levels.
-%and make it affordable.
+
+The approach proposed in this chapter contributes to answer the research question \textit{RQ2} (\textit{How can we choose what mechanisms must be used to guarantee resource reservation with low overhead for each component?}).
+Instead of selecting a fixed resource reservation mechanism for all components, we delays this selection until deployment time when we know exactly what resources a component require.
+At this point, we can specialize the approach used to reserve resources in such a way that performance overhead is kept at a low level.
 

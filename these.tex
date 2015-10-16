@@ -130,6 +130,12 @@
 % create initial glossary
 \loadglsentries[main]{./glossary/glossary}
 
+
+% activate/deactivate the operation semantics
+\newif\ifoperationalSemanticsOn
+\operationalSemanticsOntrue
+\operationalSemanticsOnfalse
+
 \begin{document}
 
 
@@ -139,9 +145,11 @@
 
 %%  1ere de Couverture:
 \titre{
+\huge
 \begin{flushleft}
-Supporting \\ resource-awareness in \\ managed runtime environments.
-\end{flushleft}}
+Supporting \\ resource awareness \\ in managed runtime environments.
+\end{flushleft}
+}
 
 %\soutenue
 %%   Laisser cette ligne en commentaire sauf pour la version finale.
@@ -204,9 +212,9 @@ Supporting \\ resource-awareness in \\ managed runtime environments.
 \pagenumbering{roman}
 
 %~\newpage
-\addcontentsline{toc}{chapter}{Table of content}
 \markboth{Table of content}{Table of content}
 \tableofcontents%%{Table des matières}
+\addcontentsline{toc}{chapter}{Table of content}
 
 % print glossary
 \printglossaries
@@ -242,7 +250,7 @@ Supporting \\ resource-awareness in \\ managed runtime environments.
 %%------------%%
 \bibliographystyle{alpha}
 \bibliography{./biblio/biblio_these.bib}
-\addcontentsline{toc}{chapter}{Bibliographie}
+\addcontentsline{toc}{chapter}{Bibliography}
 
 %%------------------%%
 %%  INDEX/TABLES    %%
@@ -258,9 +266,9 @@ Supporting \\ resource-awareness in \\ managed runtime environments.
 %
 \newpage
 \cleardoublepage
-\addcontentsline{toc}{chapter}{Table des figures}
-\markboth{Table des figures}{Table des figures}
+\markboth{List of Figures}{List of Figures}
 \listoffigures
+\addcontentsline{toc}{chapter}{List of Figures}
 %%
 %%\newpage
 %%\cleardoublepage
