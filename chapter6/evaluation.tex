@@ -109,7 +109,7 @@ The overhead in our approach remains between 4-33\%, and it is 11.93\% in averag
 
 In the previous section, we show the performance overhead on total execution time for different profiling mechanisms.
 However, these mechanisms are not executed under the same conditions.
-For instance, as we mention in section~\ref{sec:implementation}, our implementation suspends the execution of the application while it performs the analysis.
+For instance, as we mention in Section~\ref{sec:dsl-implementation}, our implementation suspends the execution of the application while it performs the analysis.
 On the contrary, the \textit{Heap Dump + Eclipse MAT} approach only suspends the application while dumping the heap, but the analysis is done in a separate process; hence, it likely runs in parallel.
 Therefore, in this experiment, we measure only the \textbf{analysis time}, which is the amount of elapsed time from the beginning of analysis to its end.
 To perform these experiments, we use again the Dacapo benchmarks.

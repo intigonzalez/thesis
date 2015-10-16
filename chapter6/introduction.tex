@@ -1,69 +1,14 @@
-%\section{Introduction}\label{sec:introduction}
-%Garbage collection-based memory management is a wide\-spread approach nowadays since
-%it improves software quality and eases the development process.
-%Nonetheless, memory-related issues are still relevant in languages/runtimes with
-%garbage collectors because developers tend to fail during memory manipulation.
-%In particular, it is known that memory leaks and unnecessary allocations are the sources
-%of both functional and non-functional software misbehavior~\cite{cbse/14/attouchi/monitoring, Vera:2004:FAF:973097.973099}.
 
-%Dealing with these issues have been a concern for both the industry and the academy
-%for a while; therefore, there are several approaches to reduce the risk of memory-related
-%errors.
-%In the industry, practitioners use memory profilers (e.g. YourKit, Eclipse Memory
-%Analyzer Tool and Plumbr) to deal with the problem.
-%These tools support many sort of built-in analysis which are fairly efficient because
-%they are based on industrial standards such as JVMTI.
-%Some of them also provide mechanisms to specify user-defined analysis through a query 
-%language such as OQL~\cite{OQL-visualvm}.
-%Although useful, the usage of user-defined analysis requires in most cases the 
-%generation of a costly heap dump which makes the associated queries unsuitable for
-%at runtime execution in a production environment.
-%Hence, it is not possible to use these tools to feed neither self-adaptive nor self-healing
-%systems.
-
-%In the academy, different approaches tackle memory issues~\cite{Xu:2015:MPP:2729552.2729565, Nguyen:2007:DEM:1296907.1296912, Bond:2008:TML:1449764.1449774, Jung:2014:AML:2568225.2568311}.
-%Many of these solutions are either efficiently implemented as hard-coded modifications to the
-%garbage collector or built on top of industrial standards as JVMTI.
-%The advantage of these mechanisms is a reduction on the overhead of such analysis.
-%However, they have two limitations: i) they target a single memory issue and ii) it is hard to
-%introduce them in the industry.
-%In general, implementing a highly efficient analysis requires knowledge of low-level APIs or
-%garbage collection mechanisms which are not commonly in the curriculum of most managed runtime
-%environment (MRE) users.
-
-%It seems clear to us that there is a gap in existent solutions to analyze the heap.
-%Either they are fairly {\em generic/easy to use} but offer poor performance or they offer good performance but are hard to customize/create. 
-%We claim that a {\em simple to use} and efficient mechanism to perform memory analysis is
-%a feature required in many areas of software development for MREs (e.g. to build self-adaptive systems, to
-%reduce development complexity, to decrease the number of errors).  
-
-%In this paper, we propose a framework to analyze the status of the memory heap and collect information about it.
-%The main component of the framework is a domain-specific language (DSL) that allows us to specify
-%how to explore and collect the desired information.
-%The concepts of this language are highly coupled to the way the heap is traversed.
-%A program in this language is compiled into a backing technology that support, in an efficient way, the iteration over all objects and 
-
-%New software abstractions are created for good reasons, such as  having specific point of views on a particular system, simplifying software development, reducing errors, removing redundant tasks and improving productivity. 
-%There is currently a trend in \glslink{SE}{SE} towards the creation of new languages and tools to support specific software developments~\cite{whittle2014state, van2000domain,hutchinson2011empirical}. 
-%The design of such new languages and platforms are done for good reasons, such as  having specific point of views on a particular system, simplifying software development, reducing errors, removing redundant tasks and improving productivity. 
-%This trend has led to the development of new research topics such as .
 The \gls{SLE} community aims at reducing the effort required in engineering new languages and their corresponding development tools, thus improving the efficiency of both people in charge of designing new languages and their users~\cite{sle}. 
 However, as far as we know, they do not take into account profiling tools, which are essentials for software maintenance and optimization.
 Indeed, although specific tools are needed to monitor running systems in order to detect defects or abnormal behaviors~\cite{duesterwald2000software, Jovic:2011:CMY:2076021.2048081},
 little support exists to ease their creation.
 
-%Many of the newly designed languages and runtime platform are built on top of existing object oriented languages runtime such as the Java Virtual Machine (JVM). 
-%Therefore people in charge of optimizing, debugging and maintaining software applications can use the existing debugger and profilers of these platforms. 
-%However, there is a paradigm mismatch between the classical profilers used in object-oriented systems and the newly designed platforms and languages. 
-%Indeed, the concepts introduced in these new languages may not exhibit a straightforward mapping to the underlying object-oriented system. For example, in the Spring framework~\cite{laddad2009aspectj}, some annotations like $@Aspect$ generate dynamic proxies on the fly. Existing profilers will present these proxies as normal objects, thus revealing a mismatch between the profiler and developer view. 
-
 In this chapter, we focus on the problem of easing the creation of memory profilers for domain-specific software abstractions that are designed to be executed on top of MRTEs. 
 We first propose a metalanguage to specific what data about the memory use is of interest in a domain (see Section~\ref{sec:approach}).
 A profiler is then generated to collect the data and present it in terms of concepts of that language. 
 In addition, we present a tooled DSL based on such a metalanguage, which generates profilers for the JVM (see Section~\ref{sec:dsl-implementation}).
-%to match the language concepts and provide useful information to the end user.
 An important point of our approach is the low overhead induced by these profilers; this makes them usable in production environments (see Sections~\ref{sec:expressiveness} and~\ref{sec:dsl-evaluation}).
-%Indeed, generating a specific profiler from an abstract definition of the role of this profiler enable us to produce very specific profiler which only monitor the relevant information.
 
 The contributions of this chapter are as follows:
 \begin{itemize}
@@ -77,10 +22,3 @@ Concrete profilers already generated are portable to any implementation of the J
 
 \item A discussion of the metalanguage's expressiveness, and an evaluation of the performance overhead induced by three profilers in real-world use cases.
 \end{itemize}
-
-%The rest of this chapter is organized as follows
-%A description of the DSL and its tooling support are presented in sections and .
-%In section we discuss the expressiveness of the language.
-% presents an evaluation of the performance achieved by the custom profilers.
-%Related works are discussed in section~\ref{sec:relatedwork}.
-%Finally, section~\ref{sec:conclusions} gives the conclusions and presents future works.

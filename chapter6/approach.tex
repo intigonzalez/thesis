@@ -182,7 +182,19 @@ This compiler is also in charge of providing interoperability between the data f
 
 In the rest of this section we describe the elements of this architecture.
 First, the abstract syntax of this metalanguage is discussed; we present it using a meta-model with its main concepts as well as some snips of code, written in a concrete syntax, to ease the presentation (see Subsection~\ref{sec:abstract-syntax}).
-This concrete syntax is then introduced in Subsection~\ref{sec:concrete-syntax}, followed by both the operational and translational semantic of the language (see Subsections~\ref{sec:operational-semantic} and~\ref{sec:translational-semantic}).
+This concrete syntax is then introduced in Subsection~\ref{sec:concrete-syntax}, followed by 
+\ifoperationalSemanticsOn
+both the operational and
+\else
+the
+\fi
+translational semantic of the language (see 
+\ifoperationalSemanticsOn
+Subsections~\ref{sec:operational-semantic} and
+\else
+Subsection
+\fi
+\ref{sec:translational-semantic}).
 Finally, in~\ref{sec:dsl-usage-examples} we present some examples of how to use the language.
 
 
@@ -393,7 +405,7 @@ For instance, it uses very explicit keywords such as ``create structure foreach'
 \setlength{\grammarindent}{4em}
 \begin{grammar}
 
-<program> ::= <types> <structures> \grule{1}
+<program> ::=  `name' <string-literal> <types> <structures> \grule{1}
 
 <types> ::= <type> <types> | <empty> \grule{2, 3}
 
@@ -465,6 +477,7 @@ m = #String[].add("first element")
 %Likewise, operator \textbf{in} checks whether the \textit{referrer} is already a member of the structure.
 %Finally, line 7 updates the length of the list when an object is detected as member of the structure.
 
+\ifoperationalSemanticsOn
 \subsection{Operational Semantics} \label{sec:operational-semantic}
 
 \extracomment{TODO}{
@@ -688,6 +701,8 @@ l_{x_i} = \operatorname{newloc}(S_{n+1}) \; for \; i = 1 \dots n \\
 
 \mathligsoff
 
+\fi
+
 \subsection{Translational Semantics}\label{sec:translational-semantic}
 
 A profiler written in this language is compiled to produce a custom memory profiler for a specific target platform.
@@ -764,7 +779,7 @@ initializationRoutine(Context& ctx, std::vector<AbstractStructure*>& s){
 }
 \end{lstlisting}
 An important concern during the transformation lays on efficiently mapping our concepts to \textit{C++} concepts.
-Moreover, since each target platform provides facilities to get metadata regarding the objects in memory, using such facilities efficiently is specially important in order to reduce the performance overhead due to profiling.
+Moreover, since each target platform provides facilities to get metadata regarding the objects in memory, using such facilities efficiently is especially important in order to reduce the performance overhead due to profiling.
 
 The final profiler is built using both the generated code and a template algorithm.
 The template is target dependent, but in general we use the underline target facilities to collect meta-data, access fields in certain steps, traverse the objects in memory and also to populate the built-in rvalues.
@@ -879,7 +894,7 @@ create structure foreach e:#["instances of String"] using
 \paragraph{Example 3: Data about large objects} 
 Memory profilers also provide mechanisms to collect data on many objects at the same.
 In this example (see Listing~\ref{lst-big-objects}), we show how to collect the class name and the size of very large objects.
-Only a structure is needed to define this profiler; both the membership function and the initialization fo the structure are simple.
+Only a structure is needed to define this profiler; both the membership function and the initialization of the structure are simple.
 To store the information, an empty list is declared in line 9.
 Every time a new object is identified as large, its class and size are added to the list as a new entry. 
 

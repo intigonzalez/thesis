@@ -1,52 +1,155 @@
 \section{Tooling}\label{sec:dsl-implementation}
 
-Our initial implementation of the language supports the definition of custom memory profilers for Java-based systems.~\footnote{Available at: \url{https://github.com/intigonzalez/heapexplorer\_language}}
-In short, any component framework, language or abstraction that is meant to run atop the JVM can take advantage of custom memory profilers.
+To validate our approach, we have implemented a tool chain to ease the definition of custom memory profilers for Java-based systems.~\footnote{Available at: \url{https://github.com/intigonzalez/heapexplorer\_language}}
+These profilers can be executed in any JVM as long as it provides support for the JVMTI.
 
-The usage of our DSL involves two different roles.
-Both roles are described in the rest of the section.
+In this section, we present tools built to support the definition of memory profilers using our language; this is done by taking into account how engineers in different roles may interact with these tools and with the resultant profilers.
+Indeed, in dealing with memory profilers, we have to take into consideration the two usual roles -- developers of profilers and their users; after all, profilers built using our language are themselves software abstractions.
+A developer must know how the target domain-specific abstractions are represented atop the JVM, and she also must have a clear understanding of how our language is executed.
+On the contrary, users only need to be aware of the interface provided by our framework, and the structure of the data collected by a profiler.
+In the rest of this section, we discuss details that are important to these roles.
+
+Additionally, we present low-level details regarding how the language is implemented atop of the JMVTI.
+The decision of implementing our approach by relying on JVMTI has advantages and disadvantages.
+On the one hand, the obvious advantage lies on the portability of this solution, which makes it more valuable from a practical point of view.
+On the other hand, building profilers on top of the JVMTI, instead of directly modifying the JVM, impacts the performance of the generated profilers and, unfortunately, hinders (in extreme case it even prevents) the implementation of some language constructs.
+Nonetheless, it is our belief that guarantying profilers' portability should be of maximum priority.
+Moreover, in writing this implementation, we have found that the limitations in the JVMTI preventing the construction of better profilers can be overcome with, at most, a few additions to the API.
 
 
-\subsection{Developers of the domain-specific abstractions}
+\subsection{Developers of domain-specific abstractions}
 
-The first role is played by people who use the DSL to define custom memory profilers.
-We envision that DSLs designers, component framework developers and engineers who design new software abstractions would be in charge of this role.
-For instance, nowadays a DSL designer can ship a set of specific memory profilers along tools such as editors, simulators and compilers. 
+%\extracomment{FIX}{I am fixing this section, you can continue in Section~\ref{sec:dsl-tooling-users}}
 
-Our DSL is built using the Xtext framework.
-Since Xtext aims at easing the development of textual DSLs, we created a textual editor based on our proposed concrete syntax.
+In our vision, developers of software libraries and component frameworks, as well as software language engineers may use our approach to  define customized memory profilers for the abstractions they create.
+This is, in addition to delivering artifacts such as libraries, source code, simulators, text editors for DSLs, and compilers for these DSLs; engineers would also ship profilers to simplify the use of these abstractions.
+For instance, the developers of the Spring framework~\footnote{\url{https://spring.io/}} may create a set of specific profilers to reduce the cost of maintaining applications written using the framework.
+These profilers can serve as both internal tools to help in the development of abstractions, and mechanisms allowing users to better use abstractions.
+
+Figure~\ref{fig:dsl-tooling-developer} summarizes the viewpoint of developers of domain-specific abstractions.
+To write a profiler, they use knowledge about the abstraction and the tool chain to generate the executable profiler. 
+Our implementation of the language is built using Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625}; it provides a textual editor that is able to handle the proposed concrete syntax.
 This editor provides syntax highlighting, error detection during editing, auto-completion, and compilation to native Java agents written in \textit{C++}.
 
-To perform low-level tasks related to memory profiling, we use JVMTI~\footnote{\url{http://docs.oracle.com/javase/8/docs/platform/jvmti/jvmti.html}}.
-Around Java's native agent mechanism we built a \textit{plugins} system which allows us to load/unload custom memory profiles without shutting down the JVM.
-The JVMTI API is used to assign values to several built-in variables: \textit{classes}, \textit{classloaders}, \textit{threads} and \textit{objects}.
-In addition, we use the JNI API to build a Java representation of the profiler output that can be consumed from Java code.
+\begin{figure}
+\centering
+\includegraphics[scale=0.45]{./chapter6/fig/developer-profiler-view.png}
+\caption{Viewpoint of developers. Memory profilers are built from the description of software abstractions.}\label{fig:dsl-tooling-developer}
+\end{figure}
 
-The developer of the profiler must be aware of: the details of the abstraction for which the custom profiler is being built, the semantic of our language, and the details of its implementation.
-Indeed, the process of code generation is driven by the need of reducing the performance impact.
-In our implementation, we apply a set of platform dependent optimizations taking into account the profiler description.
-First, since a profiler does not always need built-in rvalues (e.g., \textit{threads}, \textit{threadgroups} and \textit{classes}, etc.), we selectively skip the construction of them.
-When possible, we also skip the construction of some structures (e.g., class of each object, its classloader, field names, etc.).
+To perform low-level tasks related to memory profiling, we use \glslink{JVMTI}{JVMTI}~\footnote{\url{http://docs.oracle.com/javase/8/docs/platform/jvmti/jvmti.html}} and \glslink{JNI}{JNI}.
+These APIs are used by both profilers and the core memory profiling library, so-called Native Agent in Figure~\ref{fig:dsl-tooling-developer}.
+In this native agent, a \textit{plugins} system, which allows users to load/unload profiles without shutting down the JVM, is implemented.
+Given a profiler definion, the compiler output is a package that contains a package with the native binary code for the profiler, and a Java library you can use to access the collected data using plain Java objects.
 
-An advice related to the performance of custom profilers is noteworthy.
-Even if we try to reduce the cost of using lists, applying nested operations on them harms the performance because doing so linearly increases the time complexity of evaluating an expression.
-In our implementation, using the built-in rvalue \textit{objects} in nested lambda expressions is particularly discouraged because it can easily contains many elements.
-Even worse, since it is costly to create a list of objects, we use a JVMTI-based iterator to access each object.
-This solution reduces memory consumption but increases execution time.
+To reduce the overhead of profilers, developers must be aware of the details of the abstraction for which the profiler is being built, the semantic of our language, and the details of its implementation.
+In particular, it is advisable reducing the usage of \textit{lists} and the evaluation of nested lambda expressions.
+Likewise, heavily using the built-in rvalue \textit{objects} is specially discouraged because it can easily contains many elements.
+It is also discouraged because, in order to reduce memory consumption, we rely on an iterator built on top of JVMTI operations that can be costly to use in terms of CPU time.
 
-\subsection{Users of the domain-specific abstractions}
+Finally, we added some built-in rvalues in this implementation because they are both useful in the context of Java and easy to obtain using the JVMTI.
+These values are \textit{classes}, \textit{classloaders}, \textit{threads} and \textit{objects}; they are lists of anonymous built-in record types.
+The relations among these types and their operations are depicted in Figure~\ref{fig:dsl-built-in-types}.
 
-We envision that a set of specific custom profilers can be shipped in addition to the \textit{classic} artifacts that users of a software abstraction receive. 
-These specific profilers would support the abstraction usage.
-For instance, an user who is relying on a new extension of the Xtend language to build a system, might use specific profilers written in our DSL to understand the memory consumption and in general the behavior of the system.
+\begin{figure}
+\centering
+\includegraphics[scale=0.45]{./chapter6/fig/diagram-classes.png}
+\caption{Viewpoint of developers. Memory profilers are built from the description of software abstractions.}\label{fig:dsl-built-in-types}
+\end{figure}
 
-In our implementation, a custom profiler is a native library which can be plugged to the JVM.
-The user can switch on the profiler using a simple method call from a remote controller process or using a Java agent.
-The output is a Java structure containing the collected information.
-So far, we provide a mechanism to log the result of an arbitrary profiler.
-However, building a user interface to explore the results in a customized way is simply a matter of iterating over the results.  
+%Indeed, the process of code generation is driven by the need of reducing the performance impact.
+%In our implementation, we apply a set of platform dependent optimizations taking into account the profiler description.
+%First, since a profiler does not always need built-in rvalues (e.g., \textit{threads}, \textit{threadgroups} and \textit{classes}, etc.), we selectively skip the construction of them.
+%When possible, we also skip the construction of some structures (e.g., class of each object, its classloader, field names, etc.).
 
+\subsection{Users of domain-specific abstractions} \label{sec:dsl-tooling-users}
 
+We envision that a set of memory profilers can be shipped in addition to other ``classic'' deployment artifacts that users of a software abstraction receive. 
+These profilers would support the use of the corresponding software abstraction.
+For instance, an user who is relying on a new extension of the Xtend language to build a system, might use specific profilers written in our language to understand the memory consumption, and in general, the behavior of the system.
+
+The generated profilers can be used in two different ways, either as development tools or as mechanisms to support resource awareness at runtime.
+Due to the scope of this thesis, the reference implementation we provide is biased towards the second scenario, but it should be relatively simple to adapt it to support the software development process.
+To access memory profilers, a JVM must be launched with a native Java agent loaded, and a library to collect profiling data in its classpath.
+Once the application is running, it can trigger profiling by simple issuing a few method calls using the profiling API.
+Figure~\ref{fig:user-profiling-library-view} illustrates the process of collecting memory profiles, the software components involved, and the APIs that must be used.
+Observe how the profiling framework issues a call to a handler once it is done, a parameter contains the data computed.
+These data are encoded in a \textit{list}, in which each elements correspond to the data computed for each identified structure in the heap.
+%The problem is knowing the type and shape of each list element.
+
+\begin{figure}[!b]
+\centering
+\includegraphics[scale=0.6]{./chapter6/fig/user-profiler-view.png}
+\caption{Viewpoint of users. Memory profilers are black-boxes accessed through Java interfaces. Data collected is in the form of plain Java objects.}\label{fig:user-profiling-library-view}
+\end{figure}
+
+The output of a profiler is a list of Java objects containing the collected information; and the type of these objects depend on the profiler definition.
+Indeed, as part of our implementation, the profiler generator creates a set of Java classes to represent the data collected in a form that is easy to digest at runtime by a Java application.
+Once a profiler collects the information in an internal format, it populates a representation in Java using the Java Native Interface (JNI); the code to do so is also generated by the compiler of our language.
+In Figure~\ref{fig:dsl-generated-java}, the classes generated for a profiler are shown.
+Notice that a class is created for each \textit{record} declared, and also for each \textit{StructureType}.
+It can be seen how `lists' are directly represented in Java by mean of generic Java lists.
+The \textit{id} field in both \textit{MemoryProfile1} and \textit{MemoryProfile2} is the value used to parametrize each structure;
+in this particular example, where two structures are identified, the value of \textit{MemoryProfile1.id} is ``lists'' and the value of \textit{MemoryProfile2.id} is ``otherObjects''.
+
+Given the fact that the data computed by a profiler is returned as a list of objects, and their layout is unclear, the remaining problem is how to process such data; there are two options.
+First, users can make the application code depend on the Java code created by the profiler generator.
+In this way, your application has a new dependency, but you can profit from knowing at development time the types used in the code.
+A second approach is using the reflection capabilities of Java to explore the data.
+In the evaluation, we use such an approach to log the result of an arbitrary profiler, printing all the information it has computed.
+Using reflection, it is also possible to build a user interface to explore the results in a customized way.  
+
+\begin{figure}
+\centering
+\begin{minipage}[t]{0.60\linewidth}
+\begin{lstlisting}[language=DSL2]
+name "basic info" 
+
+T : struct {
+	classname : String
+	size: int
+}
+create structeres for e:#["lists"]
+using
+	constructor
+		initialObjects = #Object[]
+		data1 = #T[];
+	membership
+		(this is String) or (this is Array)
+	updates
+		data1 = data.add(struct T { this.classname, this.size})
+		
+create structeres for e:#["otherObjects"]
+using
+	constructor
+		initialObjects = #Object[]
+		data2 = #T[];
+	membership true
+	updates
+		data2 = data.add(struct T { this.classname, this.size})
+\end{lstlisting}
+\end{minipage}
+\hspace{0.07\linewidth}
+\begin{minipage}[t]{0.30\linewidth}
+\begin{lstlisting}[language=java, frame=L, numbers=left,numberstyle=\color{black}\scriptsize]
+class T {
+	final String classname;
+	final int size;
+}
+
+class MemoryProfile1 {
+	final Object id;
+	final List<T> data1;
+}
+
+class MemoryProfile2 {
+	final Object id;
+	final List<T> data2;
+}
+\end{lstlisting}
+\end{minipage}
+\caption{Representation of profiling data in Java, as users of profilers see it. Accessing these structures is useful to support resource awareness.} \label{fig:dsl-generated-java}
+\end{figure}
 
 
 
