@@ -1,0 +1,57 @@
+\section{Conclusions} \label{sec:thesis-conclusions}
+
+Resource-aware programming encompasses a set of techniques where applications modify their behavior based on resource availability;
+this is useful, for instance, if applications run under open-wold conditions.
+Through this thesis, we highlight that, for a software system to implement resource-aware methods, considerable runtime support is required.
+Specifically, facilities for resource accounting and reservation can be used to observe and change the consumption.
+Unfortunately, providing such a support is particularly challenging in managed runtime environments, which are widely used nowadays, for they often favor automatic resource management in order to ease software development.
+
+In reviewing the state of the art, we have found shortcomings that prevent the use of existing techniques in production environments.
+Relatively high performance overhead in portable solutions and limited capacity to deal with arbitrary granularity levels are the most overwhelming constraints of existing approaches.
+The issue of handling different granularity levels is important because managed runtime environments are used to represent a wide variety of software abstractions, ranging from component models, to domain-specific languages and simply class libraries .
+Finally, some existing approaches show how resource accounting solutions may profit of adapting their behavior to the application they are monitoring.
+
+Component-based software engineering is a good candidate to implement systems capable of coping with open-world conditions; however, the ability to handle non-functional properties is often limited because runtime environments lack support for monitoring resource consumption per components.
+Our first contribution is a framework, namely Scapegoat, to efficiently compute per component resource utilization.
+In Scapegoat, we make two assumptions: there are previous monitoring mechanisms with different trade-off between overhead and accuracy, and
+it is possible to activate/deactivate such mechanisms at runtime.
+The framework follows an adaptive monitoring approach based on two principles: i) since consumption matters when the runtime environment is running out
+of resource, we can use optimistic lightweight monitoring and still be sure we will be able to detect potential failures on time by switching to a more precise monitoring technique; and ii) it is possible to \textit{quickly} identify faulty components once a potential failure is spotted.
+Scapegoat is capable of calculating resource usage with a lower overhead than other portable state-of-the-art approaches (overhead reduced by 92\%).
+Moreover, since by construction Scapegoat leverages other techniques, it may profit of new mechanisms introduced to perform monitoring as long as they can be switched on/off at runtime.   
+
+Reserving resource for specific applications is another concern in resource-aware programming.
+Our second contribution is a methodology to select a representation of each component in the runtime environment in such a way that resource reservations can be guaranteed with low performance overhead.
+We claim that providing reservation capabilities should not be a concern only during the design and implementation of the component model.
+Instead, the resource reservation technique for each component must be chosen at deployment time, once the requirements of an application are known.
+In other words, we propose a methodology where both resource requirements and available technologies are decision variables to consider when we are binding components to runtime abstractions.
+Through this thesis, evidence for such claims are provided and a prototype, Squirrel, is implemented to show the potential benefices of this methodology.
+
+%Resource reservation for components Resource accounting is the foundation for a \textbf{second} \textit{stop} -- providing resource reservation for components.
+%It is then when we discuss a methodology to choose at runtime a ``\textit{good}'' representation of components in the execution platform.
+%This is done by delaying, until the deployment phase, the selection of the low-level method used to guarantee resource reservation; the idea is that only at that point in time we have information that can be useful to reduce the overhead.
+%This serves to guarantee both low performance overhead and per component resource reservation (see  Chapter~\ref{chp:squirrel}).
+
+Easing the construction of dynamic analysis tools such as resource monitoring frameworks is of utmost importance because it supports the adoption of new software abstractions.
+In particular, developers using component models, DSLs, and class libraries may take advantage of customized profilers.
+The third contribution of this thesis is a language to define customized memory profilers that can be used both during the development of applications and also in production environments.
+The language has been devised with constraints that, although reduce its expressive power, offer guaranties about the performance behavior of the generated profilers.
+%We propose a generative approach to create profilers for domain-specific abstractions
+To evaluate this approach, we have implemented a profiler generator that targets the JVM and uses the JVMTI to explore the content of the memory heap.
+Using such an implementation, we compare generated profilers, handwritten profilers and mainstream tools.
+The results show that the generated profilers have a behavior similar to that of handwritten solutions.
+
+%\textbf{}
+%Memory consumption monitoring and profiling are important concerns in applications that target MRTEs because even automatic memory management is not capable of guarantying error-free memory management and, more importantly, these features introduce performance issues.
+%%As mentioned, mainstream profilers are not able to deal with domain-specific concepts in an \textit{efficient} way.
+%Along this thesis, a generative approach to create customized memory profilers for domain-specific abstractions, such as DSLs and component models, is proposed.
+
+%The approach consists primarily in a language to define profilers and a profiler generator which targets heap memory exploration mechanisms such as the \gls{JVMTI}.
+%%The language has been devised with constrains that, although reduce its expressive power, offer guaranties about the performance behavior of the generated profilers.
+%To evaluate the approach, comparisons between  are presented.
+%
+%Research questions \ref{rq:rq1} and \ref{rq:rq4} are addressed with this contribution.
+%
+%Ease the constructions of tools The journey continues, and we learn how the mechanisms to define software abstractions lack support for building resource accounting tools.
+%We also realize that this issue makes us remember our first \textit{stop} because components are just a concrete abstraction; and it also brings memories of the second one because new methods to calculate resource consumption may influence the mechanism we choose to represent components at runtime. 
+%Then we \textit{stop} for the \textbf{third} time; we propose an approach to ease the construction of efficient and customized memory profilers for MRTEs (see  Chapter~\ref{chp:dsl-memory}).

@@ -1,55 +1,11 @@
 %------------------------------%
 %------------------------------%
-\chapter{Conclusion et Perspectives}
-\markboth{Conclusion et Perspectives}{Conclusion et Perspectives}
+\chapter{Conclusions and Perspectives}
+\markboth{Conclusions and Perspectives}{Conclusions and Perspectives}
 %------------------------------%
 %------------------------------%
-\label{chap:ccl}
-
-\section{Conclusions}
+\label{chp:ccl}
 
 
-\subsection{Scapegoat}
-
-\paragraph{On reducing the overhead of instrumentation}
-In addition, we plan to study alternatives to improve instruction accounting. %These alternatives are about using peak monitoring and learning monitoring.
-For example, we plan to study the use of machine learning for monitoring \cite{tesauro2006hybrid}. Based on a machine learning approach, it is possible to train the monitoring system to do the instruction instrumentation. Then, instead of doing normal instruction instrumentation, we might only do, for example, method-calls instrumentation and with the learning data, the monitoring system should be able to infer the CPU usage of each call, whilst lowering the overhead.
-
-\paragraph{Scapegoat's perspectives}
-The work presented in this chapter opens various research perspectives. 
-Scapegoat currently uses code injection at load-time to perform fine-grained monitoring. 
-The adaptive monitoring approach we have presented provides good results, but we believe we can reduce the overhead of CPU and memory monitoring by using a modified JVM and injecting specialized bytecode to cooperate with it.
-The modified JVM would account for the resources at a low-level, while the instrumentation code could provide application-level information like the component boundaries. 
-This should result in a more efficient solution than calculating resource usage at the application-level only.
-A second research perspective consists in proposing appropriate reactions when the source of a problem is discovered by Scapegoat. 
-Indeed, reconfiguration policies when a resource-consumption problem is found could range from resource limitations for faulty components, to a replacement of the component or of part of the application, to degrading the applications functionality.
-In the context of distributed systems, the set of possible reconfigurations is larger and can include moving components across the distributed infrastructure.
-It is necessary to choose how to efficiently reconfigure the system to deal with the discovered fault.
-
-\paragraph{Squirrel}
-
-In the future, we envision augmenting the Squirrel framework with automatic and dynamic reasoning capabilities in order to automatically place and migrate components with resource contracts over a distributed architecture.
-%This paper also opens interesting perspectives by applying the presented concepts in different application domains with strong security and safety concerns.
-Applying the concepts in this paper to other application domains with strong safety and security concerns is of interest.
-For instance, security concerns often leverage resource isolation as a means to avoid sharing confidential information with untrusted components within the same container.
-%\hl{WHAT?: Indeed, security concerns are often correlated with resource isolation in managing that some confidential information cannot be shared to untrusted components within the same container. }
-The possibility of applying a pattern-based approach to increase an application's security without compromising its efficiency looks promising~\cite{DBLP:conf/kbse/MorinMFTBJ10}.
-
-
-
-%Energy efficient dynamic adaptation, to switch off parts of the electronics depending on the resources usage
-
-\paragraph{Custom memory profilers}
-In the future, we plan to address the limitations of the execution model we propose.
-In particular, we are aware that it is not as powerful as other query languages since it is based on a single traversal of the graph.
-The advantages of the chosen approach are that it guarantees a low impact on the performance and it is easy to weave with existent technique to explore the heap.
-An alternative we consider is to leverage the results from graph databases.
-It would provide two benefits: i) algebraic transformation of the queries with all the potential optimizations and, ii) an already known language for developers.
-
-\begin{comment}
-
-\subsection{Transfert du monde académique vers l'industrie }
-Les travaux présentés dans cette thèse se sont fait dans le cadre d'un financement CIFRE (Convention Industrielle de Formation par la Recherche). Une partie transfert vers l'industrie reste à effectuer. Nous envisageons d'industrialiser les développements tout en conservant une interaction avec le domaine de la recherche. Cette industrialisation passera par le développement d'un produit logiciel utilisable pour modéliser la variabilité et sélectionner les configuration de tests. Puis de déployer les solutions proposées sur des projets pilotes comme le test d'applications mobiles ou les applications testées doivent s’exécuter sur un large panel de téléphone mobile, puis chez des clients.
-
-Les nombreux travaux de recherche en cours autour de la variabilité, comme le \textit{reverse engineering} de modèle de \textit{features}, répondent à des problématiques concrètes des industriels. La poursuite de ce partenariat académie-industrie serait bénéfique pour les deux parties. D'un coté, la fourniture de cas concret industriels aux chercheurs permet d'alimenter les thématiques de recherches et contribue d'autre part à la présentation de solutions innovantes pour l'entreprise.
-\end{comment}
+\input{./conclusion/conclu}
+\input{./conclusion/perspectives}
