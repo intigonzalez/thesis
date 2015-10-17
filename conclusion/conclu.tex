@@ -1,10 +1,10 @@
-\section{Conclusions} \label{sec:thesis-conclusions}
+\section{Conclusion} \label{sec:thesis-conclusions}
 
 Resource-aware programming encompasses a set of techniques where applications modify their behavior based on resource availability;
 this is useful, for instance, if applications run under open-wold conditions.
 Through this thesis, we highlight that, for a software system to implement resource-aware methods, considerable runtime support is required.
 Specifically, facilities for resource accounting and reservation can be used to observe and change the consumption.
-Unfortunately, providing such a support is particularly challenging in managed runtime environments, which are widely used nowadays, for they often favor automatic resource management in order to ease software development.
+Unfortunately, providing such a support is challenging in MRTEs because they often favor automatic resource management in order to ease software development.
 
 In reviewing the state of the art, we have found shortcomings that prevent the use of existing techniques in production environments.
 Relatively high performance overhead in portable solutions and limited capacity to deal with arbitrary granularity levels are the most overwhelming constraints of existing approaches.
@@ -22,8 +22,8 @@ Moreover, since by construction Scapegoat leverages other techniques, it may pro
 
 Reserving resource for specific applications is another concern in resource-aware programming.
 Our second contribution is a methodology to select a representation of each component in the runtime environment in such a way that resource reservations can be guaranteed with low performance overhead.
-We claim that providing reservation capabilities should not be a concern only during the design and implementation of the component model.
-Instead, the resource reservation technique for each component must be chosen at deployment time, once the requirements of an application are known.
+We claim that the technique used to provide reservation capabilities should not be selected during the design of the component model.
+Instead, the resource reservation technique for each component must be chosen at deployment time, when the requirements of an application are known.
 In other words, we propose a methodology where both resource requirements and available technologies are decision variables to consider when we are binding components to runtime abstractions.
 Through this thesis, evidence for such claims are provided and a prototype, Squirrel, is implemented to show the potential benefices of this methodology.
 

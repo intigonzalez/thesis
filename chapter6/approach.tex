@@ -1,7 +1,7 @@
 
 \section{Understanding the domain} \label{sec:domain-overview}
 
-The purpose of memory profilers is capturing information regarding how applications use memory.
+The purpose of memory profilers is to collect information regarding how applications use memory.
 To write profilers, a clear understanding about their nature is required.
 Informally, the term \textit{memory profiling} refers to any kind of \textbf{process to collect} some \textbf{data about memory usage}.
 In an object-oriented runtime environment, such data may be as simple as the number of objects of a specific class, but it may also be as complex as the list of possible memory leak's sources.
@@ -17,9 +17,8 @@ Formally, we use a set of concepts to properly define our understanding of the t
 The following concepts are used int the rest of the chapter:
 
 \begin{description}
-\item[Object] is an atomic entity that consumes memory to store the value of its attributes.
-When we say \textit{object} we mean as in \gls{OOP}.
-The operations that we can perform on these objects are nevertheless restricted to accessing attributes, obtaining the amount of memory used to represent an object, and accessing meta-data such as the class name.
+\item[An object] is an atomic entity that consumes memory to store the value of its attributes.
+Although we mean \textit{object} as in \gls{OOP}, the operations that we can perform on these objects are restricted to accessing attributes, obtaining the amount of memory used to represent an object, and accessing meta-data such as the class name.
 Reusing the concept is ``natural'' since we are targeting MRTEs, which often support the object-oriented paradigm.
 
 \item[Memory Heap] As mentioned, this is the region of memory used to store dynamically allocated \textit{objects} that are connected through references -- forming a directed graph.
@@ -66,17 +65,17 @@ In Figure~\ref{fig:reachable-from-class-object} the objects to count are highlig
 \caption{Objects reachable from the Client class. Observe that only one object is not reachable.}\label{fig:reachable-from-class-object}
 \end{figure}
 
-The aforementioned informal steps show what a profiler should be capable of doing:
+The aforementioned informal steps show that a profiler should be capable of:
 
 \begin{itemize}
-\item \textbf{Accessing meta-data of objects} such as the class of an object (\textit{java.lang.Class}), and the size of an object. 
+\item \textbf{Collecting meta-data of objects} such as the class of an object (\textit{java.lang.Class}), and the size of an object. 
 
-\item \textbf{Accessing the value of attributes} is also helpful to filter out elements of the heap.
+\item \textbf{Reading the value of attributes} is also helpful to filter out elements of the heap.
 
 \item \textbf{Traversing references} is necessary because often some objects belong to a structure only because they are referenced by an object that is already a member.
 \end{itemize}
 
-To summarize, a function to determine whether an object is member of an structure may use: properties of the object itself, and properties about its relationships.
+To summarize, a function to determine whether an object is member of a structure may use: properties of the object itself, and properties about its relationships.
 
 %\paragraph{Is there an instance of A making reference to an object of type B?}
 
@@ -84,7 +83,7 @@ To summarize, a function to determine whether an object is member of an structur
 
 \paragraph{Nodes in each simply linked list}
 
-In a second example, we want to calculate how many nodes has each simply linked list in the heap.
+In the second example, we want to compute how many nodes has each simply linked list in the heap.
 Figure~\ref{fig:simple_snapshot} shows a heap with two simply linked list and one double linked list.
 The first list has three nodes while the second one has four; these are the values we want to obtain.
 
@@ -135,20 +134,7 @@ This example shows that in defining memory profilers, we often need the capacity
 To summarize, we are frequently interested in calculating values for many structures that have the same ``characteristics''; this is what we call \textit{structure type}.
 To identify such structures we use a \textit{parameter}; the process of associating a particular parameter value to a structure type is done by a \textit{factory of structures}. 
 
-\section{Metalanguage to define custom memory profilers}\label{sec:approach}
-
-%In this chapter, we propose a tool to create custom memory profilers for MRTEs.
-%We are interested on easing the task of defining new profilers without sacrificing their performance regarding CPU consumption.
-%This section presents our approach, a metalanguage to define custom memory profilers in MRTEs.
-%First, we present a global view of how our approach is used to support resource-aware programming, and how it integrates in a production environments (see Section~\ref{sec:dsl-global-architecture}).
-
-%Keeping the profiler's overhead as low as possible is of utmost importance for us because lightweight profilers can be use both during the development phase and during the application execution in a production environment.
-%To reach this goal, we propose a Domain Specific Language (DSL) and its code generator which aims at describing and generating efficient online memory profilers. 
-
-%We next present the syntax, semantics and usage examples of our domain-specific language.
-
-
-%\subsection{Global Architecture}\label{sec:dsl-global-architecture}
+\section{Metalanguage to define customized memory profilers}\label{sec:approach}
 
 A global view of our approach is shown in Figure~\ref{fig:dsl-global-view}.
 % the figure depicts how to and how it is integrated in production environments, are shown in .
@@ -182,7 +168,7 @@ This compiler is also in charge of providing interoperability between the data f
 
 In the rest of this section we describe the elements of this architecture.
 First, the abstract syntax of this metalanguage is discussed; we present it using a meta-model with its main concepts as well as some snips of code, written in a concrete syntax, to ease the presentation (see Subsection~\ref{sec:abstract-syntax}).
-This concrete syntax is then introduced in Subsection~\ref{sec:concrete-syntax}, followed by 
+The full concrete syntax is then introduced in Subsection~\ref{sec:concrete-syntax}, followed by 
 \ifoperationalSemanticsOn
 both the operational and
 \else
@@ -195,7 +181,7 @@ Subsections~\ref{sec:operational-semantic} and
 Subsection
 \fi
 \ref{sec:translational-semantic}).
-Finally, in~\ref{sec:dsl-usage-examples} we present some examples of how to use the language.
+Finally, in~\ref{sec:dsl-usage-examples} we present some examples to illustrate the use of the language.
 
 
 \subsection{Abstract Syntax}\label{sec:abstract-syntax}
@@ -209,7 +195,7 @@ The concepts related to \textit{UserDefined} types are depicted on the left part
 \begin{figure*}
 \centering
 \includegraphics[width=0.93\linewidth]{chapter6/fig/AS}
-\caption{Custom profiler Meta-model}
+\caption{Meta-model for representing customized memory profilers}
 \label{fig:as}
 \end{figure*}
 
@@ -221,7 +207,7 @@ In addition, the language supports the declaration of both \textit{Records} and 
 A \textit{record} is a compound type that contains \textit{fields} to hold values of previously defined types.
 On the contrary,  all the members of a list must be of the same type; hence, a \textit{list} refers to a \textit{base type}.
 In a profiler, \textit{UserDefined} types can be composed in any desired way as long as a single property is respected -- no recursive types are allowed.
-We can formalize such a constrain using OCL (Object Constraint Language~\footnote{\url{http://www.omg.org/spec/OCL/}}):
+We can formalize such a constraint using \gls{OCL}~\footnote{\url{http://www.omg.org/spec/OCL/}}):
 
 \begin{lstlisting}[escapeinside={(*}{*)},
 label=fig:membership,
@@ -234,7 +220,8 @@ context List inv:
    not baseType->oclAsSet()->closure(t)->exists(t | t = self)
 \end{lstlisting} 
 
-We enforce this constrain for two reasons. First, it simplify the type system, and second because it is a way to know that no data structure other than the built-in will be used to store a \textit{list}.
+In this OCL code, the closure function computes all the instances that can be reach using
+We enforce this constrain for two reasons. First, it simplifies the type system, and second because it is a way to know that no data structure other than the built-in will be used to represent, for instance, a \textit{list}.
 In this way, we can guarantee the performance of operations on lists.  
 The \textit{List} type provides operations to manipulate list values.
 In general, these operations correspond to the set of \textit{standard} operations of any implementation of the list data type in functional languages.
@@ -253,7 +240,7 @@ add & & 'a $\to$ 'a list $\to$ 'a list \\
 first & & 'a list $\to$ 'a \\
 \hline 
 \end{tabular} 
-\caption{Operations on lists.} \label{tab:operations-on-lists}
+\caption{Operations on lists} \label{tab:operations-on-lists}
 \end{table} 
 
 In Listing~\ref{lst:defining-data}, a data structure to store information about a heap structure is declared.
@@ -305,7 +292,7 @@ In addition, a \textit{StructureType} contains a boolean \textit{expression} whi
 Finally, it also contains \textit{assignments} to update the value of each \textit{variable} every time an object is added to the structure.
 %These \textit{assignments} are used to compute the actual value of the memory profile.
 The major constraint regarding these \textit{updates} is that they must refer to already initialized \textit{variables}, and the new assigned values must match the previous types.
-We formalize such a constrain using OCL:
+We formalize such a constraint using OCL:
 
 \begin{lstlisting}[escapeinside={(*}{*)}, label=fig:lvalue, language=OCL1]
 context StructureType inv:  updates->forAll(a: Assignament | 
@@ -337,9 +324,9 @@ create structure foreach e:objects.filter([o| ret o is SimplyLinkedList]) using
 \end{lstlisting}
 
 The recursive case of the membership function is in line 5.
-It resembles the definition in function \ref{eq:simply-list}; there are however differences that are due to the evaluation semantic of our language.
+It looks like the definition in function \ref{eq:simply-list}; there are however differences that are due to the evaluation semantic of our language.
 Although the semantic is discussed hereafter, we can understand the definition by simply knowing that it is evaluated for every edge of the directed graph.
-Before the evaluation, three variable are created: \textbf{this}, \textbf{referrer}, and \textbf{this\_structure}; they are, respectively, the target of the edge, the source, and a structure.
+Before the evaluation, three variables are created: \textbf{this}, \textbf{referrer}, and \textbf{this\_structure}; they are, respectively, the target of the edge, the source, and a structure.
 When we evaluated the membership function we are simply checking whether \textbf{this} is a member of \textbf{this\_structure}, and we are passing additional information to support the definition of recursive functions.
 
 
@@ -387,7 +374,8 @@ Since building rvalues of type list is costly in terms of performance overhead, 
 
 \subsection{Concrete Syntax}\label{sec:concrete-syntax}
 
-A textual concrete syntax has been defined for our language; using it, a domain expert can define a custom memory profiler using a text editor.
+A textual concrete syntax has been defined for our language.
+It can be utilized by a domain expert to define a customized memory profiler using a text editor.
 A grammar for this textual representation is depicted in Figure~\ref{fig:dsl-grammar}.
 Notice how the rules for expressions make such a grammar ambiguous; we decide to use this form to ease the presentation.
 However, a complete LL(*) grammar~\cite{Parr:2011:LFA:1993498.1993548} can be found in Appendix~\ref{anx:grammar}.
@@ -500,7 +488,7 @@ $Bool(1)$ and $Bool(0)$ & & \parbox{8cm}{Values  $true$ and $false$.}\\
 & & \\
 $ E $ & \parbox[t]{0.7cm}{} & \parbox{8cm}{Describes a mapping from \textit{identifiers} to \textit{locations}. We use $id \mapsto l$ to represent a member of the mapping} \\ 
 & & \\
-$ S $ & & \parbox[t]{8cm}{Describes a mapping from \textit{locations} to \textit{values}. Informally, it can be seen as the storage. We use $l \mapsto v$ to represent a member of the a mapping.} \\ 
+$ S $ & & \parbox[t]{8cm}{Describes a mapping from \textit{locations} to \textit{values}. Informally, it can be seen as the storage. We use $l \mapsto v$ to represent a member of the mapping.} \\ 
 & &  \\
 $ C $ & & \parbox[t]{8cm}{Describes a mapping from \textit{values} to \textit{structures}. We use $v \mapsto s$ to represent a member of the mapping.} \\ 
 & & \\
@@ -758,9 +746,9 @@ public:
 \end{lstlisting}
 
 The last function, \textit{createStructures}, is used to identify structures of this type.
-They are invoked by a template initialization routine that expects as generic parameter a subclass of 
-\textit{AbstractStructure} -- \textit{T} in Listing~\ref{lst:init-routines}.
-Formally, the signature and behavior of this routine are as follow:
+Such a function is invoked by a template initialization routine that expects as generic parameter a subclass of 
+\textit{AbstractStructure} (\textit{T} in Listing~\ref{lst:init-routines}).
+Formally, the signature and behavior of this routine are as follows:
 \begin{lstlisting}[language=C++, frame=L,
 numbers=left,
 numberstyle=\color{black}\scriptsize,xleftmargin=2\parindent,
@@ -778,7 +766,7 @@ initializationRoutine(Context& ctx, std::vector<AbstractStructure*>& s){
   }
 }
 \end{lstlisting}
-An important concern during the transformation lays on efficiently mapping our concepts to \textit{C++} concepts.
+An important concern during the transformation lies on efficiently mapping our concepts to \textit{C++} concepts.
 Moreover, since each target platform provides facilities to get metadata regarding the objects in memory, using such facilities efficiently is especially important in order to reduce the performance overhead due to profiling.
 
 The final profiler is built using both the generated code and a template algorithm.
@@ -812,7 +800,7 @@ The creation of a context in line 5 depends on the target platform.
 It basically creates values such as the list of objects in memory or the list of loaded classes.
 The second loop traverses all the references among objects in memory.
 During each iteration, the algorithm finds the first structure for which the membership function is true.
-Notice that we only select the first because for some memory accounting problems, it is too hard to define a membership functions that build disjoints structures~\cite{dsn/09/geoffray/ijvm,Attouchi:2014:MMM:2602458.2602467}.
+Notice that we only select one because this is a simple way to guarantee that structures are disjoints sets of objects. %structures~\cite{dsn/09/geoffray/ijvm,Attouchi:2014:MMM:2602458.2602467}.
 Thereafter, the information for such a structure is updated.
 
 %The complete execution of a program in our language is as follow. Subgraph instances are initialized using listing~\ref{onInitialization}.
@@ -839,7 +827,7 @@ In this section, we discuss some examples to highlight possible uses of our lang
 \paragraph{Example 1: Evaluating an assertion}
 The first example shows how to assess the existence of a value satisfying a property, independently of which object contains it.
 Specifically, we want to check whether exists an object with an attribute named ``data'' whose value is between \textit{3} and \textit{5}.
-Since the answer we expect is a simple boolean value, this example can be seen as a form of assertion regarding the memory content.
+Since the answer we expect is a simple boolean value, this example can be seen as a kind of assertion regarding the memory content.
 
 We can write a memory profiler to compute this value.
 A complete code to implement it is depicted in Listing~\ref{lst:dsl-example1}.
@@ -847,7 +835,7 @@ Since we want to compute a single boolean value that depends on all the objects 
 In the code, this is shown in line 1, where the list of instances has one element.
 Notice that we use the string value ``whole-jvm'', this has been arbitrarily chosen, any value is acceptable in this case as long as the list's length is one.
 The initialization section simply states that, before the graph of object is traversed, we assume that no object meets the property.
-The non-recursive membership function accept every object is member of the structure.
+The non-recursive membership function accepts every object is member of the structure.
 Finally, to update the variable, we assess the property for the current object (\textbf{this}), and aggregate the result to the previous value.
 
 \begin{lstlisting}[escapeinside={(*}{*)},
@@ -870,6 +858,7 @@ A common requirement in memory profilers is calculating the number of instances 
 We can easily express this in our language; Listing~\ref{lst-common-profiling} illustrates this usage scenario.
 In particular, it counts how many \textit{Strings} and \textit{Integers} exist. 
 Since we are interested in two different classes, we declare two factories with their respective membership function.
+
 \begin{lstlisting}[escapeinside={(*}{*)},
 caption=Calculating number of instances of two classes., 
 label=lst-common-profiling,
@@ -939,7 +928,7 @@ create structure foreach e:#["big objects"] using
 The example in Listing~\ref{lst:kevoreeaccounting} calculates the number of objects that are reachable from the threads.
 It also computes how much memory these objects consume.
 
-The membership function used in this structure type is as follow:
+The membership function used in this structure type is as follows:
 
 \[
 	f\left( o \right) = \begin{cases}
@@ -949,7 +938,7 @@ The membership function used in this structure type is as follow:
 \] 
 
 In this case, a recursive membership function is used to discard those objects that are not referenced by an existing member of the structure.
-A variable, defined as a records, holds the  calculated values; it is, however, possible to achieve the same goal using two separated integer values.
+A variable, defined as a record, holds the  calculated values; it is however possible to achieve the same goal using two separated integer values.
 
 \begin{lstlisting}[escapeinside={(*}{*)},
 caption={Calculating objects reachables from threads.},

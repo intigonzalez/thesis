@@ -5,7 +5,7 @@ These profilers can be executed in any JVM as long as it provides support for th
 
 In this section, we present tools built to support the definition of memory profilers using our language; this is done by taking into account how engineers in different roles may interact with these tools and with the resultant profilers.
 Indeed, in dealing with memory profilers, we have to take into consideration the two usual roles -- developers of profilers and their users; after all, profilers built using our language are themselves software abstractions.
-A developer must know how the target domain-specific abstractions are represented atop the JVM, and she also must have a clear understanding of how our language is executed.
+A developer must know how the target domain-specific abstractions are represented on top of the JVM, and she/he must also have a clear understanding of how our language is executed.
 On the contrary, users only need to be aware of the interface provided by our framework, and the structure of the data collected by a profiler.
 In the rest of this section, we discuss details that are important to these roles.
 
@@ -34,7 +34,7 @@ This editor provides syntax highlighting, error detection during editing, auto-c
 \begin{figure}
 \centering
 \includegraphics[scale=0.45]{./chapter6/fig/developer-profiler-view.png}
-\caption{Viewpoint of developers. Memory profilers are built from the description of software abstractions.}\label{fig:dsl-tooling-developer}
+\caption{Developer viewpoint. Memory profilers are built from the description of software abstractions.}\label{fig:dsl-tooling-developer}
 \end{figure}
 
 To perform low-level tasks related to memory profiling, we use \glslink{JVMTI}{JVMTI}~\footnote{\url{http://docs.oracle.com/javase/8/docs/platform/jvmti/jvmti.html}} and \glslink{JNI}{JNI}.
@@ -44,7 +44,7 @@ Given a profiler definion, the compiler output is a package that contains a pack
 
 To reduce the overhead of profilers, developers must be aware of the details of the abstraction for which the profiler is being built, the semantic of our language, and the details of its implementation.
 In particular, it is advisable reducing the usage of \textit{lists} and the evaluation of nested lambda expressions.
-Likewise, heavily using the built-in rvalue \textit{objects} is specially discouraged because it can easily contains many elements.
+Likewise, heavily using the built-in rvalue \textit{objects} is specially discouraged because it can easily contain many elements.
 It is also discouraged because, in order to reduce memory consumption, we rely on an iterator built on top of JVMTI operations that can be costly to use in terms of CPU time.
 
 Finally, we added some built-in rvalues in this implementation because they are both useful in the context of Java and easy to obtain using the JVMTI.
@@ -66,7 +66,7 @@ The relations among these types and their operations are depicted in Figure~\ref
 
 We envision that a set of memory profilers can be shipped in addition to other ``classic'' deployment artifacts that users of a software abstraction receive. 
 These profilers would support the use of the corresponding software abstraction.
-For instance, an user who is relying on a new extension of the Xtend language to build a system, might use specific profilers written in our language to understand the memory consumption, and in general, the behavior of the system.
+For instance, a user who is relying on a new extension of the Xtend language to build a system, might use specific profilers written in our language to understand the memory consumption, and in general, the behavior of the system.
 
 The generated profilers can be used in two different ways, either as development tools or as mechanisms to support resource awareness at runtime.
 Due to the scope of this thesis, the reference implementation we provide is biased towards the second scenario, but it should be relatively simple to adapt it to support the software development process.

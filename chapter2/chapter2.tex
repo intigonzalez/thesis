@@ -21,9 +21,9 @@ Due to all these specific features there is considerable variability to consider
 %This chapter mainly discusses how to ease the task of supporting resource-aware programming by taking into account the existence of many software abstractions.
 
 This chapter mainly discusses how the usage of software abstractions poses new challenges when we are implementing support for resource consumption monitoring and reservation.
-In particular, this chapter describes an abstraction - components (Section \ref{sec:components-oriented-resource-awareness}) - which is frequently used on top of MRTEs.
+In particular, this chapter describes an abstraction -- components (Section \ref{sec:components-oriented-resource-awareness}), which is frequently used on top of MRTEs.
 A comprehensive discussion on how this abstraction consumes resources is presented.
-Moreover, state of the art approaches, for handling features specific of components and other abstractions, are presented and their limitations discussed (Section \ref{sec:abstraction-specific-requirements}).
+Moreover, state-of-the-art approaches, for handling features specific of components and other abstractions, are presented and their limitations discussed (Section \ref{sec:abstraction-specific-requirements}).
 %We tackle (Section \ref{sec:component-leverage}) the issue of how to leverage component-based architectures - to reduce the overhead of dealing with resources - by specializing resource management techniques.
 %Second, since new abstractions are constantly created nowadays, having generic and efficient mechanisms for controlling how they use resources may simplify the process of providing resource awareness support.
 We then present the state of the art on simplifying the construction of tooling support for resource consumption accounting and reservation (Section \ref{sec:easy-tools-contruction}).
@@ -31,7 +31,7 @@ We then present the state of the art on simplifying the construction of tooling 
 \section{Developer's View versus Tooling's View} \label{sec:chapter2-introduction}
 
 Building abstractions is at the core of software development.
-They are meant to tackle a large number of problems in software engineering, ranging from providing better representation of the business logic to supporting applications' extensibility.
+They are meant to tackle numerous problems in software engineering, ranging from providing better representation of the business logic to supporting applications' extensibility.
 Interestingly, abstractions are not built from scratch; instead, they are implemented upon other abstractions provided by the runtime environment.
 This leads to the well-known layered architecture where complex features are created using more simple concepts.
 In the field of operating systems, processes are built relying on low-level concepts such as hardware interrupts, context-switch, and MMU hardware.
@@ -45,7 +45,7 @@ Ideally, tools such as editors, debuggers, and profilers must be modified to mak
 Likewise, mechanisms to monitor resource consumption at runtime should also be modified.
 Unfortunately, this is not always the case.
 For instance, often developers lack the proper tools when they implement applications that execute in MRTEs.
-A couple of illustrative examples are given below; the first is associated to the usage of Domain-Specific Languages (DSLs), the second is related to OSGi bundles.
+A couple of illustrative examples are given below; the first is associated to the usage of \glspl{dsl}, the second is related to OSGi bundles.
 
 \paragraph{The case of providing tools for new DSLs}
 %When considering other abstractions, we can see that
@@ -138,7 +138,7 @@ To do so, we discuss the topic in two ways:
 This serves both to further motivate the research, and to present in details the technical complexity an engineer may face when new abstractions are used.
 %In general, most problems we find, when programs are written using DSLs and resource awareness is required, can also be found in other contexts where different kind of abstractions are used.
 
-\item We describe the specific features of a concrete kind of abstraction - software components.
+\item We describe the specific features of a concrete kind of abstraction -- software components.
 We do so because, despite of the fact that component-based software engineering is widely used in the industry, exiting approaches to support resource awareness still show limitations.
 \end{enumerate}
 
@@ -370,7 +370,7 @@ because it simplifies the implementation of features, such as, self-organizing t
 \cite{PanzicaLaManna:2012:LDU:2304736.2304764, Johnson:2015:CSM:2735960.2735979,Zhang:2009:MVD:1509239.1509262}.
 Likewise, many works~\cite{cbse-conference} have shown the benefits of using component-based approaches in open-world environments~\cite{baresi2006toward, Caporuscio:2010:AIA:1985522.1985547, Perez-Palacin:2010:PAO:1712605.1712614}.
 
-In a general sense, the concept that embodies the idea behind software components can be defined as follow
+In a general sense, the concept that embodies the idea behind software components can be defined as follows
 \cite{Crnkovic2011}:
 
 \begin{description}
@@ -443,13 +443,13 @@ It is then possible to account for resource consumption in two ways \cite{Mietti
 
 \begin{description}
 
-\item[indirect accounting:] all the resources consumed to serve a request that was originated in a component A are accounted to A (See Figure~\ref{fig:indirect-accounting}).
+\item[Indirect accounting:] all the resources consumed to serve a request that was originated in a component $A$ are accounted to $A$ (See Figure~\ref{fig:indirect-accounting}).
 In other words, there is no resource consumption accounted to service providers.
 
-\item[direct accounting:] the resources consumed during
+\item[Direct accounting:] the resources consumed during
 interaction are accounted to the provider (See Figure~\ref{fig:direct-accounting}).
 For instance, the CPU used by a code that belongs
-to component A is accounted to A, no matter if the code is executed on behalf of a client.
+to component $A$ is accounted to $A$, no matter if the code is executed on behalf of a client.
 \end{description}
 
 Both ways have advantages and disadvantages.
@@ -483,7 +483,7 @@ In that case, it is not clear what component should be accounted for the memory 
 Both approaches have pros and cons.
 The intuition dictates that if a component is preventing an object of being collected it should be accounted for that particular block of memory.
 However, such an approach may be dangerous if a buggy (or malicious) provider creates objects unnecessarily big, sends them to clients, and forgets about them; in that case, it would be hard to identify the provider as the source of excessive consumption. 
-Most existing solutions for memory consumption follow a fixed criteria, either account always for the allocator or for the component preventing the object's collection.
+Most existing solutions for memory consumption follow a fixed criterion, either account always for the allocator or for the component preventing the object's collection.
 
 A second aspect is to decide \textit{where should be implemented} the mechanism for resource consumption monitoring and reservation.
 Essentially, this consists in, selecting which actors implement the mechanism and policies to manage resources, and deciding if the actors collaborate to achieve their goal \cite{Crnkovic2011}.
@@ -675,7 +675,7 @@ It is intended to be use as a development tool.
 Monitoring the resource consumption of OSGi bundles has also been addressed.
 For instance, Miettinen et al. \cite{Miettinen2008} present a framework to measure CPU and memory usage of OSGi bundles.
 This framework relies on some modifications to an existing OSGi platform in order to identify which bundle is consuming a given resource.
-Such a modification creates a unique \textit{ThreadGroup} for a each bundle; since each object allocation and method execution is performed by a \textit{thread}, it is possible to figure out the bundle responsible by simple looking at the \textit{ThreadGroup} of the thread.
+Such a modification creates a unique \textit{ThreadGroup} for each bundle; since each object allocation and method execution is performed by a \textit{thread}, it is possible to figure out the bundle responsible by simple looking at the \textit{ThreadGroup} of the thread.
 Alas, this approach suffers of considerable performance overhead because it extensively uses JVMTI and bytecode rewriting to detect resource usage (See previous Chapter).
 In \cite{Maurel:2012:AME:2304736.2304763}, the authors propose an approach to reduce the overhead induced when CPU consumption is monitored; this is an adaptive monitoring system that is able to dynamically tune the accuracy of monitoring mechanisms depending on detected performance issues.
 This solution is built on the idea of creating proxies that are responsible for detecting invocations, and also on the usage of localized CPU sampling.
@@ -689,10 +689,10 @@ In \cite{Kuroda2014}, the authors propose a memory isolation method for OSGi-bas
 The method isolates the memory consumption of bundles without the need to modify bundles or the OSGi framework and has minimal overhead costs.
 It does so by modifying the JVM (object layout, allocator, and the garbage collector) in order to evaluate, after each allocation, whether the bundle responsible for the allocation is violating some developers-defined limits on resource usage.
 Meanwhile, I-JVM \cite{dsn/09/geoffray/ijvm} is a JVM that provides isolation between OSGi bundles.
-In addition to avoiding unintended object sharing, the approach also tackles the issue of resource consumption monitoring for components; this is meant to, for instance, be used by administrator to avoid denial-of-services attacks.
+In addition to avoiding unintended object sharing, the approach also tackles the issue of resource consumption monitoring for components; this is meant to, for instance, be used by administrator to avoid denial-of-service attacks.
 The experimental results show an overhead of 16\% on inter-bundle calls.
 Likewise, the problem of isolating CPU consumption in OSGi execution environments in order to support real-time component software development is discussed by Richardson et al. \cite{Richardson2009}.
-The idea is to use the Real-Time Specification for Java (RTSJ) to support CPU isolation; this also requires modifications to the OSGi framework.
+The idea is to use the \gls{RTSJ} to support CPU isolation; this also requires modifications to the OSGi framework.
 The authors claim that just using RTSJ is not enough to ensure real-time properties of applications when the OSGi framework is used to build them.
 Besides the arguments to justify such a claim, a solution to achieve CPU isolation is presented.
 
@@ -792,11 +792,11 @@ In this section, we first present some approaches that aim at easing the constru
 We do so by describing the following dimensions for each approach:
 
 \begin{description}
-\item[Generality] Indicate the expressive power of the approach. We only consider two values: \textit{arbitrary} and \textit{limited}.
+\item[Generality] Indicates the expressive power of the approach. We only consider two values: \textit{arbitrary} and \textit{limited}.
 
 \item[Ease of use] We argue that the possible values are \textit{already known language}, \textit{new DSL}, \textit{require specific knowledge of the MRTE}.
 
-\item[Performance Overhead] As in the previous paragraph we use the values \textit{low}, \textit{medium}, and \textit{high}.
+\item[Performance Overhead] As in the previous chapter, we use the values \textit{low}, \textit{medium}, and \textit{high}.
 Likewise, these values are taken from the literature review.
 \end{description}
 
@@ -817,7 +817,7 @@ Severe limitations prevented the success of JVMPI (deprecated in favor of JVMTI)
 These limitations are partially addressed in \cite{Maebe06javana:a} where a framework called Javana is proposed.
 In specific, Javana proposes further modifications to the JVM to detect more events.
 Additionally, it aims at easing the construction of efficient user-defined profilers by providing a generic instrumentation framework which can be adapted to specific needs.
-To do so, users define a profile using an aspect-inspired DSL where \textit{pointcuts} represent the events of interest for a profilers, and advices, which are written in \textit{C/C++}, are in charge of collecting data on the dynamic behavior of a program.
+To do so, users define a profile using an aspect-inspired DSL where \textit{pointcuts} represent the events of interest for a profiler, and advices, which are written in \textit{C/C++}, are in charge of collecting data on the dynamic behavior of a program.
 Besides the problem of requiring a modified JVM, this approach also has other disadvantages such as demanding a deep understanding of the JVM.
 
 A profiling framework that instruments Java programs at the bytecode level to build context-sensitive execution profiles at runtime is proposed in \cite{Binder2005}.
@@ -828,12 +828,12 @@ Finally, Reiss proposes a framework~\cite{Reiss:2008:CDP:1383559.1383566}, DYPER
 Each agent (so-called proflet) is able to obtain data, regarding some properties, using two approaches.
 Through sampling the data collected have poor quality, while data collected using instrumentation are very detailed.
 The framework schedules the execution of proflets to guarantee a bound in the overhead of monitoring resource consumption.
-To perform the scheduling, each proflet provides an estimates of both the expected application overhead and the time needed to set up the detailed monitoring; this information is used to dispatch the execution of a detailed collection of data.
+To perform the scheduling, each proflet provides an estimate of both the expected application overhead and the time needed to set up the detailed monitoring; this information is used to dispatch the execution of a detailed collection of data.
 In practice, this is a form of adaptive monitoring where mechanisms with high overhead are executed only when possible.
 Proflets are built using either Java or C, and they can be composed in order to collect more complex data.
 The main limitation of this approach
 %, besides from the fact that no experimental validation regarding the overhead is provided, 
-lays on the difficulty of properly estimating the overhead of proflets.
+lies on the difficulty of properly estimating the overhead of proflets.
 
 \paragraph{High-level APIs for bytecode manipulation}
 The use of bytecode rewriting techniques to build dynamic analysis tools have leaded to the development of high-level APIs for bytecode rewriting.
@@ -844,7 +844,7 @@ Alas, it requires considerable knowledge regarding the JVM specification.
 In particular, it is mandatory to understand the Java instruction set, how are they executed, and the basic structure of a classfile in Java.
 By comparison, Javassist \cite{Javassist1999} simplifies Java bytecode manipulation.
 It is a class library for editing bytecodes in Java; however, unlike ASM, it provides a source level API: to transform a classfile without knowledge of the specifications of the Java bytecode.
-For example, you can specify what bytecode to insert in an existing class by using plain Java source code - Javassist compiles it on the fly and inserts it on the class being transformed.
+For example, you can specify what bytecode to insert in an existing class by using plain Java source code -- Javassist compiles it on the fly and inserts it on the class being transformed.
 
 \paragraph{Aspect-oriented tool construction}
 The collection of data for a given dynamic analysis can be easily understood as a crosscutting concern.
@@ -874,7 +874,7 @@ For instance, in Eclipse MAT \cite{Biermann:2006:GDI:2087202.2087244} and Visual
 Despite of the fact that few constructors of OQL are really implemented in Eclipse MAT, this approach would allow, in theory, collecting practically any information contained in the heap.
 Similarly, YourKit \cite{yourkit} provides a language based on set theory to filter objects with specific properties; this language is used when no built-in memory analysis can provide the desired data.
 Besides providing query languages, mainstream profilers also support the development of extensions (e.g., plugins written in Java); these extensions essentially traverse the graph of objects in a heap dump to collect information.
-Alas, both queries and extensions require costly operations - a complete dump of the heap, and a step to preprocess the dump; only after these operations, the frameworks are capable of executing queries.
+Alas, both queries and extensions require costly operations -- a complete dump of the heap, and a step to preprocess the dump; only after these operations, the frameworks are capable of executing queries.
 In DeAl~\cite{Reichenbach:2010:GCE:1869459.1869482}, the authors propose a language to compute heap assertions at garbage collection time.
 The design of this approach aims at guarantee a low performance overhead.
 To ensure such a property, the language is only able to compute boolean outputs; while resource consumption monitoring, for instance, needs to compute values of integer type.
@@ -924,7 +924,7 @@ The area is split in four regions that represent in which conditions an approach
 The \textit{usability} axes represents how ``easy'' to use is an approach while the \textit{overhead} axes shows whether the tools built with a solution are efficient. 
 Meanwhile, the size of a circumference shows how generic is an approach.
 The ``values'' to locate each approach are obtained by carefully analyzing the respective description in the previous section.
-Although these are fuzzy values based on our judgment, they are useful to express an actual fact: every single solution has some limitations that prevent its use as mechanism to create dynamic analysis tools. 
+Although these are fuzzy values based on our judgment, they are useful to express a fact: every single solution has some limitations that prevent its use as mechanism to create dynamic analysis tools. 
 
 \newcommand{\asymcloud}[2][.1]{%
 \begin{scope}[#2]
@@ -1059,54 +1059,8 @@ Although these are fuzzy values based on our judgment, they are useful to expres
   \draw[draw=black, dotted, line width = 1pt] (DeAl) -- (DeAlT);
   
 \end{tikzpicture}
-\caption{Assessing the relevance of the aforementioned approaches. The location in terms of overhead an usability is given for each approach. Furthermore, the area of each circumference indicates how general the approach is (the larger the better).} \label{fig:position-approaches-to-simplify}
+\caption{Assessing the relevance of the aforementioned approaches. The location in terms of overhead a usability is given for each approach. Furthermore, the area of each circumference indicates how general the approach is (the larger the better).} \label{fig:position-approaches-to-simplify}
 \end{figure}
-
-%
-%\paragraph{A meta-aspect protocol for developing dynamic analyses, \cite{Achenbach:2010:MPD:1939399.1939415} }
-%Dynamic aspect-oriented programming has been widely used
-%for the development of dynamic analyses to abstract over low-level program instrumentation.
-%Due to particular feature requirements in different analysis domains like debugging or testing, many different aspect
-%languages were developed from scratch or by extensive compiler or interpreter extensions.
-%We introduce another level of abstraction in form of a meta-aspect protocol to separate the host language from the analysis
-%domain.
-%A language expert can use this protocol to tailor an analysis-specific aspect language, based on which a domain expert can develop
-%a particular analysis.
-%Our design enables a flexible specification of the join point model, configurability of aspect deployment and scoping, and
-%extensibility of pointcut and advice language.
-%We present the application of our design to different dynamic analysis domains.
-%
-%\paragraph{Comprehensive Profiling Support in the Java Virtual Machine. \cite{Liang1999}}
-%Existing profilers for Java applications typically rely on custom instrumentation in the Java virtual machine, and measure only limited types of resource consumption. Garbage collection and multi-threading pose additional challenges to profiler design and implementation.
-%
-%In this paper we discuss a general-purpose, portable, and extensible approach for obtaining comprehensive profiling information from the Java virtual machine. Profilers based on this framework can uncover CPU usage hot spots, heavy memory allocation sites, unnecessary object retention, contended monitors, and thread deadlocks. In addition, we discuss a novel algorithm for thread-aware statistical CPU time profiling, a heap profiling technique independent of the garbage collection implementation, and support for interactive profiling with minimum overhead.
- 
-%\paragraph{Profiling Field Initialisation in Java, \cite{Nelson2013}}
-%\todo{No cre que sea muy bueno}
-%Java encourages programmers to use constructor methods to
-%initialise objects, supports final modifiers for documenting fields which
-%are never modified and employs static checking to ensure such fields
-%are only ever initialised inside constructors. Unkel and Lam observed
-%that relatively few fields are actually declared final and showed using
-%static analysis that many more fields have final behaviour, and even more
-%fields are stationary (i.e. all writes occur before all reads). We present
-%results from a runtime analysis of 14 real-world Java programs which
-%not only replicates Unkel and Lam’s results, but suggests their analysis
-%may have under-approximated the true figure. Our results indicate a
-%remarkable 72-82% of fields are stationary, that final is poorly utilised by
-%Java programmers, and that initialisation of immutable fields frequently
-%occurs after constructor return. This suggests that the final modifier for
-%fields does a poor job of supporting common programming practices.
-%\paragraph{A dynamic optimization framework for a Java just-in-time compiler, \cite{Suganuma:2001:DOF:504311.504296}}
-%The high performance implementation of Java Virtual Machines (JVM) and just-in-time (JIT) compilers is directed toward adaptive compilation optimizations on the basis of online runtime profile information. This paper describes the design and implementation of a dynamic optimization framework in a production-level Java JIT compiler. Our approach is to employ a mixed mode interpreter and a three level optimizing compiler, supporting quick, full, and special optimization, each of which has a different set of tradeoffs between compilation overhead and execution speed. a lightweight sampling profiler operates continuously during the entire program's exectuion. When necessary, detailed information on runtime behavior is collected by dynmiacally generating instrumentation code which can be installed to and uninstalled from the specified recompilation target code. Value profiling with this instrumentation mechanism allows fully automatic code specialization to be performed on the basis of specific parameter values or global data at the highest optimization level. The experimental results show that our approach offers high performance and a low code expansion ratio in both program startup and steady state measurements in comparison to the compile-only approach, and that the code specialization can also contribute modest performance improvement.
-%
-%\paragraph{Complete and Platform-Independent Calling Context Profiling for the Java Virtual Machine, \cite{Sarimbekov201161}}
-%Calling context profiling collects statistics separately for each calling context. Complete calling context profiles that faithfully represent overall program execution are important for a sound analysis of program behavior, which in turn is important for program understanding, reverse engineering, and workload characterization. Many existing calling context profilers for Java rely on sampling or on incomplete instrumentation techniques, yielding incomplete profiles; others rely on Java Virtual Machine (JVM) modifications or work only with one specific JVM, thus compromising portability. In this paper we present a new calling context profiler for Java that reconciles completeness of the collected profiles and full compatibility with any standard JVM. In order to reduce measurement perturbation, our profiler collects platform-independent dynamic metrics, such as the number of method invocations and the number of executed bytecodes. In contrast to prevailing calling context profilers, our tool is able to distinguish between multiple call sites in a method and supports selective profiling of (the dynamic extent of) certain methods. We have evaluate the overhead introduced by our profiler with standard Java and Scala benchmarks on a range of different JVMs.
-
-
-%\paragraph{another, \cite{Harkema:2002:PMJ:584369.584388}}
-
-
 
 \section{Summary}
 
@@ -1114,7 +1068,7 @@ Although these are fuzzy values based on our judgment, they are useful to expres
 Defining and using software abstractions is at the core of systems development.
 Once a new abstraction is defined, the tools used in the development process and to support resource awareness should be modified to make them reflect the new concepts.
 When these modifications are not done, we argue that a mismatch exists between developer's view and the tooling's view.
-Alas, implementing this tooling support is tedious and error-pone.
+Alas, implementing this tooling support is tedious and error-prone.
 In this chapter, we have identified two challenges related to this complexity:
 
 \begin{itemize}
@@ -1127,7 +1081,7 @@ For instance, building a resource consumption monitor for a new DSL should be si
 \end{itemize}   
 
 In reviewing the state of the art of resource management for software abstractions, we realized that severe shortcomings in existing approaches prevent their usage in production environments.
-In regards to the matter of dealing with abstraction-specific features, the following issues exist:
+With regard to the matter of dealing with abstraction-specific features, the following issues exist:
 
 \begin{itemize}
 \item Existing solutions offer limited support for resource accounting in component-based systems.
@@ -1152,8 +1106,5 @@ Unfortunately, such extensions suffer from high overhead because they depend on 
 \item Although several approaches are able to produce complex dynamic analysis tools, most of them are not capable of delivering such functionality with low overhead.
 Interestingly, the mechanisms that do offer a low overhead either require extensive knowledge of the platform or are limited in the kind of analysis they can perform.
 \end{itemize} 
-
-%
-%Discutir aqui que problemas nuevos surgen cuando se quiere hacer resource management en component-based systems. Por ejemplo, a quien se le asigna el consumo.
 
 

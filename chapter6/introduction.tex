@@ -4,7 +4,7 @@ However, as far as we know, they do not take into account profiling tools, which
 Indeed, although specific tools are needed to monitor running systems in order to detect defects or abnormal behaviors~\cite{duesterwald2000software, Jovic:2011:CMY:2076021.2048081},
 little support exists to ease their creation.
 
-In this chapter, we focus on the problem of easing the creation of memory profilers for domain-specific software abstractions that are designed to be executed on top of MRTEs. 
+In this chapter, we focus on the problem of easing the creation of efficient memory profilers for domain-specific software abstractions that are designed to be executed on top of MRTEs. 
 We first propose a metalanguage to specific what data about the memory use is of interest in a domain (see Section~\ref{sec:approach}).
 A profiler is then generated to collect the data and present it in terms of concepts of that language. 
 In addition, we present a tooled DSL based on such a metalanguage, which generates profilers for the JVM (see Section~\ref{sec:dsl-implementation}).
@@ -16,7 +16,7 @@ The contributions of this chapter are as follows:
 In addition, programs in this metalanguage also defines how to collect the information.
 Although knowledge of the underline execution model is required, the procedure to obtain data is mostly defined without using low-level details.  
 
-\item A concrete implementation of this metalanguage that target the JVM.
+\item A concrete implementation of this metalanguage that targets the JVM.
 In particular, by using the \glslink{JVMTI}{JVMTI}, we are able to generate memory profilers with low overhead.
 Concrete profilers already generated are portable to any implementation of the JVM that supports JVMTI.
 

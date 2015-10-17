@@ -133,11 +133,11 @@ create structure foreach e:#["jvm"], using
       exists = exists or (this is UnusedClass)
 \end{lstlisting}
 
-The setting of the experiment is as follow.
+The setting of the experiment is as follows.
 The DaCapo benchmark suite is used with two different input sizes, default and large.
 Before the final test, twenty warm-ups are executed in order to ensure long enough execution time.
 A separate thread periodically checks the assertion and records the analysis time.
-The average analysis time along the complete execution of a benchmark (i.e., xalan, fop, ...) is used as data point.
+The average analysis time along the complete execution of a benchmark (i.e., xalan, fop, \dots) is used as data point.
 Ten of these data points are obtained through repetition of the previous step and used as final measurement for a pair of benchmark and analysis approach.
 As in the previous experiment, we use a handwritten JVMTI agents and an Eclipse MAT extension to check the assertion with those tools.
 
