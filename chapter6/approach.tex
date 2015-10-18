@@ -81,10 +81,10 @@ To summarize, a function to determine whether an object is member of a structure
 
 %\paragraph{Length of each string, and number of objects referencing each string}
 
-\paragraph{Nodes in each simply linked list}
+\paragraph{Nodes in each singly linked list}
 
-In the second example, we want to compute how many nodes has each simply linked list in the heap.
-Figure~\ref{fig:simple_snapshot} shows a heap with two simply linked list and one double linked list.
+In the second example, we want to compute how many nodes has each singly linked list in the heap.
+Figure~\ref{fig:simple_snapshot} shows a heap with two singly linked list and one double linked list.
 The first list has three nodes while the second one has four; these are the values we want to obtain.
 
 %Mostrar como hay patrones similares que se pueden detectar muchas estructuras
@@ -105,20 +105,20 @@ The problem is that we have two structures instead of one, but using the aforeme
 In other words, we need additional information to distinguish the two structures.
 
 A method to solve this particular problem is to use the following recursive membership function: an object is member of a structure $S$ if it is an instance of \textit{NodeEntry} and it is being referenced by a member of $S$.
-For the non-recursive case, we can see how each simply linked list starts with an instance of \textit{SimplyLinkedList}.
+For the non-recursive case, we can see how each singly linked list starts with an instance of \textit{SinglyLinkedList}.
 This is easily represented with a parametrized and recursive membership function:
 
 \begin{equation} \label{eq:simply-list}
 	f_{head}\left(O\right) = 
 	\begin{cases}
-		head = O & \quad O \; is \; \operatorname{SimplyLinkedList} \\
+		head = O & \quad O \; is \; \operatorname{SinglyLinkedList} \\
 		\exists {x \in \operatorname{Objects}}, \quad x \operatorname{references} o \wedge f_{head}\left(x\right) & \quad O \; is \; \operatorname{NodeEntry} \\
 		\operatorname{false} & \quad \operatorname{otherwise} \\
 	\end{cases}
 \end{equation}
 
-The parameter $\textit{head}$ represents the structure of interest, and it is an instance of \textit{SimplyLinkedList}.
-In this example, we have two functions, in which only the parameter varies, because there are two instances of class \textit{SimplyLinkedList}.
+The parameter $\textit{head}$ represents the structure of interest, and it is an instance of \textit{SinglyLinkedList}.
+In this example, we have two functions, in which only the parameter varies, because there are two instances of class \textit{SinglyLinkedList}.
 Similarly, we need two counters to store the number of nodes while we are traversing the graph of objects; once again, they (and the function to compute their values) are parametrized by the $head$ of the list.
 Figure~\ref{fig:simple_snapshot} depicts a snapshot in time of the heap while it is being explored;
 the shaded nodes are those that were already explored.
@@ -128,7 +128,7 @@ This example shows that in defining memory profilers, we often need the capacity
 \begin{itemize}
 \item Using the same functions for many structures, varying only some parameters. This is necessary for both membership functions and to compute the memory profile.
 
-\item Identifying structures in the heap by using a parameter. For instance, in this example, we know that there are two structures because there are two instances of class \textit{SimplyLinkedList}.
+\item Identifying structures in the heap by using a parameter. For instance, in this example, we know that there are two structures because there are two instances of class \textit{SinglyLinkedList}.
 \end{itemize}
 
 To summarize, we are frequently interested in calculating values for many structures that have the same ``characteristics''; this is what we call \textit{structure type}.
@@ -207,21 +207,53 @@ In addition, the language supports the declaration of both \textit{Records} and 
 A \textit{record} is a compound type that contains \textit{fields} to hold values of previously defined types.
 On the contrary,  all the members of a list must be of the same type; hence, a \textit{list} refers to a \textit{base type}.
 In a profiler, \textit{UserDefined} types can be composed in any desired way as long as a single property is respected -- no recursive types are allowed.
-We can formalize such a constraint using \gls{OCL}~\footnote{\url{http://www.omg.org/spec/OCL/}}):
+We can formalize such a constraint using the \gls{OCL}~\footnote{\url{http://www.omg.org/spec/OCL/}}):
+
+\begin{figure*}
+\begin{minipage}[b]{0.44\linewidth}
 
 \begin{lstlisting}[escapeinside={(*}{*)},
-label=fig:membership,
+label=fig:membership2,
 language=OCL1
 ]
-context Record inv: 
-   not fields->oclAsSet()->closure(t)->exists(t | t = self)
-
 context List inv:
-   not baseType->oclAsSet()->closure(t)->exists(t | t = self)
+   not self.baseType->closure(t:Type| 
+	   if t.oclIsKindOf(List) then
+		   t.oclAsType(List).baseType
+	   else
+		   if t.oclIsTypeOf(BasicType) then
+			   t
+		   else
+			   t.oclAsType(Record).fields.type
+		   endif
+	   endif
+   	)->exists(t | t = self)
 \end{lstlisting} 
+\end{minipage}
+\hspace{0.1\linewidth}
+\begin{minipage}[b]{0.44\linewidth}
+\begin{lstlisting}[escapeinside={(*}{*)},
+label=fig:membership3,
+language=OCL1,frame=none
+]
+context Record inv: 
+	not self.fields.type->closure(t:Type|
+		if t.oclIsKindOf(List) then
+			t.oclAsType(List).baseType
+		else
+			if t.oclIsTypeOf(BasicType) then
+				t
+			else
+				t.oclAsType(Record).fields.type
+			endif
+		endif
+	)->exists(t | t = self);
+\end{lstlisting} 
+\end{minipage}
+\end{figure*}
 
-In this OCL code, the closure function computes all the instances that can be reach using
-We enforce this constrain for two reasons. First, it simplifies the type system, and second because it is a way to know that no data structure other than the built-in will be used to represent, for instance, a \textit{list}.
+In this OCL code (written in Xtext OCL), the closure function computes the set of types that can be reached from a given type definition when the relationships among types are followed.
+We enforce this constraint for two reasons. First, it simplifies the type system, and second because it is a way to know that no data structure other than the built-in will be used to represent, for instance, a \textit{list}.
 In this way, we can guarantee the performance of operations on lists.  
 The \textit{List} type provides operations to manipulate list values.
 In general, these operations correspond to the set of \textit{standard} operations of any implementation of the list data type in functional languages.
@@ -260,7 +292,7 @@ data: struct {
 \end{lstlisting}
 
 \subsubsection*{Defining structures to profile}
-Defining \textit{StructureFactories} is at the core of writing a custom profiler.
+Defining \textit{StructureFactories} is at the core of writing a customized profiler.
 A \textit{StructureFactory} contains an \textit{Expression} through the \textit{instances} relationship, which indicates a pattern to identify structures in the memory heap.
 Notice that a single instance of \textit{StructureFactory} identifies many structures in memory; thus, the \textit{Expression} is a list -- a new structure must be instantiated for each element of the list.
 %Forcing the \textit{Expression} to be a \textit{List} can be easily formalized using OCL:
@@ -269,19 +301,19 @@ Notice that a single instance of \textit{StructureFactory} identifies many struc
 %context StructureFactory inv: instances.type.oclIsTypeOf(List)
 %\end{lstlisting}
 
-Listing~\ref{lst:defining-header} shows a snip of code that defines a structure for each \textit{SimplyLinkedList} in the heap.
+Listing~\ref{lst:defining-header} shows a snip of code that defines a structure for each \textit{SinglyLinkedList} in the heap.
 This is useful to solve one of the example we mentioned in Section~\ref{sec:domain-overview}.
 Note that `$e$' is the \textit{value} used to parametrize the structures.
-In this case, `$e$' will take the values in the list defined after `$:$'; such a list is composed by instances of class \textit{SimplyLinkedList}.
+In this case, `$e$' will take the values in the list defined after `$:$'; such a list is composed by instances of class \textit{SinglyLinkedList}.
 In this example, we use the operation \textit{filter} on a built-in list -- \textit{objects}.
 The actual parameter for \textit{filter} is a lambda expression that only return true if its parameter is an instance of the expected class. 
 
 \begin{lstlisting}[escapeinside={(*}{*)}, 
-label={lst:defining-header}, caption={Defining a factory that instantiates a structure for each instance of the class SimplyLinkedList that it can find in the heap.}, language=DSL2
+label={lst:defining-header}, caption={Defining a factory that instantiates a structure for each instance of the class SinglyLinkedList that it can find in the heap.}, language=DSL2
 ]
 create structure foreach e: objects.filter([
 		o | 
-		  ret o is SimplyLinkedList
+		  ret o is SinglyLinkedList
 		]) using
 \end{lstlisting}
 
@@ -302,19 +334,19 @@ context StructureType inv:  updates->forAll(a: Assignament |
 \end{lstlisting}
 
 
-In Listing~\ref{lst:listLengt}, we show how to compute the length of each \textit{SimplyLinkedList} in the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}.
+In Listing~\ref{lst:listLengt}, we show how to compute the length of each \textit{SinglyLinkedList} in the memory snapshot depicted in Figure~\ref{fig:simple_snapshot}.
 We use the fact that each \textit{NodeEntry} points to the next element in the list.
 Since we only want to count the number of nodes in each list, we simply define an \textit{integer} variable in the structure type -- `$n$'; in line 7, this variable is updated every time an object is added to the structure.
 The variable `$e$' is used to parametrize the structure; observe how, in line 3, a list of members of the structure is initialized (`$e$' is its only member).
 This line corresponds to defining the non-recursive case of the membership function.
-Line 1 was already discussed, it is just worth highlighting that only two structures will be built because there are two simply linked lists in the memory snapshot.
+Line 1 was already discussed, it is just worth highlighting that only two structures will be built because there are two singly linked lists in the memory snapshot.
 The first member of these structures are in one case \textit{list0}, and \textit{list1} in the other case.
  
 
 \begin{lstlisting}[escapeinside={(*}{*)}, 
-label={lst:listLengt}, caption={Calculating the length of each simply linked list.}, language=DSL2
+label={lst:listLengt}, caption={Calculating the length of each singly linked list.}, language=DSL2
 ]
-create structure foreach e:objects.filter([o| ret o is SimplyLinkedList]) using
+create structure foreach e:objects.filter([o| ret o is SinglyLinkedList]) using
   constructor
     initialObjects = #[e] // a list literal with one element: e
     n = 0
@@ -327,7 +359,7 @@ The recursive case of the membership function is in line 5.
 It looks like the definition in function \ref{eq:simply-list}; there are however differences that are due to the evaluation semantic of our language.
 Although the semantic is discussed hereafter, we can understand the definition by simply knowing that it is evaluated for every edge of the directed graph.
 Before the evaluation, three variables are created: \textbf{this}, \textbf{referrer}, and \textbf{this\_structure}; they are, respectively, the target of the edge, the source, and a structure.
-When we evaluated the membership function we are simply checking whether \textbf{this} is a member of \textbf{this\_structure}, and we are passing additional information to support the definition of recursive functions.
+When we evaluated the membership function we are checking whether \textbf{this} is a member of \textbf{this\_structure}, and we are passing additional information to support the definition of recursive functions.
 
 
 %Once a new structure is created, the \textit{Assignments} are executed to assign the initial value of each \textit{Variable}.
@@ -693,8 +725,8 @@ l_{x_i} = \operatorname{newloc}(S_{n+1}) \; for \; i = 1 \dots n \\
 
 \subsection{Translational Semantics}\label{sec:translational-semantic}
 
-A profiler written in this language is compiled to produce a custom memory profiler for a specific target platform.
-%An instance of our metamodel is compiled into a custom memory profiler.
+A profiler written in this language is compiled to produce a customized memory profiler for a specific target platform.
+%An instance of our metamodel is compiled into a customized memory profiler.
 For instance, in our reference implementation, the compiler produces a library written in \textit{C++}, which is in charge of collecting the desired information from the runtime environment.
 The generated source code is a set of classes.
 In particular, for each \textit{StructureType} in the model, the compiler generates a subclass of \textit{AbstractStructure},  which is shown below.
@@ -711,14 +743,14 @@ public:
 }
 \end{lstlisting}
 
-Listing~\ref{dsl-generated-c-linked-list} shows the code generated by the compiler for the simply linked lists example (see Listing~\ref{lst:listLengt}).
+Listing~\ref{dsl-generated-c-linked-list} shows the code generated by the compiler for the singly linked lists example (see Listing~\ref{lst:listLengt}).
 Notice the use of three functions provided by the runtime, \textit{markAsMembers}, \textit{isInstance}, and \textit{isMember}. 
 
 \begin{lstlisting}[language=C++, frame=L,
 numbers=left,
 numberstyle=\color{black}\scriptsize,xleftmargin=2\parindent, label=dsl-generated-c-linked-list,
 caption={To represent a structure type, we declare a subclass of AbstractStructure.}]
-class SimplyLinkedListStructure1 : public AbstractStructure {
+class SinglyLinkedListStructure1 : public AbstractStructure {
 private:
 	int n;
 public:
@@ -738,7 +770,7 @@ public:
 	}
 	static void createStructures(const Context& ctx, vector<DSL_Object>& instances) {
 		vector<DSL_Object> r;
-		auto f = [](DSL_Object o) { return isInstance(o, "SimplyLinkedList")};
+		auto f = [](DSL_Object o) { return isInstance(o, "SinglyLinkedList")};
 		ctx.objects.filter(f, r); // add valid elements to r
 		instances.insert(instances.end(),r.begin(),r.end()); 
 	}
