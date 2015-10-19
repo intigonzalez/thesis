@@ -1,31 +1,31 @@
 \section{Conclusion} \label{sec:thesis-conclusions}
 
 Resource-aware programming encompasses a set of techniques where applications modify their behavior based on resource availability;
-this is useful, for instance, if applications run under open-wold conditions.
-Through this thesis, we highlight that, for a software system to implement resource-aware methods, considerable runtime support is required.
+this is useful, for instance, if applications run under open-world conditions.
+Throughout this thesis, we have highlighted that a considerable runtime support is required for a software system to implement resource-aware methods.
 Specifically, facilities for resource accounting and reservation can be used to observe and change the consumption.
 Unfortunately, providing such a support is challenging in MRTEs because they often favor automatic resource management in order to ease software development.
 
 In reviewing the state of the art, we have found shortcomings that prevent the use of existing techniques in production environments.
 Relatively high performance overhead in portable solutions and limited capacity to deal with arbitrary granularity levels are the most overwhelming constraints of existing approaches.
 The issue of handling different granularity levels is important because managed runtime environments are used to represent a wide variety of software abstractions, ranging from component models, to domain-specific languages and simple class libraries .
-Finally, some existing approaches show how resource accounting solutions may profit of adapting their behavior to the application they are monitoring.
+Finally, some existing approaches show how resource accounting solutions may benefit from specializing their behavior to the monitored application.
 
 Component-based software engineering is a good candidate to implement systems capable of coping with open-world conditions; however, the ability to handle non-functional properties is often limited because runtime environments lack support for monitoring resource consumption per components.
-Our first contribution is a framework, namely Scapegoat, to efficiently compute per component resource utilization.
+Our first contribution is a framework, named Scapegoat, to efficiently compute per component resource utilization.
 In Scapegoat, we make two assumptions: there are previous monitoring mechanisms with different trade-off between overhead and accuracy, and
 it is possible to activate/deactivate such mechanisms at runtime.
 The framework follows an adaptive monitoring approach based on two principles: i) since consumption matters when the runtime environment is running out
-of resource, we can use optimistic lightweight monitoring and still be sure we will be able to detect potential failures on time by switching to a more precise monitoring technique; and ii) it is possible to \textit{quickly} identify faulty components once a potential failure is spotted.
+of resource, we can use optimistic lightweight monitoring and still be sure to detect potential failures on time by switching to a more precise monitoring technique; and ii) it is possible to \textit{quickly} identify faulty components once a potential failure is spotted.
 Scapegoat is capable of calculating resource usage with a lower overhead than other portable state-of-the-art approaches (overhead reduced by 92\%).
-Moreover, since by construction Scapegoat leverages other techniques, it may profit of new mechanisms introduced to perform monitoring as long as they can be switched on/off at runtime.   
+Moreover, since by construction Scapegoat leverages other techniques, it may benefit from new mechanisms introduced to perform monitoring as long as they can be switched on/off at runtime.   
 
 Reserving resource for specific applications is another concern in resource-aware programming.
 Our second contribution is a methodology to select a representation of each component in the runtime environment in such a way that resource reservations can be guaranteed with low performance overhead.
 We claim that the technique used to provide reservation capabilities should not be selected during the design of the component model.
 Instead, the resource reservation technique for each component must be chosen at deployment time, when the requirements of an application are known.
 In other words, we propose a methodology where both resource requirements and available technologies are decision variables to consider when we are binding components to runtime abstractions.
-Through this thesis, evidence for such claims are provided and a prototype, Squirrel, is implemented to show the potential benefices of this methodology.
+Through this thesis, evidences for such claim are provided and a prototype, Squirrel, is implemented to show the potential benefit of this methodology.
 
 %Resource reservation for components Resource accounting is the foundation for a \textbf{second} \textit{stop} -- providing resource reservation for components.
 %It is then when we discuss a methodology to choose at runtime a ``\textit{good}'' representation of components in the execution platform.
@@ -38,8 +38,8 @@ The third contribution of this thesis is a language to define customized memory 
 The language has been devised with constraints that, although reduce its expressive power, offer guaranties about the performance behavior of the generated profilers.
 %We propose a generative approach to create profilers for domain-specific abstractions
 To evaluate this approach, we have implemented a profiler generator that targets the JVM and uses the JVMTI to explore the content of the memory heap.
-Using such an implementation, we compare generated profilers, handwritten profilers and mainstream tools.
-The results show that the generated profilers have a behavior similar to that of handwritten solutions.
+Using such an implementation, we have compared generated profilers, handwritten profilers and mainstream tools.
+The results show that the generated profilers exhibit similar performance to the one of handwritten solutions.
 
 %\textbf{}
 %Memory consumption monitoring and profiling are important concerns in applications that target MRTEs because even automatic memory management is not capable of guarantying error-free memory management and, more importantly, these features introduce performance issues.

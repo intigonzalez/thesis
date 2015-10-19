@@ -2,7 +2,7 @@
 
 % arreglar y creerme esta oracion
 The work presented in this thesis represents a step towards proving support for resource aware programming.
-There are a number of avenues of research that can be taken. 
+This work presents many perspectives which are presented below. 
 
 
 %\subsection{Scapegoat}
@@ -11,11 +11,11 @@ There are a number of avenues of research that can be taken.
 
 % este puede ser, pero esta escrito de forma horrible
 Instrumentation by bytecode rewriting induces a particularly high performance overhead, specially when used for instruction accounting.
-Despite of the fact that using adaptive monitoring, as we propose in this thesis, can reduce the performance overhead, there are occasions when the overhead imposed is still high: while doing localized monitoring, and while probes are being activated.
+Despite the use of adaptive monitoring which reduces the performance overhead, there are occasions when the overhead imposed is still high: while doing localized monitoring, and while probes are being activated.
 A way to reduce both overheads is by identifying sections of code that do not need to be instrumented.
 
 We can learn at runtime how many instructions a method executes for a given input.
-In this way, we only need to instrument some methods a few times until we find a predictive model (as in machine learning) that is able to predict the number of executed instructions~\cite{tesauro2006hybrid}.
+This way, we only need to instrument some methods a few times until we find a predictive model (as in machine learning) that is able to predict the number of executed instructions~\cite{tesauro2006hybrid}.
 Afterwards, no instrumentation code is added to such methods and their consumption is measured by evaluating a prediction model when they are called.
  
 %In addition, we plan to study alternatives to improve instruction accounting. %These alternatives are about using peak monitoring and learning monitoring.
@@ -32,8 +32,8 @@ Afterwards, no instrumentation code is added to such methods and their consumpti
 
 %Reacting to events about resource consumption is of utmost importance to guarantee the robustness of a system.
 Resource accounting only provides a single step to support the reconfiguration of a system when events about resource consumption are triggered.
-Handling such events in the proper way, eliminating the source of misbehavior and guarantying the consistence of the system, is of utmost importance.
-There are approaches to face similar issues, for instance, replacing a service for an alternative implementation when th response time of the former is high.
+Handling such events in the proper way, eliminating the source of misbehavior and guaranteeing  consistency  of the system, is of utmost importance.
+There are approaches to face similar issues, for instance, replacing a service for an alternative implementation when the response time of the former is high.
 Since many responses are possible, it is worth considering a systematic approach to select them using a heuristic instead of a hard coded policy.
 This heuristic may choose among a set of reconfiguration policies that include limiting the resources available to a component, replacement of components, slowing down a component by simply delaying the access to its interface, and moving components across the distributed infrastructure
 
@@ -49,9 +49,9 @@ This heuristic may choose among a set of reconfiguration policies that include l
 %This paper also opens interesting perspectives by applying the presented concepts in different application domains with strong security and safety concerns.
 
 Choosing the mapping from high-level concepts to low-level system abstractions is one of the step in providing a concrete implementation of a component model.
-In the same way that this mapping may affect the performance overhead of a system and its capacity to provide resource reservation, it can also affect other properties, such as security.
-In~\cite{Gama:2010:SCS:2176905.2176915}, the authors propose an approach to execute components in a sandbox when it is no possible to trust in their origin; using these sandboxes  also has an impact on the overall performance of the system.
-As a consequence, we can consider whether the appropriate mechanism to put a component in a sandbox can be selected at deployment time.
+As this mapping may affect the performance overhead of a system and its capacity to provide resource reservation, it can also affect other properties, such as security.
+In~\cite{Gama:2010:SCS:2176905.2176915}, the authors proposed an approach to execute components in a sandbox when it is not possible to trust in their origin; using these sandboxes also has an impact on the overall performance of the system.
+As a consequence, we can consider that the appropriate mechanism to put a component in a sandbox should be selected at deployment time.
 
 
 
@@ -79,14 +79,14 @@ As a consequence, we can consider whether the appropriate mechanism to put a com
 % 2 - aumentar el lenguage para que pueda manipular el grafo de objetos
 Exploring the graph of objects may be useful to reveal bugs in a system.
 In particular, to detect memory leaks and excessive memory consumption.
-It has also been discussed how to evaluate assertions on some data structures in memory by simple traversing the objects in the heap~\cite{Reichenbach:2010:GCE:1869459.1869482}.
+It has also been discussed how to evaluate assertions on some data structures in memory by simply traversing the objects in the heap~\cite{Reichenbach:2010:GCE:1869459.1869482}.
 The idea is that exploring the heap may be considered a cross-cutting concern.
 In this context, it is interesting to study whether modifying the graph of objects may help to solve problems that can be identified by looking at objects and how they are connected.
 
-One interesting example is eliminating memory leaks; in \cite{dsn:15:attouchi:incinerator}, the authors propose a mechanism to remove stale references in dynamic OSGi applications, the approach is largely based on eliminating references between objects once the JVM detects they are stale references.
-Since this is simply a modification to the graph of objects, it is worth considering the use of a language to express this kind of \textit{automatic}
+One interesting example is eliminating memory leaks; in \cite{dsn:15:attouchi:incinerator}, the authors proposed a mechanism to remove stale references in dynamic OSGi applications, the approach is largely based on eliminating references between objects once the JVM detects the stale references.
+Since this is simply a modification to the object graph, it is worth considering the use of a language to express this kind of \textit{automatic}
 bug fixing without having to hard code them using a low-level language nor modifying the JVM.
-The question is at what extent the same goals can be achieved without modifying the JVM by simply using profilers API such as JVMTI.
+The question is to what extent the same goals can be achieved without modifying the JVM by simply using profilers API such as JVMTI.
 
 % 3 - cambiar su semantica para que en lugar de un solo pase sea mas como un dataflow analysis
 
@@ -94,21 +94,21 @@ The question is at what extent the same goals can be achieved without modifying 
 % 4 - crear un mecanismo para que la definion del profiler a partir de la especificacion de la abstraccion se haga de una forma mas automatica, seria genial
 Automating the construction of memory profilers for new software abstractions may ease software maintenance.
 Using our approach, engineers have to implement both the software abstraction and the memory profilers.
-A way to further reduce the development effort is using high-level descriptions of the abstraction to generate the definition of a profiler in our language.
-In this way, engineers can focus on the definition of the abstraction. 
+A way to further reduce the development effort is by using high-level descriptions of the abstraction to generate the definition of a profiler in our language.
+This way, engineers could focus on the definition of the abstraction. 
 
 For instance, this is the approach followed by Xtext~\cite{Eysholdt:2010:XIY:1869542.1869625} to automatically generate debuggers for languages that inherit from the base language (Java).
 The idea is using models, as in \gls{MDSD}~\cite{Stahl:2006:MSD:1196766, Fowler:2010:DSL:1809745}, to describe the software abstraction and also the way a concrete instance is mapped to a low-level technology.
-In particularly, this can be done using the metamodel of the abstraction (as in a DSL) and a traceability model to see how a concrete model is transformed to, for instance, Java.
+In particular, this can be done using the metamodel of the abstraction (as in a DSL) and a traceability model to see how a concrete model is transformed to, for instance, Java.
 
 \paragraph{Use declarative languages to define profilers}
 % 1 - tener un lenguage mas declarativo, tipo CYPHER
 Declarative languages are often preferred for solving tasks such as querying a data structure.
 In the case of querying a graph, there are languages able to express complex requests in concise ways, for instance, CYPHER.
-As we already discuss, the problems is how to efficiently schedule the execution of queries written in such languages.
+As we already discuss, the problem is how to efficiently schedule the execution of queries written in such languages.
 
-One interesting path to explore is reusing a subset of these languages that can be efficiently implemented using the constraints imposed by MRTEs.
-The main challenges, in implementing an alternative like this, will be to create a scheduler to optimize th execution of such queries.
+One interesting path to explore is reusing a subset of these languages that can be efficiently implemented despite the MRTEs' constraints.
+The main challenges in implementing an alternative like this will be to create a scheduler to optimize th execution of such queries.
 This is important because the graph of objects is not explicitly represented in a MRTE.
 
 
