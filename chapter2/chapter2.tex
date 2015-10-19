@@ -110,14 +110,14 @@ In a second option, a bundle only consumes resources when it is executing its ow
 The important point is that, above the concern we present in the previous chapter regarding the mechanisms to support resource-aware programming, engineers also have to focus on features specific to each abstraction.
 
 \paragraph{The problem at hand}
-In this thesis we argue that a \textit{mismatch}, between the developer's view and the tooling's view, exists when the concepts managed by the developers are not clearly reflected in the tools.
+In this thesis, we argue that a \textit{mismatch}, between the developer's view and the tooling's view, exists when the concepts managed by the developers are not clearly reflected in the tools.
 This mismatch may complicate the development of applications, as well as prevent the correctness of software systems.
 We identify in this thesis, two ways in which such a mismatch may affect software development when new software abstractions are heavily used and, at the same time, support for resource-aware programming is also required:
 
 %\todo{This two points are really close, bad}
 \begin{itemize}
 \item The creation of new software abstractions poses challenges for software developers because abstractions may have requirements that are not addressed by generic developing tools.
-In particular, tools, such as profilers, and runtime monitors, might require modifications in order to reduce the gap between the user's view and the tools' view.
+In particular, tools, such as profilers, and runtime monitors, may require modifications in order to reduce the gap between the user's view and the tools' view.
 The problem is how to efficiently reuse the generic mechanisms of existing approaches to handle the specific requirements of new abstractions.
 
 \item Since new software abstractions are constantly being defined, there is an increasing pressure to ease the creation of abstraction-specific tooling support.
@@ -139,7 +139,7 @@ This serves both to further motivate the research, and to present in details the
 %In general, most problems we find, when programs are written using DSLs and resource awareness is required, can also be found in other contexts where different kind of abstractions are used.
 
 \item We describe the specific features of a concrete kind of abstraction -- software components.
-We do so because, despite of the fact that component-based software engineering is widely used in the industry, exiting approaches to support resource awareness still show limitations.
+We do so because, despite of the fact that \gls{CBSE} is widely used in the industry, existing approaches to support resource awareness still have limitations.
 \end{enumerate}
 
 The presentation aims at highlighting the type of modifications that might be required in order to make an existing resource management tool capable of dealing with concepts defined in a new abstraction.
@@ -189,8 +189,9 @@ For instance, an internal DSL is embedded into a \gls{GPL}.
 This is often done by relying on meta-programming facilities of a host language.
 Likewise, design patterns and reflection are used to implement some forms of internal DSLs, such as fluent APIs, and annotation-based languages.
 On the contrary, a ``\textit{program}'' written using an external DSL requires a separated translation process (i.e., compilation) in order to produce an artifact that can be integrated as part of an application.
-It is then interesting that language, regardless their representation, are always translated to concepts in a lower layer of the software stack; at that point, developers find the gap between their view and the tooling's view. 
-The point is then to find out how software abstractions consume computational resources.
+It is then interesting that languages, regardless their representation, are always translated to concepts in a lower layer of the software stack.
+Developers then find the gap between their view and the tooling's view. 
+The problem is to find out how software abstractions consume computational resources.
 %Both approaches have advantages and disadvantages that have been discussed elsewhere~\cite{Czarnecki2000, Stahl:2006:MSD:1196766}.
 %One of the most important differences lays on the fact that external DSLs support the definition of arbitrary concrete syntaxes while internal DSLs don't.
 
@@ -212,7 +213,7 @@ As mentioned, concrete ``programs'' written in a DSL are typically translated to
 This means that the DSL concepts are layered on top of concepts, such as \textit{classes}, \textit{objects}, and \textit{threads}.
 Plenty of approaches exist for writing DSL-based applications that are transformed to be executed on top of MRTEs; in particular, many solutions target the Java language and the JVM.
 For instance, the Xtext language workbench~\cite{Eysholdt:2010:XIY:1869542.1869625}, the Eclipse Modeling Framework~\cite{EMFModeling}, the meta-programming capabilities of languages such as Scala~\cite{Hofer:2010:MDL:1868294.1868307} and Clojure~\cite{Kelker2013} where internal DSLs can be defined and executed, the combination of annotations and annotation processor~\cite{Huang2008}, and intentional programming frameworks such as Meta-Programming System (MPS)~\cite{JetBrainsMetaProgrammingSystem(MPS),Voelter2014}.
-Likewise, F\# applications, which execute in CLR, can use meta-programming support to write DSLs~\cite{Cheney:2013:PTL:2500365.2500586}; and the Boo language provides constructor that are easy to use for crafting DSLs~\cite{Rahien2010}. 
+Likewise, F\# applications, which execute in CLR, can use meta-programming support to write DSLs~\cite{Cheney:2013:PTL:2500365.2500586}; and the Boo language provides constructors that are easy to use for crafting DSLs~\cite{Rahien2010}. 
 
 \paragraph{Abstractions and their resources consumption} 
 Naturally, the resource consumption of a ``program'' written in a DSL depends on the DSL itself.
@@ -385,7 +386,7 @@ Crnkovic et al. \cite{Crnkovic2011} propose properties that can be used to class
 \begin{description}
 \item[Modeling capabilities:] it is common to provide a mechanism for modeling the system architecture during the development phase; this results useful to reason about the system.
 In addition, it is possible to support some form of reflection for querying the architecture of a system at runtime.
-Component models, which include both features, are the target of our research.
+Component models that include both features are the target of our research.
 
 \item[Deployment of components at runtime:] since, we are dealing with the problem of supporting resource awareness in open environments, we focus on component models that allow component deployment at runtime.
 Many component models are able to cope with the necessity of adaptation through, for example, the deployment of new modules, the instantiation of new services, and the creation of new bindings between components~\cite{Porter:2014:RMC:2602458.2602471, Zheng:2014:RCC:2679601.2680405, Irmert:2008:RAS:1370018.1370036, Ghezzi:2010:QDD:2163764.2163774}.
@@ -424,7 +425,7 @@ To summarize, the resources consumed by a component comprise (but are not limite
 \paragraph{Contracts on resource consumption}
 \glslink{QoS}{QoS} contracts serve, among others, to describe how components consume resources.
 They simply express what resources will be consumed by a component to perform some action. 
-In writing such contracts, it is better that developers use platform-independent metrics.
+In writing such contracts, it is better for developers to use platform-independent metrics.
 Indeed, doing otherwise hinders the interpretation of a contract when components are deployed in different platforms.
 For instance, if $n$ CPU cycles are required to handle a request, this $n$ may, in fact, represent different amount of CPU time depending on the architecture.
 This is the reason why, the number of bytecode instructions to be executed, which is platform-independent, offers the following advantages:
@@ -490,44 +491,8 @@ Essentially, this consists in, selecting which actors implement the mechanism an
 Indeed, many component models provide no facilities for managing \glspl{EFP}.
 In these cases, the mechanism used to handle a property is left to the designers of each application.
 This facilitates the creation of EFP management policies that are specifically tuned towards a system, and also allows the use of multiple policies in a system.
-%However, the fact that such policies are not
-%standardized (and are fully implemented in components) may be a source of architectural mismatch between
-%components.
-%The compatibility of components is improved if the
-%execution platform provides standardized facilities for managing EFPs.
-%However, components still need to know EFPs affect their functioning in order to guide the manner
-%in which EFPs are handled.
 On the contrary, other approaches favor the separation of concerns between functional and non-functional aspects.
 Hence, components are only allowed to address functional aspects, while containers are in charge of wrapping components to guarantee EFPs.
-%Containers can either be totally in charge of managing EFPs or
-%they can interact with a mechanism in the component framework that manages EFPs.
-%This approach is a way of realizing separation of
-%concerns in which components focus on functional aspects
-%and containers concentrate on extra-functional aspects.
-
-%A third concern, which is related to the previous one, is how to express EFPs.
-
-%To guarantee properties regarding the behavior of components (and the systems built using them), contracts are used. 
-%According to \cite{Beugnard774917}, \textit{contracts} can be classified in four levels which, if
-%taken together, form a global contract; these are syntactic, behavioral, synchronization, and Quality-Of-Service (QoS).
-%Contracts based on the first three levels describe what can be done using a component and under which provisions.
-%They do not specify other properties, such as what resources would be consumed by a component to perform some action.
-%Nevertheless, a violation of QoS requirements breaks clients just as easily as a violation of a business rule.
-%If a provider is too slow in serving a request, client components will also be slow in achieving their goal.
-%These contracts, which express QoS and extra-functional properties, are used to control how many resources a component consumes.
-
-%In writing a contracts to express requirements regarding resource utilization, developers may profit of platform-independent mechanisms to describe the resources needed by components and component-based systems.
-%Indeed, writing a contract using platform-dependent metrics hinders its interpretation when components are deployed in a different execution environment.
-%For instance, if a contract expresses the fact that a component needs $n$ number of CPU cycles to handle a request, the value of $n$ may, in fact, represent different values depending on the architecture.
-%For this reason, using a metric, such as number of bytecode instructions executed, to describe a contract is useful in MRTEs.
-%This metric in particular has the following advantages:
-%\begin{itemize}
-%\item It is easy to control the admission of components because each platform knows how many bytecode instructions it is able to execute in an interval of time.
-%\item A portable framework for resource consumption monitoring is easier to implement.
-%\item Different measurements are easy to compare, even across platforms, because they use the same metric.
-%\end{itemize} 
-
-%\paragraph{Example of differences among concrete abstractions}
 
 Finally, some differences among component models impact the implementation of mechanisms for resource consumption monitoring.
 For instance. Kevoree and OSGi provide different methods for interaction between components.
@@ -537,78 +502,6 @@ As a consequence, an automated tool can easily instrument the code to detect whe
 On the contrary, OSGi uses plain Java interfaces and objects to connect bundles.
 In that cases it is more complex to detect when components are communicating because a bundle can communicate with several services using different interfaces. 
 
-%\subsubsection{Extra-functional Properties} \label{sec:efp-resources}
-%
-%According to \cite{Beugnard774917}, contracts can be classified in four levels which, if
-%taken together, form a global contract; these are syntactic level, behavioral level, synchronization level, and Quality-Of-Service level.
-%Contracts based on the first three levels describe what can be done under which provisions.
-%They do not specify other properties such as how long it would take to service a request or what other resources, besides time, would be consumed by a component in order to perform some action.
-%Nevertheless, in real scenarios, a violation of extra-functional
-%requirements can break clients just as easily as a violation of, for instance, a business rule. 
-%If a provider is too slow in performing a function, any client component will also be slow in achieving their goal.
-%Without using contract on QoS to control performance, it can be hard to identify what components are underperforming. 
-%Beside time, components have to respect other resource limitations such as excessive heap storage and network usage.
-
-
-%\subsection{Component Models}
-%
-%In the next section, we provide a very brief overview of some component models and their main characteristics.
-%The discussion is limited to component models that have been either designed from scratch or implemented to target MRTEs.
-%Since we are interested in software systems that evolve at runtime, the discussion is also limited to component models that allow component deployment at runtime.
-%The list is not exhaustive; instead, it should be understood as a provision of some characteristic examples.
-%Nevertheless, a component model - Kevoree -  is discussed in further details because the contributions in chapters \ref{chp:scapegoat} and \ref{chp:squirrel}
-%are implemented and evaluated using such a component model.
-%
-%\paragraph{Enterprise Java Beans (EJB)} \cite{OracleEJB3.0} envisions the construction of object-oriented and
-%distributed business applications in trying to hide to developers the underlying complexity of common operations such as transactions processing, persistence,
-%concurrency, and interoperability.
-%It also aims at the improvement of component reusability in providing the so called EJB-jars to package components.
-%An EJB container holds two major types of components to match the needs of different applications: SessionBean, and MessageDrivenBeans.
-%Each of these beans is deployed in an EJB Container which is in charge of their management at
-%runtime (start, stop, activation or deactivation).
-%Starting with EJB 3.0, annotations are heavily used for dependency injection to simplify configuration and integration of heterogeneous systems. 
-%In order to achieve this, EJB technology use the Java programming language.
-%
-%\paragraph{The Open Services Gateway Initiative (OSGi)} \cite{OSGI:r5} is a consortium of industrial partners working together to
-%define a service-oriented framework with ``open specifications
-%for the delivery of multiple services over wide area networks to local networks and devices''.
-%In the OSGi's component definitions, there is a clear distinction between a unit of
-%composition and a unit of deployment; the former is known as service while the latter is called bundle.
-%OSGi offers a flexible architecture of systems that can dynamically evolve during execution time.
-%This implies that in the system, components can be added, removed or modified at run-time.
-%Thus, there is no guaranty that a service provided at a certain time will be still provided later.
-%Being built on Java, on which it heavily depends, OSGI is platform independent.
-%
-%%\paragraph{Fractal} \cite{Bruneton:2006:FCM:1152333.1152345} is a hierarchical and reflective component model with sharing.
-%%Components in this model can be endowed with arbitrary reflective capabilities, from plain black-box objects to
-%%components that allow a fine-grained manipulation of their internal structure.
-%%The paper describes JULIA, a Java implementation of the model, a small but efficient runtime framework, which relies on
-%%a combination of interceptors and mixins for the programming of reflective features of components.
-%%The paper presents a qualitative and quantitative evaluation of this implementation, showing that
-%%component-based programming in FRACTAL can be made very efficient. 
-%
-%\paragraph{Fractal} \cite{Bruneton:2006:FCM:1152333.1152345} intends to cover the whole development lifecycle (design, implementation, deployment and maintenance/management) of complex systems.
-%It comes up with features such as nesting, sharing of components and reflexivity.
-%In other words, a component may respectively be created from other components, be shared between components and describes its own behavior.
-%Fractal aims at providing an general model that can be tuned to fit a large variety of applications and domains.
-%Hence, nothing is fixed in Fractal.
-%Actually, since the component model is language and platform independent, it is possible to leverage domain-specific 
-%For instance, there exists a C-implementation called Think \cite{Fassino:2002:TSF:647057.713860}, 
-%a Java-implementation called Julia \cite{Bruneton:2006:FCM:1152333.1152345}.
-%Fractal can be seen as a generic component model which intends to encompass other component models.
-%
-%
-%\todo{READ UNTIL THIS POINT}
-%
-%\section{State of the art of resource management for components} \label{sec:component-leverage}
-%\begin{itemize}
-%\item Describe las soluciones de kouther
-%\item generacion de contenedores
-%\item generacion de canales de comunicacion
-%\item ver que mas se puede describir
-%\end{itemize}
-%
-%
 %Franz Brosch, Heiko Koziolek, Barbora Buhnova, Ralf Reussner: Architecture-Based Reliability Prediction with the Palladio Component Model. IEEE Trans. Software Eng. 38(6): 1319-1339 (2012)
 %
 %Sam Malek, Marija Mikic-Rakic, Nenad Medvidovic: A Style-Aware Architectural Middleware for Resource-Constrained, Distributed Systems. IEEE Trans. Software Eng. 31(3): 256-272 (2005)
@@ -663,14 +556,6 @@ Finally, a mechanism for measuring the response time of components, as well as t
 This approach uses interceptors to collect data about how components calls each other.
 It is intended to be use as a development tool.
 
-%\textbf{Resource monitoring in EJB}
-%
-%TestEJB: response time measurement and call dependency tracing for EJBs
-%
-%In this paper we present how to conduct performance related analyses of component-based applications and how to derive call dependencies between software components in the TestEJB framework. This framework facilitates an interceptor-based approach to measure selected properties of components following the Enterprise JavaBeans specification. Amongst its advantages are the lightweightness and transparency to the application as the measuring sensors simply gather timestamps and additional metadata at selected positions inside a component-based application. Using basic database support, it is possible to generate invocation trees and calculate response- and run-times of a component and its methods while accounting for the overhead introduced by the framework itself. Therefore, the developer is offered a useful tool for benchmarking selected components as well as monitoring the interactions of components with the application server and amongst themselves.
-%
-%TESTEJB – A Measurement Framework for EJBs\cite{TESTEJB2004}
-%Specification of Quality of Service (QoS) for components can only be done in relation to the QoS the components themselves are given by imported components. Developers as well as users need support in order to derive valid data for specification respectively for checking whether a selected component complies with its specification. In this paper we introduce the architecture of a measurement framework for EJBs giving such support and discuss in detail the measurement of the well understood property of response time.
 
 Monitoring the resource consumption of OSGi bundles has also been addressed.
 For instance, Miettinen et al. \cite{Miettinen2008} present a framework to measure CPU and memory usage of OSGi bundles.
@@ -702,19 +587,6 @@ Due to the need of processing the complete memory dump, the performance overhead
 
 %\textbf{Resource isolation in Component-RTSJ}
 
-%Providing temporal isolation in the OSGi framework .
-%The OSGi Framework is a run-time environment for deploying service-containing Java components. Dynamically reconfigurable Java applications can be developed through the Framework's powerful capabilities such as installing, uninstalling, updating components at run-time, and allowing the substitution of service implementations at run-time. Coupled with the capability to be remotely managed, the OSGi Framework is proving a success in a variety of application domains. One domain where it is yet to make an impact is real-time systems. Despite the fact that OSGi components and services can be developed using the Real-Time Specification for Java (RTSJ), there are still a variety of problems preventing the use of the Framework to develop real-time systems. One such problem is a lack of temporal isolation. This paper focuses on how temporal isolation can be provided in the OSGi Framework as a first step towards using the Framework to developing real-time systems with the RTSJ.
-%(Usa RTSJ y un OSGi framework modificado)
-
-%Towards memory management for service-oriented real-time systems\cite{Richardson2010}
-%Dynamically discoverable units of software (services) are the centerpiece of service-oriented architecture (SOA). Such dynamic software architectures closely match the dynamics of businesses, and for that reason, SOA is becoming an increasingly important approach to the development of software. However, one aspect of deploying such dynamic software, that is frequently neglected, is the impact that it has on the availability of hardware resources such as CPU utilization and memory consumption. All software systems require the system load to be controlled in order to provide the service user with some level of quality-of-service. Furthermore, one type of software, which is particularly difficult to develop and would certainly benefit from the use of service-orientation, is real-time systems. Such systems, however, require resource guarantees and therefore are currently prohibited from using service-orientation in their design.
-%In this paper we propose solutions to the problems relating to providing memory management in service-oriented real-time systems (RT-SOA).
-%( memory management approach for RT-SOA allowing
-%the memory requirements of threads to be calculated and used to
-%generate GC parameters, only allowing threads to be admitted into
-%the system when the addition of the thread will not cause memory
-%to be exhausted, and of course, only when there is sufficient CPU
-%for the threads to execute their own application code )
 
 %\cite{Jung:2011:LAI:2000292.2000296}
 %
@@ -794,7 +666,7 @@ We do so by describing the following dimensions for each approach:
 \begin{description}
 \item[Generality] Indicates the expressive power of the approach. We only consider two values: \textit{arbitrary} and \textit{limited}.
 
-\item[Ease of use] We argue that the possible values are \textit{already known language}, \textit{new DSL}, \textit{require specific knowledge of the MRTE}.
+\item[Ease of use] We argue that the possible values are \textit{already known language}, \textit{new language}, \textit{require specific knowledge of the MRTE}.
 
 \item[Performance Overhead] As in the previous chapter, we use the values \textit{low}, \textit{medium}, and \textit{high}.
 Likewise, these values are taken from the literature review.
@@ -816,7 +688,7 @@ Although the events reported only provide primitive information, such as \textit
 Severe limitations prevented the success of JVMPI (deprecated in favor of JVMTI): performance impact on the JVM, the relatively low-level interface provided, and the limited capabilities to detect fine-grained events.
 These limitations are partially addressed in \cite{Maebe06javana:a} where a framework called Javana is proposed.
 In specific, Javana proposes further modifications to the JVM to detect more events.
-Additionally, it aims at easing the construction of efficient user-defined profilers by providing a generic instrumentation framework which can be adapted to specific needs.
+Additionally, it aims at easing the construction of efficient user-defined profilers by providing a generic instrumentation framework that can be adapted to specific needs.
 To do so, users define a profile using an aspect-inspired DSL where \textit{pointcuts} represent the events of interest for a profiler, and advices, which are written in \textit{C/C++}, are in charge of collecting data on the dynamic behavior of a program.
 Besides the problem of requiring a modified JVM, this approach also has other disadvantages such as demanding a deep understanding of the JVM.
 
@@ -860,7 +732,7 @@ This simple addition is enough to reduce the performance overhead of some dynami
 
 DISL~\cite{Marek:2012:DEL:2162037.2162046,Marek2012} is a domain-specific aspect language for bytecode instrumentation; it uses annotations and plain Java to describe what a dynamic analysis tool must do.
 The novelty of this approach is that new \textit{joinpoints} and \textit{guard conditions} can be defined using the Java language along some annotations.
-It is then possible to collect data which is not accessible using a standard framework such as AspectJ.
+It is then possible to collect data that is not accessible using a standard framework such as AspectJ.
 Unfortunately, to define new \textit{jointpoints}, some knowledge of JVM internals is required.
 Finally, in an effort to overcome the limitations of specific aspect weavers, which prevent using them to implement arbitrary dynamic analysis tools, Achenbach et al.~\cite{Achenbach:2010:MPD:1939399.1939415} propose an approach to customize aspect weavers.
 When a new concrete weaver is built, the developer can choose arbitrary locations in the program as \textit{joinpoints}.
@@ -893,8 +765,8 @@ In this section, we discuss in details the limitations we find in these approach
 \begin{description}
 \item[Tools have high overhead]
 Many times, the tools that we can build, using the approaches presented in the previous section, induce high overhead.
-This is particularly true for solutions based on bytecode rewriting, but also for other approaches, such as JVMPI, that are based on events.
-This is not surprising; as we discuss in the previous chapter, bytecode rewriting and other techniques tend to produce high overhead.
+This is particularly true for solutions based on bytecode rewriting, but also for other event-based approaches, such as JVMPI.
+This is not surprising because, as we discuss in the previous chapter, bytecode rewriting and other techniques tend to produce high overhead.
 The mechanisms that are able to keep a low overhead, do so by limiting the expressive power of the tools (as in DeAl~\cite{Reichenbach:2010:GCE:1869459.1869482}), and by reducing the accuracy of the tools in certain cases (as in DYPER \cite{Reiss:2008:CDP:1383559.1383566}). 
 We have found that, when a solution is expressive and produce efficient tools, it generally requires extensive knowledge of low-level details.
 It is not clear whether this trade-off is unavoidable.
@@ -915,7 +787,7 @@ In the same way, using aspect-oriented programming can also create additional pr
 Indeed, since well-known frameworks, such as AspectJ, cannot be used to develop arbitrary profiler, new frameworks for aspect-oriented programming must be used to implement tools such as profilers; the time required to learn these frameworks hinders the development of dynamic analysis tools.
 
 Although many techniques with low overhead can be implemented using low-level technologies (such as JVMTI), or through modifications to legacy MRTEs; 
-we think that approaches that use languages such as \textit{C/C++} and low-level APIs may also complicate the developments of tools.
+we think that approaches that use low-level APIs may also complicate the developments of tools.
  
 \end{description}
 
