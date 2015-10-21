@@ -1,34 +1,41 @@
-\markboth{}{}
 \pagestyle{empty}
 \vspace{-2cm}
 %---------------------------%
 \section*{Résumé}
-Aujourd'hui, les éditeurs logiciels ne conçoivent, développent et ne maintiennent plus leur offre logicielle avec comme cible un client unique. Au contraire, les offres logicielles sont conçues pour cibler plusieurs entités. Par conséquent, ces applications doivent s'intégrer dans des environnements différents et s'adapter aux besoins des clients. Ainsi, les produits logiciels développés ne sont plus des programmes uniques, mais des familles de produits \cite{parnas1976design}.
-Les systèmes configurables facilitent la création de ces familles de produits. Grâce à eux il est possible de créer un produit logiciel en sélectionnant les fonctionnalités qui seront intégrées. Cependant, la validation de ces systèmes  est une tâche complexe. Un système configurable   peut  générer plusieurs millions de configurations possibles. Il ne s'agit donc plus de valider un seul et unique produit, mais un ensemble de produits. Cet important nombre de configurations est un problème pour les personnes  chargées de la validation.
-Nous proposons trois contributions qui visent à mieux répondre aux problématiques liées à la variabilité lors des projets de test. 
+Aujourd'hui, les syst\`emes logiciels sont omnipr\'esents.
+Parfois, les applications doivent fonctionner sur des dispositifs à ressources limit\'ees.
+Toutefois, les applications nécessitent un support d'exécution de faire face à de telles limitations. 
+Cette thèse aborde le problème de la programmation pour créer des systèmes «conscient des ressources» supporté par des environnements d'exécution adaptés (MRTEs).
+En particulier, cette thèse vise à offrir un soutien efficace pour recueillir des données sur la consommation de ressources de calcul (par exemple, CPU, mémoire), ainsi que des mécanismes efficaces pour réserver des ressources pour des applications spécifiques.
+Dans les solutions existantes, nous trouvons deux inconvénients importants.
+Les solutions imposent un impact important sur les performances à l'exécution des applications.
+La création d'outils permettant de gérer finement les ressources pour ces abstractions est encore une tâche complexe.
+Les résultats de cette thèse forment trois contributions:
 \begin{itemize}
-\item  une présentation détaillée de deux projets de test industriels faisant face à des problématiques de variabilité issus de deux entreprises : Cisco et Orange.
+\item Un cadre de surveillance des ressources optimiste qui réduit le coût de la collecte des données de consommation de ressources.
 
-\item une méthode originale basée sur les techniques de programmation par contraintes pour extraire des configurations de test qui respectent le critère Pairwise à partir d'un modèle explicite de la variabilité. 
+\item Une méthodologie pour sélectionner les le support d’exécution des composants au moment du déploiement afin d'effectuer la réservation de ressources.
 
-\item une comparaison de cette approche par rapport aux techniques de l'état de l'art et une étude de l'application de cette technique de test sur deux projets de tests industriels.
+\item Un langage pour construire des profileurs de mémoire personnalisées qui peuvent être utilisés à la fois au cours du développement des applications, ainsi que dans un environnement de production.
 \end{itemize}
-
 
 \section*{Abstract}
 
-Nowadays, software companies develop and maintain their software for several clients. Consequently, these applications have to  be integrated in heterogenous context and adapt to the user requriements. All these products are sharing commonalities but also differ in certain point due to business specific constraints.
-Configurable systems facilitate the creation of these product families. With them it is possible to create a software product by selecting the features that will be integrated, thus, the creation of a product is greatly simplified. However,  the validation of these systems is a complex task. A configurable system can generate millions of possible configurations. Thus, validation process doesn't consist in validating a single product but in validating a set of products. This large number of configurations is a problem for those responsible of the validation.
-In this thesis we propose three contributions that aim to solve issues raised by  variability during test projects : 
-
+Software systems are more pervasive than ever nowadays.
+Occasionally, applications run on top of resource-constrained devices where efficient resource management is required; hence, they must be capable of coping with such limitations.
+However, applications require support from the runtime environment to properly deal with resource limitations.
+This thesis addresses the problem of supporting resource-aware programming in execution environments.
+In particular, it aims at offering efficient support for collecting data about the consumption of computational resources (e.g., CPU, memory), as well as efficient mechanisms to reserve resources for specific applications.
+In existing solutions we find two important drawbacks.
+First, they impose performance overhead on the execution of applications.
+Second, creating resource management tools for these abstractions is still a daunting task.
+The outcomes of this thesis are three contributions:
 \begin{itemize}
+\item An optimistic resource monitoring framework that reduces
+the cost of collecting resource consumption data.
 
+\item A methodology to select components' bindings at deployment time in order to perform resource reservation.
 
-\item  A detailled presentation of two industrial test projects coping tat variaibility issues 
-
-
-\item An original methodology based on constraint programming techniques to select test configurations that respect pairwise criteria from a feature model
-
-
-\item An exhaustive comparison of this approach with the existing approches and a detailled study of the application of a such techniques on the two industrials projects.
+\item A language to build customized memory profilers that can be used both during applications' development, and also in a production
+environment. 
 \end{itemize}

@@ -147,7 +147,11 @@
 \titre{
 \huge
 \begin{flushleft}
-Supporting \\ resource awareness \\ in managed runtime environments.
+Supporting \\
+\vspace{0.2cm}
+resource awareness \\
+\vspace{0.2cm}
+in managed runtime environments.
 \end{flushleft}
 }
 
@@ -157,8 +161,8 @@ Supporting \\ resource awareness \\ in managed runtime environments.
 %%   au lieu de "soutenue le ...")
 
 %% Les différents champs de la couverture...
-\datesout{18 November 2015}
-\Auteur{Inti}{Gonzalez-Herrera}
+\datesout{14 D\'ecembre 2015}
+\Auteur{Inti Yulien}{Gonzalez Herrera}
 
 \Labo{INRIA}
 \LaboEtendu{Rennes Bretagne Atlantique} % sauf INSA
@@ -166,14 +170,14 @@ Supporting \\ resource awareness \\ in managed runtime environments.
 
 %% La composition du jury : prénom, nom, titre
 % % %\President[M]{Thierry}{Jeron}{Directeur de recherche à l'INRIA}         %% le président du jury
-\Advisor{Olivier}{Barais}{Chercheur, INRIA Rennes - Bretagne Atlantique}
-\Advisor{Johann}{Bourcier}{Maître de conférences, Université du Rennes 1}
-\Advisor{John}{Doe}{Maître de conférences, Université du Rennes 1}
-\Rapporteur{Vivien}{Qu\'ema}{Place 1}
-\Rapporteur{Gilles}{Muller}{Place 1}
+\Advisor{Olivier}{\uppercase{Barais}}{Professor, IRISA -- Université de Rennes 1}
+\Advisor{Johann}{\uppercase{Bourcier}}{Maître de conférences, IRISA -- Université de Rennes 1}
+\Rapporteur{Vivien}{\uppercase{Qu\'ema}}{LIG laboratory -- Grenoble INP/ENSIMAG}
+\Rapporteur{Gilles}{\uppercase{Muller}}{Whisper team -- LIP6}
 %% Si vous avez N rapporteurs ça marche toujours...
-\Examinateur[Mme]{John}{Doe}{Place 1}
-\Examinateur[M]{John}{Doe}{Place 1}
+\Examinateur[M]{Ga\"el}{\uppercase{Thomas}}{Samovar Laboratory -- Telecom SudParis}
+\Examinateur[M]{Laurent}{\uppercase{R\'eveill\`ere}}{LaBRI -- Université de Bordeaux}
+\Examinateur[Mme]{Isabelle}{\uppercase{Puaut}}{IRISA -- Université de Rennes 1}
 %% idem...
 
 %\ordre{00000}  %% le numéro d'ordre donné par la Sco
@@ -185,7 +189,20 @@ Supporting \\ resource awareness \\ in managed runtime environments.
 ~\newpage\thispagestyle{empty}\addtocounter{page}{-1}
 
 %%  une page de citation (pas indispensable)
+\topskip0pt
+\vspace*{\fill}
+Hay una historia familiar que me impact\'o muchísimo.
+Contaba mi tío Lore que una vez hab\'ia intentado abandonar la escuela.
+Mi abuelo Lolo le autoriz\'o, con una sola condici\'on -- mi tio deb\'ia comenzar a trabajar, pues un
+vago no pod\'ia ser.
 
+Asi fue como por una semana mi tío hizo de campesino, unas once horas seguidas bajo el sol.
+A los pocos días no pudo más, fue y le dijo a mi abuelo -- ``así no puedo seguir''.
+Lolo, tranquilito como siempre, dijo -- ``a mi me parece que si regresas a la escuela de seguro te aceptan''.
+A Lore la alegr\'ia no le cupo en el cuerpo y, aunque siempre tuvo la sospecha, le tom\'o unos 30 años convencerse de que mi abuelo no trabajaba tanto.
+
+A mis padres va dedicado este trabajo, pues son ellos los que -- siempre usando sus modos retorcidos -- me han convertido en alguien capaz de apreciar esa historia.
+\vspace*{\fill}
 
 %% Encore une page blanche pour que les remerciements arrivent
 %%  sur une page impaire
@@ -194,11 +211,12 @@ Supporting \\ resource awareness \\ in managed runtime environments.
 ~\newpage\thispagestyle{empty}\addtocounter{page}{-1}
 
 %\remerciements
-%\remerciements{Il faut vraiment que je dise merci ? :o)}
+%\input{./remerciements}
 %% vous n'êtes pas obligés d'utiliser cette commande
 %% mais elle vous donnera une idée de la chose
 
 \newpage\thispagestyle{empty}\addtocounter{page}{-1}
+
 
 %% pour cacher le numéro de page sur cette page blanche paire
 %% (à virer si vous avez plus d'une page de remerciements.)
@@ -210,6 +228,16 @@ Supporting \\ resource awareness \\ in managed runtime environments.
 %\newpage\thispagestyle{empty}
 \setcounter{page}{1}
 \pagenumbering{roman}
+
+% summary in french
+\include{./resume-francais/resume}
+\markboth{}{}
+\thispagestyle{empty}
+
+\selectlanguage{english}
+
+% new page
+\newpage\thispagestyle{empty}\addtocounter{page}{-1}
 
 %~\newpage
 \markboth{Table of content}{Table of content}
@@ -289,10 +317,12 @@ Supporting \\ resource awareness \\ in managed runtime environments.
 %% Suivant que votre liste de figures comporte un nombre pair
 %% ou impair de pages il faudra mettre un nombre pair ou impair
 %% de commandes \newpage.
-\newpage
+\newpage\thispagestyle{empty}\addtocounter{page}{-1}
 %\alignquatriemedecouv
 \cleardoublepage
+\markboth{Résumé}{Résumé}
 \input{./resume/resume.tex}
+\addcontentsline{toc}{chapter}{Résumé}
 
 \end{document}
 

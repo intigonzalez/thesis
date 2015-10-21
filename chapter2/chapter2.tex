@@ -657,7 +657,7 @@ Unfortunately, building such tools is not a simple tasks.
 It is then necessary to provide a ``simpler'' mechanism to build tooling support for abstractions.
 
 Resource consumption monitoring is a form of dynamic analysis, and there are many approaches that tackle the issue of simplifying the definition of dynamic analysis tools.
-Unfortunately, we have found fewer mechanisms to ease the construction of resource reservation tools \cite{mueller}.
+Unfortunately, we have found fewer mechanisms to ease the construction of resource reservation tools.
 Due to this fact, we mostly discuss in this section the problem of supporting resource accounting. 
 
 In this section, we first present some approaches that aim at easing the construction of dynamic analysis tools.
@@ -747,10 +747,20 @@ Despite of the fact that few constructors of OQL are really implemented in Eclip
 Similarly, YourKit \cite{yourkit} provides a language based on set theory to filter objects with specific properties; this language is used when no built-in memory analysis can provide the desired data.
 Besides providing query languages, mainstream profilers also support the development of extensions (e.g., plugins written in Java); these extensions essentially traverse the graph of objects in a heap dump to collect information.
 Alas, both queries and extensions require costly operations -- a complete dump of the heap, and a step to preprocess the dump; only after these operations, the frameworks are capable of executing queries.
+
+\paragraph{DSLs for resource monitoring and reservation}
 In DeAl~\cite{Reichenbach:2010:GCE:1869459.1869482}, the authors propose a language to compute heap assertions at garbage collection time.
 The design of this approach aims at guarantee a low performance overhead.
 To ensure such a property, the language is only able to compute boolean outputs; while resource consumption monitoring, for instance, needs to compute values of integer type.
-DeAl is a purely declarative language; in exchange for the declarative style and the focus on assertions, some properties about the performance of queries written in DeAl can be formally proved. 
+DeAl is a purely declarative language; in exchange for the declarative style and the focus on assertions, some properties about the performance of queries written in DeAl can be formally proved.
+
+Bossa, a language that aims at easing the definition of new scheduling policies is proposed  by Muller at el.~\cite{Muller:2005:FSD:1092360.1092660}.
+The language defines a set of concepts related to the domain of scheduling; they can be used to facilitate both the specification of scheduling policies and the verification of safety properties.
+A scheduling policy is transformed into a corresponding \textit{C} code that can be plugged to the target OS kernel.
+In practical scenarios, new scheduling policies induce low performance overhead on application.
+The most important drawback nevertheless is that implementing a compiler for the language requires a deep understanding of low-level details of the target kernel; and it might even require modifications to a kernel.
+If available in a platform, this mechanism can be used by an application running on top of a MRTE to defining CPU reservation policies.
+
 
 \subsection{Discussing the limitations} \label{sec:discussing-tools-to-ease-construction}
 
@@ -929,6 +939,12 @@ Although these are fuzzy values based on our judgment, they are useful to expres
   \path (1.7,3.7) node[circle,minimum size=0.17cm](DeAl) {}
         (1,4.9) node(DeAlT) {DeAl};
   \draw[draw=black, dotted, line width = 1pt] (DeAl) -- (DeAlT);
+  
+  % DeAl - low/medium overhead - medium usability - limited generalidad
+  \draw[draw=black] (2.1,2.7) circle [radius=0.14cm];
+  \path (2.1,2.7) node[circle,minimum size=0.17cm](Bossa) {}
+      (0.7,2.3) node(BossaT) {Bossa};
+  \draw[draw=black, dotted, line width = 1pt] (Bossa) -- (BossaT);
   
 \end{tikzpicture}
 \caption{Assessing the relevance of the aforementioned approaches. The location in terms of overhead a usability is given for each approach. Furthermore, the area of each circumference indicates how general the approach is (the larger the better).} \label{fig:position-approaches-to-simplify}

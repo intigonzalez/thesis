@@ -13,7 +13,7 @@ Additionally, we present low-level details regarding how the language is impleme
 The decision of implementing our approach by relying on JVMTI has advantages and disadvantages.
 On the one hand, the obvious advantage lies on the portability of this solution, which makes it more valuable from a practical point of view.
 On the other hand, building profilers on top of the JVMTI, instead of directly modifying the JVM, impacts the performance of the generated profilers and, unfortunately, hinders (in extreme case it even prevents) the implementation of some language constructs.
-Nonetheless, it is our belief that guarantying profilers' portability should be of maximum priority.
+Nonetheless, it is our belief that guaranteeing profilers' portability should be of maximum priority.
 Moreover, in writing this implementation, we have found that the limitations in the JVMTI preventing the construction of better profilers can be overcome with, at most, a few additions to the API.
 
 
@@ -44,7 +44,7 @@ Given a profiler definion, the compiler output is a package that contains a pack
 
 To reduce the overhead of profilers, developers must be aware of the details of the abstraction for which the profiler is being built, the semantic of our language, and the details of its implementation.
 In particular, it is advisable reducing the usage of \textit{lists} and the evaluation of nested lambda expressions.
-Likewise, heavily using the built-in rvalue \textit{objects} is specially discouraged because it can easily contain many elements.
+Likewise, heavily using the built-in rvalue \textit{objects} is especially discouraged because it can easily contain many elements.
 It is also discouraged because, in order to reduce memory consumption, we rely on an iterator built on top of JVMTI operations that can be costly to use in terms of CPU time.
 
 Finally, we added some built-in rvalues in this implementation because they are both useful in the context of Java and easy to obtain using the JVMTI.

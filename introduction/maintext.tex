@@ -8,28 +8,8 @@ However, the industry faces several challenges while coping with these expectati
 Among them, we find problems related to the general issue of efficiently handling computational resources to satisfy non-functional requirements.
 Indeed, sometimes applications must run atop resource-constrained devices or unsafe open runtime environments~\cite{baresi2006toward} where efficient resource management is of paramount importance to guarantee applications' proper execution.
 For instance, mobile devices and smart home gateways are resource constrained devices where users can install applications from different sources.
-In the case of smart home gateways is important avoiding crashes because these devices often control a physical environment occupied by people.
-
-%
-%
-%The growing number of devices connected through client/server architectures have led to a massive increment in the number of users some applications have to deal with.
-%These applications require a complex and extremely costly infrastructure that has naturally evolve into the \textit{cloud}.
-%Although cloud services are shipped in different forms, using a rather simplistic model we can see them as mechanisms to provide basic computing resources such as CPU cycles, memory, network bandwidth and storage capacity.
-%This view is useful if we consider how important is, for cloud service's providers, to reduce the usage of resources.
-%For instance, given the large nature of the cloud, a platform as a service (PaaS)~\cite{} provider can reduce the operational costs if it manages to squeeze a few thousand bytes from each request.
-%As a consequence, carefully managing resources such as CPU and memory becomes a primary concern for cloud service providers.
-%
-%Despite of the continuous hardware evolution, applications' demand often surpasses hardware capabilities.
-%This limitation of resources is particularly clear in wearable devices, but in the near future we can expect to see the same kind of concern in the emergent \textit{Internet of Things}~\cite{}.
-%In this kind of devices it is fundamental to offer tools for properly sharing the scarce resources among applications.
-%It is worth noting that managing resources has been a central problem in software engineer for a long time.
-%The problem is nevertheless highlighted because in my opinion new technologies to build applications for these devices allow and require better resource management techniques.
-%
-%Open execution environments~\cite{} refer to the possibility of allowing the deployment of applications provided by different sources at any time, being these sources trustworthy or not.
-%Since end-users are able to install many applications that share the execution environment, it is impossible for the developers of the runtime or of a single application to predict under what condition an application will be executing.
-%Providing isolation among applications to guarantee a \textit{safe} behavior is then of utmost importance~\cite{} because now it is possible to use these execution environments to build and massively deploy actuators that operate on the physical environment.
-%A possible source of failure in these applications is the lack of resource isolation.
-%In short, an application makes another to fail by consuming the resources needed for the later.
+In the case of smart home gateways, avoiding any misbehavior in applications is important because these devices often control a physical environment occupied by people.
+%In the case of smart home gateways is important avoiding crashes because these devices often control a physical environment occupied by people.
 
 To satisfy these requirements, the goal is to make applications and execution environments aware and capable of coping with resource limitations.
 This is important because often such requirements emerge together
@@ -74,15 +54,15 @@ The reason for this is that defining tooling support for a specific abstraction 
 \end{itemize}
  
 The challenges this research tackle can be summarized in the following research questions.
-These questions arises from the analysis of the drawbacks in the previous paragraphs.
-It is worthwhile remembering that these questions refer to MRTEs and CBSE.
+These questions arise from the analysis of the drawbacks in the previous paragraphs.
+It is worthwhile remembering that these questions refer to MRTEs.
 
 \begin{enumerate}
 \renewcommand{\theenumi}{\textit{RQ\arabic{enumi}}}
 
 \item How can we provide portable and efficient support for resource consumption monitoring? \label{rq:rq1}
 
-\item How can we choose what mechanisms must be used to guarantee resource reservation with low overhead for each component? \label{rq:rq2}
+\item How can we choose what mechanisms must be used to guarantee resource reservation with low overhead for each software component? \label{rq:rq2}
 %\item How can we improve resource management efficiency by relying on the fact that many applications are built on top of component models?
 
 \item How can we leverage the knowledge about the architecture of applications to drive a mechanism for resource management? \label{rq:rq3}
@@ -114,7 +94,7 @@ Along the present work, evidence for such claims are provided and a prototype na
 This contribution is a response to research questions \ref{rq:rq2} and \ref{rq:rq3}.
 
 \textbf{Contribution: a language to build customized memory profilers that can be used both during applications' development, and also in a production environment.}
-Memory consumption monitoring and profiling are important concerns in applications that target MRTEs because even automatic memory management is not capable of guarantying error-free memory management and, more importantly, these features introduce performance issues.
+Memory consumption monitoring and profiling are important concerns in applications that target MRTEs because even automatic memory management is not capable of guaranteeing error-free memory management. % and, more importantly, these features introduce performance issues.
 %As mentioned, mainstream profilers are not able to deal with domain-specific concepts in an \textit{efficient} way.
 Along this thesis, a generative approach to create customized memory profilers for domain-specific abstractions, such as DSLs and component models, is proposed.
 The approach consists primarily in a language to define profilers and a profiler generator which targets heap memory exploration mechanisms such as the \gls{JVMTI}.
