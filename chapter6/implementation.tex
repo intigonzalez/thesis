@@ -1,4 +1,4 @@
-\section{Tooling}\label{sec:dsl-implementation}
+\section{Tooling} \label{sec:dsl-implementation}
 
 To validate our approach, we have implemented a tool chain to ease the definition of customized memory profilers for Java-based systems.~\footnote{Available at: \url{https://github.com/intigonzalez/heapexplorer\_language}}
 These profilers can be executed in any JVM as long as it provides support for the JVMTI.
@@ -9,10 +9,10 @@ A developer must know how the target domain-specific abstractions are represente
 On the contrary, users only need to be aware of the interface provided by our framework, and the structure of the data collected by a profiler.
 In the rest of this section, we discuss details that are important to these roles.
 
-Additionally, we present low-level details regarding how the language is implemented atop of the JMVTI.
+In this section, we also present low-level details regarding how the language is implemented on top of the JMVTI.
 The decision of implementing our approach by relying on JVMTI has advantages and disadvantages.
 On the one hand, the obvious advantage lies on the portability of this solution, which makes it more valuable from a practical point of view.
-On the other hand, building profilers on top of the JVMTI, instead of directly modifying the JVM, impacts the performance of the generated profilers and, unfortunately, hinders (in extreme case it even prevents) the implementation of some language constructs.
+On the other hand, building profilers on top of the JVMTI; instead of directly modifying the JVM, impacts the performance of the generated profilers and, unfortunately, hinders (in extreme case it even prevents) the implementation of some language constructs.
 Nonetheless, it is our belief that guaranteeing profilers' portability should be of maximum priority.
 Moreover, in writing this implementation, we have found that the limitations in the JVMTI preventing the construction of better profilers can be overcome with, at most, a few additions to the API.
 
@@ -40,7 +40,7 @@ This editor provides syntax highlighting, error detection during editing, auto-c
 To perform low-level tasks related to memory profiling, we use \glslink{JVMTI}{JVMTI}~\footnote{\url{http://docs.oracle.com/javase/8/docs/platform/jvmti/jvmti.html}} and \glslink{JNI}{JNI}.
 These APIs are used by both profilers and the core memory profiling library, so-called Native Agent in Figure~\ref{fig:dsl-tooling-developer}.
 In this native agent, a \textit{plugins} system, which allows users to load/unload profiles without shutting down the JVM, is implemented.
-Given a profiler definion, the compiler output is a package that contains a package with the native binary code for the profiler, and a Java library you can use to access the collected data using plain Java objects.
+Given a profiler definition, the compiler output is a package that contains the native binary code for the profiler, and a Java library you can use to access the collected data using plain Java objects.
 
 To reduce the overhead of profilers, developers must be aware of the details of the abstraction for which the profiler is being built, the semantic of our language, and the details of its implementation.
 In particular, it is advisable reducing the usage of \textit{lists} and the evaluation of nested lambda expressions.
@@ -49,7 +49,7 @@ It is also discouraged because, in order to reduce memory consumption, we rely o
 
 Finally, we added some built-in rvalues in this implementation because they are both useful in the context of Java and easy to obtain using the JVMTI.
 These values are \textit{classes}, \textit{classloaders}, \textit{threads} and \textit{objects}; they are lists of anonymous built-in record types.
-The relations among these types and their operations are depicted in Figure~\ref{fig:dsl-built-in-types}.
+The relation among these types and their operations are depicted in Figure~\ref{fig:dsl-built-in-types}.
 
 \begin{figure}
 \centering
@@ -66,12 +66,12 @@ The relations among these types and their operations are depicted in Figure~\ref
 
 We envision that a set of memory profilers can be shipped in addition to other ``classic'' deployment artifacts that users of a software abstraction receive. 
 These profilers would support the use of the corresponding software abstraction.
-For instance, a user who is relying on a new extension of the Xtend language to build a system, might use specific profilers written in our language to understand the memory consumption, and in general, the behavior of the system.
+For instance, a user who is relying on a new extension of the Xtend language to build a system, may use specific profilers written in our language to understand the memory consumption, and in general, the behavior of the system.
 
 The generated profilers can be used in two different ways, either as development tools or as mechanisms to support resource awareness at runtime.
 Due to the scope of this thesis, the reference implementation we provide is biased towards the second scenario, but it should be relatively simple to adapt it to support the software development process.
 To access memory profilers, a JVM must be launched with a native Java agent loaded, and a library to collect profiling data in its classpath.
-Once the application is running, it can trigger profiling by simple issuing a few method calls using the profiling API.
+Once the application is running, it can trigger profiling by simply issuing a few method calls using the profiling API.
 Figure~\ref{fig:user-profiling-library-view} illustrates the process of collecting memory profiles, the software components involved, and the APIs that must be used.
 Observe how the profiling framework issues a call to a handler once it is done, a parameter contains the data computed.
 These data are encoded in a \textit{list}, in which each elements correspond to the data computed for each identified structure in the heap.
@@ -89,11 +89,11 @@ Once a profiler collects the information in an internal format, it populates a r
 In Figure~\ref{fig:dsl-generated-java}, the classes generated for a profiler are shown.
 Notice that a class is created for each \textit{record} declared, and also for each \textit{StructureType}.
 It can be seen how `lists' are directly represented in Java by mean of generic Java lists.
-The \textit{id} field in both \textit{MemoryProfile1} and \textit{MemoryProfile2} is the value used to parametrize each structure;
-in this particular example, where two structures are identified, the value of \textit{MemoryProfile1.id} is ``lists'' and the value of \textit{MemoryProfile2.id} is ``otherObjects''.
+The \textit{id} field in both \textit{MemoryProfile1} and \textit{MemoryProfile2} is the value used to parametrize each structure.
+In this particular example, where two structures are identified, the value of \textit{MemoryProfile1.id} is ``lists'' and the value of \textit{MemoryProfile2.id} is ``otherObjects''.
 
 Given the fact that the data computed by a profiler is returned as a list of objects, and their layout is unclear, the remaining problem is how to process such data; there are two options.
-First, users can make the application code depend on the Java code created by the profiler generator.
+First, users can make the application code depends on the Java code created by the profiler generator.
 In this way, your application has a new dependency, but you can profit from knowing at development time the types used in the code.
 A second approach is using the reflection capabilities of Java to explore the data.
 In the evaluation, we use such an approach to log the result of an arbitrary profiler, printing all the information it has computed.
@@ -209,7 +209,7 @@ An additional mechanism is required when a lambda expression for filtering \text
 For instance, in Listing~\ref{lst:dsl-example1} a primitive attribute, ``\textit{data}'', is accessed, while a reference attribute ``\textit{key}'' is read in Listing~\ref{k3}.
 Reading primitive attributes is supported by the JVMTI function \textit{FollowReferences}; by simply supplying the appropriates callbacks,  you can get the value of every primitive field.
 However, this is not enough.
-The problem is that -- to completely evaluate a lambda expression -- the values involved in the expression must be collected from different execution contexts.
+The problem is that -- to completely evaluate a lambda expression -- the values involved in the expression must be collected in different execution contexts.
 
 \begin{figure}[!b]
 \centering
@@ -251,8 +251,8 @@ primitive_callback() {
 \caption{Evaluating an expression through partial evaluation.} \label{fig:dsl-closures}
 \end{figure}
 
-The solution we propose is based on using the functional library of \textit{C++11}.
-In other words, we build functions that contain partial evaluations of a lambda expression, the values already computed are stored in the closure associated to the function.
+The solution we propose is based on using the functional library of \textit{C++11} to implement continuations.
+In other words, we build \textit{functions} that contain parts of the evaluation of a lambda expression, the values already computed are stored in the closure associated to the \textit{function}.
 Figure~\ref{fig:dsl-closures} shows the transformation of an expression.
 Observe how it requires collecting data in two different places, and partially evaluating the expression in three places.
 
@@ -263,10 +263,11 @@ In other words, we also use the function \textit{FollowReferences} to identify t
 
 We perform some optimizations related to the construction of the built-in values \textit{threads}, \textit{threadgroups}, \textit{classes}, etc. 
 Since not all memory profilers depends on such values, we selectively skip the construction of them.
-We also extend this to other cases. For instance, we do not find the class of each object when it is not required, and we avoid processing classes to obtain field names when they are not use in a expression.
-To implement these optimizations, we used a parametrized code template; therefore, the generated code depends on the values of these parameters which we can tune to satisfy our needs.
-Another optimization is reducing the nodes of the graph that must be traversed.
-As an illustration, we only produce code to explore primitive fields of each object, which are represented as leaf nodes in the graph, if there exists some expression accessing a field.
+We also extend this to other cases. For instance, we do not find the class of each object when it is not required, and we avoid processing classes to obtain field names when they are not used in an expression.
+To implement these optimizations, we used a parametrized code template; therefore, the generated code depends on the values of generic parameters. 
+We can tune them to satisfy our needs.
+Another optimization is reducing the number of nodes that must be traversed.
+As an illustration, we only produce code to explore primitive fields of each object, which are represented as leaf nodes in the graph, if there exists an expression accessing a field.
 
 
 %The process of code generation is driven by the need of reducing the performance impact.
