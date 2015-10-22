@@ -5,7 +5,7 @@ The purpose of memory profilers is to collect information regarding how applicat
 To write profilers, a clear understanding about their nature is required.
 Informally, the term \textit{memory profiling} refers to any kind of \textbf{process to collect} some \textbf{data about memory usage}.
 In an object-oriented runtime environment, such data may be as simple as the number of objects of a specific class, but it may also be as complex as the list of possible memory leak's sources.
-Some other examples include computing the number of objects reachable from a specific class object; finding out if there is an instance of class $A$ which is referencing an object of class $B$; and computing, for each \textit{String}, its length and the number of objects that make direct reference to the \textit{string}.
+Other examples include computing the number of objects reachable from a specific class object; finding out if there is an instance of class $A$ which is referencing an object of class $B$; and computing, for each \textit{String}, its length and the number of objects that make direct reference to the \textit{string}.
 The data collected by a profiler may have an arbitrary complexity; it may be a simple natural number, a boolean value, a list of values, or a composed value.
 For instance, an integer value is required to describe one of the aforementioned examples, the number of objects reachable from a specific class object.
 In the same way, a pair $\langle l,r \rangle$, where both $l$ and $r$ are integers, is required to store the result of determining for a \textit{string}, its length and the number of objects referencing it.
@@ -14,7 +14,7 @@ In the same way, a pair $\langle l,r \rangle$, where both $l$ and $r$ are intege
 %The rest of this section introduces the vocabulary we use in the domain of memory profilers.
 
 Formally, we use a set of concepts to properly define our understanding of the term profiler, and how we address their construction in this chapter.
-The following concepts are used int the rest of the chapter:
+The following concepts are used in the rest of the chapter:
 
 \begin{description}
 \item[An object] is an atomic entity that consumes memory to store the value of its attributes.
@@ -46,14 +46,15 @@ In particular, they provide (i) functions to evaluate whether an object is membe
 
 %\extracomment{TODO}{Add example of structures in a graph, all connected to the fact that roots are in threads}
 
-As mentioned, the objects in the heap form a directed graph; a profiler must iterate over such objects to identify whether they belong to a structure.
+As mentioned, the \textbf{objects in the heap form a directed graph; a profiler must iterate over such objects to identify whether they belong to a structure}.
+\textit{Our approach is a mechanism to specify what to do while the graph is being traversed.}
 The following examples show what kind of operations must be executed during graph exploration.
 
 \paragraph{Objects reachable from a specific class object}
 
 Figure~\ref{fig:reachable-from-class-object} depicts a diagram of objects.
 Suppose we want a profiler to compute the number of objects that can be reached from the object of class \textit{java.lang.Class} whose \textit{classname} is ``Client'' (see Figure~\ref{fig:reachable-from-class-object}).
-Informally, this profiler must execute three steps to calculate the desired data.
+Informally, this profiler must execute three steps to obtain the desired data.
 First, it iterates over the objects to find all the instances of class \textit{java.lang.Class}.
 These objects are then explored to get the value of attribute \textit{classname}, and see if it is equal to ``Client''; in this way we can locate the instance of interest.
 Finally, the profiler traverses the graph (as in Depth First Search) using the node found in the previous step as root, and counting the number of traversed nodes.
@@ -101,18 +102,19 @@ The first list has three nodes while the second one has four; these are the valu
 Informally, to compute such data a profiler must traverse the heap, checks whether an object's class is \textit{NodeEntry} (membership function), and increases a counter every time an instance is found (function to compute memory profile).
 Unfortunately, these two steps are insufficient to correctly compute the fact that there exist two lists.
 Indeed,  instead of the two values 3 and 4, a single value -- seven -- is obtained when this procedure is used.
-The problem is that we have two structures instead of one, but using the aforementioned membership function it is impossible to know of which structure an instance of \textit{NodeEntry} is member of.
+The problem is that we have two structures instead of one.
+However, using the aforementioned membership function, it is not possible to know whether a \textit{NodeEntry} belongs to a given structure.
 In other words, we need additional information to distinguish the two structures.
 
 A method to solve this particular problem is to use the following recursive membership function: an object is member of a structure $S$ if it is an instance of \textit{NodeEntry} and it is being referenced by a member of $S$.
 For the non-recursive case, we can see how each singly linked list starts with an instance of \textit{SinglyLinkedList}.
-This is easily represented with a parametrized and recursive membership function:
+This is easily represented with a parametrized and recursive membership function $f_{\textit{head}}: \textit{Objects} \mapsto \textit{bool}$:
 
 \begin{equation} \label{eq:simply-list}
-	f_{head}\left(O\right) = 
+	f_{\textit{head}}\left(O\right) = 
 	\begin{cases}
-		head = O & \quad O \; is \; \operatorname{SinglyLinkedList} \\
-		\exists {x \in \operatorname{Objects}}, \quad x \operatorname{references} o \wedge f_{head}\left(x\right) & \quad O \; is \; \operatorname{NodeEntry} \\
+		\textit{head} = O & \quad O \; is \; \operatorname{SinglyLinkedList} \\
+		\exists {x \in \operatorname{Objects}}, \quad x \operatorname{references} o \wedge f_{\textit{head}}\left(x\right) & \quad O \; is \; \operatorname{NodeEntry} \\
 		\operatorname{false} & \quad \operatorname{otherwise} \\
 	\end{cases}
 \end{equation}
@@ -123,12 +125,12 @@ Similarly, we need two counters to store the number of nodes while we are traver
 Figure~\ref{fig:simple_snapshot} depicts a snapshot in time of the heap while it is being explored;
 the shaded nodes are those that were already explored.
 
-This example shows that in defining memory profilers, we often need the capacity for:
+This example shows that in defining memory profilers, we often need:
 
 \begin{itemize}
-\item Using the same functions for many structures, varying only some parameters. This is necessary for both membership functions and to compute the memory profile.
+\item To use the same functions for many structures, varying only some parameters. This is necessary for both membership functions and to compute the memory profile.
 
-\item Identifying structures in the heap by using a parameter. For instance, in this example, we know that there are two structures because there are two instances of class \textit{SinglyLinkedList}.
+\item To identify structures in the heap by using a parameter. For instance, in this example, we know that there are two structures because there are two instances of class \textit{SinglyLinkedList}.
 \end{itemize}
 
 To summarize, we are frequently interested in calculating values for many structures that have the same ``characteristics''; this is what we call \textit{structure type}.
@@ -138,14 +140,14 @@ To identify such structures we use a \textit{parameter}; the process of associat
 
 A global view of our approach is shown in Figure~\ref{fig:dsl-global-view}.
 % the figure depicts how to and how it is integrated in production environments, are shown in .
-Since our goal is to support resource-aware programming, in this architecture, an application is able to collect data on its own memory consumption.
+Since our goal is to support resource-aware programming, in this architecture an application can collect data on its own memory consumption.
 To provide this feature, we add a layer (data collection layer) to MRTEs to take care of: 
 
 \begin{itemize}
 \item Providing a set of interfaces for collecting meta-data of objects in the heap, iterating over such objects, and reading the value of their fields.
 These interfaces are used by memory profilers.
 
-\item Providing a set of interface for accessing memory profilers from the applications.
+\item Providing a set of interface for accessing memory profilers from applications.
 In other words, an application may trigger the execution of a memory profiler, and it should be able to analyze the values computed by the profiler.
 
 \item Supporting dynamic loading of memory profilers.
@@ -166,7 +168,7 @@ Instead, we favor a generative approach where profilers are written using a meta
 A compiler is then used to transform such definitions into a binary form that can be executed in the runtime environment.
 This compiler is also in charge of providing interoperability between the data format provided by low-level facilities of the MRTE, and the high-level data format expected by applications running on top of such execution environments. 
 
-In the rest of this section we describe the elements of this architecture.
+In the rest of this section, we describe the elements of this architecture.
 First, the abstract syntax of this metalanguage is discussed; we present it using a meta-model with its main concepts as well as some snips of code, written in a concrete syntax, to ease the presentation (see Subsection~\ref{sec:abstract-syntax}).
 The full concrete syntax is then introduced in Subsection~\ref{sec:concrete-syntax}, followed by 
 \ifoperationalSemanticsOn
@@ -187,8 +189,8 @@ Finally, in~\ref{sec:dsl-usage-examples} we present some examples to illustrate 
 \subsection{Abstract Syntax}\label{sec:abstract-syntax}
 
 The meta-model shown in Figure~\ref{fig:as} describes the abstract syntax of our language.
-The main concept of this meta-model is a \textit{CustomProfiler} which is composed of \textit{UserDefined} types and a \textit{StructureFactory}.
-This means that a developer must focus on declaring the types to store information about memory usage, and defining the what are the \textit{structures} of interest by mean of \textit{factories}.
+The main concept of this meta-model is a \textit{CustomProfiler} which is composed of \textit{UserDefined} types and \textit{StructureFactories}.
+This means that a developer must focus on declaring the types to store information about memory usage, and defining what are the \textit{structures} of interest by mean of \textit{factories}.
 
 The concepts related to \textit{UserDefined} types are depicted on the left part of the metamodel, while the right part describes the \textit{StructureFactory} which represents both the set of  structures to identify and the value to compute on these structures.
 
@@ -202,6 +204,7 @@ The concepts related to \textit{UserDefined} types are depicted on the left part
 \subsubsection*{User-defined types}
 The language support three basic types -- \textit{Integer}, \textit{String} and \textit{Boolean}.
 They are not shown in the meta-model for the sake of clarity, and because these types behave mostly as in any other language.
+It is however noteworthy that the language intentionally lacks support for implicit casts, and explicit casts exist in the form of built-in functions. 
 
 In addition, the language supports the declaration of both \textit{Records} and \textit{Lists}.
 A \textit{record} is a compound type that contains \textit{fields} to hold values of previously defined types.
@@ -209,7 +212,7 @@ On the contrary,  all the members of a list must be of the same type; hence, a \
 In a profiler, \textit{UserDefined} types can be composed in any desired way as long as a single property is respected -- no recursive types are allowed.
 We can formalize such a constraint using the \gls{OCL}~\footnote{\url{http://www.omg.org/spec/OCL/}}):
 
-\begin{figure*}
+\begin{figure*}[h]
 \begin{minipage}[b]{0.44\linewidth}
 
 \begin{lstlisting}[escapeinside={(*}{*)},
@@ -256,7 +259,7 @@ In this OCL code (written in Xtext OCL), the closure function computes the set o
 We enforce this constraint for two reasons. First, it simplifies the type system, and second because it is a way to know that no data structure other than the built-in will be used to represent, for instance, a \textit{list}.
 In this way, we can guarantee the performance of operations on lists.  
 The \textit{List} type provides operations to manipulate list values.
-In general, these operations correspond to the set of \textit{standard} operations of any implementation of the list data type in functional languages.
+In general, these operations correspond to a subset of \textit{standard} operations one can find in any implementation of the list data type in functional languages.
 Table~\ref{tab:operations-on-lists} shows the name of these operations as well as their signature.
 
 \begin{table}[!ht]
@@ -302,8 +305,8 @@ Notice that a single instance of \textit{StructureFactory} identifies many struc
 %\end{lstlisting}
 
 Listing~\ref{lst:defining-header} shows a snip of code that defines a structure for each \textit{SinglyLinkedList} in the heap.
-This is useful to solve one of the example we mentioned in Section~\ref{sec:domain-overview}.
-Note that `$e$' is the \textit{value} used to parametrize the structures.
+This is useful to solve one of the example we mention in Section~\ref{sec:domain-overview}.
+Notice that `$e$' is the \textit{value} used to parametrize the structures.
 In this case, `$e$' will take the values in the list defined after `$:$'; such a list is composed by instances of class \textit{SinglyLinkedList}.
 In this example, we use the operation \textit{filter} on a built-in list -- \textit{objects}.
 The actual parameter for \textit{filter} is a lambda expression that only return true if its parameter is an instance of the expected class. 
@@ -357,17 +360,11 @@ create structure foreach e:objects.filter([o| ret o is SinglyLinkedList]) using
 
 The recursive case of the membership function is in line 5.
 It looks like the definition in function \ref{eq:simply-list}; there are however differences that are due to the evaluation semantic of our language.
-Although the semantic is discussed hereafter, we can understand the definition by simply knowing that it is evaluated for every edge of the directed graph.
+Although the semantic is discussed hereafter, we can understand the definition by simply knowing that this boolean expression is evaluated for every edge of the directed graph.
 Before the evaluation, three variables are created: \textbf{this}, \textbf{referrer}, and \textbf{this\_structure}; they are, respectively, the target of the edge, the source, and a structure.
 When we evaluated the membership function we are checking whether \textbf{this} is a member of \textbf{this\_structure}, and we are passing additional information to support the definition of recursive functions.
 
-
-%Once a new structure is created, the \textit{Assignments} are executed to assign the initial value of each \textit{Variable}.
-
-\subsubsection*{Expressions and Types}
-
-
-Nevertheless, there is a built-in variable in each \textit{StructureType} that is only accessible during initialization.
+Finally, there is a built-in variable in each \textit{StructureType} (line 3) that is only accessible during initialization.
 Its type is predetermined as part of the language specification.
 We force the use of the proper type using OCL:
 
@@ -376,6 +373,10 @@ context StructureType inv:  initialValues->exists(a: Assignment |
      a.lvalue.name = 'initialObjects' and a.rvalue.type.oclIsTypeOf(List)
    ) 
 \end{lstlisting}
+
+%Once a new structure is created, the \textit{Assignments} are executed to assign the initial value of each \textit{Variable}.
+
+\subsubsection*{Expressions and Types}
 
 
 For the sake of readability, Figure~\ref{fig:as} only shows a few concepts related to expressions.
@@ -468,7 +469,7 @@ For instance, it uses very explicit keywords such as ``create structure foreach'
 An interesting aspect of this grammar is how \textbf{list} and \textbf{struct} values are defined.
 In particular, they can be created from non-constant values in the right hand of the evaluation.
 For instance, in Listing~\ref{fig:declaring-structures}, three values are created; line 1 instantiates a list of integers with two elements, line 2 defines a value of type \textit{Point}, and line 3 creates an empty list of \textit{strings} that is immediately populated with one element.
-Notice that line three requires writing the type of the list because it is not possible, in general, to infer the list type. 
+Notice that line three requires writing the type of the list because it is not possible, in general, to infer the list type when it is empty. 
 
 \begin{lstlisting}[escapeinside={(*}{*)}, 
 label={fig:declaring-structures}, caption={Creating list and struct values.}, language=DSL2
@@ -745,6 +746,11 @@ public:
 
 Listing~\ref{dsl-generated-c-linked-list} shows the code generated by the compiler for the singly linked lists example (see Listing~\ref{lst:listLengt}).
 Notice the use of three functions provided by the runtime, \textit{markAsMembers}, \textit{isInstance}, and \textit{isMember}. 
+Lines 6-8 correspond to the creation and assignment of the built-in value \textit{initialObjects}.
+Meanwhile, line 9 is simply the initialization of the value n associated to each structure.
+In lines 12 and 13, the membership function is evaluated. 
+The translation process does not optimize the code for expressions; instead, it produces \textit{triples} and relies on the \textit{C++} compiler to optimize expressions.
+The method to update is a simple translation from the concrete syntax. 
 
 \begin{lstlisting}[language=C++, frame=L,
 numbers=left,
@@ -766,7 +772,8 @@ public:
 		return b1;
 	}
 	void update(const Context& ctx) {
-		n = n + 1;
+		int i0 = n + 1;
+		n = i0;
 	}
 	static void createStructures(const Context& ctx, vector<DSL_Object>& instances) {
 		vector<DSL_Object> r;
@@ -778,38 +785,53 @@ public:
 \end{lstlisting}
 
 The last function, \textit{createStructures}, is used to identify structures of this type.
+In other words, it implements the factory.
 Such a function is invoked by a template initialization routine that expects as generic parameter a subclass of 
 \textit{AbstractStructure} (\textit{T} in Listing~\ref{lst:init-routines}).
 Formally, the signature and behavior of this routine are as follows:
+
 \begin{lstlisting}[language=C++, frame=L,
 numbers=left,
 numberstyle=\color{black}\scriptsize,xleftmargin=2\parindent,
 label=lst:init-routines, caption={Routine to initialize structures in the heap.}]
 template <typename T> void
 initializationRoutine(Context& ctx, std::vector<AbstractStructure*>& s){
+
   vector<DSL_Object> instances;
   T::createStructures(ctx, instances);
+  
   for (DSL_Object obj : instances) {
     AbstractStructure* ns = new T();
+    
     ctx.e = obj;
     ctx.this_structure = defineStructure(ns); // part of the runtime support
+    
     ns->initialize(ctx);
     s.push_back(ns);
   }
 }
 \end{lstlisting}
-An important concern during the transformation lies on efficiently mapping our concepts to \textit{C++} concepts.
-Moreover, since each target platform provides facilities to get metadata regarding the objects in memory, using such facilities efficiently is especially important in order to reduce the performance overhead due to profiling.
+
+In line 5 the factory is invoked to identify the set of structures in the heap.
+This simply add an element to the list for each structure.
+Afterwards, the internal format used to represent such structures are created and the structures initialized.
+
+%An important concern during the transformation lies on efficiently mapping our concepts to \textit{C++} concepts.
+%Moreover, since each target platform provides facilities to get metadata regarding the objects in memory, using such facilities efficiently is especially important in order to reduce the performance overhead due to profiling.
+
+\paragraph{Assembling a profiler}
 
 The final profiler is built using both the generated code and a template algorithm.
-The template is target dependent, but in general we use the underline target facilities to collect meta-data, access fields in certain steps, traverse the objects in memory and also to populate the built-in rvalues.
-A simplified version of this algorithm is shown in Listing~\ref{lst:dsl-algorithm}.
+This algorithm is target dependent, but in general we use the underline target facilities to collect meta-data, access fields in certain steps, traverse the objects in memory and also to populate the built-in rvalues.
+Informally, the idea is traversing a graph in which nodes and edges have properties, and executing \textit{callbacks} to collect data about the graph.
+A simplified version of this algorithm is shown in Listing~\ref{lst:dsl-algorithm}. The model of execution of profilers written using our approach is summarized in such an algorithm.
+
 
 \begin{lstlisting}[escapeinside={(*}{*)},
 label=lst:template, language=AlgLang, frame=L,
 numbers=left,
 numberstyle=\color{black}\scriptsize, xleftmargin=2\parindent,
-label=lst:dsl-algorithm, caption{Template algorithm to collect data with in a memory profiler.}]
+label={lst:dsl-algorithm}, caption={Template algorithm to collect data with in a memory profiler. This summarizes the model of execution of profilers written using our approach}]
 values:
    structures: vector<AbstractStructureType*>
 routine:
@@ -826,14 +848,37 @@ routine:
    return structures 
 \end{lstlisting}
 
+
 There are two loops in the algorithm. 
 The first loop is in charge of creating the set of structures the program is intended to collect information about.
 The creation of a context in line 5 depends on the target platform.
-It basically creates values such as the list of objects in memory or the list of loaded classes.
+It basically creates values such as the list of \textit{objects} in memory or the list of loaded \textit{classes}.
 The second loop traverses all the references among objects in memory.
-During each iteration, the algorithm finds the first structure for which the membership function is true.
-Notice that we only select one because this is a simple way to guarantee that structures are disjoints sets of objects. %structures~\cite{dsn/09/geoffray/ijvm,Attouchi:2014:MMM:2602458.2602467}.
+During each iteration, the algorithm finds the ``\textit{first}'' structure for which the membership function is true (the if in line 9).
 Thereafter, the information for such a structure is updated.
+Notice that we only select one because this is a simple way to guarantee that structures are disjoints sets of objects.
+For instance, suppose the graph of object is $G=\left( \{ A, B, C \} , \{ \langle A,C \rangle, \langle B,C \rangle \} \right)$, and we want to identify the members of two structures $S_A$ and $S_B$ using the following membership functions (parameter $T$ is either $A$ or $B$):
+
+\[
+	f_T\left(O\right) = 
+	\begin{cases}
+		T = O & \quad O \; is \; \operatorname{Class0} \\
+		\exists {x \in \operatorname{Objects}}, \quad x \operatorname{references} o \wedge f_T\left(x\right) & \quad O \; is \; \operatorname{Class1} \\
+		\operatorname{false} & \quad \operatorname{otherwise} \\
+	\end{cases}
+\]
+
+In this case, $C$ is member of both structures, $S_A$ and $S_B$.
+Since we want to guarantee that structures are disjoint set, we need an additional mechanism to achieve this.
+In our implementation, we simply consider that an object $O$ is member of the ``\textit{first}'' structure fo which evaluating the membership function produces true.
+In general, a structure $S_0$ is evaluated first than $S_1$ if its \textit{StructureFactory} is defined earlier in the source code of the program; this is deterministic.
+Also, a structure is evaluated first if the parameter to identify the structure appears earlier in the list of instances produced by the factory; this case is non-deterministic.
+
+To summarize, we need to enforce additional execution rules to guarantee that structures are disjoint sets.
+As a consequence, every membership function $f(o)$ one defines is actually evaluated as $f(o) \wedge \nexists{S_T \in \textit{Structures}}, f_T(o) $.
+
+ %structures~\cite{dsn/09/geoffray/ijvm,Attouchi:2014:MMM:2602458.2602467}.
+
 
 %The complete execution of a program in our language is as follow. Subgraph instances are initialized using listing~\ref{onInitialization}.
 %Afterward, all the references in the graph of objects are traversed running listing~\ref{lst:onNodeFoundData}.
