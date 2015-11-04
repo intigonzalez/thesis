@@ -74,7 +74,7 @@ To access memory profilers, a JVM must be launched with a native Java agent load
 Once the application is running, it can trigger profiling by simply issuing a few method calls using the profiling API.
 Figure~\ref{fig:user-profiling-library-view} illustrates the process of collecting memory profiles, the software components involved, and the APIs that must be used.
 Observe how the profiling framework issues a call to a handler once it is done, a parameter contains the data computed.
-These data are encoded in a \textit{list}, in which each elements correspond to the data computed for each identified structure in the heap.
+These data are encoded in a \textit{list}, in which elements correspond to the data computed for each identified structure in the heap.
 %The problem is knowing the type and shape of each list element.
 
 \begin{figure}[!t]

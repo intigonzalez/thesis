@@ -424,7 +424,7 @@ In addition, it is worth mentioning that approaches exist to reduce the performa
 This is possible because MRTEs' implementations are usually built upon OS abstractions.
 For instance, managed threads in the JVM are often implemented on top of native threads.
 Thus, reusing OS support for resource-aware programming in the context of MRTEs is relatively simple. 
-Unfortunately, the abstractions used in modern operating systems are much more coarse than those abstractions that are present in MRTEs.
+Unfortunately, the abstractions used in modern operating systems are coarser than those abstractions that are present in MRTEs.
 As a summary, in some cases it is possible to reuse OS facilities for measuring the resource usage of a managed thread, but relying on the OS is not feasible if we are trying to monitor the resource consumption at a different granularity level.
 \end{description}
 

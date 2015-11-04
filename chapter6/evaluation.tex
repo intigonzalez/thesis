@@ -96,7 +96,7 @@ The idea is to check how much the performance is affected by each method.
 We repeat this process 10 times for each test in the DaCapo Benchmark suite, and take the average as final measurement.
 
 It is useful to discuss how varies the number of times the analysis is performed.
-As we mentioned, profilers runs periodically in this set of experiments; thus, the number of invocations to a profiler depends on the benchmark, and the overhead produced by the profiler itself.
+As we mentioned, profilers run periodically in this set of experiments; thus, the number of invocations to a profiler depends on the benchmark, and the overhead produced by the profiler itself.
 For instance, using our approach, the memory analysis is executed a minimum of 10 times in the \textit{fop} benchmark, and a maximum of 366 times in the \textit{eclipse} benchmark.
 
 Figure~\ref{fig:evaluationTotalTime} depicts the overhead in total execution time for different profiling strategies and Dacapo tests.
