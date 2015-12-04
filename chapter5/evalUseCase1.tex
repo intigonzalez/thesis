@@ -197,7 +197,7 @@ If the application switches between monitoring modes too often then the benefits
 The overhead of switching from \emph{Global monitoring} to \emph{full components} or \emph{Localized monitoring} comes from the fact that the framework must reload and instrument classes to activate the monitoring probes.
 Therefore, using \emph{Localized monitoring} reduces the number of classes that must be reloaded.
 This is shown in the third use-case of Figure~\ref{adaptive-vs-full}, which uses a heuristic based on the number of failures.
-Because we execute the faulty component many times, the heuristic is able to select, monitor and identify the faulty component quickly. This reduces overhead by 92.98\%. We use the following equation to calculate overhead:
+Because we execute the faulty component many times, the heuristic is able to select, monitor and identify the faulty component quickly. This reduces overhead by 93\%. We use the following equation to calculate overhead:
 
 \[ Gain=100-\frac{OurApproach-GlobalMonitoring}{FullMonitoring-GlobalMonitoring}*100 \]
 
