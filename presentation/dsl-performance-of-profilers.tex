@@ -1,0 +1,37 @@
+\begin{figure}[!ht]
+\centering
+\resizebox{.8\textwidth}{!}{
+\begin{tikzpicture}
+\begin{axis}[ybar=0pt, legend style={at={(0.72,1)},
+every axis legend/.append style={nodes={right}},
+anchor=north,legend columns=1, font=\tiny},
+ylabel={Overhead (\%)},
+y label style={at={(0.02, 0.5)}},
+scaled y ticks = false,
+      y tick label style={/pgf/number format/fixed, font=\scriptsize,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+      },
+xtick=data,ymin=0,
+width = 0.9\columnwidth,
+height = 3.5cm,
+bar width = 7,
+x tick label style={rotate=45,anchor=east,font=\scriptsize},
+ axis lines*=left, % Don't display the top and right lines
+ symbolic x coords={antlr,fop,hsqldb,jython,chart,luindex,xalan,lusearch, pmd, eclipse}
+]
+\addplot coordinates 
+	{(antlr,3.9781514264) (fop,4.605707750) (hsqldb,29.2388250106) (jython,1.3401924419) (chart,2.9126870659) (luindex,7.4126736676)
+	(xalan,3.5175679043) (lusearch,2.1071653048) (pmd,2.1071653048) (eclipse,13.2922104461) };
+\addplot coordinates 
+	{(antlr,4.6792415918) (fop,10.920169369) (hsqldb,33.4078193658) (jython,7.3669103815) (chart,10.0961181121) (luindex,5.8949045922) 
+	(xalan,10.6595492114) (lusearch,8.8185623499) (pmd,11.7847827707) (eclipse,15.7219232736)};
+\addplot coordinates 
+	{(antlr,28.7859273871) (fop,23.7271506764) (hsqldb,46.0448750552) (jython,32.4395399802) (chart,44.6349538836) (luindex,31.9874187461) 
+	(xalan,37.7533619117) (lusearch,12.9664891096) (pmd,33.9112866499) (eclipse,32.6863711858)};
+\legend{Handwritten JVMTI, \underline{Our approach}, Heap Dump + Eclipse MAT}
+\end{axis}
+\end{tikzpicture}
+}
+\vspace{-.5cm}
+\caption{\scriptsize Overhead on execution time \underline{compared to the execution without memory analysis}}
+\end{figure}

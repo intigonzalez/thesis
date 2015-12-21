@@ -1,0 +1,32 @@
+\begin{figure}[!h]
+\centering
+\resizebox{.7\textwidth}{!}{
+	\begin{tikzpicture}
+		\begin{axis}[ybar=0pt, legend style={at={(0.72,1)},
+		every axis legend/.append style={nodes={right}},
+		anchor=north,legend columns=1, font=\tiny},
+		ylabel={Analysis Time (sec)},
+		y label style={at={(0.02, 0.5)}},
+		scaled y ticks = false,
+		      y tick label style={/pgf/number format/fixed,font=\scriptsize,
+		      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+		      },
+		xtick=data,ymin=0,
+		width = 0.8\columnwidth,
+		height = 4.2cm,
+		bar width = 7,
+		x tick label style={rotate=45,anchor=east, font=\scriptsize},
+		 axis lines*=left, % Don't display the top and right lines
+		 symbolic x coords={Eclipse Luna, NetBean 8.0, dotCMS 3.1,Cytoscape 3.2.1,Glassfish 4.1, Liferay 6.2.2, WildFly 8.2}
+		]
+		\addplot coordinates 
+			{(Eclipse Luna,3.9781514264) (NetBean 8.0, 4.605707750) (dotCMS 3.1, 9.2388250106) (Cytoscape 3.2.1, 1.3401924419) (Glassfish 4.1, 2.9126870659) (Liferay 6.2.2,4.9126870659) (WildFly 8.2, 3.9126870659) };
+		\addplot coordinates 
+			{(Eclipse Luna,42.133233423) (NetBean 8.0,38.388906289) (dotCMS 3.1,30.9167577408) (Cytoscape 3.2.1,25.99) (Glassfish 4.1, 18.46) (Liferay 6.2.2, 28.9126870659) (WildFly 8.2, 19.9126870659)};
+		\legend{Our Approach, Heap Dump + Eclipse MAT}
+		\end{axis}
+	\end{tikzpicture}
+}
+\vspace{-.5cm}
+\caption{\scriptsize Time needed to execute the analysis just once. The analysis finds the consumption of the top components\label{fig:analysisTime}}
+\end{figure}

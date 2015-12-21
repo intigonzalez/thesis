@@ -1,0 +1,44 @@
+\begin{figure}[!ht]
+\centering
+\resizebox{0.8\textwidth}{!}{%
+\begin{tikzpicture}
+\begin{axis}[
+every axis legend/.append style={nodes={right}},
+ybar=0pt, legend style={at={(0.28,1.1)},
+anchor=north,legend columns=1, font=\tiny},
+ylabel={Time (seconds)},
+y label style={at={(0.04, 0.5)}},
+scaled y ticks = false,
+      y tick label style={/pgf/number format/fixed, font=\scriptsize,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+      },
+xtick=data,ymin=0,
+width = \textwidth,
+height = 5cm,
+bar width = 6,
+x tick label style={rotate=45,anchor=east, font=\scriptsize},
+ axis lines*=left, % Don't display the top and right lines
+ symbolic x coords={antlr,fop,hsqldb,jython,chart,luindex,xalan,lusearch}
+]
+% no monitoring
+\addplot[fill=black] coordinates 
+	{(antlr,1.28) (fop,1.101) (hsqldb,2.337) (jython,2.351) (chart,2.534) (luindex,3.561) (xalan,1.224) (lusearch,1.305)};
+% memory
+\addplot[pattern=north east lines] coordinates 
+	{(antlr,2.164) (fop,1.188) (hsqldb,8.655) (jython,10.688) (chart,4.806) (luindex,8.001) (xalan,4.885) (lusearch,9.349)};
+% heap dump
+\addplot[fill=gray] coordinates 
+	{(antlr,1.143) (fop,1.125) (hsqldb,8.639) (jython,2.762) (chart,2.836) (luindex,3.589) (xalan,1.822) (lusearch,5.078)};
+% memory and instructions
+\addplot[pattern=dots] coordinates 
+	{(antlr,7.468) (fop,1.970) (hsqldb,15.888) (jython,18.625) (chart,11.502) (luindex,51.660) (xalan,11.188) (lusearch,18.975)};
+% heap dump and instructions
+\addplot[fill=white] coordinates 
+	{(antlr,6.159) (fop,1.188) (hsqldb,14.647) (jython,10.950) (chart,9.059) (luindex,44.758) (xalan,7.812) (lusearch,15.990)};
+% legend
+\legend{\underline{\textit{No Monitoring}}, \underline{Memory instrumentation}, \underline{Heap Exploration}, Memory \& Instructions instrumentation, Heap Exploration \& Instructions Instrumentation}
+\end{axis}
+\end{tikzpicture}
+}
+\caption{\scriptsize Using different memory monitoring techniques}
+\end{figure}

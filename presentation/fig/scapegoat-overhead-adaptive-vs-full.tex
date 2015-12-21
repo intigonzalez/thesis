@@ -1,0 +1,52 @@
+\begin{figure}
+\centering
+\resizebox{0.8\textwidth}{!}{%
+\begin{tikzpicture}
+\begin{axis}[
+every axis legend/.append style={nodes={right}},
+ybar=0pt, legend style={at={(0.4,1.2)},
+anchor=north,legend columns=1, font=\tiny},
+ylabel={Time (seconds)},
+y label style={at={(0.02, 0.5)}},
+scaled y ticks = false,
+      y tick label style={/pgf/number format/fixed,font=\scriptsize,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+      },
+xtick=data,ymin=0,
+width = \textwidth,
+height = 5cm,
+bar width = 6,
+x tick label style={rotate=45,anchor=east, font=\scriptsize},
+ axis lines*=left, % Don't display the top and right lines
+ symbolic x coords={UC1,UC2,UC3,UC4,UC5,UC6}
+]
+% full monitoring
+\addplot[fill=black] coordinates 
+	{(UC1,613.000) (UC2,46.363) (UC3,63.899) (UC4,78.324) (UC5,49.144) (UC6,132.949)};
+% adaptive with all component
+\addplot[fill=red, pattern=crosshatch dots] coordinates 
+	{(UC1,432.744) (UC2,70.501) (UC3,198.554) (UC4,187.036) (UC5,32.340) (UC6,127.711)};
+% adaptive with all component and heap dump
+\addplot[fill=yellow, pattern=crosshatch] coordinates 
+	{(UC1,410.790) (UC2,61.808) (UC3,95.503) (UC4,204.479) (UC5,16.864) (UC6,123.381)};
+% adaptive with heuristic
+\addplot[fill=green, pattern=north west lines] coordinates 
+	{(UC1,176.413) (UC2,16.741) (UC3,29.461) (UC4,19.470) (UC5,27.001) (UC6,123.813)};
+% adaptive with heuristic and heap dump
+\addplot[fill=pink, pattern=dots] coordinates 
+	{(UC1,169.467) (UC2,12.520) (UC3,16.403) (UC4,20.251) (UC5,15.110) (UC6,124.294)};
+% global monitoring
+\addplot[fill=cyan, pattern=north east lines] coordinates 
+	{(UC1,166.759) (UC2,10.646) (UC3,14.37) (UC4,20.860) (UC5,14.77) (UC6,120.16)};
+\legend{
+	\underline{Components Instrumented all the time}, 
+	Adaptive with All Components using Memory Instrumentation, 
+	Adaptive with All Components using Heap Exploration, 
+	Localized monitoring using Memory Instrumentation, 
+	\underline{Localized monitoring using Heap Exploration},
+	Global Monitoring}
+\end{axis}
+\end{tikzpicture}
+}
+%\caption{Execution time for some use cases under different monitoring policies.}\label{adaptive-vs-full}
+\end{figure}

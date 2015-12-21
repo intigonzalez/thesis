@@ -1,0 +1,78 @@
+\begin{figure}[!ht]
+ \centering
+\resizebox{.8\textwidth}{!}{
+ \begin{minipage}[t]{0.45\linewidth}
+ \centering
+\begin{tikzpicture}
+\begin{axis}[
+ybar=0pt, 
+legend style={at={(0.72,1)},
+every axis legend/.append style={nodes={right}},
+anchor=north,legend columns=1, font=\tiny},
+ylabel={Analysis Time (sec)},
+y label style={at={(0.1, 0.5)}},
+scaled y ticks = false,
+      y tick label style={/pgf/number format/fixed, font=\scriptsize,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+      },
+xtick=data,ymin=0,
+width = \columnwidth,
+height = 4.0cm,
+bar width = 4,
+x tick label style={rotate=45,anchor=east, font=\scriptsize},
+ axis lines*=left, % Don't display the top and right lines
+ symbolic x coords={antlr,fop,hsqldb,jython,chart,luindex,xalan,lusearch, pmd, eclipse}
+]
+\addplot coordinates 
+	{(antlr,1.9781514264) (fop,1.605707750) (hsqldb,2.2388250106) (jython,1.3401924419) (chart,2.9126870659) (luindex,1.4126736676)
+	(xalan,1.5175679043) (lusearch,2.1071653048) (pmd,1.1071653048) (eclipse,3.2922104461) };
+\addplot coordinates 
+	{(antlr,2.2781514264) (fop,1.805707750) (hsqldb,2.5388250106) (jython,1.6401924419) (chart,3.2126870659) (luindex,1.6126736676)
+		(xalan,1.7175679043) (lusearch,2.4071653048) (pmd,1.3071653048) (eclipse,3.5922104461) };
+\addplot coordinates 
+	{(antlr,2.9781514264) (fop,2.605707750) (hsqldb,3.2388250106) (jython,2.3401924419) (chart,3.9126870659) (luindex,2.4126736676)
+		(xalan,2.5175679043) (lusearch,3.1071653048) (pmd,2.1071653048) (eclipse,4.2922104461) };
+%\legend{Handwritten JVMTI, Our approach, Heap Dump + Eclipse MAT}
+\end{axis}
+\end{tikzpicture}
+\vspace{-.3cm}
+\caption{\scriptsize Analysis time with default input size}
+\end{minipage}
+\hspace{0.03\linewidth}
+\begin{minipage}[t]{0.45\linewidth}
+ \centering
+\begin{tikzpicture}
+\begin{axis}[ybar=0pt, legend style={at={(1.08,1.23)},
+every axis legend/.append style={nodes={right}},
+anchor=north,legend columns=1, font=\tiny},
+ylabel={Analysis Time (sec)},
+y label style={at={(0.1, 0.5)}},
+scaled y ticks = false,
+      y tick label style={/pgf/number format/fixed, font=\scriptsize,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+      },
+xtick=data,ymin=0,
+width = \columnwidth,
+height = 4.0cm,
+bar width = 4,
+x tick label style={rotate=45,anchor=east, font=\scriptsize},
+ axis lines*=left, % Don't display the top and right lines
+ symbolic x coords={antlr,fop,hsqldb,jython,chart,luindex,xalan,lusearch, pmd, eclipse}
+]
+\addplot coordinates 
+	{(antlr,2.3781514264) (fop,1.905707750) (hsqldb,2.7388250106) (jython,1.8401924419) (chart,3.1126870659) (luindex,1.6126736676)
+	(xalan,1.7175679043) (lusearch,2.2171653048) (pmd,1.3171653048) (eclipse,3.3822104461) };
+\addplot coordinates 
+	{(antlr,2.5781514264) (fop,1.945707750) (hsqldb, 2.7818250106) (jython,2.0401924419) (chart,3.6326870659) (luindex,1.912632376)
+		(xalan,1.9375679043) (lusearch,2.4071653048) (pmd,1.3999716530) (eclipse,3.7922104461) };
+\addplot coordinates 
+	{(antlr,3.9781514264) (fop,3.605707750) (hsqldb,4.2388250106) (jython,3.3401924419) (chart,4.9126870659) (luindex,3.4126736676)
+		(xalan,3.5175679043) (lusearch,4.1071653048) (pmd,3.1071653048) (eclipse,5.2922104461) };
+\legend{Handwritten JVMTI, \underline{Our approach}, \underline{Heap Dump + Eclipse MAT}}
+\end{axis}
+\end{tikzpicture}
+\vspace{-.3cm}
+\caption{\scriptsize Analysis time with large input size}
+ \end{minipage}
+}
+\end{figure}

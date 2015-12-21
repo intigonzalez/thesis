@@ -1,0 +1,39 @@
+\begin{figure}[!ht]
+\centering
+\resizebox{0.8\textwidth}{!}{%
+\begin{tikzpicture}
+\begin{axis}[
+every axis legend/.append style={nodes={right}},
+ybar=0pt,
+legend style={at={(0.25,1.1)},
+anchor=north,legend columns=1, font=\tiny},
+ylabel={Time (seconds)},
+y label style={at={(0.04, 0.5)}},
+scaled y ticks = false,
+      y tick label style={/pgf/number format/fixed, font=\scriptsize,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+      },
+xtick=data,ymin=0,
+width = 13cm,
+height = 5cm,
+bar width = 6,
+x tick label style={rotate=45,anchor=east, font=\scriptsize},
+ axis lines*=left, % Don't display the top and right lines
+ symbolic x coords={antlr,fop,hsqldb,jython,chart,luindex,xalan,lusearch}
+]
+\addplot[fill=black] coordinates 
+	{(antlr,1.28) (fop,1.101) (hsqldb,2.337) (jython,2.351) (chart,2.534) (luindex,3.561) (xalan,1.224) (lusearch,1.305)};
+\addplot[fill=gray] coordinates 
+	{(antlr,1.023) (fop,1.039) (hsqldb,2.284) (jython,2.524) (chart,2.417) (luindex,3.165) (xalan,1.191) (lusearch,1.321)};
+\addplot[pattern=north east lines] coordinates 
+	{(antlr,2.164) (fop,1.188) (hsqldb,8.655) (jython,10.688) (chart,4.806) (luindex,8.001) (xalan,4.885) (lusearch,9.349)};
+\addplot[pattern=crosshatch] coordinates 
+	{(antlr,6.235) (fop,1.905) (hsqldb,9.091) (jython,10.905) (chart,8.985) (luindex,44.988) (xalan,8.026) (lusearch,9.261)};
+\addplot[pattern=dots] coordinates 
+	{(antlr,7.468) (fop,1.970) (hsqldb,15.888) (jython,18.625) (chart,11.502) (luindex,51.660) (xalan,11.188) (lusearch,18.975)};
+\legend{\underline{\textit{No monitoring}}, Global monitoring, \underline{Memory instrumentation},\underline{Instructions instrumentation}, Memory \& Instructions instrumentation}
+\end{axis}
+\end{tikzpicture}
+}
+\caption{\scriptsize Execution time for tests using the DaCapo Benchmark\label{overhead-of-monitoring}}
+\end{figure}

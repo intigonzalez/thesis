@@ -1,0 +1,1641 @@
+\documentclass[10pt,xcolor={dvipsnames}]{beamer}
+\usetheme{CambridgeUS}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+%\usepackage[svgnames]{xcolor}
+
+\usepackage{listings}
+
+\usepackage{tikz} % for painting, heheheh
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usetikzlibrary{arrows,shadows,patterns, external, decorations.text,positioning, shapes}
+
+\usepackage[absolute,overlay,showboxes]{textpos}
+
+
+\author[Inti Gonzalez-Herrera]{Inti Gonzalez Herrera\\[0.5cm]{\scriptsize PhD's thesis  \\[.3cm] \textit{Supervised by}: Olivier Barais and Johann Bourcier\newline
+		\textit{Jury}: Isabelle Puaut, Vivien Qu\'ema, Gilles Muller, Ga\"el Thomas, Laurent R\'eveill\`ere}}
+\title[{\tiny Supporting resource-awareness in MRTEs}]{Supporting resource-awareness in managed runtime environments}
+\subtitle{}
+%\logo{\includegraphics[scale=0.4]{../rennes1.pdf}}
+\institute[]{Diverse -- IRISA/University of Rennes 1}
+\date{\today}
+\titlegraphic{\includegraphics[scale=0.5]{../diverse.png}}
+%\subject{}
+%\setbeamercovered{transparent}
+\setbeamertemplate{navigation symbols}{}
+
+%\usefonttheme{serif}
+%\usecolortheme{lily}
+
+\addto\captionsenglish{%
+	\renewcommand{\figurename}{\scriptsize Fig.}%
+}
+
+\begin{document}
+	
+	% DONE - 1
+	\begin{frame}
+		\titlepage
+	\end{frame}
+	
+	\section[Context]{Context}
+	
+	\subsection[Motivation]{Motivation}
+	
+	% DONE - 5
+	\begin{frame}{Developers embrace managed runtime environments}
+		%\textbf{Programming language popularity rating~\footnote{TIOBE Index as for Dec 2015. Just as a reference for the motivation}}:
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.4]{fig/languages.png}
+		\end{figure}
+		\begin{columns}
+			\column{0.6\textwidth}
+			\begin{block}{Managed runtime environments (MRTEs) \underline{boost productivity}}
+				\begin{footnotesize}
+					\begin{itemize}
+						\item Portability of Applications
+						\item Dynamic Code Loading (supporting the hypothesis of open world)
+						\item Automatic Memory Management (usually with a Garbage Collector)
+						\item Improved Error Handling
+					\end{itemize}
+				\end{footnotesize}
+			\end{block}
+			\column{0.25\textwidth}
+			\begin{exampleblock}{MRTEs}
+				\begin{figure}
+					\includegraphics[scale=0.0018]{fig/jvm.jpeg}
+				\end{figure}
+				\vspace{-.5cm}
+				\begin{figure}
+					\includegraphics[scale=0.07]{fig/python.jpg}
+				\end{figure}
+				\vspace{-.5cm}
+				\begin{figure}
+					\includegraphics[scale=0.17]{fig/dotnet.png}
+				\end{figure}
+			\end{exampleblock}
+		\end{columns}
+%		\begin{footnotesize}
+%			\begin{itemize}
+%				\item Java (20.97\%) \hfill \includegraphics[scale=0.0006]{fig/jvm.jpeg}
+%				\item Python (4.42\%) \hfill \includegraphics[scale=0.03]{fig/python.jpg}
+%				\item C\# (4.11\%) \hfill \includegraphics[scale=0.06]{fig/dotnet.png}
+%				\item Visual Basic .Net (2.39\%) \hfill \includegraphics[scale=0.06]{fig/dotnet.png}
+%			\end{itemize}
+%		\end{footnotesize}
+%		\vspace{0.2cm}
+		%{\centering \color{red} \\}
+		%\vspace{0.5cm}
+		%\centering{\color{red}  But developers have limited control on how resources are used}
+	\end{frame}
+	
+	% DONE - 2
+	\begin{frame}{High usability vs Limited Control}
+			\begin{columns}<1->
+				\column{0.2\textwidth}
+				\begin{scriptsize}
+					\begin{block}{Focus on Ideas}
+						\begin{itemize}
+							\item Use high-level abstractions
+							\item Forget about details such as resources
+						\end{itemize}
+					\end{block}
+				\end{scriptsize}
+				\column{0.75\textwidth}
+					\begin{figure}
+						\centering
+						\includegraphics[scale=0.3]{fig/high-level.png}
+					\end{figure}
+			\end{columns}
+	%		\vspace{0.2cm}
+			\begin{columns}<2->
+				\column{0.3\textwidth}
+					\begin{figure}
+						\centering
+						\includegraphics[scale=0.3]{fig/software-stack.png}
+					\end{figure}
+				  
+				\column{0.65\textwidth}
+				\begin{scriptsize}
+					\begin{alertblock}{In the ``software stack'' we trust}
+						\begin{itemize}
+							\item OSs abstract the hardware
+							\item OSs multiplex resource
+							\item Runtimes offer additional guarantees
+						\end{itemize}
+					\end{alertblock}
+				\end{scriptsize}
+			\end{columns}
+		\vspace{0.2cm}
+		\uncover<2->{
+		\centering{%
+			\textbf{\Large \color{red} It \underline{usually} works!!!}
+		}%
+		}
+	\end{frame}
+	
+	% Real Example in a new slide
+	
+	% DONE - 3
+	\begin{frame}{But developers need control}
+		\begin{footnotesize}
+		\vspace{-.2cm}
+		\begin{columns}
+			\column{0.43\textwidth}
+			\begin{exampleblock} {Developers often need support for fined-grain resource management}
+				
+					\begin{enumerate}[1]
+						\item Developing middleware and Component Frameworks
+						\item Multi-tenant cloud systems
+						\item Smartphones and Embedded systems
+					\end{enumerate}
+			\end{exampleblock}
+			\vspace{-.2cm}
+			\begin{block} {A ``traditional'' \textbf{software stack} can be a burden in these cases}
+				\begin{footnotesize}
+					\begin{enumerate}[1]
+						\item Generic APIs might hinder performance
+						\item \textit{Safe} APIs prevent collecting information and managing resources
+					\end{enumerate}
+				\end{footnotesize}
+			\end{block}
+			\column{0.55\textwidth}
+			\includegraphics[scale=0.29]{fig/need-for-speed.jpg}
+		\end{columns}
+		\vspace{-.2cm}
+		\begin{alertblock}{Consequences? }
+			Suboptimal solutions 
+			\begin{center}
+				{\color{red} More control is needed!!!}
+			\end{center}
+		\end{alertblock}
+		\end{footnotesize}
+	\end{frame}
+	
+	\subsection[Problem]{Problem}
+	
+	% DONE - 4
+	\begin{frame}{The populous land of resource-aware applications}
+		\begin{block}{Resource-aware applications}
+			\begin{itemize}
+				\item \textbf{{Observe}}
+				\begin{itemize}
+					\item how \underline{different parts} of applications \underline{consume resource}?
+					\item how much resources are available?
+				\end{itemize}
+				\item \textbf{{Manage}} the resource available
+				\begin{itemize}
+					\item allocating and deallocating resource as needed
+				\end{itemize}
+				\item \textbf{{Modify their behavior}}
+				\begin{itemize}
+					\item to improve performance
+					\item to avoid critical failures
+				\end{itemize}
+			\end{itemize}
+		\end{block}
+		
+		\begin{alertblock}{Resource-aware programming \underline{requires runtime support}}
+			We focus on \underline{supporting resource-aware programming} by \underline{providing}:
+			\begin{enumerate}
+				\item Resource Consumption Monitoring
+				\item Resource Reservation
+			\end{enumerate}
+		\end{alertblock}
+	\end{frame}
+	
+	\begin{frame}{Problems}
+		\vspace{-.3cm} 
+		\begin{footnotesize}
+			\begin{alertblock}{Mismatch between the concepts used by developers and how tools present information}
+				Developers define new abstractions to deal with specific domains, but development tools (e.g., profilers and debuggers) know nothing about such abstractions. \\
+				\begin{center}
+					\textcolor{red}{\large We need \underline{domain-specific} development \underline{tools}}
+				\end{center}
+			\end{alertblock}
+		\end{footnotesize}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.3]{fig/problems.png}
+		\end{figure}
+		\begin{center}
+			\textcolor{red}{\large We need \underline{efficient} development \underline{tools}}
+		\end{center}
+	\end{frame}
+	
+	% DONE - 6
+%	\begin{frame}{Objectives}
+%		\begin{enumerate}
+%			\item Support resource Consumption Monitoring and Reservation in MRTEs
+%			\begin{itemize}
+%				\item Handle many types of resource
+%				\item Portable
+%				\item Low overhead
+%			\end{itemize}
+%			\vspace{0.5cm}
+%			\item Provide support using the same concepts that developers \tikz[remember picture] \node (a) {\vphantom{X}};
+%			\begin{itemize}
+%				\item Dealing with abstraction-specific requirements
+%				\item Easing the construction of resource management tools for specific software abstractions
+%			\end{itemize}
+%		\end{enumerate}
+%		\begin{tikzpicture}[remember picture,overlay]
+%		\path (a.east) ++(-2,-2) node[anchor=west,cloud callout,fill=red!50,opacity=.5, callout absolute pointer={(a.east)}, text width = 2cm]
+%		{
+%			{\tiny
+%				Applications are composed by parts
+%				built using abstractions.\\[0.3cm]
+%				Can we detect the consumption of each part?\\
+%			}
+%		};
+%		\end{tikzpicture}
+%	\end{frame}
+	
+	\section[State of the Art]{State of the Art}
+	
+	% DONE - 7
+	\begin{frame}{Resource Consumption Monitoring and Reservation in MRTEs}
+		\vspace{-.3cm}
+		\begin{block}<2->{}
+			\uncover<4->{\includegraphics[scale=0.2]{fig/ys.png}~Arbitrary structures} \hfill \includegraphics[scale=0.2]{fig/bs.png}~All resource types
+		\end{block}
+		\begin{columns}
+			\column{0.48\textwidth}
+			\begin{scriptsize}
+				\begin{block}{\textbf{OS Specific} \hfill \textcolor{red}{low overhead}}
+					\begin{itemize}
+						\item Cgroups\uncover<2->{~\includegraphics[scale=0.2]{fig/bs.png}}
+						\item Overseer (HPC)
+						\item Resource Containers\uncover<2->{~\includegraphics[scale=0.2]{fig/bs.png}}
+						\item Jails\uncover<2->{~\includegraphics[scale=0.2]{fig/bs.png}}
+						\item Jamus\uncover<2->{~\includegraphics[scale=0.2]{fig/bs.png}}
+					\end{itemize}
+					\vfill
+				\end{block}
+			\end{scriptsize}  
+			\column{0.48\textwidth}
+			\begin{scriptsize}
+				\begin{block}<3->{\textbf{MRTE Specific} \hfill \textcolor{red}{low--medium overhead}}
+					\begin{itemize}
+						\item MVM
+						\item KaffeOS
+						\item Modified GC
+						\item Dynamic Profiling~\includegraphics[scale=0.2]{fig/bs.png}\uncover<4->{\includegraphics[scale=0.2]{fig/ys.png}}
+						\item OSGi Memory Profiling
+						\item Tracing Objects
+					\end{itemize}
+				\end{block}
+			\end{scriptsize}
+		\end{columns}
+		\begin{columns}
+			\column{0.6\textwidth}
+			\begin{scriptsize}
+				\begin{block}<5->{\textbf{Application level (portable)} \hfill \textcolor{red}{medium-high overhead}}
+					\begin{itemize}
+						\item JRes~\includegraphics[scale=0.2]{fig/bs.png}
+						\item JRAF2
+						\item Instrumentation-based monitoring~\includegraphics[scale=0.2]{fig/bs.png}\includegraphics[scale=0.2]{fig/ys.png}
+						\item OSGi CPU Profiling
+						\item Multi-tenant CPU isolation
+					\end{itemize}
+				\end{block}
+			\end{scriptsize}
+		\end{columns}
+		%\centering{
+		%	\includegraphics[scale=0.33]{fig/state-of-the-art.png}
+		%}
+		\uncover<5->{
+			\centering{
+				\color{red} Instrumentation-based monitoring is \underline{almost} good\\
+				{
+					\scriptsize Can also be used as the foundation for reservation \\
+			%		{\color{black} \dots and the {\color{yellow} \underline{\textbf{star}}} is important}
+				} 
+			}
+		}
+	\end{frame}
+	
+	% DONE - 8
+%	\begin{frame}{Approaches to deal with abstraction specific features}
+%		\textbf{Facts:}
+%		\begin{footnotesize}
+%			\begin{itemize}
+%				\item Software is built using abstractions
+%				\item \textit{Threads}, \textit{Processes}, \textit{classes}, \textit{objects}
+%				\item \dots but also: \textit{components} and other \textit{domain-specific abstractions}
+%				\item Developers want to see analyze resource usage using their \textit{abstractions}
+%			\end{itemize}
+%		\end{footnotesize}
+%		\vspace{0.5cm}
+%		{\centering
+%			\color{red} How to \underline{efficiently} support resource-awareness in the presence of abstractions?\\
+%		}
+%		\vspace{0.5cm}
+%		\textbf{Problems}
+%		\begin{footnotesize}
+%			\begin{enumerate}[i]
+%				\item Have unique features
+%				\item Tools to support resource awareness are hard to reuse
+%				\item lack of tools when new abstractions are defined
+%				\item re-implement tools vs extensible tools
+%			\end{enumerate}
+%		\end{footnotesize}
+%		%\textbf{Related works:}
+%		%\begin{footnotesize}
+%		%	\begin{itemize}
+%		%		\item Profiling
+%		%		\item Static Analysis
+%		%		\item Tooling support for DSLs
+%		%	\end{itemize}
+%		%\end{footnotesize}
+%	\end{frame}
+	
+	% DONE - 9
+	\begin{frame}{Easing the construction of resource management tools}
+		\framesubtitle{Relevance of approaches}
+		\centering{
+			\input{fig/state-of-the-art-clouds.tex}
+		}
+	\end{frame}
+	
+	
+	\begin{frame}{Synthesis}
+		\begin{block}{On resource consumption monitoring and reservation for MRTEs}
+			\begin{footnotesize}
+				\begin{itemize}
+					\item There are many approaches with different overhead and accuracy
+					\item Most approaches are not portable, but they offer low-medium overhead
+					\item Portable approaches are not usable in production due to their high overhead
+				\end{itemize}
+				
+			\end{footnotesize}
+		\end{block}
+		\vspace{1cm}
+		\begin{block}{Easing the construction of resource management tools}
+			\begin{footnotesize}
+				\begin{itemize}
+					\item Most easy to use tools are useful during development, but they fail in production environments
+					\item Most approaches are nor usable enough nor they offer low performance overhead
+				\end{itemize}
+				
+			\end{footnotesize}
+		\end{block}
+	\end{frame}
+	
+	\section[Contributions]{Contributions}
+	
+	% DONE ? - 10
+	\begin{frame}{Contributions}
+		%\framesubtitle{ Synthesis and relation to contributions }
+			
+			\begin{block}{{\large 1 -- Scapegoat}}
+				An adaptive resource consumption monitoring framework for component-based systems.
+			\end{block}
+%			
+%			\begin{columns}
+%				\column{.57\textwidth}
+%				\begin{itemize}
+%					\item Lack of portable, efficient, and generic resource consumption monitoring tools
+%				\end{itemize}
+%				\column{.01\textwidth}
+%				
+%				\column{.37\textwidth}
+%				\begin{itemize}
+%					\item Scapegoat -- an adaptive monitoring framework
+%				\end{itemize}
+%			\end{columns}
+		
+		\vspace{0.2cm}
+			\begin{scriptsize}
+				\begin{block}{\textcolor{gray}{2 -- Squirrel methodology}}
+					\textcolor{gray}{An architecture-driven approach to reduce the overhead of resource reservation by choosing the proper mapping to represent components in the runtime.}
+				\end{block}
+				\begin{block}{\textcolor{gray}{3 -- A domain-specific language to define memory profilers}}
+					\textcolor{gray}{A generative approach to ease the construction of tools for supporting resource-aware programming. In particular, it support the construction of profilers that can be used at runtime.}
+				\end{block}
+			\end{scriptsize}
+			
+%			\begin{columns}
+%				\column{.47\textwidth}
+%				\begin{itemize}
+%					\item Lack of efficient resource reservation tools for component platforms
+%				\end{itemize}
+%				\column{.01\textwidth}
+%					
+%				\column{.47\textwidth}
+%				\begin{itemize}
+%					\item Squirrel -- an approach to reduce the overhead of resource reservation
+%				\end{itemize}
+%			\end{columns}
+		
+ 	\end{frame}
+	
+	% bullet con las conclusiones of state of the art
+	
+	% slide linking conclusions and contributions
+	
+	%\begin{frame}{Subway map (Roadmap)}
+	%	\input{fig/subway-map.tex}
+	%\end{frame}
+	
+	\section[Scapegoat -- A monitoring framework for component systems]{Scapegoat -- A monitoring framework}
+	
+	\subsection[Approach]{Approach}
+	% DONE - 11
+	\begin{frame}{Overview}
+			\textbf{What is the desired behavior?}
+			\begin{enumerate}[i]
+				\item Precise and lightweight
+				\item Detect \underline{faulty} components \tikz[remember picture] \node (b) {\vphantom{y}};
+			\end{enumerate}
+			
+			\vspace{2cm}
+			\uncover<2>{
+			\textbf{How to achieve that goal?}\tikz[remember picture] \node (a) {\vphantom{X}};
+			\begin{itemize}
+				\item Global Monitoring by default
+				\item Fine-Grained Monitoring only when required \dots
+				\begin{enumerate}[i]
+					\item Assume some components are more likely to be faulty
+					\item Begin with suspected components
+				\end{enumerate}
+			\end{itemize}
+			}
+			\begin{tikzpicture}[remember picture,overlay]
+			\path<2> (a.east) ++(2.5,0.7) node[anchor=west,cloud callout,fill=red!50,opacity=.5, callout absolute pointer={(a.east)}, text width = 2cm]
+				{
+					\centering{\underline{Observation:}} \\
+					{\scriptsize
+					Consumption matters when \\
+					the container is running out \\
+					of resources \\
+					}
+				};
+			\end{tikzpicture}
+			
+			\begin{tikzpicture}[remember picture,overlay]
+			\path<1-> (b.east) ++(1,0.3) node[anchor=west,ellipse callout,fill=red!50,opacity=.5, callout absolute pointer={(b.mid)}, text width = 3cm]
+			{
+				\scriptsize
+				Consume more than \textit{expected}\\
+			};
+			\end{tikzpicture}
+			
+	\end{frame}
+	
+	% DONE - 12
+	\begin{frame}{Main Loop}
+		\centering
+		\includegraphics[scale=0.3]{fig/scapegoat.png}
+	\end{frame}
+	
+	% DONE - 13
+	\begin{frame}{Contract-based approach}
+		\begin{enumerate}
+			\item<1-> Contract for the whole system/JVM -- when to trigger the alarm?
+					\begin{itemize}
+						\item CPU Usage
+						\item Memory usage
+					\end{itemize}
+			\begin{scriptsize}
+			\begin{example}[Contract specification for an application]
+					\hspace{.5cm} \textbf{add} node0 : JavaNode\\
+					\hspace{.5cm} \textbf{set} node0.cpu\_threshold = \textbf{80} \% \\
+			\end{example}
+			\end{scriptsize}
+			\item<2> Contract for each component -- consumption allowed under certain operation conditions
+				\begin{itemize}
+					\item Peak number of instruction per second
+					\item Maximum memory usage
+					\item Operation condition %(e.g. If the component receives at most 100 requests per second it consumes at most 30 MB)
+				\end{itemize}
+				\begin{scriptsize}\begin{example}[Contract specification for a component]
+						\hspace{.5cm} \textbf{add} node0.server : WsServer\\
+						\hspace{.5cm} \textbf{set} server.cpu\_wall\_time = \textbf{2580323} intr/sec \\
+						\hspace{.5cm} \textbf{set} server.memory\_max\_size = \textbf{15000} bytes\\
+						\hspace{.5cm} \textbf{set} server.throughput\_all\_ports = \textbf{10000} msg/sec {\color{Emerald} \# operation condition} \\
+				\end{example}
+				\end{scriptsize}
+		\end{enumerate}
+		
+	\end{frame}
+	
+	% DONE - 14
+	\begin{frame}{Extending the framework with heuristics}
+		\uncover{
+		\centering{
+			\includegraphics[scale=0.5]{fig/scapegoat-heuristic.png}
+		}
+		}
+		\begin{example}
+			\textbf{Number of previous failures}: \\ Components are suspected if they have previously failed
+		\end{example}
+		\begin{example}
+			\textbf{Models@runtime-based heuristic}: Failures come from recent changes
+			\begin{itemize}
+				\item Recently added components
+				\item Components that interact with recently added components
+			\end{itemize}
+		\end{example}
+	\end{frame}
+	
+	% DONE - 15
+	\begin{frame}{Mechanisms to perform monitoring}
+		%{
+		\begin{footnotesize}
+			\begin{alertblock}{Global Monitoring}
+				To perform global monitoring we use JMX
+			\end{alertblock}
+		\end{footnotesize}
+		\begin{footnotesize}
+			\begin{alertblock}{Memory Consumption Monitoring}
+				\begin{itemize}
+					\item Instrumentation-based monitoring
+					\item Using the JVMTI to explore the Java heap
+				\end{itemize}
+			\end{alertblock}
+		\end{footnotesize} 
+		\begin{alertblock}{Switching from global monitoring to fine-grain monitoring}
+			\begin{figure}
+				\centering
+				\includegraphics[scale=0.27]{fig/activate-deactivate.png}
+			\end{figure}
+			\vspace{-.5cm}
+			\begin{footnotesize}
+				Require Java Agent for:
+				\begin{enumerate}[i]
+					\item Instrumenting bytecode
+					\item Retransforming every class within a component
+				\end{enumerate}
+			\end{footnotesize}
+		\end{alertblock}
+	\end{frame}
+	
+	\subsection[Evaluation]{Evaluation}
+	% DONE - 16
+	\begin{frame}{Research Questions}
+		\begin{enumerate}[RQ1]\setlength{\itemsep}{0.5cm}
+			\item What is the impact of the various level of instrumentation?
+			\item What are the costs of using instrumentation-based memory monitoring and heap exploration?  
+			\item Does adaptive  monitoring outperform state-of-the-art instrumentation monitoring?
+			\item What is the impact of application size (i.e. number of components, size of components) and the quality of the heuristic?
+			\begin{enumerate}[a]
+				\item Execution time
+				\item Time to discover faulty components
+			\end{enumerate}
+		\end{enumerate}
+		\vfill
+	\end{frame}
+	
+	% DONE - 17
+	\begin{frame}{Overhead of the instrumentation solutions}
+		{} \tikz[remember picture] \node (a) {\vphantom{y}};
+		
+		\begin{tikzpicture}[remember picture,overlay]
+		\path (a.east) ++(8.7,-.5) node[anchor=west,ellipse,fill=red!50,opacity=.5, text width = 2.5cm]
+		{
+			{\scriptsize
+				\centering{\underline{RQ1}}: \\
+				What is the impact of the various level of instrumentation? \\
+			}
+		};
+		\end{tikzpicture}
+		
+		\input{fig/scapegoat-overhead-instrumentation}
+		
+		\centering{
+			\normalsize
+			\color{red} {
+				 Memory instrumentation, average overhead of 329\% \\
+				 Instruction instrumentation, average overhead  of 562\% \\
+			}
+		}
+	\end{frame}
+	
+	% DONE - 18
+	\begin{frame}{Instrumentation-based memory monitoring vs. heap exploration-based memory monitoring}
+		{} \tikz[remember picture] \node (a) {\vphantom{y}};
+		\begin{tikzpicture}[remember picture,overlay]
+		\path (a.east) ++(8.7,-.5) node[anchor=west,ellipse,fill=red!50,opacity=.5, text width = 2.5cm]
+		{
+			{\scriptsize
+				\centering{\underline{RQ2}}: \\
+				What are the costs of using instrumentation-based memory monitoring and heap exploration? \\
+			}
+		};
+		\end{tikzpicture}
+		\input{fig/scapegoat-overhead-instrumentation-memory}
+		\centering{
+			\color{red} {Memory Instrumentation $=>$ average overhead of 329\% \\ Heap Exploration $=>$ average overhead of 179\%}
+		}
+	\end{frame}
+	
+	% DONE - 19
+	\begin{frame}{Overhead of Adaptive Monitoring vs Components Instrumented all the time}
+		\framesubtitle{Experiment Setting}
+		\begin{itemize}
+			\item Components of firefighter use case (13 components)
+			\item One component that \underline{fails over and over} \tikz[remember picture] \node (a) {\vphantom{X}};
+			\item Component with a job to complete -- used to measure its execution time
+		\end{itemize}
+		\begin{tikzpicture}[remember picture,overlay]
+		\path (a.east) ++(1.5,.7) node[anchor=west,ellipse callout,fill=red!50,opacity=.5, callout absolute pointer={(a.east)}, text width = 2.5cm]
+		{
+			
+			{\scriptsize
+				\centering{\underline{Worst-case scenario:}} \\
+				Switching states \\
+				Global \\
+				Fine-Grain \\
+				Global \\
+				Fine-Grain \\
+				\dots \\
+			}
+		};
+		\end{tikzpicture}
+		
+		\begin{tiny}
+			\begin{table}[!hb]
+				\centering
+				\caption{Setting of use cases}
+				\begin{tabular}{p{0.5cm}|p{1.35cm}p{0.85cm}p{2.5cm}p{2.5cm}}
+					\hline \textbf{Test Name} & \textbf{Monitored\newline Resource} & \textbf{Faulty\newline Resource} & \textbf{Heuristic} & \textbf{External Task} \\ 
+					\hline \hline UC1 & CPU, Memory & CPU & number of failures & Weka, train neural network \\ 
+					UC2 & CPU, Memory & CPU & number of failures & dacapo, antlr \\ 
+					UC3 & CPU, Memory & CPU & number of failures & dacapo, chart \\ 
+					UC4 & CPU & CPU & number of failures & dacapo, xalan \\ 
+					UC5 & CPU, Memory & CPU & less number of failures first  & dacapo, chart \\ 
+					UC6 & Memory & CPU & number of failures & Weka, train neural network \\ 
+					\hline 
+				\end{tabular} 
+			\end{table}
+		\end{tiny}
+	\end{frame}
+	
+	% DONE - 20
+	\begin{frame}{Overhead of Adaptive Monitoring vs Components Instrumented all the time}
+		\framesubtitle{Experiment Results}
+		{} \tikz[remember picture] \node (a) {\vphantom{y}};
+		\begin{tikzpicture}[remember picture,overlay]
+		\path (a.east) ++(8.7,-.5) node[anchor=west,ellipse,fill=red!50,opacity=.5, text width = 2.5cm]
+		{
+			{\scriptsize
+				\centering{\underline{RQ3}}: \\
+				Does adaptive  monitoring outperform state-of-the-art instrumentation-based monitoring? \\
+			}
+		};
+		\end{tikzpicture}
+		\input{fig/scapegoat-overhead-adaptive-vs-full}
+		\centering{
+			\color{red}
+			Components Instrumented all the time vs Adaptive Monitoring:\\ \underline{Overhead Reduced by 93\% on average}
+		}
+	\end{frame}
+	
+	% DONE - 21
+	\begin{frame}{Impact of application size and heuristic on \underline{execution time}}
+		{} \tikz[remember picture] \node (a) {\vphantom{y}};
+		\begin{tikzpicture}[remember picture,overlay]
+		\path (a.east) ++(8.7,-.5) node[anchor=west,ellipse,fill=red!50,opacity=.5, text width = 2.5cm]
+		{
+			{\scriptsize
+				\centering{\underline{RQ4a}}: \\
+				What is the impact of application size and the quality of the heuristic on execution time? \\
+			}
+		};
+		\end{tikzpicture}
+		{}\\
+		\textbf{Experiment setup:}
+		\begin{scriptsize}
+			\begin{itemize}
+				\item Faulty component that fails over and over
+				\item Component with a job to complete -- to measure its execution time
+				\item Variable number of components: 4, 8, 16, 32, 64, 128
+				\item Perfect Heuristic: \textit{Number of previous failures}
+			\end{itemize}
+		\end{scriptsize}
+		\input{fig/scapegoat-executionTimeManyComponents}
+		\centering{
+			\color{red} Heuristic has \underline{limited effect} on execution time 
+		}
+	\end{frame}
+	
+	% DONE - 22
+	\begin{frame}{Impact of application size and heuristic on \underline{delay time}}
+		{} \tikz[remember picture] \node (a) {\vphantom{y}};
+		\begin{tikzpicture}[remember picture,overlay]
+		\path (a.east) ++(8.7,-.5) node[anchor=west,ellipse,fill=red!50,opacity=.5, text width = 2.5cm]
+		{
+			{\scriptsize
+				\centering{\underline{RQ4b}}: \\
+				What is the impact of application size and the quality of the heuristic on time to discover failure? \\
+			}
+		};
+		\end{tikzpicture}
+		{}\\
+		\textbf{Experiment setup:}
+		\begin{scriptsize}
+		\begin{itemize}
+			\item Same setting as before
+			\item \textbf{Delay Time}: Time to discover faulty component.
+		\end{itemize}
+		\end{scriptsize}
+		\input{fig/scapegoat-delay-time}
+		\centering{
+			\color{red} Delay Time \underline{highly affected} by the heuristic 
+		}
+	\end{frame}
+	
+	% DONE - 23
+%	\begin{frame}{Web use case -- spot faulty components in a scalable diverse web application}
+%		\begin{figure}[!bt]
+%			\centering
+%			\includegraphics[scale=0.35]{../chapter5/figures/webapp2}
+%			\caption{\scriptsize Architecture of MdMS along with Scapegoat and additional components to adapt the system.}
+%		\end{figure}
+%	\end{frame}
+%	
+%	% DONE - 24
+%	\begin{frame}{Web use case -- spot faulty components in a scalable diverse web application}
+%		\input{fig/scapegoat-web-app-results}
+%	\end{frame}
+	
+	\subsection[Summary]{Summary}
+	
+	% DONE - 25
+	\begin{frame}{Summary}
+		\begin{enumerate}\setlength{\itemsep}{0.7cm}
+			\item Lightweight yet efficient monitoring system
+				\begin{itemize}
+					\item Adaptive monitoring mode that only slowdowns parts of the application
+					\item Comparable delay time when a good heuristic is used
+				\end{itemize}
+			\item Support the definition of application-specific heuristics. In this way developers can:
+				\begin{itemize}
+					\item Leverages architectural information to drive the search for the
+					faulty component
+					\item Define Models@runtime-based heuristics
+				\end{itemize}
+			
+			\item Monitoring overhead reduced by 93\%
+			
+		\end{enumerate}
+	\end{frame}
+	
+	\section{Contributions}
+	
+	\begin{frame}{Contributions}
+		%\framesubtitle{ Synthesis and relation to contributions }
+		\begin{scriptsize}
+		\begin{block}{\textcolor{gray}{1 -- Scapegoat}}
+			\textcolor{gray}{An adaptive resource consumption monitoring framework for component-based systems.}
+		\end{block}
+		\end{scriptsize}
+		%			
+		%			\begin{columns}
+		%				\column{.57\textwidth}
+		%				\begin{itemize}
+		%					\item Lack of portable, efficient, and generic resource consumption monitoring tools
+		%				\end{itemize}
+		%				\column{.01\textwidth}
+		%				
+		%				\column{.37\textwidth}
+		%				\begin{itemize}
+		%					\item Scapegoat -- an adaptive monitoring framework
+		%				\end{itemize}
+		%			\end{columns}
+		
+		\vspace{0.2cm}
+			\begin{block}{{\large 2 -- Squirrel methodology}}
+				An architecture-driven approach to reduce the overhead of resource reservation by choosing the proper mapping to represent 
+				components in the runtime.
+			\end{block}
+		\vspace{0.2cm}
+		\begin{scriptsize}
+			\begin{block}{\textcolor{gray}{3 -- A domain-specific language to define memory profilers}}
+				\textcolor{gray}{A generative approach to ease the construction of tools for supporting resource-aware programming. In particular, it support the construction of profilers that can be used at runtime.}
+			\end{block}
+		\end{scriptsize}
+		
+		%			\begin{columns}
+		%				\column{.47\textwidth}
+		%				\begin{itemize}
+		%					\item Lack of efficient resource reservation tools for component platforms
+		%				\end{itemize}
+		%				\column{.01\textwidth}
+		%					
+		%				\column{.47\textwidth}
+		%				\begin{itemize}
+		%					\item Squirrel -- an approach to reduce the overhead of resource reservation
+		%				\end{itemize}
+		%			\end{columns}
+		
+	\end{frame}
+	
+	\section[Squirrel -- architecture-driven resource management]{Squirrel -- architecture-driven resource management}
+	
+	\subsection[Approach]{Approach}
+	% DONE - 26
+	\begin{frame}{Squirrel -- architecture-driven resource management}
+		\textbf{Several approaches to reserve resource}
+		\begin{enumerate}[i]
+			\item Support different resource types
+			\item Impose different overhead 
+		\end{enumerate}
+		\vspace{1cm}
+		\uncover<2>{
+			\textbf{What approach to use?}\tikz[remember picture] \node (a) {\vphantom{X}};
+			\begin{itemize}
+				\item Delay the decision until deployment
+				\item Use metadata on architecture to decide
+				\item Use extensible component platform supporting:
+				\begin{footnotesize}
+					\begin{enumerate}[i]
+						\item Many mappings from component to system-level abstractions
+						\item Each mapping knows how to manage some resource types
+					\end{enumerate}
+				\end{footnotesize}
+				
+			\end{itemize}
+		}
+		\begin{tikzpicture}[remember picture,overlay]
+		\path<2> (a.east) ++(3.5,0.7) node[anchor=west,cloud callout,fill=red!50,opacity=.5, callout absolute pointer={(a.mid)}, text width = 2cm]
+		{
+			\centering{
+				\scriptsize
+				\underline{Assumption}: \\
+				Components do not use resources in the same way.\\[0.8cm]
+				\underline{Fact}: \\
+				We only know components at deployment time\\
+			}
+		};
+		\end{tikzpicture}
+	\end{frame}
+	
+	% DONE - 27
+	\begin{frame}{Squirrel -- Extensible Component Platform}
+		\framesubtitle{An implementation to assess the concept}
+		\textbf{During component framework design:}
+		\begin{enumerate}
+			\item Identify mappings from components to system-level abstraction
+			\item For each mapping
+				\begin{enumerate}[i]
+					\item Build resource management mechanisms
+					\item Implement optimization for each mechanism
+					\item Evaluate mechanisms
+					\item Keep the set of most \textit{efficient} mechanisms
+				\end{enumerate}
+		\end{enumerate}
+		\vspace{0.5cm}
+		\textbf{At deployment time:}
+		\begin{enumerate}
+			\item What resources a component requires?
+			\item Find the best mapping for each component using multi-objective optimization
+			\item Map components to system-level abstraction by wrapping components in resource-aware containers
+		\end{enumerate}
+	\end{frame}
+	
+	\subsection[Prototype]{Prototype}
+	
+	% DONE - 28
+	\begin{frame}{An implementation to assess the concept}
+		\begin{columns}
+			\column{0.5\textwidth}
+			\begin{footnotesize}
+				\begin{enumerate}
+					\item CPU reservation by mapping components to Linux's Cgroups
+					\item Memory Reservation using either Scapegoat or isolation components in different JVMs
+					\item Optimize communication and deployment time when components are isolated
+						\begin{itemize}
+							\item Shared-memory channel for communication
+							\item Cloning processes to reduce start-up time
+						\end{itemize}
+				\end{enumerate}
+			\end{footnotesize}
+			\column{0.5\textwidth}
+			\uncover{
+				\begin{scriptsize}
+					\begin{figure}
+						\centering
+						\resizebox{0.9\textwidth}{!}{
+							\input{../chapter4/figures/Comp2Cgroup.pgf}
+						}
+						\caption{\scriptsize Reserving CPU by mapping components to cgroups}
+					\end{figure}
+				\end{scriptsize}
+				
+			}
+		\end{columns}
+	\end{frame}
+	
+	\subsection[Evaluation of the prototype]{Evaluation of the prototype}
+	
+	% DONE - 29
+	\begin{frame}{Research Questions}
+		\begin{enumerate}[RQ1]\setlength{\itemsep}{1cm}
+			\item What is the impact of the various resource management strategies?
+			\item When isolation of component is used as memory management strategy, is the deployment time reduced by using clones of the Kevoree runtime?  
+			\item How is communication among components improved by using the proposed optimization?
+		\end{enumerate}
+	\end{frame}
+	
+	% DONE - 30
+	\begin{frame}{Comparing resource management strategies}
+		{} \tikz[remember picture] \node (a) {\vphantom{y}};
+		\begin{tikzpicture}[remember picture,overlay]
+		\path (a.east) ++(8.7,.2) node[anchor=west,ellipse,fill=red!50,opacity=.5, text width = 2.5cm]
+		{
+			{\scriptsize
+				\centering{\underline{RQ1}}: \\
+				What is the impact of the various resource management strategies? \\
+			}
+		};
+		\end{tikzpicture}
+		\begin{figure}
+			\centering
+			\resizebox{0.8\textwidth}{!}{
+				\begin{minipage}[t]{0.43\linewidth}
+					\centering
+					\input{../chapter4/figures/cpu-overhead.tex}
+					\caption{\scriptsize CPU overhead during the execution of Dacapo benchmarks}
+				\end{minipage}
+				\hspace{0.05\linewidth}
+				\begin{minipage}[t]{0.43\linewidth}
+					\centering
+					\input{../chapter4/figures/memory-overhead.tex}
+					\caption{\scriptsize Memory overhead during the execution of Dacapo benchmarks}
+				\end{minipage}
+			}
+		\end{figure}
+		\centering{
+			\color{red} CPU management produces no overhead\\ Memory management produces overhead: Scapegoat is worse
+		}
+	\end{frame}
+	
+	% DONE - 31
+	\begin{frame}{Importance of optimization for each mapping: \underline{starting time}}
+		{} \tikz[remember picture] \node (a) {\vphantom{y}};
+		\begin{tikzpicture}[remember picture,overlay]
+		\path (a.east) ++(8.7,.6) node[anchor=west,ellipse,fill=red!50,opacity=.5, text width = 2.5cm]
+		{
+			{\scriptsize
+				\centering{\underline{RQ2}}: \\
+				When isolation of component is used as memory management strategy, is the deployment time reduced by using clones of the Kevoree runtime? \\
+			}
+		};
+		\end{tikzpicture}
+		\begin{figure}
+			\centering
+			\resizebox{0.85\textwidth}{!}{
+				\input{../chapter4/figures/starting-time-final-comparison.tex}
+			}
+			\caption{\scriptsize Average deployment time per component using different strategies}
+		\end{figure}
+		\centering{
+			\color{red} cloning processes reduces starting time overhead from 4000\% to 1900\% 
+		}
+	\end{frame}
+	
+	% DONE - 32
+	\begin{frame}{Importance of optimizations for each mapping: \underline{communication among isolates}}
+		{} \tikz[remember picture] \node (a) {\vphantom{y}};
+		\begin{tikzpicture}[remember picture,overlay]
+		\path (a.east) ++(8.7,.6) node[anchor=west,ellipse,fill=red!50,opacity=.5, text width = 2.5cm]
+		{
+			{\scriptsize
+				\centering{\underline{RQ3}}: \\
+				How is communication among components improved by using the proposed optimizations? \\
+			}
+		};
+		\end{tikzpicture}
+		\begin{figure}
+			\centering
+			\resizebox{.7\textwidth}{!}{
+				\begin{minipage}[t]{0.43\textwidth}
+					\input{../chapter4/figures/latency-raw-communication.tex}
+					\vspace{-0.3cm}
+					\caption{{\scriptsize Latency of IPC mechanisms}}
+				\end{minipage}
+				\hspace{0.05\linewidth}
+				\begin{minipage}[t]{0.49\textwidth}
+					\input{../chapter4/figures/raw-communication.tex}
+					\vspace{-0.3cm}
+					\caption{{\scriptsize Bandwidth of IPC mechanisms}}
+				\end{minipage}
+			}
+		\end{figure}
+		\vspace{-0.5cm}
+		\begin{figure}
+			\centering
+			\resizebox{0.55\textwidth}{!}{
+				\input{../chapter4/figures/multicast-serialization-communication.tex}
+			}
+			\vspace{-0.5cm}
+			\caption{{\tiny Communication throughput for different channels}}
+		\end{figure}
+		\vspace{-.3cm}
+		\centering{\color{red} Proper channels reduce the cost of isolation in terms of communications}
+	\end{frame}
+	
+	\subsection[Summary]{Summary}
+	
+	% DONE - 33
+	\begin{frame}{Summary}
+		\begin{itemize}\setlength{\itemsep}{1cm}
+			\item A late binding approach to reduce the cost of resource management
+			\item A prototype implemented using the Kevoree component framework
+				\vspace{0.5cm}
+				\begin{itemize}\setlength{\itemsep}{0.5cm}
+					\item Different mapping for components
+					\item Different optimization strategies
+				\end{itemize}
+		\end{itemize}
+		\vfill
+	\end{frame}
+	
+
+\newcommand{\kw}[1]{\textbf{\color{blue} #1}}
+
+	\section{Contributions}
+
+	\begin{frame}{Contributions}
+		%\framesubtitle{ Synthesis and relation to contributions }
+		\begin{scriptsize}
+			\begin{block}{\textcolor{gray}{1 -- Scapegoat}}
+				\textcolor{gray}{An adaptive resource consumption monitoring framework for component-based systems.}
+			\end{block}
+			\begin{block}{\textcolor{gray}{2 -- Squirrel methodology}}
+				\textcolor{gray}{An architecture-driven approach to reduce the overhead of resource reservation by choosing the proper mapping to represent components in the runtime.}
+			\end{block}
+		\end{scriptsize}
+		%			
+		%			\begin{columns}
+		%				\column{.57\textwidth}
+		%				\begin{itemize}
+		%					\item Lack of portable, efficient, and generic resource consumption monitoring tools
+		%				\end{itemize}
+		%				\column{.01\textwidth}
+		%				
+		%				\column{.37\textwidth}
+		%				\begin{itemize}
+		%					\item Scapegoat -- an adaptive monitoring framework
+		%				\end{itemize}
+		%			\end{columns}
+		
+		
+		\vspace{0.2cm}
+		\begin{block}{{\large 3 -- A domain-specific language to define memory profilers}}
+			A generative approach to ease the construction of tools for supporting resource-aware programming. In particular, it support the construction of profilers that can be used at runtime.
+		\end{block}
+		
+		%			\begin{columns}
+		%				\column{.47\textwidth}
+		%				\begin{itemize}
+		%					\item Lack of efficient resource reservation tools for component platforms
+		%				\end{itemize}
+		%				\column{.01\textwidth}
+		%					
+		%				\column{.47\textwidth}
+		%				\begin{itemize}
+		%					\item Squirrel -- an approach to reduce the overhead of resource reservation
+		%				\end{itemize}
+		%			\end{columns}
+		
+	\end{frame}
+
+	\section{Building efficient domain-specific memory profilers}
+	
+	% DONE 
+	\begin{frame}{Customized memory profilers}
+		\textbf{Software abstractions are at the core of development}
+		\begin{enumerate}[i]
+			\item Components, Domain-Specific Languages
+			\item Development tools lack support for new abstractions
+			\item Time consuming writing them from scratch 
+		\end{enumerate}
+		\vspace{1cm}
+		\uncover<2>{
+			\textbf{Generative approach to the rescue}\tikz[remember picture] \node (a) {\vphantom{X}};
+			\begin{itemize}
+				\item Backend technology to perform the actual profiling
+				\item What kind of information we want to compute?
+				\item How we represent the great diversity of abstractions?				
+			\end{itemize}
+		}
+		\begin{tikzpicture}[remember picture,overlay]
+		\path<2> (a.east) ++(3.0,0.7) node[anchor=west,cloud callout,fill=red!50,opacity=.5, callout absolute pointer={(a.east)}, text width = 2cm]
+		{
+			\centering{
+				\scriptsize
+				\underline{Observation}: \\
+				In a MRTE all abstractions are represented by objects in memory\\ 
+			}
+		};
+		\end{tikzpicture}
+	\end{frame}
+	
+	\subsection[Motivating Examples]{Motivating Examples}
+	% DONE
+	\begin{frame}{Number of objects reachable from a given object}
+		\begin{figure}[!ht]
+			\centering
+			\includegraphics[scale=0.3]{../chapter6/fig/example1.png}
+			\caption{\scriptsize Objects reachable from the Client class. Observe that only one object is not reachable.}
+		\end{figure}
+		\centering{
+			\color{red} This is a \underline{graph}, and we are \underline{computing values} in a \underline{subgraph}
+		}
+	\end{frame}
+	
+	% DONE
+	\begin{frame}{Length of singly linked lists}
+		\begin{figure}[!ht]
+			\centering
+			\includegraphics[scale=0.3]{../chapter6/fig/lists}
+			\vspace{-.3cm}
+			\caption{\scriptsize Memory snapshot with three linked lists}
+		\end{figure}
+		%\vspace*{-0.1cm}
+		{\footnotesize
+		\begin{equation*}
+			f_{\textit{head}}\left(O\right) = 
+			\begin{cases}
+			\textit{head} = O & \quad O \; is \; \operatorname{SinglyLinkedList} \\
+			\exists {x \in \operatorname{Objects}}, \quad x \operatorname{references} o \wedge f_{\textit{head}}\left(x\right) & \quad O \; is \; \operatorname{NodeEntry} \\
+			\operatorname{false} & \quad \operatorname{otherwise} \\
+			\end{cases}
+		\end{equation*}
+		}
+		\vspace{0.2cm}
+		\begin{alertblock}{Other subgraphs (there are many lists)}
+			A recursive equation determines whether an object is member of a subgraph
+		\end{alertblock}
+	\end{frame}
+	
+	\subsection[Approach]{Approach}
+	
+	% DONE
+	\begin{frame}{Idea for a domain-specific language to define memory profilers}
+		\begin{enumerate}
+			\item An instance of a software abstraction is represented as a collection of objects at runtime -- a subgraph
+			\item We call such subgraphs \underline{\textbf{structures}}
+			\item The idea is to identify structures and to compute values on them.
+			\begin{itemize}
+				\item Size
+				\item Number of Objects
+				\item How many objects in the structure met a first order predicate
+			\end{itemize}
+		\end{enumerate}
+		\vfill
+		\begin{alertblock}{The garbage collector knows how to traverse the whole graph -- linear time}
+			\begin{enumerate}[S1]
+				\item For each object, checks if it is member of a \textit{\textbf{structure}}
+				\item If \textit{yes}, perform a partial computation of the value associated to such a \textit{\textbf{structure}}
+			\end{enumerate}
+		\end{alertblock}
+		
+		%{
+		%	\centering{\color{red} Our goal is to identify the structures in linear time with respect to the number of objects in the heap }\\
+		%	\centering{\scriptsize \underline{}}\\
+		%}
+	\end{frame}
+	
+	\begin{frame}{Global Architecture}
+		\begin{figure}[!ht]
+			\centering
+			\includegraphics[scale=0.3]{../chapter6/fig/global-view.png}
+			\caption{\scriptsize In this case, three memory profilers are defined.}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}{Declaring Types For Collecting Data}
+		\begin{block}{Concrete Syntax}
+			\hspace{1cm} \textcolor{red}{\textbf{Type}} ::= \textcolor{red}{\textbf{id}} `\textcolor{Emerald}{:}' (`\textcolor{Emerald}{tableOf}' \textcolor{red}{\textbf{id}} $|$ `\textcolor{Emerald}{struct}' `\textcolor{Emerald}{\{}' (\textcolor{red}{\textbf{id}} `\textcolor{Emerald}{:}' \textcolor{red}{\textbf{id}})$+$  `\textcolor{Emerald}{\}}') 
+		\end{block}
+		\begin{columns}
+			\column{0.48\textwidth}
+			\begin{exampleblock}<2->{Structures}
+				\begin{footnotesize}
+					\hspace{.3cm} \textcolor{Emerald}{// A simple structure} \\
+					\hspace{.3cm} WantedObject : \kw{struct} \{ \\
+					\hspace{.6cm} class\_name : \textbf{string} \\
+					\hspace{.6cm} size : \textbf{int} \\
+					\hspace{.3cm} \} \\
+				\end{footnotesize}
+			\end{exampleblock}
+			\column{0.48\textwidth}
+			\begin{exampleblock}<3->{Tables}
+				\begin{footnotesize}
+					\hspace{.3cm} \textcolor{Emerald}{// This new type is a table (i.e., list)} \\
+					\hspace{.3cm} \textcolor{Emerald}{// of WantedObject} \\
+					\hspace{.3cm} wanted : \kw{tableOf} WantedObject \\
+					\hspace{.3cm} \textcolor{Emerald}{// In the language, values of this type} \\
+					\hspace{.3cm} \textcolor{Emerald}{// have operations such as \textit{map} and \textit{filter}} \\
+				\end{footnotesize}
+			\end{exampleblock}
+		\end{columns}
+		\begin{columns}
+			\centering
+			\column{0.4\textwidth}
+			\begin{block}<4->{Built-In Types}
+				\begin{itemize}
+					\item \textbf{int}
+					\item \textbf{bool}
+					\item \textbf{string}
+				\end{itemize}
+			\end{block}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}{Expressions}
+		\begin{columns}
+			\column{0.4\textwidth}
+			\begin{exampleblock}<1->{Basic}
+				\begin{footnotesize}
+					\hspace{.1cm} \textcolor{Emerald}{// simple arithmetic} \\
+					\hspace{.1cm} 3 + i \\
+					\hspace{.1cm} \textcolor{Emerald}{// boolean operators} \\
+					\hspace{.1cm} flag \kw{and} (12 $>$ a) \\
+					\hspace{.1cm} \textcolor{Emerald}{// string to int} \\
+					\hspace{.1cm} \textcolor{NavyBlue}{``12''}.toInt() + 4 \\
+					\hspace{.1cm} 12.toString() \textcolor{Emerald}{// int to string}\\
+				\end{footnotesize}
+			\end{exampleblock}
+			\column{0.56\textwidth}
+			\begin{exampleblock}<2->{Initializing structures and tables}
+				\begin{footnotesize}
+					\hspace{.1cm} \textcolor{Emerald}{ // a table value that contains 1, 2, 3} \\
+					\hspace{.1cm} \#[ 1,2,3 ] \\
+					\hspace{.1cm} \textcolor{Emerald}{// a structure value WantedObject} \\
+					\hspace{.1cm} \kw{struct} WantedObject \{ \textcolor{NavyBlue}{``String''}, \textit{12 + 3} \} \\
+					\hspace{.1cm} \textcolor{Emerald}{// a list of WantedObject with one element} \\
+					\hspace{.1cm} \#[ \kw{struct} WantedObject \{ \textcolor{NavyBlue}{``Integer''}, i*4 \} ]\\ % \textcolor{Emerald}{// one element} \\
+					\hspace{.1cm} \textcolor{Emerald}{// an empty list of string} \\
+					\hspace{.1cm} \#\textbf{string}[] \textcolor{Emerald}{// need the type qualifier } \\
+				\end{footnotesize}
+			\end{exampleblock}
+		\end{columns}
+		\vspace{0.3cm}
+		\begin{columns}
+			\centering
+			\column{0.9\textwidth}
+			\begin{exampleblock}<3->{Lambda Expressions}
+				\begin{footnotesize}
+					\hspace{.1cm} \textcolor{NavyBlue}{// keep three in the result} \\
+					\hspace{.1cm} \#[ 1,2,3 ].filter([it $|$ it $>$ 2])
+					\hspace{.1cm} {}\\
+					\hspace{.1cm} \textcolor{NavyBlue}{// instances of class K3Object} \\
+					\hspace{.1cm} \underline{objects}.filter([it $|$ it \kw{is} K3Object]) \textcolor{NavyBlue}{// \textit{objects is a built-in value}}\\
+					\hspace{.1cm} \textcolor{NavyBlue}{// keep metadata of ``big'' objects } \\
+					\hspace{.1cm} \underline{objects}.filter([it $|$ it $>$ 1000]).map([it $|$ \kw{struct} WantedObject \{ it.\underline{classname}, it.\underline{size} \}]) \\
+				\end{footnotesize}
+			\end{exampleblock}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}{Defining structures in the heap}
+		\begin{block}{Concrete Syntax}
+			\hspace{1cm} \textcolor{red}{\textbf{structure}} ::= `\textcolor{Emerald}{create structure foreach}' \textcolor{red}{\textbf{id}} `\textcolor{Emerald}{:}' \textcolor{red}{\textbf{exp}} `\textcolor{Emerald}{using}' \textcolor{red}{\textbf{body}} \\ 
+			\hspace{1cm} \textcolor{red}{\textbf{body}} ::= `\textcolor{Emerald}{constructor}' \textcolor{red}{\textbf{stmts}} `\textcolor{Emerald}{membership}' \textcolor{red}{\textbf{exp}} `\textcolor{Emerald}{updates}' \textcolor{red}{\textbf{stmts}} \\
+			\hspace{1cm} \textcolor{red}{\textbf{stmts}} ::= (\textcolor{red}{\textbf{id}} `\textcolor{Emerald}{=}' \textcolor{red}{\textbf{exp}} ) $+$\\
+		\end{block}
+		\begin{columns}
+			\column{0.6\textwidth}
+			\begin{exampleblock}<1->{Number of instances of two classes}
+				\begin{footnotesize}
+					\hspace{.1cm} \kw{create structure foreach} e:\#[\textcolor{NavyBlue}{``JFrame''}] \kw{using} \\
+					\hspace{.3cm} \kw{constructor} \\
+					\hspace{.5cm} \textbf{\textit{initialObjects}} = \#Object[] \textcolor{Emerald}{// built-in value} \\
+					\hspace{.5cm} n = 0 \textcolor{Emerald}{// compute value n in this structure} \\
+					\hspace{.3cm} \kw{membership} \kw{\textit{this}} \kw{is} JFrame \textcolor{Emerald}{// \textit{this} is built-in value} \\
+					\hspace{.3cm} \kw{updates} n = n + 1 \\
+					\vspace{0.2cm}
+					\hspace{.1cm} \textcolor{Emerald}{// defining another type of structure } \\
+					\hspace{.1cm} \kw{create structure foreach} e:\#[\textcolor{NavyBlue}{``JPane''}] \kw{using} \\
+					\hspace{.3cm} \kw{constructor} \\
+					\hspace{.5cm} \textbf{\textit{initialObjects}} = \#Object[] \\
+					\hspace{.5cm} m = 0 \\
+					\hspace{.3cm} \kw{membership} \kw{\textit{this}} \kw{is} JPane \\
+					\hspace{.3cm} \kw{updates} m = m + 1 \\
+				\end{footnotesize}
+			\end{exampleblock}
+		\end{columns}
+	\end{frame}
+	
+	%\begin{frame}{Abstract Syntax}
+	%	\begin{figure}
+	%		\centering
+	%		\includegraphics[width=0.93\linewidth]{../chapter6/fig/AS}
+	%		\caption{\scriptsize Meta-model for representing customized memory profilers}
+	%	\end{figure}
+	%\end{frame}
+	
+	\begin{frame}{Developers View}
+		\begin{columns}
+			\column{0.65\textwidth}
+			\begin{block}{Create software abstraction for other developers}
+				\begin{scriptsize}
+					\begin{itemize}
+						\item Component framework
+						\item Library for a given domain
+						\item Domain-specific language
+					\end{itemize}
+				\end{scriptsize}
+			\end{block}
+			\column{0.28\textwidth}
+		\end{columns}
+		\begin{columns}
+			\column{0.25\textwidth}
+			\begin{block}{Deliver software}
+				\begin{scriptsize}
+					Include domain-specific memory profilers along the \textit{software abstraction} to ease its usage.
+				\end{scriptsize}
+			\end{block}
+			
+			\begin{alertblock}{Native agent}
+				\begin{scriptsize}
+					JVMTI is used to traverse the graph of objects\\
+				\end{scriptsize}
+			\end{alertblock}
+			\column{0.65\textwidth}
+			
+			\begin{figure}
+				\hfill
+				\includegraphics[scale=0.3]{../chapter6/fig/developer-profiler-view.png}
+				\vspace{-.3cm}
+				\caption{\scriptsize Memory profilers are built from the description of software abstractions}
+			\end{figure}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}{Users View}
+		\begin{columns}
+			\column{0.70\textwidth}
+			\begin{figure}
+				\centering
+				\includegraphics[scale=0.35]{../chapter6/fig/user-profiler-view.png}
+				%\caption{\scriptsize . Data collected is in the form of plain Java objects.}
+			\end{figure}
+			\column{0.25\textwidth}
+		\end{columns}
+		\vspace{.3cm}
+		\begin{columns}
+			\column{0.25\textwidth}
+			\column{0.65\textwidth}
+			\begin{alertblock}{Accessing profilers}
+				\begin{scriptsize}
+					\begin{itemize}
+						\item Memory profilers are black-boxes accessed through Java interfaces
+						\item Data is collected in the form of plain Java objects
+					\end{itemize}
+				\end{scriptsize}
+			\end{alertblock}
+		\end{columns}
+	\end{frame}
+	
+	\subsection[Evaluation]{Evaluation}
+	
+	% DONE 
+	\begin{frame}{Research Questions}
+		\begin{enumerate}[RQ1]\setlength{\itemsep}{1cm}
+			\item Is significant the difference between the time needed to execute a single analysis with our approach in comparison to previous solutions?  
+			\item Does our approach produce profilers with lower overhead than state-of-the-art tools when used to perform many iterations of memory analysis at runtime?
+			\item Does the advantages of our approach remain for real applications?
+		\end{enumerate}
+	\end{frame}
+	
+	\begin{frame}{Analysis Time}
+		{} \tikz[remember picture] \node (a) {\vphantom{y}};
+		\vspace{-.5cm}
+		\begin{scriptsize}
+			\begin{example}
+				\hspace{.3cm} \kw{create structure foreach} e:\#["jvm"], \kw{using}\\
+				\hspace{.6cm} \kw{constructor} \\
+				\hspace{.9cm} initialObjects = \#[Object] \\
+				\hspace{.9cm} exists = false \\
+				\hspace{.6cm} \kw{membership}  true \\
+				\hspace{.6cm} \kw{updates} exists = exists \kw{or} (this \kw{is} UnusedClass) \\
+			\end{example}
+		\end{scriptsize}
+		\begin{tikzpicture}[remember picture,overlay]
+		\path (a.east) ++(8.7,.0) node[anchor=west,ellipse,fill=red!50,opacity=.5, text width = 2.5cm]
+		{
+			{\scriptsize
+				\centering{\underline{RQ1}}: \\
+				Is significant the difference between the time needed to execute a single analysis with our approach in comparison to previous solutions? \\
+			}
+		};
+		\end{tikzpicture}
+		\vspace{-.4cm}
+		\input{fig/dsl-analysis-time}
+		\vspace{-.3cm}
+		\begin{columns}
+			\column{0.5\textwidth}
+			\centering{\color{red} \underline{Analysis time reduced between 25\% and 39\%}}
+			\column{0.5\textwidth}
+			\centering{\color{red} 150+ sloc in handwritten solution \\ 3+ sloc in Eclipse MAT}
+		\end{columns}
+	\end{frame}
+
+	\begin{frame}{Total Execution Time}
+		{} \tikz[remember picture] \node (a) {\vphantom{y}};
+		\vspace{-0.7cm}
+		\begin{scriptsize}
+			\begin{example}
+				\hspace{.3cm} Info : \kw{struct} \{ nbObjects : int, size : int \} \\
+				\hspace{.3cm}	\kw{create structure foreach} e:\#["whole-jvm"] \kw{using} \\
+				\hspace{.6cm}	\kw{constructor} \\
+				\hspace{.9cm}	initialObjects = threads \\
+				\hspace{.9cm}	data = \kw{struct} Info \{ 0, 0 \} \\
+				\hspace{.6cm}	\kw{membership} ( referrer \kw{in} this\_structure ) \\
+				\hspace{.6cm}	\kw{updates} \\
+				\hspace{.9cm}	data = \kw{struct} Info \{ data.nbObjects + 1 , data.size + this.size \}
+			\end{example}
+		\end{scriptsize}
+		\begin{tikzpicture}[remember picture,overlay]
+		\path (a.east) ++(8.7,.3) node[anchor=west,ellipse,fill=red!50,opacity=.5, text width = 2.5cm]
+		{
+			{\scriptsize
+				\centering{\underline{RQ2}}: \\
+				Does our approach produce profilers with lower overhead than state-of-the-art tools when used to perform many iterations of memory analysis at runtime? \\
+			}
+		};
+		\end{tikzpicture}
+		\vspace{-.4cm}
+		\input{dsl-performance-of-profilers}
+		\vspace{-.2cm}
+		\begin{columns}
+			\column{0.5\textwidth}
+			\centering{\color{red} \underline{Average overhead is 12\%}}
+			\column{0.5\textwidth}
+			\centering{\color{red} 200+ sloc in handwritten solution \\ 10+ sloc in Eclipse MAT}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}{Memory consumption of OSGi bundles}
+		{} \tikz[remember picture] \node (a) {\vphantom{y}};
+		\vspace{-.5cm}
+		\begin{scriptsize}
+		\begin{example}
+		\hspace{.3cm} \kw{create structure foreach} e:classloaders \kw{using} \\
+		\hspace{.6cm} \kw{constructor} \\
+		\hspace{.9cm} initialObjects = \#[e] \\
+		\hspace{.9cm} size = 0 \\
+		\hspace{.6cm} \kw{membership}  ((ref\_kind == root \kw{and} this.class.classloader \kw{in} this\_structure)\kw{or} \\
+		\hspace{1.2cm}             (ref\_kind != root \kw{and} referrer \kw{in} this\_structure)) \\
+		\hspace{.6cm} \kw{updates} \\
+		\hspace{.9cm} size = size + this.size \\
+		\end{example}
+		\end{scriptsize}
+		\begin{tikzpicture}[remember picture,overlay]
+		\path (a.east) ++(8.7,.6) node[anchor=west,ellipse,fill=red!50,opacity=.5, text width = 2.5cm]
+		{
+			{\scriptsize
+				\centering{\underline{RQ3}}: \\
+				Does the advantages of our approach remain for real applications? \\
+			}
+		};
+		\end{tikzpicture}
+		\vspace{-.4cm}
+		\input{fig/dsl-real-scenario}
+	\end{frame}
+	
+	\subsection{Summary}
+	
+	\begin{frame}{Summary}
+		\begin{itemize}\setlength{\itemsep}{1cm}
+			\item DSLs should be delivered along the necessary tooling support in order to ease their use
+			\item The mechanism we propose to describe memory profilers can be used by both the developers of DSLs and their users 
+			\item We present a DSL to define profilers and the tools to use it:
+			\vspace{0.5cm}
+			\begin{itemize}\setlength{\itemsep}{0.5cm}
+				\item Generator of profilers that target JVMTI technology.
+			\end{itemize}
+			\item The generated profilers impose less performance overhead than a previous approach
+		\end{itemize}
+		\vfill
+	\end{frame}
+	
+	\section[Conclusions]{Conclusions}
+	
+	\begin{frame}{Conclusions}
+		\begin{itemize}\setlength{\itemsep}{0.6cm}
+			\item Runtime support is required to implement resource-aware methods: resource accounting and reservation.
+			\item Existing approaches impose high performance overhead and have limited capacity for dealing with arbitrary software abstractions.
+			\item A framework, named Scapegoat, to efficiently compute per component resource utilization.
+			\item A methodology to select a representation of each component in the runtime environment in such a way that resource reservations can be guaranteed with low performance overhead.
+			\item A language to ease the definition of memory profilers that can be used in production environments.
+		\end{itemize}
+	\end{frame}
+	
+	\section[Perspectives]{Perspectives}
+	\subsection{Perspectives}
+	
+	\begin{frame}{Reducing overhead of instruction accounting}
+		\begin{block}{So far}
+			Adaptive monitoring reduces the overhead of performing CPU consumption monitoring. Still, instrumenting components for monitoring imposes overhead.
+		\end{block}
+		
+		\begin{alertblock}{ Learn a predictive model for costly methods and avoid instrumenting them }
+			\begin{itemize}
+				\item Create a training set by using the parameters of several invocations
+				\item Build a simple predictive model
+				\item If the model is good enough use it every time the method is invoked 
+			\end{itemize}
+		\end{alertblock}
+		
+		\begin{alertblock}{\centering \includegraphics[scale=0.03]{fig/questions.png}}
+			\begin{itemize}
+				\item What kind of predictive model to use? It must be simple to train and evaluate
+				\item What methods are worth considering when this technique is used?
+			\end{itemize}
+			%Modifying the graph by changing references or adding objects is not enough; additional actions are often needed (e.g., releasing a \textit{lock} held by an object) 
+		\end{alertblock}
+	\end{frame}
+	
+	\begin{frame}{A language to manipulate the graph of objects}
+		\begin{block}{Provided so far}
+			A language to query the graph of objects in the memory heap
+		\end{block}
+		
+		\begin{alertblock}{ Manipulating the graph of objects seems useful }
+			\begin{itemize}
+				\item A mechanism to remove stale references in OSGi applications is proposed in~\cite{dsn:15:attouchi:incinerator}. The approach is largely based on eliminating references between objects.
+				
+				%\item[Cloning data structures] In~\cite{DBLP:conf/models/BousseCB14a}, the authors propose an approach to create model clones by sharing data. A part of the approach 
+			\end{itemize}
+		\end{alertblock}
+		
+		\begin{alertblock}{\centering \includegraphics[scale=0.03]{fig/questions.png}}
+			\begin{itemize}
+				\item Can we achieve the same without modifying the JVM by simply using an API such as JVMTI?
+				\item What is the kind of interaction needed between the language and the rest of the MRTE?
+			\end{itemize}
+			%Modifying the graph by changing references or adding objects is not enough; additional actions are often needed (e.g., releasing a \textit{lock} held by an object) 
+		\end{alertblock}
+	\end{frame}
+
+	\begin{frame}{Automatically generate memory profilers for DSLs}
+		\begin{block}{Provided so far}
+			Developers of memory profilers must understand the DSL, and how its concepts are represented in memory. Then write the profiler by hand.
+		\end{block}
+		
+		\begin{alertblock}{ Can we automatically generate ``\textit{standard}'' profilers? }
+			\begin{itemize}
+				\item Identify a containment relationship as a \textit{structure}
+				\item Compute the size of structures
+				\item Understand the relationships in memory and the classes used to represent concepts of the language?
+			\end{itemize}
+		\end{alertblock}
+		
+		\begin{alertblock}{\centering \includegraphics[scale=0.03]{fig/questions.png}}
+			\begin{itemize}
+				\item Can we do better than just providing a set of generic profilers?
+				\item Can we abstract the target DSL?
+				\item Is this feature useful at all? 
+			\end{itemize}
+			%Modifying the graph by changing references or adding objects is not enough; additional actions are often needed (e.g., releasing a \textit{lock} held by an object) 
+		\end{alertblock}
+		
+	\end{frame}
+
+	
+	\section[Publications]{Publications}
+	
+	\begin{frame}{Publications}
+		\begin{footnotesize}
+			\begin{itemize}\setlength{\itemsep}{0.8cm}
+				\item {\color{CadetBlue} Inti Gonzalez-Herrera, Johann Bourcier, Erwan Daubert, Walter Rudametkin, Olivier Barais, François Fouquet, Jean-Marc Jézéquel:}
+				\textit{Scapegoat: An Adaptive Monitoring Framework for Component-Based Systems}. \textcolor{CadetBlue}{WICSA 2014: 67-76}
+				
+				\item \textcolor{CadetBlue}{Rima Al Ali, Ilias Gerostathopoulos, Inti Gonzalez-Herrera, Adrian Juan Verdejo, Michal Kit, Bholanathsingh Surajbali:}
+				\textit{An Architecture-Based Approach for Compute-Intensive Pervasive Systems in Dynamic Environments}. \textcolor{CadetBlue}{HotTopiCS@ICPE 2014: 3:1-3:6}
+				
+				\item \textcolor{CadetBlue}{Inti Gonzalez-Herrera, Johann Bourcier, Walter Rudametkin, Olivier Barais, François Fouquet:}
+				\textit{Squirrel: Architecture Driven Resource Management}. \textcolor{CadetBlue}{SAC 2016: [to appear]}
+			\end{itemize}
+		\end{footnotesize}
+		
+	\end{frame}
+	
+	\section[Questions]{Questions}
+	
+	\begin{frame}
+		\centering
+		\includegraphics[scale=0.3]{fig/questions.png}
+	\end{frame}
+	
+	\section[References]{References}
+	
+	\bibliographystyle{alpha}
+	\bibliography{../biblio/biblio_these.bib}
+	
+\end{document}

@@ -136,7 +136,7 @@ This example shows that in defining memory profilers, we often need:
 To summarize, we are frequently interested in calculating values for many structures that have the same ``characteristics''; this is what we call \textit{structure type}.
 To identify such structures we use a \textit{parameter}; the process of associating a particular parameter value to a structure type is done by a \textit{factory of structures}. 
 
-\section{Metalanguage to define customized memory profilers}\label{sec:approach}
+\section{Language to define customized memory profilers}\label{sec:approach}
 
 A global view of our approach is shown in Figure~\ref{fig:dsl-global-view}.
 % the figure depicts how to and how it is integrated in production environments, are shown in .
@@ -1018,7 +1018,7 @@ In this case, a recursive membership function is used to discard those objects t
 A variable, defined as a record, holds the  calculated values; it is however possible to achieve the same goal using two separated integer values.
 
 \begin{lstlisting}[escapeinside={(*}{*)},
-caption={Calculating objects reachables from threads.},
+caption={Calculating objects reachable from threads.},
 label={lst:kevoreeaccounting},
 language=DSL2]
 Info : struct {
